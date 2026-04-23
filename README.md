@@ -13,6 +13,7 @@ Ogni skill insegna a Claude comportamenti specifici utili per gli avvocati — c
 | Skill | Descrizione |
 |-------|-------------|
 | [**normattiva**](./normattiva/) | Genera link ipertestuali cliccabili verso Normattiva.it per ogni riferimento normativo italiano citato nel testo (art. X c.c., d.lgs., legge n., r.d., ecc.), usando il formato standard URN-NIR. Claude non produce mai riferimenti normativi "nudi": ogni citazione diventa automaticamente un link verificabile. |
+| [**BuddaLaw per Perplexity**](./"MCP BuddaLaw per Perplexity"/) | Guida operativa per usare il connettore MCP BuddaLaw con Perplexity su quesiti legali complessi: ricerca giurisprudenziale multi-step (Cassazione, merito, TAR), ricerca normativa per dominio (civile, penale, tributario, privacy), template di contratti e atti processuali. Include schema di lavoro, esempi pratici e parametri di ricerca consigliati. |
 
 ---
 
