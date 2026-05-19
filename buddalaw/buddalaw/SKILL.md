@@ -1,7 +1,8 @@
 ---
 name: buddalaw
-version: "8.2"
+version: "8.3"
 changelog:
+  - "8.3 (2026-05-19): chiave dedup search_articles rafforzata (numero + codice legge, non nome completo fonte)"
   - "8.2 (2026-05-19): verifica data_deposito sui risultati, deduplicazione risultati identici per idatto e numero+fonte"
   - "8.1 (2026-05-19): integrazione normattiva, pertinenza topica, data_deposito, sintesi come fonte primaria, ricerca multi-DB"
   - "8.0 (2026-05-19): prima versione strutturata — frontmatter YAML, test suite 32 scenari, fix dominio get_judgement"
@@ -337,7 +338,7 @@ esplicitamente prima di passare al successivo.
 
 8. **Deduplicazione risultati**: prima di presentare i risultati, rimuovere i duplicati:
    - `search_case_law`: deduplicare per `idatto` — trattenere la prima occorrenza.
-   - `search_articles`: deduplicare per `numero` + `fonte_normativa` — trattenere la prima occorrenza.
+   - `search_articles`: deduplicare per `numero` + numero identificativo della legge estratto da `fonte_normativa` (es. «81/2008», «392/1978»). Il server restituisce varianti dello stesso atto con nomi diversi («Decreto Legislativo 81/2008» e «Decreto Legislativo n. 81 del 2008» sono lo stesso atto) — trattarle come duplicate.
    - `get_contract_requirements`: deduplicare per `title` (già previsto nella sezione D).
 
 ---
