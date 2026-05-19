@@ -122,6 +122,61 @@ Il numero `:N` nell'URN identifica quale allegato del R.D. contiene la norma, no
 
 ---
 
+## Versioni storiche e multivigenza
+
+Normattiva.it supporta la **multivigenza**: è possibile consultare la versione di un atto vigente a una data specifica tramite il parametro `!vig=`.
+
+### Sintassi `!vig=`
+
+| Caso d'uso | Sintassi | Esempio |
+|---|---|---|
+| Versione vigente oggi | `!vig=` (senza data) | `...;81!vig=` |
+| Versione vigente a data X | `!vig=AAAA-MM-GG` | `...;81!vig=2022-12-31` |
+| Articolo + versione storica | `~artN!vig=AAAA-MM-GG` | `...;81~art29!vig=2022-12-31` |
+
+**Posizione nel link**: `!vig=` va sempre in coda all'URL, dopo `~artN` se presente.
+
+```
+https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:{tipo}:{data};{numero}[:{all}][~artN]!vig=AAAA-MM-GG
+```
+
+### Quando usarlo
+
+- **Contenzioso su fatti passati**: usare la versione vigente alla data dei fatti (`!vig=data-fatti`)
+- **Norma abrogata ancora applicabile**: es. l.fall. per procedure fallimentari aperte prima del 15/07/2022
+- **Norma ante-riforma**: es. art. 18 L. 300/1970 nella versione pre-Jobs Act (`!vig=2012-06-30`)
+- **Verifica requisiti storici**: es. soglie D.Lgs. 81/2008 prima delle modifiche del 2023
+
+### Esempi concreti
+
+```markdown
+<!-- Legge fallimentare: versione vigente il giorno prima dell'abrogazione -->
+[art. 42 l.fall. (testo ante 15/7/2022)](https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-01-16;267:1~art42!vig=2022-07-14)
+
+<!-- Art. 18 Statuto Lavoratori: versione pre-Jobs Act -->
+[art. 18 L. 300/1970 (testo ante D.Lgs. 23/2015)](https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:legge:1970-05-20;300~art18!vig=2015-03-06)
+
+<!-- D.Lgs. 81/2008 prima del correttivo 2009 -->
+[art. 29 D.Lgs. 81/2008 (versione originaria)](https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2008-04-09;81~art29!vig=2009-08-02)
+```
+
+---
+
+## Norme abrogate o integralmente riformate
+
+Quando citi queste norme, **segnala sempre** lo stato di vigenza e indica la norma sostituta.
+
+| Norma storica | Abrogata/riformata da | Data decorrenza | Norma sostituta vigente |
+|---|---|---|---|
+| R.D. 267/1942 — Legge Fallimentare | D.Lgs. 14/2019 (Cod. Crisi d'Impresa) | **15/07/2022** | D.Lgs. 14/2019 |
+| D.Lgs. 50/2016 — Codice Appalti | D.Lgs. 36/2023 | **01/07/2023** | D.Lgs. 36/2023 |
+| Art. 18 L. 300/1970 — tutela reale | D.Lgs. 23/2015 (per assunzioni post 7/3/2015) | **07/03/2015** | Art. 3 D.Lgs. 23/2015 |
+| D.Lgs. 196/2003 — Privacy (testo originario) | D.Lgs. 101/2018 (adeguamento GDPR) | **19/09/2018** | D.Lgs. 196/2003 (consolidato post 2018) + Reg. UE 2016/679 |
+
+> **Nota**: per le norme abrogate con regime transitorio (l.fall., D.Lgs. 50/2016), il testo storico rimane applicabile alle procedure avviate prima della data di decorrenza. Usa `!vig=data-precedente` per linkare la versione storica corretta.
+
+---
+
 ## Se la norma non è in tabella
 
 1. Identifica il `tipo_atto` dalla tabella sopra.
