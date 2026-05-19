@@ -70,6 +70,24 @@ https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:{tipo}:{YYYY-MM-DD};{numero
 
 ---
 
+## Versioni storiche di una norma
+
+Quando il contesto riguarda fatti passati, norme ante-riforma o atti abrogati,
+aggiungi `!vig=AAAA-MM-GG` all'URL per puntare alla versione vigente a quella data.
+
+**Posizione del parametro**: sempre in coda, dopo `~artN` se presente:
+- Solo atto: `...;numero[:{all}]!vig=AAAA-MM-GG`
+- Con articolo: `...;numero[:{all}]~artN!vig=AAAA-MM-GG`
+
+**Regole operative**:
+1. Se l'utente specifica una data di riferimento (es. "fatti del 2019", "prima della riforma") → usa `!vig=` con la data appropriata.
+2. Se citi una norma che risulta abrogata o integralmente riformata → segnalalo in testo, indica la norma sostituta e la data di decorrenza, e usa `!vig=data-anteriore` per linkare il testo storico.
+3. Per la versione vigente oggi → ometti `!vig=` (comportamento default già corretto).
+
+Consulta la tabella "Norme abrogate o integralmente riformate" in `references/lookup-extended.md` per l.fall., D.Lgs. 50/2016, art. 18 L. 300/1970 e Privacy.
+
+---
+
 ## Template Markdown
 
 ```markdown
