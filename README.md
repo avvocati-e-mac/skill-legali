@@ -17,6 +17,18 @@ Ogni skill insegna a Claude comportamenti specifici utili per gli avvocati — c
 
 ---
 
+## Cronologia degli aggiornamenti
+
+| Data | Skill | Aggiornamento |
+|------|-------|---------------|
+| 19 maggio 2026 | **BuddaLaw** v8.3 | Migliorata la gestione dei risultati duplicati nella ricerca articoli |
+| 19 maggio 2026 | **BuddaLaw** v8.2 | Aggiunta suite di test automatici per verificare la qualità delle ricerche |
+| 19 maggio 2026 | **normattiva** | Aggiunto supporto per versioni storiche delle norme e testi abrogati |
+| 23 aprile 2026 | **BuddaLaw** | Primo rilascio: ricerca live di sentenze, normativa e prassi tributaria tramite MCP |
+| 10 aprile 2026 | **normattiva** | Primo rilascio: generazione automatica di link a Normattiva.it per ogni citazione normativa |
+
+---
+
 ## Come installare una skill
 
 Scegli il prodotto Claude che usi:
