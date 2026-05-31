@@ -1,0 +1,36 @@
+{
+  "answer": "Sembra una frase volutamente nonsense o giocosa, non qualcosa con un significato riconosciuto o un riferimento noto; non esiste alcun “blorgatron” o “quantum spaghetti del futuro 2099” come concetto stabilito in fonti tecniche o culturali note.[1][2][3]\n\n## Cosa significa (o meglio: non significa)\n\n- “zzxqpfm” non risulta come acronimo, codice o termine usato in ambito scientifico, tecnologico o culturale; appare come una stringa casuale di caratteri.[4]\n- “blorgatron” non è legato a prodotti, tecnologie o franchise famosi; termini simili (“blorg”, “blag” ecc.) compaiono solo come nickname, blog o titoli senza significato specifico.[5][6][7]\n- “quantum spaghetti del futuro 2099” richiama per tono la fantascienza (es. i fumetti “2099” di Marvel), ma non è un titolo o concetto realmente esistente in quelle serie.[3][8][1]\n\n## Se volevi qualcosa di specifico\n\nPotresti voler fare una di queste cose:\n\n- Inventare un’idea di fantascienza (un piatto, un device, un meme del futuro).  \n- Cercare un nome creativo per un progetto, un racconto o una band.  \n- Verificare se esiste già un riferimento pop alla “pasta quantistica del futuro”.\n\nPosso aiutarti a trasformare questa frase in:\n\n- Una micro‑storia ambientata nel 2099.  \n- Un concept di tecnologia o ricetta “quantistica” spiegata con tono comico o pseudo‑scientifico.  \n- Un titolo e una sinossi per fumetto/gioco/romanzo breve.\n\nVuoi che tratti “quantum spaghetti del futuro 2099” come spunto per una storia, per un’idea di tecnologia immaginaria o per qualcos’altro?",
+  "citations": [
+    "https://fumettologica.it/2019/08/nuovi-fumetti-marvel-2099/",
+    "http://mycomics.it/serie/2099-collection",
+    "https://it.wikipedia.org/wiki/Marvel_2099",
+    "https://github.com/zzugbb/zzugbb.github.io/blob/master/atom.xml",
+    "https://steamcommunity.com/profiles/76561199166161957/",
+    "https://github.com/rvagg/archived-blorg",
+    "https://zzzzbov.com",
+    "https://fumettologica.it/2024/04/annihilation-2099-fumetto-marvel/",
+    "https://steamcommunity.com/profiles/76561199001246462",
+    "https://steamcommunity.com/id/blorgin/",
+    "https://www.deezer.com/en/artist/225297445",
+    "https://steamcommunity.com/sharedfiles/filedetails/?id=3296492496",
+    "https://bzl.co",
+    "https://www.youtube.com/watch?v=Wxt81A8SYu4",
+    "https://z-bqbffgaf.blogspot.com/?421803"
+  ],
+  "routing": {
+    "model": "pplx_pro",
+    "model_name": "auto",
+    "search_type": "pro",
+    "intent": "standard",
+    "reason": "Standard query — pro healthy (102/300)",
+    "was_downgraded": false,
+    "quota_snapshot": {
+      "pro_remaining": 102,
+      "pro_level": "healthy",
+      "research_remaining": 19,
+      "research_level": "healthy",
+      "labs_remaining": 25,
+      "agent_remaining": 0
+    }
+  }
+}

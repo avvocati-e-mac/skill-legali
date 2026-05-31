@@ -1,0 +1,33 @@
+Sei un giudice esperto e imparziale. NON cercare online: valuta SOLO i due testi qui sotto rispetto alla FACT-KEY data.
+Regole: (1) giudica i FATTI, NON premiare la risposta più lunga o più verbosa. (2) Una risposta breve ma corretta vale quanto una lunga e corretta. (3) Rispondi SOLO con il JSON richiesto, nessun altro testo.
+
+DOMANDA UTENTE: "Commenti dottrinali sull'abuso di dipendenza economica nel diritto italiano."
+
+FACT-KEY (verità di riferimento indipendente): Art. 9 L. 192/1998 vieta l'abuso di dipendenza economica (subfornitura); nullità del patto abusivo. Fattispecie tra diritto della concorrenza e dei contratti; dottrina rilevante (Delli Priscoli, Colangelo).
+
+--- RISPOSTA A ---
+L'abuso di dipendenza economica è vietato dall'art. 9 L. 192/1998 (subfornitura), con nullità del patto abusivo; la dottrina (Colangelo; Delli Priscoli, Abuso di dipendenza economica e abuso del diritto, Contr. 2010) lo colloca tra disciplina della concorrenza e diritto dei contratti; dibattito sul rapporto con l'abuso del diritto; riforma 2021. [Nota: fonti primarie PDF/paywall non leggibili, sintesi dagli estratti di ricerca].
+Fonti citate da A: ['tesi.luiss.it (PDF)', 'orizzontideldirittocommerciale.it (PDF)', 'archiviofscpo.unict.it']
+
+--- RISPOSTA B ---
+I principali commenti dottrinali sull’abuso di dipendenza economica in Italia ruotano intorno alla natura della fattispecie (tra diritto della concorrenza e disciplina dei contratti), al rapporto con l’abuso del diritto e all’ampiezza della tutela dell’impresa “debole”, specie dopo le più recenti riforme e aperture giurisprudenziali.[1][2][3][4][5]
+
+## Inquadramento della fattispecie
+
+- L’abuso di dipendenza economica è introdotto dall’art. 9 l. 192/1998 come divieto di abuso, da parte di un’impresa, dello stato di dipendenza economica in cui si trova un’altra impresa cliente o fornitrice, con sanzione della nullità del patto abusivo.[6][4][5]
+- Dottrina e giurisprudenza hanno progressivamente interpretato la norma come clausola generale di tutela nei rapporti tra imprese, non limitata alle subforniture, riconoscendole portata “orizzontale” nell’ordinamento civile e commerciale.[4][5][6]
+
+## Natura e funzione della disciplina
+
+- Una parte significativa della dottrina sottolinea la funzione “protettiva” della disciplina, volta a colmare lacune del diritto antitrust nella tutela delle 
+Fonti citate da B: ['https://diges.unicz.it/web/wp-content/uploads/2019/07/Divieto-di-abuso-di-dipendenza-economica.pdf', 'https://www.treccani.it/enciclopedia/abuso-di-dipendenza-economica_(Diritto-on-line)/', 'https://www.orizzontideldirittocommerciale.it/wp-content/uploads/2021/04/11_delli_priscoli.pdf', 'https://tesi.luiss.it/36623/1/259351_MOTTOLA_ERNESTO%20PIO.pdf', 'https://www.diritto.it/abuso-dipendenza-economica/']
+
+Per A e per B valuta questi criteri booleani (true=soddisfatto):
+- Q1_corretto
+- Q2_lingua_IT_adeguata
+- Q3_fonte_autorevole
+- Q5_citazioni_supportano_claim
+  (Q3_fonte_autorevole = cita almeno UNA fonte ufficiale/primaria pertinente; per i social/video da soli = false.
+   Q5_citazioni_supportano_claim = le fonti citate sono coerenti col contenuto e non lo contraddicono.)
+
+Output SOLO questo JSON: {"A":{"Q1_corretto":true/false,"Q2_lingua_IT_adeguata":true/false,"Q3_fonte_autorevole":true/false,"Q5_citazioni_supportano_claim":true/false},"B":{"Q1_corretto":true/false,"Q2_lingua_IT_adeguata":true/false,"Q3_fonte_autorevole":true/false,"Q5_citazioni_supportano_claim":true/false}}

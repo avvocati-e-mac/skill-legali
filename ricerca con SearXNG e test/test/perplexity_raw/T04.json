@@ -1,0 +1,32 @@
+{
+  "answer": "La cacio e pepe “vera” romana si fa con tre soli ingredienti: pasta (meglio tonnarelli o spaghetti), Pecorino Romano stagionato e pepe nero, senza panna, burro o olio.[1][2]\n\n## Ingredienti per 4 persone\n\n- 400 g di spaghetti o tonnarelli[3][2]\n- 200–220 g di Pecorino Romano DOP ben stagionato (almeno 12 mesi) grattugiato finissimo[4][2]\n- Pepe nero in grani (abbondante)[2][1]\n- Sale fino q.b. (molto poco, il pecorino è già **sapido**)[2]\n\n## Preparazione passo per passo\n\n1. Metti a bollire poca acqua  \n   - Usa una pentola grande ma riempila solo a metà: meno acqua = più amido = pasta più cremosa.[2]\n   - Sala leggermente l’acqua, meno del solito per la pasta.[2]\n\n2. Prepara pepe e pecorino  \n   - Grattugia finissimo il Pecorino Romano e tienilo in una ciotola ampia.[4][2]\n   - Schiaccia i grani di pepe in un mortaio o con il fondo di un pentolino, non troppo fini.[1][2]\n\n3. Tosta il pepe e fai il “brodo di pepe”  \n   - In una padella larga metti circa metà del pepe macinato e tostalo pochi secondi a fuoco medio, finché profuma.[1][2]\n   - Aggiungi un mestolo di acqua di cottura della pasta e fai sobbollire 1–2 minuti: ottieni una base liquida al pepe, ricca di amido.[1][2]\n\n4. Cuoci la pasta “risottandola”  \n   - Tuffa la pasta nell’acqua bollente e scolala molto al dente, dopo circa metà/tre quarti del tempo indicato.[1]\n   - Trasferiscila nella padella col brodo di pepe e termina la cottura aggiungendo via via altra acqua di cottura, come fosse un risotto, mescolando continuamente.[2][1]\n\n5. Prepara la crema di pecorino (trucco anti-grumi)  \n   - In una ciotola mescola il pecorino con pochi cucchiai di acqua di cottura tiepida, NON bollente, fino a ottenere una pasta densa, non liquida.[5][1]\n   - L’acqua deve essere tiepida: se è troppo calda il formaggio “straccia”, se è fredda non si scioglie bene.[5][1]\n\n6. Mantecatura finale fuori dal fuoco  \n   - Quando la pasta è perfettamente al dente e avvolta da una bella base cremosa al pepe, spegni il fuoco e attendi 20–30 secondi.[1][2]\n   - Aggiungi la pasta di pecorino alla pasta e manteca energicamente, muovendo la padella o usando pinze e mestolo.[2][1]\n   - Se appare troppo asciutta, unisci pochissima acqua di cottura tiepida; se troppo fluida, aggiungi un cucchiaio di pecorino grattugiato.[4][1]\n\n7. Servizio  \n   - Impiatta subito, completa con altro pepe macinato al momento.[4][1]\n   - Niente olio, burro, panna o altri grassi: il piatto deve sapere di pecorino e pepe, pulito e deciso.[6][1]\n\n## Trucchi “alla romana”\n\n- Pecorino ben stagionato: più è stagionato, più fonde in crema e meno fa fili.[4][2]\n- Acqua poco salata e ricca di amido: riempi poco la pentola e non sciacquare mai la pasta.[2]\n- Temperatura: manteca sempre fuori dal fuoco e con acqua solo tiepida nella crema di pecorino.[5][1]\n\nEsempio di proporzioni molto “osteria romana”: 100 g di pasta e 50–60 g di pecorino a testa, pepe a pioggia.[3][1]\n\nTi interessa anche qualche variante “eretica” (tipo con mix pecorino-parmigiano o con mezze maniche) o preferisci restare ultra-tradizionale?",
+  "citations": [
+    "https://www.tavolartegusto.it/ricetta/cacio-e-pepe-ricetta-originale/",
+    "https://daniela1963.com/blogs/notizie/storia-e-ricetta-della-cacio-e-pepe",
+    "https://blog.giallozafferano.it/dulcisinforno/spaghetti-cacio-e-pepe/",
+    "https://www.soniaperonaci.it/spaghetti-cacio-e-pepe/",
+    "https://www.youtube.com/watch?v=arjf5m2ZWTI",
+    "https://italiasquisita.net/it/video-ricette/cacio-e-pepe",
+    "https://www.casapappagallo.it/ricette/cacio-e-pepe",
+    "https://www.youtube.com/watch?v=qNoi4WuyzgE",
+    "https://www.youtube.com/watch?v=SXT6lQh1BDI",
+    "https://www.facebook.com/foodvlogger/videos/pasta-cacio-e-pepe-ricetta-originale/492922960400157/",
+    "https://www.sicilianicreativiincucina.it/cacio-e-pepe-ricetta-originale-romana/"
+  ],
+  "routing": {
+    "model": "pplx_pro",
+    "model_name": "auto",
+    "search_type": "pro",
+    "intent": "standard",
+    "reason": "Standard query — pro healthy (105/300)",
+    "was_downgraded": false,
+    "quota_snapshot": {
+      "pro_remaining": 105,
+      "pro_level": "healthy",
+      "research_remaining": 19,
+      "research_level": "healthy",
+      "labs_remaining": 25,
+      "agent_remaining": 0
+    }
+  }
+}

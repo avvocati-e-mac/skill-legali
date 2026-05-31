@@ -1,0 +1,35 @@
+Sei un giudice esperto e imparziale. NON cercare online: valuta SOLO i due testi qui sotto rispetto alla FACT-KEY data.
+Regole: (1) giudica i FATTI, NON premiare la risposta più lunga o più verbosa. (2) Una risposta breve ma corretta vale quanto una lunga e corretta. (3) Rispondi SOLO con il JSON richiesto, nessun altro testo.
+
+DOMANDA UTENTE: "Confronto aggiornato tra Claude Opus 4.x e GPT-5.x per task di reasoning."
+
+FACT-KEY (verità di riferimento indipendente): A maggio 2026 i frontier su reasoning sono Claude Opus 4.x e GPT-5.x; su benchmark hard (HLE) Opus 4.8 in testa, GPQA ~pari. Dati corretti se citano System Card / benchmark riconosciuti e recenti (2026).
+
+--- RISPOSTA A ---
+A maggio 2026 sul reasoning Opus 4.8 guida su Humanity's Last Exam (49.8% no-tool / 57.9% con tool) davanti a GPT-5.5 (41.4% / 52.2%) e Gemini 3.1 Pro; su GPQA Diamond i tre sono statisticamente pari (~94%). Opus 4.8 #1 su Artificial Analysis (Elo 1890). GPT-5.5 più veloce sul 'speed-of-correct-answer'.
+Fonti citate da A: ['vellum.ai/claude-opus-4-8-benchmarks (cita System Card Opus 4.8)', 'artificialanalysis.ai']
+
+--- RISPOSTA B ---
+Per task di reasoning “puro”, GPT‑5.x (soprattutto le varianti high/5.5) tende ad avere un vantaggio netto su matematica dura e problemi molto strutturati, mentre Claude Opus 4.x spicca su ragionamento discorsivo, pianificazione e collaborazione più “dialogica”.[1][2][3][4]
+
+Di seguito un confronto sintetico focalizzato sul reasoning, aggiornato alle generazioni Opus 4.7 e GPT‑5.5.
+
+## Profilo generale dei modelli
+
+- Claude Opus 4.x è la linea “reasoning” di Anthropic, pensata per conversazioni profonde, analisi testuali complesse, codice con molta spiegazione a voce e uso in contesti di assistente “partner” che riflette con te.[2][4][1]
+- GPT‑5.x è la linea di punta di OpenAI; le varianti high / Codex / 5.5 massimizzano accuratezza su benchmark difficili (math, coding, agentic tasks) e offrono livelli di “reasoning effort” configurabili (minimal/low/medium/high) per bilanciare profondità, costi e latenza.[3][1][2]
+
+## Reasoning matematico e logico
+
+- Benchmark di matematica avanzata: GPT‑5 (e soprattutto gli SKU Codex/high) raggiunge valori intorno al 95% su benchmark math sintetici
+Fonti citate da B: ['https://llmbase.ai/compare/claude-opus-4-5-thinking,gpt-5-codex/', 'https://www.braintrust.dev/blog/gpt-5-vs-claude-opus', 'https://spectrumailab.com/blog/ai-reasoning-models-comparison-2025', 'https://www.iweaver.ai/it/blog/claude-opus-4-7-vs-gpt-5-comparison/', 'https://www.reddit.com/r/OpenAI/comments/1mpu04o/gpt5_vs_claude_opus_41_which_new_ai_model_wins/']
+
+Per A e per B valuta questi criteri booleani (true=soddisfatto):
+- Q1_corretto
+- Q3_fonte_autorevole
+- Q4_attuale
+- Q5_citazioni_supportano_claim
+  (Q3_fonte_autorevole = cita almeno UNA fonte ufficiale/primaria pertinente; per i social/video da soli = false.
+   Q5_citazioni_supportano_claim = le fonti citate sono coerenti col contenuto e non lo contraddicono.)
+
+Output SOLO questo JSON: {"A":{"Q1_corretto":true/false,"Q3_fonte_autorevole":true/false,"Q4_attuale":true/false,"Q5_citazioni_supportano_claim":true/false},"B":{"Q1_corretto":true/false,"Q3_fonte_autorevole":true/false,"Q4_attuale":true/false,"Q5_citazioni_supportano_claim":true/false}}

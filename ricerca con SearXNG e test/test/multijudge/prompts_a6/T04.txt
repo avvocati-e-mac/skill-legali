@@ -1,0 +1,39 @@
+Sei un giudice esperto e imparziale. NON cercare online: valuta SOLO i due testi rispetto alla FACT-KEY.
+Regole: giudica i FATTI, NON premiare la risposta più lunga. Rispondi SOLO col JSON richiesto.
+
+DOMANDA: "Ricetta originale della pasta cacio e pepe romana."
+FACT-KEY: Cacio e pepe romana: pasta (spaghetti/tonnarelli), pecorino romano stagionato, pepe nero; NO panna/burro. Tecnica: crema di pecorino, tostatura pepe, mantecatura.
+
+--- RISPOSTA A ---
+La cacio e pepe “vera” romana si fa con tre soli ingredienti: pasta (meglio tonnarelli o spaghetti), Pecorino Romano stagionato e pepe nero, senza panna, burro o olio.[1][2]
+
+## Ingredienti per 4 persone
+
+- 400 g di spaghetti o tonnarelli[3][2]
+- 200–220 g di Pecorino Romano DOP ben stagionato (almeno 12 mesi) grattugiato finissimo[4][2]
+- Pepe nero in grani (abbondante)[2][1]
+- Sale fino q.b. (molto poco, il pecorino è già **sapido**)[2]
+
+## Preparazione passo per passo
+
+1. Metti a bollire poca acqua  
+   - Usa una pentola grande ma riempila solo a metà: meno acqua = più amido = pasta più cremosa.[2]
+   - Sala leggermente l’acqua, meno del solito per la pasta.[2]
+
+2. Prepara pepe e pecorino  
+   - Grattugia finissimo il Pecorino Romano e tienilo in una ciotola ampia.[4][2]
+   - Schiaccia i grani di pepe in un mortaio o con il fondo di un pentolino, non troppo fini.[1][2]
+
+3. Tosta il pe
+Fonti A: ['https://www.tavolartegusto.it/ricetta/cacio-e-pepe-ricetta-originale/', 'https://daniela1963.com/blogs/notizie/storia-e-ricetta-della-cacio-e-pepe', 'https://blog.giallozafferano.it/dulcisinforno/spaghetti-cacio-e-pepe/', 'https://www.soniaperonaci.it/spaghetti-cacio-e-pepe/', 'https://www.youtube.com/watch?v=arjf5m2ZWTI']
+
+--- RISPOSTA B ---
+Ingredienti: spaghetti/tonnarelli, pecorino romano stagionato, pepe nero. Procedura GialloZafferano: acqua ridotta per più amido, tostatura del pepe, crema di pecorino con acqua di cottura, mantecatura fuori fuoco.
+Fonti B: ['ricette.giallozafferano.it (ufficiale GZ)']
+
+Criteri booleani (true=soddisfatto) per A e B:
+- Q1_corretto
+- Q2_lingua_IT_adeguata
+- Q3_fonte_autorevole
+  (Q3_fonte_autorevole=cita almeno una fonte ufficiale/primaria pertinente; social/video da soli=false.)
+Output SOLO: {"A":{"Q1_corretto":true/false,"Q2_lingua_IT_adeguata":true/false,"Q3_fonte_autorevole":true/false},"B":{"Q1_corretto":true/false,"Q2_lingua_IT_adeguata":true/false,"Q3_fonte_autorevole":true/false}}

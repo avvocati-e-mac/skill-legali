@@ -1,0 +1,32 @@
+{
+  "query": "Sei un giudice esperto e imparziale. NON cercare online: valuta SOLO i due testi qui sotto rispetto alla FACT-KEY data.\nRegole: (1) giudica i FATTI, NON premiare la risposta più lunga o più verbosa. (2) Una risposta breve ma corretta vale quanto una lunga e corretta. (3) Rispondi SOLO con il JSON richiesto, nessun altro testo.\n\nDOMANDA UTENTE: \"Come usare async/await in Python 3.12 e differenze rispetto a 3.10.\"\n\nFACT-KEY (verità di riferimento indipendente): async/await sintatticamente invariato 3.10→3.12; differenze in asyncio (eager task factory, I/O socket più veloce) e performance. Fonte autorevole = docs.python.org.\n\n--- RISPOSTA A ---\nIn Python 3.12 usi async/await esattamente come in 3.10 per la maggior parte dei casi pratici; le differenze sono soprattutto in miglioramenti di asyncio, performance e dettagli di runtime, non nella sintassi.[1][2]\n\n## Concetti base: async/await\n\nIn Python, `async` definisce una coroutine, mentre `await` sospende l’esecuzione finché l’operazione asincrona non termina.  Il modello standard ruota attorno a event loop, coroutine e task della libreria `asyncio`.[3][4][1]\n\nEsempio minimale (vale sia per 3.10 che per 3.12):\n\n```python\nimport asyncio\n\nasync def io_bound_task(name, delay):\n    print(f\"Start {name}\")\n    await asyncio.sleep(delay)  # simula I/O\n    print(f\"End {name}\")\n    return name\n\nasync def main():\n    # esegue le coroutine in parallelo (concorrenza I/O-bound)\n    results = await asyncio.gather(\n        io_bound_task(\"A\", 1),\n        io_bound_task(\"B\", 2),\n        io_bound_task(\"C\", 1),\n    )\n    print(\"Results:\", results)\n\nif __name__ == \"__main__\":\n    asyncio.run(main())\n```\n\nQui `asyncio.gather` gestisce più coroutine in concorrenza, sfruttando il fatto che mentre u\nFonti citate da A: ['https://docs.python.org/pt-br/3.12/library/asyncio.html', 'https://docs.python.org/3/whatsnew/3.12.html', 'https://docs.python.org/3/library/asyncio.html', 'https://innovaformazione.net/guida-asyncio-python/', 'https://docs.python.org/3/library/asyncio-task.html']\n\n--- RISPOSTA B ---\nIn Python 3.12 async/await è sintatticamente invariato vs 3.10; cambiano gli internals di asyncio: I/O su socket più veloce (sendmsg, zero-copy) e nuove asyncio.eager_task_factory()/create_eager_task_factory() (eager task execution, 2x-5x in alcuni casi), oltre ai miglioramenti generali di performance 3.12.\nFonti citate da B: ['docs.python.org/3/whatsnew/3.12.html (ufficiale)']\n\nPer A e per B valuta questi criteri booleani (true=soddisfatto):\n- Q1_corretto\n- Q2_lingua_adeguata\n- Q3_fonte_autorevole\n- Q5_citazioni_supportano_claim\n  (Q3_fonte_autorevole = cita almeno UNA fonte ufficiale/primaria pertinente; per i social/video da soli = false.\n   Q5_citazioni_supportano_claim = le fonti citate sono coerenti col contenuto e non lo contraddicono.)\n\nOutput SOLO questo JSON: {\"A\":{\"Q1_corretto\":true/false,\"Q2_lingua_adeguata\":true/false,\"Q3_fonte_autorevole\":true/false,\"Q5_citazioni_supportano_claim\":true/false},\"B\":{\"Q1_corretto\":true/false,\"Q2_lingua_adeguata\":true/false,\"Q3_fonte_autorevole\":true/false,\"Q5_citazioni_supportano_claim\":true/false}}",
+  "models": [
+    "GPT-5.4",
+    "Gemini 3.1 Pro",
+    "Kimi K2.6",
+    "Nemotron 3 Super"
+  ],
+  "synthesis": "",
+  "individual_results": [
+    {
+      "model": "GPT-5.4",
+      "answer": "{\"A\":{\"Q1_corretto\":true,\"Q2_lingua_adeguata\":true,\"Q3_fonte_autorevole\":true,\"Q5_citazioni_supportano_claim\":true},\"B\":{\"Q1_corretto\":true,\"Q2_lingua_adeguata\":true,\"Q3_fonte_autorevole\":true,\"Q5_citazioni_supportano_claim\":true}}",
+      "error": null
+    },
+    {
+      "model": "Gemini 3.1 Pro",
+      "answer": "{\n  \"A\": {\n    \"Q1_corretto\": true,\n    \"Q2_lingua_adeguata\": true,\n    \"Q3_fonte_autorevole\": true,\n    \"Q5_citazioni_supportano_claim\": true\n  },\n  \"B\": {\n    \"Q1_corretto\": true,\n    \"Q2_lingua_adeguata\": true,\n    \"Q3_fonte_autorevole\": true,\n    \"Q5_citazioni_supportano_claim\": true\n  }\n}",
+      "error": null
+    },
+    {
+      "model": "Kimi K2.6",
+      "answer": "{\"A\":{\"Q1_corretto\":true,\"Q2_lingua_adeguata\":true,\"Q3_fonte_autorevole\":true,\"Q5_citazioni_supportano_claim\":true},\"B\":{\"Q1_corretto\":true,\"Q2_lingua_adeguata\":true,\"Q3_fonte_autorevole\":true,\"Q5_citazioni_supportano_claim\":true}}",
+      "error": null
+    },
+    {
+      "model": "Nemotron 3 Super",
+      "answer": "{\"A\":{\"Q1_corretto\":true,\"Q2_lingua_adeguata\":true,\"Q3_fonte_autorevole\":true,\"Q5_citazioni_supportano_claim\":true},\"B\":{\"Q1_corretto\":true,\"Q2_lingua_adeguata\":true,\"Q3_fonte_autorevole\":true,\"Q5_citazioni_supportano_claim\":true}}",
+      "error": null
+    }
+  ]
+}

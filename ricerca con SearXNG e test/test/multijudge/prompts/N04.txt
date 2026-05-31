@@ -1,0 +1,54 @@
+Sei un giudice esperto e imparziale. NON cercare online: valuta SOLO i due testi qui sotto rispetto alla FACT-KEY data.
+Regole: (1) giudica i FATTI, NON premiare la risposta più lunga o più verbosa. (2) Una risposta breve ma corretta vale quanto una lunga e corretta. (3) Rispondi SOLO con il JSON richiesto, nessun altro testo.
+
+DOMANDA UTENTE: "Come usare async/await in Python 3.12 e differenze rispetto a 3.10."
+
+FACT-KEY (verità di riferimento indipendente): async/await sintatticamente invariato 3.10→3.12; differenze in asyncio (eager task factory, I/O socket più veloce) e performance. Fonte autorevole = docs.python.org.
+
+--- RISPOSTA A ---
+In Python 3.12 usi async/await esattamente come in 3.10 per la maggior parte dei casi pratici; le differenze sono soprattutto in miglioramenti di asyncio, performance e dettagli di runtime, non nella sintassi.[1][2]
+
+## Concetti base: async/await
+
+In Python, `async` definisce una coroutine, mentre `await` sospende l’esecuzione finché l’operazione asincrona non termina.  Il modello standard ruota attorno a event loop, coroutine e task della libreria `asyncio`.[3][4][1]
+
+Esempio minimale (vale sia per 3.10 che per 3.12):
+
+```python
+import asyncio
+
+async def io_bound_task(name, delay):
+    print(f"Start {name}")
+    await asyncio.sleep(delay)  # simula I/O
+    print(f"End {name}")
+    return name
+
+async def main():
+    # esegue le coroutine in parallelo (concorrenza I/O-bound)
+    results = await asyncio.gather(
+        io_bound_task("A", 1),
+        io_bound_task("B", 2),
+        io_bound_task("C", 1),
+    )
+    print("Results:", results)
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+Qui `asyncio.gather` gestisce più coroutine in concorrenza, sfruttando il fatto che mentre u
+Fonti citate da A: ['https://docs.python.org/pt-br/3.12/library/asyncio.html', 'https://docs.python.org/3/whatsnew/3.12.html', 'https://docs.python.org/3/library/asyncio.html', 'https://innovaformazione.net/guida-asyncio-python/', 'https://docs.python.org/3/library/asyncio-task.html']
+
+--- RISPOSTA B ---
+In Python 3.12 async/await è sintatticamente invariato vs 3.10; cambiano gli internals di asyncio: I/O su socket più veloce (sendmsg, zero-copy) e nuove asyncio.eager_task_factory()/create_eager_task_factory() (eager task execution, 2x-5x in alcuni casi), oltre ai miglioramenti generali di performance 3.12.
+Fonti citate da B: ['docs.python.org/3/whatsnew/3.12.html (ufficiale)']
+
+Per A e per B valuta questi criteri booleani (true=soddisfatto):
+- Q1_corretto
+- Q2_lingua_adeguata
+- Q3_fonte_autorevole
+- Q5_citazioni_supportano_claim
+  (Q3_fonte_autorevole = cita almeno UNA fonte ufficiale/primaria pertinente; per i social/video da soli = false.
+   Q5_citazioni_supportano_claim = le fonti citate sono coerenti col contenuto e non lo contraddicono.)
+
+Output SOLO questo JSON: {"A":{"Q1_corretto":true/false,"Q2_lingua_adeguata":true/false,"Q3_fonte_autorevole":true/false,"Q5_citazioni_supportano_claim":true/false},"B":{"Q1_corretto":true/false,"Q2_lingua_adeguata":true/false,"Q3_fonte_autorevole":true/false,"Q5_citazioni_supportano_claim":true/false}}

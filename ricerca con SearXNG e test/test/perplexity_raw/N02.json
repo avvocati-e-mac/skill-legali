@@ -1,0 +1,30 @@
+{
+  "answer": "La carbonara di Giallozafferano si prepara rosolando il guanciale in padella, lessando gli spaghetti e poi mantecandoli fuori dal fuoco con una crema di soli tuorli, pecorino romano e pepe, usando un po’ di acqua di cottura per ottenere una salsa liscia e cremosa senza effetto frittata.[1][2]\n\n## Ingredienti base\n\nPer 4 persone, Giallozafferano propone indicativamente:[2]\n- 320 g di spaghetti.[2]\n- 150 g di guanciale.[2]\n- 6 tuorli d’uovo.[2]\n- 50 g di pecorino romano grattugiato.[2]\n- Sale fino q.b. (pochissimo, perché il pecorino è sapido).[3][2]\n- Pepe nero macinato al momento q.b.[1][2]\n\n## Preparazione del guanciale\n\n- Taglia il guanciale a listarelle o striscioline dopo aver tolto la cotenna.[1][2]\n- Mettilo in una padella ben calda senza aggiungere olio, così rosola nel suo stesso grasso.[1][2]\n- Cuocilo a fuoco medio per circa 10–15 minuti, facendolo prima “sudare” e poi diventare croccante, evitando di bruciarlo.[2]\n\n## Cottura della pasta\n\n- Porta a bollore una pentola con acqua leggermente salata, usando circa metà del sale che usi di solito, perché pecorino e guanciale sono già molto saporiti.[3][2]\n- Cuoci gli spaghetti e scolali al dente, tenendo da parte un po’ di acqua di cottura.[1][2]\n\n## Crema di uova e pecorino\n\n- In una ciotola versa i tuorli, aggiungi la maggior parte del pecorino romano e una generosa macinata di pepe.[4][1][2]\n- Amalgama bene fino a ottenere una crema densa; aggiungi 1–2 cucchiai di acqua di cottura per renderla più fluida e pronta alla mantecatura.[1][2]\n- In alcune versioni legate a Giallozafferano si aggiunge anche un cucchiaio del grasso del guanciale fuso alla crema, per renderla ancora più saporita e lucida.[5][1]\n\n## Mantecatura e servizio\n\n- Trasferisci la pasta al dente nella padella con il grasso del guanciale e fai insaporire a fuoco medio-alto per completare la cottura.[1][2]\n- Spegni il fuoco, lascia intiepidire pochi secondi, poi versa la crema di tuorli e pecorino sulla pasta e mescola energicamente fuori dal fuoco, aggiungendo se necessario poca acqua di cottura per mantenere la salsa cremosa e non troppo densa.[2][1]\n- Unisci il guanciale croccante, mescola ancora, quindi impiatta, completando con altro pecorino e un’ultima macinata di pepe nero.[4][1][2]\n\nVuoi la versione con dosi precise per 2 persone o un adattamento “più leggero” con meno tuorli?",
+  "citations": [
+    "https://blog.giallozafferano.it/valeriaciccotti/pasta-alla-carbonara/",
+    "https://www.youtube.com/watch?v=_T6jkRvhlkk",
+    "https://blog.giallozafferano.it/dulcisinforno/spaghetti-alla-carbonara/",
+    "https://www.facebook.com/GialloZafferanolive/videos/spaghetti-alla-carbonara/936693144731933/",
+    "https://www.tiktok.com/@giallozafferano/video/7053849922407353606",
+    "https://blog.giallozafferano.it/incucinaconilsole/ricetta-spaghetti-alla-carbonara/",
+    "https://www.facebook.com/GialloZafferanolive/videos/spaghetti-alla-carbonara/310486476239835/",
+    "https://www.facebook.com/GialloZafferanolive/videos/spaghetti-alla-carbonara/1845045768973743/",
+    "https://blog.giallozafferano.it/cucinaconsimone/spaghetti-alla-carbonara-2/"
+  ],
+  "routing": {
+    "model": "pplx_pro",
+    "model_name": "auto",
+    "search_type": "pro",
+    "intent": "standard",
+    "reason": "Standard query — pro healthy (100/300)",
+    "was_downgraded": false,
+    "quota_snapshot": {
+      "pro_remaining": 100,
+      "pro_level": "healthy",
+      "research_remaining": 19,
+      "research_level": "healthy",
+      "labs_remaining": 25,
+      "agent_remaining": 0
+    }
+  }
+}

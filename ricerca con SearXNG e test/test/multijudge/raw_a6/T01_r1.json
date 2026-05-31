@@ -1,0 +1,32 @@
+{
+  "query": "Sei un giudice esperto e imparziale. NON cercare online: valuta SOLO i due testi rispetto alla FACT-KEY.\nRegole: giudica i FATTI, NON premiare la risposta più lunga. Rispondi SOLO col JSON richiesto.\n\nDOMANDA: \"In che anno è stata fondata OpenAI?\"\nFACT-KEY: OpenAI fondata nel dicembre 2015.\n\n--- RISPOSTA A ---\nOpenAI è stata fondata nel **2015**. La pagina ufficiale di OpenAI indica che l’organizzazione è stata fondata nel 2015, e anche fonti enciclopediche riportano dicembre 2015 come data di fondazione.[1][2]\nFonti A: ['https://openai.com/it-IT/our-structure/', 'https://www.treccani.it/enciclopedia/eol-openai/', 'https://it.wikipedia.org/wiki/OpenAI', 'https://www.fastweb.it/fastweb-plus/digital-magazine/la-storia-di-openai/', 'https://www.librologica.digital/openai-dalle-origini-no%E2%80%91profit-allascesa-globale/']\n\n--- RISPOSTA B ---\nOpenAI è stata fondata nel dicembre 2015 (10 dicembre 2015).\nFonti B: ['it.wikipedia.org/wiki/OpenAI', 'ai4business.it', 'agendadigitale.eu']\n\nCriteri booleani (true=soddisfatto) per A e B:\n- Q1_corretto\n- Q3_fonte_autorevole\n  (Q3_fonte_autorevole=cita almeno una fonte ufficiale/primaria pertinente; social/video da soli=false.)\nOutput SOLO: {\"A\":{\"Q1_corretto\":true/false,\"Q3_fonte_autorevole\":true/false},\"B\":{\"Q1_corretto\":true/false,\"Q3_fonte_autorevole\":true/false}}",
+  "models": [
+    "GPT-5.4",
+    "Gemini 3.1 Pro",
+    "Kimi K2.6",
+    "Nemotron 3 Super"
+  ],
+  "synthesis": "",
+  "individual_results": [
+    {
+      "model": "GPT-5.4",
+      "answer": "{\"A\":{\"Q1_corretto\":true,\"Q3_fonte_autorevole\":true},\"B\":{\"Q1_corretto\":true,\"Q3_fonte_autorevole\":false}}",
+      "error": null
+    },
+    {
+      "model": "Gemini 3.1 Pro",
+      "answer": "{\"A\":{\"Q1_corretto\":true,\"Q3_fonte_autorevole\":true},\"B\":{\"Q1_corretto\":true,\"Q3_fonte_autorevole\":false}}",
+      "error": null
+    },
+    {
+      "model": "Kimi K2.6",
+      "answer": "{\"A\":{\"Q1_corretto\":true,\"Q3_fonte_autorevole\":true},\"B\":{\"Q1_corretto\":true,\"Q3_fonte_autorevole\":false}}",
+      "error": null
+    },
+    {
+      "model": "Nemotron 3 Super",
+      "answer": "{\"A\":{\"Q1_corretto\":true,\"Q3_fonte_autorevole\":true},\"B\":{\"Q1_corretto\":true,\"Q3_fonte_autorevole\":false}}",
+      "error": null
+    }
+  ]
+}

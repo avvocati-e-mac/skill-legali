@@ -1,0 +1,36 @@
+{
+  "answer": "L’attuale CEO di Google nel 2026 è **Sundar Pichai**. È indicato anche come CEO di Google e Alphabet nelle fonti ufficiali e di profilo pubblico aggiornate al 2026.[1][2][3]",
+  "citations": [
+    "https://www.corriere.it/economia/finanza/26_marzo_08/google-il-ceo-pichai-potra-incassare-692-milioni-in-tre-anni-il-volano-di-robotaxi-e-droni-542ec679-efb2-4218-9bcc-8a2474d14xlk.shtml",
+    "https://blog.google/authors/sundar-pichai/",
+    "https://about.google/company-info/",
+    "https://tg24.sky.it/mondo/2026/03/18/sundar-pichai-ceo-google-stipendio",
+    "https://www.linkedin.com/in/sundarpichai",
+    "https://it.investing.com/news/stock-market-news/pichai-nuovo-ceo-alphabet-dopo-uscita-di-scena-cofondatori-google-1920177",
+    "https://tech.fanpage.it/larry-page-e-sergey-brin-fondano-la-holding-alphabet-sundar-pichai-e-il-nuovo-ceo-di-google/",
+    "https://abcnews.go.com/Technology/meet-googles-ceo-sundar-pichai/story?id=33012570",
+    "https://www.affaritaliani.it/esteri/sundar-pichai-google-trump-953129.html",
+    "https://www.corriere.it/tecnologia/argomenti/sundar-pichai/",
+    "https://www.googlecloudpresscorner.com/leadership",
+    "https://en.wikipedia.org/wiki/Sundar_Pichai",
+    "https://fortune.com/2026/02/19/google-ceo-sundar-pichai-says-ai-spending-still-makes-sense-despite-bubble-fears/",
+    "https://digitaldefynd.com/IQ/csuite-team-of-google-meet-the-executives/",
+    "https://www.clay.com/dossier/google-ceo"
+  ],
+  "routing": {
+    "model": "experimental",
+    "model_name": "sonar",
+    "search_type": "standard",
+    "intent": "quick",
+    "reason": "Quick lookup — using Sonar 2 (pro: 107/300)",
+    "was_downgraded": false,
+    "quota_snapshot": {
+      "pro_remaining": 107,
+      "pro_level": "healthy",
+      "research_remaining": 19,
+      "research_level": "healthy",
+      "labs_remaining": 25,
+      "agent_remaining": 0
+    }
+  }
+}

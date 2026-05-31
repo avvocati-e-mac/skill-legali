@@ -1,0 +1,32 @@
+Sei un giudice esperto e imparziale. NON cercare online: valuta SOLO i due testi qui sotto rispetto alla FACT-KEY data.
+Regole: (1) giudica i FATTI, NON premiare la risposta più lunga o più verbosa. (2) Una risposta breve ma corretta vale quanto una lunga e corretta. (3) Rispondi SOLO con il JSON richiesto, nessun altro testo.
+
+DOMANDA UTENTE: "Cosa prevede la normativa italiana sui cookie e il GDPR per i siti web?"
+
+FACT-KEY (verità di riferimento indipendente): Cookie tecnici: esenti da consenso, serve informativa. Cookie di profilazione: consenso preventivo libero/specifico/informato (GDPR Reg. UE 2016/679, art.122 Codice Privacy d.lgs.196/2003, Linee guida Garante 10/6/2021). Vietati cookie wall puri. Consenso granulare preimpostato off, conservazione prova del consenso.
+
+--- RISPOSTA A ---
+I siti che usano cookie non tecnici (profilazione/tracciamento) devono raccogliere il consenso preventivo, libero e specifico (Linee guida Garante 10 giugno 2021 + GDPR Reg. UE 2016/679 art. 13); i cookie tecnici sono esenti ma serve l'informativa; vietati i cookie wall puri; consenso granulare preimpostato su off; va conservata la prova del consenso.
+Fonti citate da A: ['garanteprivacy.it/faq/cookie (ufficiale)', 'iubenda.com/banner-cookie-obbligatorio', 'orizzontegiuridico.com']
+
+--- RISPOSTA B ---
+La normativa italiana prevede che i cookie (e in generale i tracciatori online) possano essere installati sui dispositivi degli utenti solo se tecnici oppure se l’utente ha dato un consenso libero, specifico e informato, in linea con GDPR, Direttiva e‑Privacy e Linee guida del Garante del 2021.[1][2][3]
+
+## Fonti normative di riferimento
+
+- GDPR (Reg. UE 2016/679): disciplina generale sul trattamento dei dati personali, inclusi quelli raccolti tramite cookie, con principi di liceità, trasparenza, minimizzazione, accountability e diritti degli interessati.[2][4]
+- Direttiva e‑Privacy (2002/58/CE come modificata) recepita in Italia dall’art. 122 del Codice Privacy (d.lgs. 196/2003): regola l’uso di cookie e “altri strumenti di tracciamento” imponendo l’obbligo di consenso informato, salvo cookie tecnici.[2]
+- Provvedimenti del Garante italiano: in particolare le Linee guida cookie e altri strumenti di tracciamento del 10 giugno 2021, in vigore dal 10 gennaio 2022, che dettagliano modalità di informativa e raccolta del consenso sui siti web.[3][5][1]
+
+## Tipologie di cookie e quando ser
+Fonti citate da B: ['https://www.garanteprivacy.it/home/docweb/-/docweb-display/docweb/9677876', 'https://orizzontegiuridico.com/cookie-obblighi-consenso-e-tutele-dellutente-nel-quadro-europeo/', 'https://www.garanteprivacy.it/home/docweb/-/docweb-display/docweb/9679893', 'https://www.cookiebot.com/it/cookie-gdpr/', 'https://www.privacylab.it/IT/1247/nuove-linee-guida-sui-cookies-cosa-cambia/']
+
+Per A e per B valuta questi criteri booleani (true=soddisfatto):
+- Q1_corretto
+- Q2_lingua_IT_adeguata
+- Q3_fonte_autorevole
+- Q5_citazioni_supportano_claim
+  (Q3_fonte_autorevole = cita almeno UNA fonte ufficiale/primaria pertinente; per i social/video da soli = false.
+   Q5_citazioni_supportano_claim = le fonti citate sono coerenti col contenuto e non lo contraddicono.)
+
+Output SOLO questo JSON: {"A":{"Q1_corretto":true/false,"Q2_lingua_IT_adeguata":true/false,"Q3_fonte_autorevole":true/false,"Q5_citazioni_supportano_claim":true/false},"B":{"Q1_corretto":true/false,"Q2_lingua_IT_adeguata":true/false,"Q3_fonte_autorevole":true/false,"Q5_citazioni_supportano_claim":true/false}}

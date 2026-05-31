@@ -1,0 +1,43 @@
+Sei un giudice esperto e imparziale. NON cercare online: valuta SOLO i due testi rispetto alla FACT-KEY.
+Regole: giudica i FATTI, NON premiare la risposta più lunga. Rispondi SOLO col JSON richiesto.
+
+DOMANDA: "Differenze tra interfaces e types in TypeScript, quando usare quale."
+FACT-KEY: interface: declaration merging, contratti classe, extends performante. type: union/intersezioni/tuple/conditional/generic. Entrambi validi, scelta per caso d'uso.
+
+--- RISPOSTA A ---
+Usa interface quando serve declaration merging, contratti di classe, estensione di librerie (extends più performante); usa type per union, intersezioni, tuple, conditional/generic types, alias di primitivi.
+Fonti A: ['blog.logrocket.com', 'typescriptlang.org (playground ufficiale)']
+
+--- RISPOSTA B ---
+Nel TypeScript moderno puoi modellare quasi tutto sia con `interface` che con `type`, ma hanno caratteristiche diverse: in pratica usa `interface` per la “forma” di oggetti/classi che vuoi poter estendere, e `type` per alias, unioni/intersezioni e tipi più complessi.[1][2][3]
+
+## Differenze fondamentali
+
+- Entrambi possono descrivere la shape di un oggetto, cioè quali proprietà ha e di che tipo sono.[2][1]
+- `type` è un alias generico: può rappresentare oggetti, primitive, unioni (`A | B`), intersezioni (`A & B`), tuple ecc.[1][4]  
+- `interface` nasce per descrivere strutture di oggetti e contratti per classi, con particolare supporto per l’ereditarietà (`extends`).[4][5]
+
+Esempio equivalente:
+
+```ts
+interface User {
+  id: number;
+  name: string;
+}
+
+type UserType = {
+  id: number;
+  name: string;
+};
+```
+
+## Apertura vs chiusura (declaration merging)
+
+- Le `interface` sono “aperte”: puoi
+Fonti B: ['https://dev.to/ebereplenty/type-vs-interface-in-typescript-whats-the-difference-when-to-use-each-50po', 'https://www.typescriptlang.org/play/typescript/language-extensions/types-vs-interfaces.ts.html', 'https://gibbok.github.io/typescript-book/it-it/book/differences-between-type-and-interface/', 'https://gibbok.github.io/typescript-book/book/differences-between-type-and-interface/', 'https://dev.to/geraldhamiltonwicks/interface-vs-type-in-typescript-2146']
+
+Criteri booleani (true=soddisfatto) per A e B:
+- Q1_corretto
+- Q3_fonte_autorevole
+  (Q3_fonte_autorevole=cita almeno una fonte ufficiale/primaria pertinente; social/video da soli=false.)
+Output SOLO: {"A":{"Q1_corretto":true/false,"Q3_fonte_autorevole":true/false},"B":{"Q1_corretto":true/false,"Q3_fonte_autorevole":true/false}}

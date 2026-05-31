@@ -1,0 +1,30 @@
+Sei un giudice esperto e imparziale. NON cercare online: valuta SOLO i due testi rispetto alla FACT-KEY.
+Regole: giudica i FATTI, NON premiare la risposta più lunga. Rispondi SOLO col JSON richiesto.
+
+DOMANDA: "Quali sono gli annunci e le novità di OpenAI di maggio 2026?"
+FACT-KEY: Maggio 2026: GPT-5.5 Instant default ChatGPT, modelli open-weight gpt-oss, ChatGPT advertising, API vocali, rumor IPO. Fonti recenti (mag 2026).
+
+--- RISPOSTA A ---
+Maggio 2026 OpenAI: GPT-5.5 Instant (default ChatGPT dal 5 mag, meno allucinazioni), modelli open-weight gpt-oss-120b/20b (Apache 2.0, HuggingFace), ChatGPT Ads Manager (dal 18 mag), nuove API vocali, rumor IPO (20 mag), SME AI Accelerator per PMI italiane.
+Fonti A: ['openai.com/it-IT/news (ufficiale)', 'cosmonet.info', 'menteinformatica.it (5 mag 2026)']
+
+--- RISPOSTA B ---
+A maggio 2026, OpenAI ha annunciato diverse novità significative, concentrate principalmente tra il 5 e l'11 del mese.
+
+## GPT-5.5 Instant come modello predefinito
+
+Il 5 maggio 2026, OpenAI ha rilasciato GPT-5.5 Instant come nuovo modello predefinito per tutti gli utenti ChatGPT, sostituendo GPT-5.3. Questo modello presenta una riduzione del 52,5% delle allucinazioni rispetto al predecessore, specialmente in domini critici come medicina, legge e finanza. Inoltre, riduce del 37,3% le affermazioni inaccurate nelle conversazioni particolarmente difficili e utilizza il 30,2% in meno di parole nelle risposte.[1][2]
+
+## Tre nuovi modelli vocali in tempo reale
+
+Tra il 7 e l'8 maggio 2026, OpenAI ha presentato tre modelli vocali progettati per interazioni in tempo reale, tutti disponibili tramite la Realtime API:[3][4]
+
+- **GPT-Realtime-2**: il primo modello vocale con capacità di ragionamento d
+Fonti B: ['https://www.searchmarketingitalia.com/news/openai-gpt-5-5-instant-meno-allucinazioni-fiducia-5-5-2026/', 'https://vincenzodellolio.com/le-notizie-ai-piu-importanti-della-settinana-8-maggio-2026-la-crescita-di-anthropic-e-le-ads-di-chatgpt/', 'https://it.blastingnews.com/tecnologia/2026/05/openai-potenzia-lapi-con-nuove-funzioni-vocali-per-interazioni-in-tempo-reale-004029959.html', 'https://dreams.news/articles/ai-e-applicazioni-vocali-openai-lancia-tre-nuovi-modelli-per-migliorare-le-interazioni', 'https://www.tecnoandroid.it/2026/05/08/openai-lancia-3-nuovi-modelli-vocali-ragionano-traducono-e-trascrivono-in-tempo-reale-1883176/']
+
+Criteri booleani (true=soddisfatto) per A e B:
+- Q1_corretto
+- Q3_fonte_autorevole
+- Q4_attuale
+  (Q3_fonte_autorevole=cita almeno una fonte ufficiale/primaria pertinente; social/video da soli=false.)
+Output SOLO: {"A":{"Q1_corretto":true/false,"Q3_fonte_autorevole":true/false,"Q4_attuale":true/false},"B":{"Q1_corretto":true/false,"Q3_fonte_autorevole":true/false,"Q4_attuale":true/false}}

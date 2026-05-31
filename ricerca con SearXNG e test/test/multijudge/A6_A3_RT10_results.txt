@@ -1,0 +1,17 @@
+=== A6: celle dove la MAGGIORANZA dei 4 esterni DISSENTE da Claude (che aveva detto True) ===
+  T01 B(SearXNG) Q3_fonte_autorevole: esterni={'GPT-5.4': False, 'Gemini 3.1 Pro': False, 'Kimi K2.6': False, 'Nemotron 3 Super': False}  Claude=True -> CONTAMINATA
+  T03 B(Perplexity) Q1_corretto: esterni={'GPT-5.4': False, 'Gemini 3.1 Pro': False, 'Kimi K2.6': True, 'Nemotron 3 Super': False}  Claude=True -> CONTAMINATA
+  T03 B(Perplexity) Q3_fonte_autorevole: esterni={'GPT-5.4': False, 'Gemini 3.1 Pro': False, 'Kimi K2.6': False, 'Nemotron 3 Super': False}  Claude=True -> CONTAMINATA
+  Celle contaminate: 3/28 (11%) sulle query non contestabili
+
+=== A3: stabilità tra i 2 run (stesso prompt, stessi modelli) ===
+  Voti che cambiano tra run 1 e run 2: 3/102 (3% instabilità)
+
+=== RT10: tasso di minoranza (outlier) e verbosity bias per giudice ===
+  giudice             %minoranza  %True_su_lungo
+  GPT-5.4                     2%             77%
+  Gemini 3.1 Pro              6%             73%
+  Kimi K2.6                   2%             88%
+  Nemotron 3 Super            0%             76%
+
+0 parse-fail.

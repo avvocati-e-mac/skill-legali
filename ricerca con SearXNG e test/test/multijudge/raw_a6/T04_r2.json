@@ -1,0 +1,32 @@
+{
+  "query": "Sei un giudice esperto e imparziale. NON cercare online: valuta SOLO i due testi rispetto alla FACT-KEY.\nRegole: giudica i FATTI, NON premiare la risposta più lunga. Rispondi SOLO col JSON richiesto.\n\nDOMANDA: \"Ricetta originale della pasta cacio e pepe romana.\"\nFACT-KEY: Cacio e pepe romana: pasta (spaghetti/tonnarelli), pecorino romano stagionato, pepe nero; NO panna/burro. Tecnica: crema di pecorino, tostatura pepe, mantecatura.\n\n--- RISPOSTA A ---\nLa cacio e pepe “vera” romana si fa con tre soli ingredienti: pasta (meglio tonnarelli o spaghetti), Pecorino Romano stagionato e pepe nero, senza panna, burro o olio.[1][2]\n\n## Ingredienti per 4 persone\n\n- 400 g di spaghetti o tonnarelli[3][2]\n- 200–220 g di Pecorino Romano DOP ben stagionato (almeno 12 mesi) grattugiato finissimo[4][2]\n- Pepe nero in grani (abbondante)[2][1]\n- Sale fino q.b. (molto poco, il pecorino è già **sapido**)[2]\n\n## Preparazione passo per passo\n\n1. Metti a bollire poca acqua  \n   - Usa una pentola grande ma riempila solo a metà: meno acqua = più amido = pasta più cremosa.[2]\n   - Sala leggermente l’acqua, meno del solito per la pasta.[2]\n\n2. Prepara pepe e pecorino  \n   - Grattugia finissimo il Pecorino Romano e tienilo in una ciotola ampia.[4][2]\n   - Schiaccia i grani di pepe in un mortaio o con il fondo di un pentolino, non troppo fini.[1][2]\n\n3. Tosta il pe\nFonti A: ['https://www.tavolartegusto.it/ricetta/cacio-e-pepe-ricetta-originale/', 'https://daniela1963.com/blogs/notizie/storia-e-ricetta-della-cacio-e-pepe', 'https://blog.giallozafferano.it/dulcisinforno/spaghetti-cacio-e-pepe/', 'https://www.soniaperonaci.it/spaghetti-cacio-e-pepe/', 'https://www.youtube.com/watch?v=arjf5m2ZWTI']\n\n--- RISPOSTA B ---\nIngredienti: spaghetti/tonnarelli, pecorino romano stagionato, pepe nero. Procedura GialloZafferano: acqua ridotta per più amido, tostatura del pepe, crema di pecorino con acqua di cottura, mantecatura fuori fuoco.\nFonti B: ['ricette.giallozafferano.it (ufficiale GZ)']\n\nCriteri booleani (true=soddisfatto) per A e B:\n- Q1_corretto\n- Q2_lingua_IT_adeguata\n- Q3_fonte_autorevole\n  (Q3_fonte_autorevole=cita almeno una fonte ufficiale/primaria pertinente; social/video da soli=false.)\nOutput SOLO: {\"A\":{\"Q1_corretto\":true/false,\"Q2_lingua_IT_adeguata\":true/false,\"Q3_fonte_autorevole\":true/false},\"B\":{\"Q1_corretto\":true/false,\"Q2_lingua_IT_adeguata\":true/false,\"Q3_fonte_autorevole\":true/false}}",
+  "models": [
+    "GPT-5.4",
+    "Gemini 3.1 Pro",
+    "Kimi K2.6",
+    "Nemotron 3 Super"
+  ],
+  "synthesis": "",
+  "individual_results": [
+    {
+      "model": "GPT-5.4",
+      "answer": "{\"A\":{\"Q1_corretto\":true,\"Q2_lingua_IT_adeguata\":true,\"Q3_fonte_autorevole\":false},\"B\":{\"Q1_corretto\":true,\"Q2_lingua_IT_adeguata\":true,\"Q3_fonte_autorevole\":true}}",
+      "error": null
+    },
+    {
+      "model": "Gemini 3.1 Pro",
+      "answer": "{\"A\":{\"Q1_corretto\":false,\"Q2_lingua_IT_adeguata\":true,\"Q3_fonte_autorevole\":true},\"B\":{\"Q1_corretto\":true,\"Q2_lingua_IT_adeguata\":true,\"Q3_fonte_autorevole\":true}}",
+      "error": null
+    },
+    {
+      "model": "Kimi K2.6",
+      "answer": "{\"A\":{\"Q1_corretto\":true,\"Q2_lingua_IT_adeguata\":true,\"Q3_fonte_autorevole\":true},\"B\":{\"Q1_corretto\":true,\"Q2_lingua_IT_adeguata\":true,\"Q3_fonte_autorevole\":true}}",
+      "error": null
+    },
+    {
+      "model": "Nemotron 3 Super",
+      "answer": "{\"A\":{\"Q1_corretto\":true,\"Q2_lingua_IT_adeguata\":true,\"Q3_fonte_autorevole\":false},\"B\":{\"Q1_corretto\":true,\"Q2_lingua_IT_adeguata\":true,\"Q3_fonte_autorevole\":true}}",
+      "error": null
+    }
+  ]
+}

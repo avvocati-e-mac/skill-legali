@@ -1,0 +1,43 @@
+Sei un giudice esperto e imparziale. NON cercare online: valuta SOLO i due testi qui sotto rispetto alla FACT-KEY data.
+Regole: (1) giudica i FATTI, NON premiare la risposta più lunga o più verbosa. (2) Una risposta breve ma corretta vale quanto una lunga e corretta. (3) Rispondi SOLO con il JSON richiesto, nessun altro testo.
+
+DOMANDA UTENTE: "Procedimento della carbonara di Giallozafferano."
+
+FACT-KEY (verità di riferimento indipendente): Carbonara romana: guanciale (NON pancetta), tuorli, pecorino romano, pepe; NO panna; mantecatura fuori fuoco. Procedura GialloZafferano coerente con questo.
+
+--- RISPOSTA A ---
+La carbonara di Giallozafferano si prepara rosolando il guanciale in padella, lessando gli spaghetti e poi mantecandoli fuori dal fuoco con una crema di soli tuorli, pecorino romano e pepe, usando un po’ di acqua di cottura per ottenere una salsa liscia e cremosa senza effetto frittata.[1][2]
+
+## Ingredienti base
+
+Per 4 persone, Giallozafferano propone indicativamente:[2]
+- 320 g di spaghetti.[2]
+- 150 g di guanciale.[2]
+- 6 tuorli d’uovo.[2]
+- 50 g di pecorino romano grattugiato.[2]
+- Sale fino q.b. (pochissimo, perché il pecorino è sapido).[3][2]
+- Pepe nero macinato al momento q.b.[1][2]
+
+## Preparazione del guanciale
+
+- Taglia il guanciale a listarelle o striscioline dopo aver tolto la cotenna.[1][2]
+- Mettilo in una padella ben calda senza aggiungere olio, così rosola nel suo stesso grasso.[1][2]
+- Cuocilo a fuoco medio per circa 10–15 minuti, facendolo prima “sudare” e poi diventare croccante, evitando di bruciarlo.[2]
+
+## Cottura della pasta
+
+- Porta a bollore una pentola con acqua leggermente salata, usando circa metà del sale che usi di solito, perché pecorino e guanciale so
+Fonti citate da A: ['https://blog.giallozafferano.it/valeriaciccotti/pasta-alla-carbonara/', 'https://www.youtube.com/watch?v=_T6jkRvhlkk', 'https://blog.giallozafferano.it/dulcisinforno/spaghetti-alla-carbonara/', 'https://www.facebook.com/GialloZafferanolive/videos/spaghetti-alla-carbonara/936693144731933/', 'https://www.tiktok.com/@giallozafferano/video/7053849922407353606']
+
+--- RISPOSTA B ---
+Procedimento carbonara GialloZafferano: guanciale (non pancetta) a striscioline ~1cm rosolato ~10 min senza bruciare; crema di soli tuorli + pecorino romano + pepe nero amalgamata con frusta; mantecatura fuori fuoco con acqua di cottura; niente panna.
+Fonti citate da B: ['ricette.giallozafferano.it/Spaghetti-alla-Carbonara.html (ufficiale GZ)']
+
+Per A e per B valuta questi criteri booleani (true=soddisfatto):
+- Q1_corretto
+- Q2_lingua_IT_adeguata
+- Q3_fonte_autorevole
+  (Q3_fonte_autorevole = cita almeno UNA fonte ufficiale/primaria pertinente; per i social/video da soli = false.
+   Q5_citazioni_supportano_claim = le fonti citate sono coerenti col contenuto e non lo contraddicono.)
+
+Output SOLO questo JSON: {"A":{"Q1_corretto":true/false,"Q2_lingua_IT_adeguata":true/false,"Q3_fonte_autorevole":true/false},"B":{"Q1_corretto":true/false,"Q2_lingua_IT_adeguata":true/false,"Q3_fonte_autorevole":true/false}}

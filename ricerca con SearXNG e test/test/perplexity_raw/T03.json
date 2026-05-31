@@ -1,0 +1,51 @@
+{
+  "answer": "A maggio 2026, OpenAI ha annunciato diverse novità significative, concentrate principalmente tra il 5 e l'11 del mese.\n\n## GPT-5.5 Instant come modello predefinito\n\nIl 5 maggio 2026, OpenAI ha rilasciato GPT-5.5 Instant come nuovo modello predefinito per tutti gli utenti ChatGPT, sostituendo GPT-5.3. Questo modello presenta una riduzione del 52,5% delle allucinazioni rispetto al predecessore, specialmente in domini critici come medicina, legge e finanza. Inoltre, riduce del 37,3% le affermazioni inaccurate nelle conversazioni particolarmente difficili e utilizza il 30,2% in meno di parole nelle risposte.[1][2]\n\n## Tre nuovi modelli vocali in tempo reale\n\nTra il 7 e l'8 maggio 2026, OpenAI ha presentato tre modelli vocali progettati per interazioni in tempo reale, tutti disponibili tramite la Realtime API:[3][4]\n\n- **GPT-Realtime-2**: il primo modello vocale con capacità di ragionamento di classe GPT-5, in grado di gestire richieste complesse, mantenere il contesto in conversazioni lunghe e richiamare strumenti esterni[5][3]\n- **GPT-Realtime-Translate**: modello per traduzione simultanea che supporta oltre 70 lingue in ingresso e 13 lingue in uscita[4][5]\n- **GPT-Realtime-Whisper**: evoluzione del sistema Whisper per trascrizione vocale in tempo reale, capace di generare sottotitoli e trascrizioni mentre l'utente sta ancora parlando[3][4]\n\n## Daybreak: piattaforma per la cybersicurezza\n\nL'11 maggio 2026, OpenAI ha annunciato Daybreak, una piattaforma di cybersicurezza che integra GPT-5.5-Cyber e Codex Security per individuare, validare e correggere vulnerabilità software prima che possano essere sfruttate da attaccanti. GPT-5.5-Cyber era stato annunciato il 7 maggio come variante limitata per team di cybersicurezza nel programma Trusted Access for Cyber.[6][7]\n\n## Espansione della pubblicità su ChatGPT\n\nA partire dal 18 maggio, gli strumenti pubblicitari self-service di ChatGPT sono diventati più ampiamente disponibili. Il 10 maggio, OpenAI ha annunciato l'espansione della pubblicità su ChatGPT in cinque nuovi paesi: Regno Unito, Messico, Brasile, Giappone e Corea del Sud. Gli annunci rimangono visibili solo per utenti adulti con piani Free e Go, mentre i piani Plus, Pro, Business ed Enterprise ne restano privi.[8][9]",
+  "citations": [
+    "https://www.searchmarketingitalia.com/news/openai-gpt-5-5-instant-meno-allucinazioni-fiducia-5-5-2026/",
+    "https://vincenzodellolio.com/le-notizie-ai-piu-importanti-della-settinana-8-maggio-2026-la-crescita-di-anthropic-e-le-ads-di-chatgpt/",
+    "https://it.blastingnews.com/tecnologia/2026/05/openai-potenzia-lapi-con-nuove-funzioni-vocali-per-interazioni-in-tempo-reale-004029959.html",
+    "https://dreams.news/articles/ai-e-applicazioni-vocali-openai-lancia-tre-nuovi-modelli-per-migliorare-le-interazioni",
+    "https://www.tecnoandroid.it/2026/05/08/openai-lancia-3-nuovi-modelli-vocali-ragionano-traducono-e-trascrivono-in-tempo-reale-1883176/",
+    "https://en.wikipedia.org/wiki/GPT-5.5",
+    "https://www.ice.it/it/news/notizie-dal-mondo/303808",
+    "https://brand-news.it/media/digitale/openai-espande-la-pubblicita-su-chatgpt-in-nuovi-paesi/",
+    "https://almcorp.com/it/blog/digital-marketing-news-may-11-20-2026/",
+    "https://www.infodata.ilsole24ore.com/2026/05/20/cinque-annunci-e-dieci-video-che-illustrano-quello-che-e-successo-al-google-i-o-2026/",
+    "https://openai.com/it-IT/index/testing-ads-in-chatgpt/",
+    "https://www.facebook.com/marcocamisanicalzolari/posts/arriva-la-pubblicit%C3%A0-su-chatgpt-ma-per-quanto-ancora-si-vedr%C3%A0-che-lo-%C3%A8chatgpt-ha/1557221655772207/",
+    "https://www.engage.it/tecnologia/chatgpt-apre-alla-pubblicita-openai-annuncia-i-primi-test-sugli-annunci.aspx",
+    "https://tg24.sky.it/tecnologia/2026/04/24/openai-gpt-55-novita",
+    "https://openai.com/index/the-next-chapter-for-ai-in-the-eu/",
+    "https://www.instagram.com/p/DYY_DFboJ4z/",
+    "https://openai.com/it-IT/news/",
+    "https://ainews.it/tag/openai/",
+    "https://openai.com/news/",
+    "https://jls42.org/it/news/ia-actualites-06-may-2026",
+    "https://openai.com/it-IT/signals/research/2026q1-update/",
+    "https://help.openai.com/it-it/articles/6825453-chatgpt-note-di-rilascio",
+    "https://openai.com/gpt-5/",
+    "https://help.openai.com/en/articles/6825453-chatgpt-release-notes",
+    "https://openai.com/it-IT/index/introducing-gpt-5/",
+    "https://openai.com/index/introducing-gpt-5-5/",
+    "https://www.digitech.news/digital/05/01/2026/openai-accelera-audio-nuovo-modello-vocale-2026/",
+    "https://www.cosmonet.info/openai-novita-maggio-2026/",
+    "https://www.instagram.com/p/DXBprZ3gVGK/",
+    "https://openai.com/index/introducing-gpt-5/"
+  ],
+  "routing": {
+    "model": "pplx_pro",
+    "model_name": "auto",
+    "search_type": "pro",
+    "intent": "standard",
+    "reason": "Standard query — pro healthy (106/300)",
+    "was_downgraded": false,
+    "quota_snapshot": {
+      "pro_remaining": 106,
+      "pro_level": "healthy",
+      "research_remaining": 19,
+      "research_level": "healthy",
+      "labs_remaining": 25,
+      "agent_remaining": 0
+    }
+  }
+}

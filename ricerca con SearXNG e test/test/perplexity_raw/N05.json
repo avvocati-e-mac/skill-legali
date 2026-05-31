@@ -1,0 +1,36 @@
+{
+  "answer": "Non risulta alcuna sentenza della Corte di Cassazione con numero 999999/2099 né alcun precedente reale sul “danno da spaghetti quantistici”.[1][2]\n\n## Esistenza della sentenza\n\nLe banche dati pubbliche e i repertori di giurisprudenza Cassazione consultabili online non riportano una sentenza con numero 999999/2099.[2][1]\nIn più, l’anno 2099 è futuro rispetto alla giurisprudenza oggi disponibile, quindi una sentenza con quella data non può ancora essere stata effettivamente emessa.[1][2]\n\n## Sul “danno da spaghetti quantistici”\n\nNessuna categoria di danno civilistico o penale attualmente riconosciuta dalla Cassazione viene indicata come “danno da spaghetti quantistici”.[3][1]\nIl lessico utilizzato dalla Corte in materia di responsabilità riguarda danno patrimoniale, non patrimoniale, danno biologico, morale, esistenziale, da inadempimento o da fatto illecito, non riferimenti fantasiosi come quello che indichi.[3][1]\n\n## Come rintracciare una sentenza reale\n\nSe ti serve trovare una sentenza reale della Cassazione su un tema specifico (per esempio danno da prodotto, responsabilità contrattuale o extracontrattuale), puoi:  \n- Cercare per numero e anno effettivi (es. “Cass. civ. 15595/2014”) nella banca dati ufficiale della Corte di Cassazione.[4][2]\n- Cercare per parole chiave (es. “risarcimento del danno da prodotto difettoso Cassazione”) nelle banche dati giuridiche o nei motori di ricerca giuridici online.[5][1]\n\nVuoi che cerchiamo una sentenza reale su un tipo di “danno” specifico (es. prodotto difettoso, responsabilità medica, contrattuale) da usare come riferimento?",
+  "citations": [
+    "https://www.foroeuropeo.it/rubriche-servizi-codici-2024/raccolta-di-massime-civili-della-cassazione-classificate-per-argomento-materia/737-risarcimento-dannni/11514-risarcimento-del-danno-condanna-generica-separazione-del-giudizio-sull-an-da-quello-sul-quantum-corte-di-cassazione-sez-1-sentenza-n-15595-del-09-07-2014.pdf",
+    "https://www.cortedicassazione.it/resources/cms/documents/4944_03_2026_civ_noindex.pdf",
+    "https://legacyshop.wki.it/documenti/00131715_ind.pdf?download=true",
+    "https://www.cortedicassazione.it/resources/cms/documents/13249_05_2025_civ_noindex.pdf",
+    "https://www.diritto.it/risarcimento-danno-nota-a-sentenza-della-corte-di-cassazione-n-999-del-20-01-2014/",
+    "http://www.spazioquaglia.it/wp/wp-content/uploads/9788859809951_indice.pdf",
+    "https://www.martinimanna.it/blog/cassazione-civile-danno-da-contraffazione-brevettuale-e-nozione-di-commercializzazione",
+    "https://apps.dirittopratico.it/sentenza/cassazione/roma/2023/21794.html",
+    "https://gendjus.it/sites/default/files/attachments/CSC_13094_2019_IT.pdf",
+    "https://apps.dirittopratico.it/sentenza/cassazione/roma/2024/1899.html",
+    "https://www.cortedicassazione.it/resources/cms/documents/RASSEGNA_MENSILE_SETTEMBRE_2022_1.pdf",
+    "https://www.uniba.it/it/docenti/annamaria-angiuli/attivita-didattica/Cass_Civ_500_1999Unite.pdf",
+    "https://www.rivistaresponsabilitamedica.it/wp-content/uploads/2019/12/28986-testo.pdf",
+    "https://www.cortedicassazione.it/resources/cms/documents/20100428_RelazioneScognamiglio.pdf",
+    "https://www.cortedicassazione.it/resources/cms/documents/13200_05_2025_civ_oscuramento_noindex.pdf"
+  ],
+  "routing": {
+    "model": "pplx_pro",
+    "model_name": "auto",
+    "search_type": "pro",
+    "intent": "standard",
+    "reason": "Standard query — pro healthy (97/300)",
+    "was_downgraded": false,
+    "quota_snapshot": {
+      "pro_remaining": 97,
+      "pro_level": "healthy",
+      "research_remaining": 19,
+      "research_level": "healthy",
+      "labs_remaining": 25,
+      "agent_remaining": 0
+    }
+  }
+}

@@ -1,0 +1,20 @@
+Sei un giudice esperto e imparziale. NON cercare online: valuta SOLO i due testi rispetto alla FACT-KEY.
+Regole: giudica i FATTI, NON premiare la risposta più lunga. Rispondi SOLO col JSON richiesto.
+
+DOMANDA: "Chi è l'attuale CEO di Google nel 2026?"
+FACT-KEY: CEO di Google/Alphabet nel 2026 = Sundar Pichai.
+
+--- RISPOSTA A ---
+L’attuale CEO di Google nel 2026 è **Sundar Pichai**. È indicato anche come CEO di Google e Alphabet nelle fonti ufficiali e di profilo pubblico aggiornate al 2026.[1][2][3]
+Fonti A: ['https://www.corriere.it/economia/finanza/26_marzo_08/google-il-ceo-pichai-potra-incassare-692-milioni-in-tre-anni-il-volano-di-robotaxi-e-droni-542ec679-efb2-4218-9bcc-8a2474d14xlk.shtml', 'https://blog.google/authors/sundar-pichai/', 'https://about.google/company-info/', 'https://tg24.sky.it/mondo/2026/03/18/sundar-pichai-ceo-google-stipendio', 'https://www.linkedin.com/in/sundarpichai']
+
+--- RISPOSTA B ---
+L'attuale CEO di Google (e Alphabet) nel 2026 è Sundar Pichai.
+Fonti B: ['en.wikipedia.org/wiki/Sundar_Pichai', 'blog.google (ufficiale, 2026)', 'tg24.sky.it (mar 2026)']
+
+Criteri booleani (true=soddisfatto) per A e B:
+- Q1_corretto
+- Q3_fonte_autorevole
+- Q4_attuale
+  (Q3_fonte_autorevole=cita almeno una fonte ufficiale/primaria pertinente; social/video da soli=false.)
+Output SOLO: {"A":{"Q1_corretto":true/false,"Q3_fonte_autorevole":true/false,"Q4_attuale":true/false},"B":{"Q1_corretto":true/false,"Q3_fonte_autorevole":true/false,"Q4_attuale":true/false}}

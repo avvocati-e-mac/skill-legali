@@ -1,0 +1,35 @@
+{
+  "answer": "OpenAI è stata fondata nel **2015**. La pagina ufficiale di OpenAI indica che l’organizzazione è stata fondata nel 2015, e anche fonti enciclopediche riportano dicembre 2015 come data di fondazione.[1][2]",
+  "citations": [
+    "https://openai.com/it-IT/our-structure/",
+    "https://www.treccani.it/enciclopedia/eol-openai/",
+    "https://it.wikipedia.org/wiki/OpenAI",
+    "https://www.fastweb.it/fastweb-plus/digital-magazine/la-storia-di-openai/",
+    "https://www.librologica.digital/openai-dalle-origini-no%E2%80%91profit-allascesa-globale/",
+    "https://startupitalia.eu/tech/mezzo-secolo-di-ai-come-nato-e-come-si-e-evoluto-chatgpt/",
+    "https://ilpunto.beehiiv.com/p/openai-la-storia-dietro-l-azienda-che-ha-portato-l-ai-nelle-mani-di-tutti",
+    "https://www.quotidiano.net/tech/chi-ce-dietro-openai-9c98c46c",
+    "https://en.wikipedia.org/wiki/OpenAI",
+    "https://lilys.ai/it/notes/microsoft-agi-20251220/openai-history-chatgpt-ai-revolution",
+    "https://www.wikiwand.com/it/articles/OpenAI",
+    "https://it.moyens.net/ia/tutto-cio-che-devi-sapere-su-openai/",
+    "https://pt.wikipedia.org/wiki/OpenAI",
+    "https://fr.wikipedia.org/wiki/OpenAI"
+  ],
+  "routing": {
+    "model": "experimental",
+    "model_name": "sonar",
+    "search_type": "standard",
+    "intent": "quick",
+    "reason": "Quick lookup — using Sonar 2 (pro: 108/300)",
+    "was_downgraded": false,
+    "quota_snapshot": {
+      "pro_remaining": 108,
+      "pro_level": "healthy",
+      "research_remaining": 19,
+      "research_level": "healthy",
+      "labs_remaining": 25,
+      "agent_remaining": 0
+    }
+  }
+}
