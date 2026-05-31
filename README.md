@@ -1,7 +1,7 @@
 # Skill legali per Claude
 
-Raccolta di **skill** per Claude dedicate alla pratica legale italiana.  
-Ogni skill insegna a Claude comportamenti specifici utili per gli avvocati — come generare automaticamente link alle norme, redigere atti processuali con il formato corretto, e altro ancora.
+Raccolta di **skill** per Claude utili nella pratica e nello studio dell'avvocato italiano.  
+Ogni skill insegna a Claude comportamenti specifici — come generare automaticamente link alle norme, cercare giurisprudenza, fare ricerche sul web in modo riservato o trascrivere registrazioni — pensati per il lavoro quotidiano di chi fa l'avvocato.
 
 > **A chi è rivolto questo repository**  
 > Queste istruzioni sono scritte per avvocati che non hanno familiarità con la programmazione. Niente paura: installare una skill richiede solo pochi clic.
@@ -14,6 +14,8 @@ Ogni skill insegna a Claude comportamenti specifici utili per gli avvocati — c
 |-------|-------------|
 | [**normattiva**](./normattiva/) | Genera link ipertestuali cliccabili verso [Normattiva.it](https://www.normattiva.it) per ogni riferimento normativo italiano citato nel testo (art. X c.c., d.lgs., legge n., r.d., ecc.), usando il formato standard URN-NIR. Claude non produce mai riferimenti normativi "nudi": ogni citazione diventa automaticamente un link verificabile. |
 | [**BuddaLaw**](./buddalaw/) | Ricerca live di sentenze (Cassazione, merito, TAR, CGT, Garante Privacy), normativa e prassi tributaria tramite il server MCP [BuddaLaw](https://buddalaw.it) *(banca dati a pagamento, con sistema a crediti)*. Claude non cita mai sentenze dalla memoria interna: ogni riferimento giurisprudenziale proviene da ricerca live con link verificabile. Include workflow per contratti (3 step) e atti processuali (2 step), con ordine obbligatorio per la prassi tributaria. |
+| [**ricerca web (SearXNG)**](./ricerca%20con%20SearXNG%20e%20test/) | Ricerca su internet **gratuita e privata** per Claude, tramite un motore [SearXNG](https://docs.searxng.org) che installi sul tuo computer — l'alternativa per chi **non ha un abbonamento Perplexity**. Cura particolarmente le ricerche in italiano e quelle legali, con instradamento automatico verso Normattiva (norme), BuddaLaw (sentenze) e fonti di dottrina. La [guida passo-passo](./ricerca%20con%20SearXNG%20e%20test/README.md) spiega come creare il server SearXNG (Docker/OrbStack) e collegarlo a Claude. |
+| [**trascrizione audio**](./trascrizione%20audio/) | Trasforma un file audio in **testo e sottotitoli** (SRT/VTT/TXT) direttamente in Claude Code e Claude Desktop, lavorando **interamente sul tuo computer** (l'audio non viene mai caricato online). Adatta a registrazioni di udienze, colloqui col cliente e note vocali coperte da segreto professionale. Sceglie da sola lo strumento giusto in base all'hardware (Mac Apple Silicon, Mac Intel, Windows, Linux). |
 
 ---
 
@@ -21,6 +23,8 @@ Ogni skill insegna a Claude comportamenti specifici utili per gli avvocati — c
 
 | Data | Skill | Aggiornamento |
 |------|-------|---------------|
+| 31 maggio 2026 | **trascrizione audio** | Primo rilascio: trascrizione audio→testo in locale (SRT/VTT/TXT), multi-piattaforma, con guida per avvocati |
+| 31 maggio 2026 | **ricerca web (SearXNG)** | Primo rilascio: ricerca web gratuita e privata via SearXNG, con guida all'installazione del server e routing legale |
 | 19 maggio 2026 | **BuddaLaw** v8.3 | Migliorata la gestione dei risultati duplicati nella ricerca articoli |
 | 19 maggio 2026 | **BuddaLaw** v8.2 | Aggiunta suite di test automatici per verificare la qualità delle ricerche |
 | 19 maggio 2026 | **normattiva** | Aggiunto supporto per versioni storiche delle norme e testi abrogati |
@@ -34,7 +38,7 @@ Ogni skill insegna a Claude comportamenti specifici utili per gli avvocati — c
 Articoli, video e podcast su [avvocati-e-mac.it](https://avvocati-e-mac.it) che spiegano come funzionano queste skill e come sono state costruite:
 
 - **[Una skill per linkare le norme italiane con Normattiva.it](https://avvocati-e-mac.it/blog/2026/4/13/skill-link-norme-italiane-perplexity-claude)** — Articolo che racconta come è nata la skill normattiva e perché è utile per ottenere la liquidazione delle spese processuali
-- **[Ricerche giuridiche online con IA? Iniziano ad essere possibili](https://avvocati-e-mac.it/blog/2025/4/2/ricerche-giuridiche-online-con-ia-iniziano-ad-essere-possibili)** — Articolo introduttivo su BuddaLaw e la ricerca giurisprudenziale con l'IA
+- **[Ricerche giuridiche online con IA? Iniziano ad essere possibili](https://avvocati-e-mac.it/blog/2025/4/2/ricerche-giuridiche-online-con-ia-iniziano-ad-essere-possibili)** — Articolo introduttivo sulla ricerca giurisprudenziale con l'IA e sulla scoperta di SearXNG per cercare sul web (alla base della skill di ricerca web)
 - **[Video: MCP BuddaLaw per Perplexity](https://www.youtube.com/watch?v=Tu1ZDFstDsY)** — Video su YouTube che mostra come usare il server MCP di BuddaLaw con Perplexity
 - **[Podcast ep. 79 — MCP di BuddaLaw, Skill Normattiva ed altri esperimenti](https://avvocati-e-mac.it/podcast/79)** — Episodio podcast che tratta entrambe le skill
 
