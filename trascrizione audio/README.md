@@ -49,8 +49,9 @@ passaggio nel testo trascritto.
 
 ### Claude Desktop / claude.ai
 
-Trascina il file **`audio-transcription.skill`** nella finestra di Claude e conferma
-l'installazione. (I passi completi sono nel [README generale](../README.md#come-installare-una-skill).)
+Scarica il file **[`audio-transcription.skill`](https://github.com/avvocati-e-mac/skill-legali/raw/main/trascrizione%20audio/audio-transcription.skill)**
+e trascinalo nella finestra di Claude, poi conferma l'installazione. (I passi completi sono nel
+[README generale](../README.md#come-installare-una-skill).)
 
 ### Claude Code (terminale)
 

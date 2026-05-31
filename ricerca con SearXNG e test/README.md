@@ -256,6 +256,16 @@ Se preferisci farlo a mano:
 > **Importante:** il numero di porta in `SEARXNG_URL` deve **combaciare** con quello scelto al
 > Passo 2 (di default `8080`). Se al Passo 2 hai cambiato porta, cambiala anche qui.
 
+### Claude Desktop / claude.ai (solo la skill)
+
+Se usi **Claude Desktop** o **claude.ai**, puoi installare la sola skill scaricando il file
+**[`ricerca-web-searXNG.skill`](https://github.com/avvocati-e-mac/skill-legali/raw/main/ricerca%20con%20SearXNG%20e%20test/ricerca-web-searXNG.skill)**
+e trascinandolo nella finestra di Claude.
+
+> **Attenzione:** la skill da sola insegna a Claude *come* cercare, ma per cercare davvero
+> servono comunque il **motore SearXNG** (Passo 2) e il **ponte MCP** già avviati. Su Claude
+> Desktop il ponte MCP va configurato a parte.
+
 ---
 
 ## 6. Passo 4 — Verifica dentro Claude
