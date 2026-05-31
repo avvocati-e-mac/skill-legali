@@ -8,7 +8,7 @@ Questo file contiene informazioni di contesto per Claude. Leggilo all'inizio di 
 
 `skill-legali` è un repository pubblico GitHub che raccoglie **skill per Claude** dedicate alla pratica legale italiana. Le skill sono "istruzioni comportamentali" che insegnano a Claude come agire in specifici contesti legali (es. generare link a norme, redigere atti processuali, ecc.).
 
-**Repository GitHub:** `filippostrozzi/skill-legali`  
+**Repository GitHub:** `avvocati-e-mac/skill-legali`  
 **Maintainer:** Filippo Strozzi (avvocato)  
 **Target utenti finali:** avvocati italiani, **non tecnici** — le istruzioni devono sempre essere semplici e prive di gergo tecnico
 
@@ -68,6 +68,22 @@ description: >
    ```
 5. Aggiorna la tabella "Skill disponibili" nel `README.md`
 6. Fai commit e push
+
+---
+
+## Regola: commit ⇒ push automatico
+
+In questo repository, **ogni volta che fai un commit devi fare subito anche il `git push`** verso
+`origin` (`avvocati-e-mac/skill-legali`), senza chiederlo all'utente. Il repo è pubblico e va
+mantenuto allineato al remote: non lasciare commit solo in locale.
+
+```bash
+git commit -m "tipo(scope): descrizione"
+git push
+```
+
+Unica eccezione: se sei su un branch diverso da `main` creato per una specifica revisione, pusha
+comunque quel branch (`git push -u origin <branch>`) salvo diversa indicazione dell'utente.
 
 ---
 

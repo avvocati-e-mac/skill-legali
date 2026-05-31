@@ -165,4 +165,4 @@ Dopo aver sintetizzato la risposta in Step 3, se nel testo compaiono riferimenti
 4. Presenta la risposta finale linkificata
 
 Se Normattiva non è installata, lascia i riferimenti come testo semplice e aggiungi (una volta per sessione):
-> `ℹ️ Installa la skill Normattiva per avere link cliccabili alle norme: https://github.com/filippostrozzi/skill-legali/blob/main/normattiva`
+> `ℹ️ Installa la skill Normattiva per avere link cliccabili alle norme: https://github.com/avvocati-e-mac/skill-legali/blob/main/normattiva`

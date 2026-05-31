@@ -67,7 +67,7 @@ Se questi tool non compaiono tra quelli disponibili → BuddaLaw non è connesso
 ### Normattiva non installata (mostra 1 volta per sessione)
 ```
 ℹ️ La skill Normattiva non è installata. Puoi installarla da:
-https://github.com/filippostrozzi/skill-legali/blob/main/normattiva
+https://github.com/avvocati-e-mac/skill-legali/blob/main/normattiva
 Una volta installata, ogni riferimento normativo nella risposta diventerà
 un link cliccabile diretto alla norma su Normattiva.it.
 ```
