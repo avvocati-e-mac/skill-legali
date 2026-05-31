@@ -85,6 +85,22 @@ git push
 Unica eccezione: se sei su un branch diverso da `main` creato per una specifica revisione, pusha
 comunque quel branch (`git push -u origin <branch>`) salvo diversa indicazione dell'utente.
 
+### Autenticazione per il push (importante)
+
+Sul Mac di Filippo ci sono **due account GitHub** autenticati via `gh`. L'account di default
+`a2podcast` **non ha permessi di scrittura** su questo repo: un `git push` diretto fallisce con
+errore **403**. Il push va fatto con l'account proprietario **`avvocati-e-mac`**.
+
+Quando il push dà 403 (o prima di pushare), usa `gh` per impostare l'account giusto:
+
+```bash
+gh auth switch --user avvocati-e-mac   # passa all'account con permessi sul repo
+gh auth setup-git                      # configura git a usare le credenziali di gh
+git push                               # ora il push va a buon fine
+```
+
+In generale, **usa `gh` per gestire autenticazione e push**: è il modo affidabile per evitare il 403.
+
 ---
 
 ## Note tecniche
