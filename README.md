@@ -1,7 +1,7 @@
-# Skill legali per Claude
+# Skill legali per Claude, Codex e assistenti AI
 
-Raccolta di **skill** per Claude utili nella pratica e nello studio dell'avvocato italiano.  
-Ogni skill insegna a Claude comportamenti specifici — come generare automaticamente link alle norme, cercare giurisprudenza, fare ricerche sul web in modo riservato o trascrivere registrazioni — pensati per il lavoro quotidiano di chi fa l'avvocato.
+Raccolta di **skill** per Claude, Codex e altri assistenti AI utili nella pratica e nello studio dell'avvocato italiano.  
+Ogni skill insegna all'assistente comportamenti specifici — come generare automaticamente link alle norme, cercare giurisprudenza, fare ricerche sul web in modo riservato o trascrivere registrazioni — pensati per il lavoro quotidiano di chi fa l'avvocato.
 
 > **A chi è rivolto questo repository**  
 > Queste istruzioni sono scritte per avvocati che non hanno familiarità con la programmazione. Niente paura: installare una skill richiede solo pochi clic.
@@ -12,10 +12,10 @@ Ogni skill insegna a Claude comportamenti specifici — come generare automatica
 
 | Skill | Descrizione | Scarica |
 |-------|-------------|---------|
-| [**normattiva**](./normattiva/) | Genera link ipertestuali cliccabili verso [Normattiva.it](https://www.normattiva.it) per ogni riferimento normativo italiano citato nel testo (art. X c.c., d.lgs., legge n., r.d., ecc.), usando il formato standard URN-NIR. Claude non produce mai riferimenti normativi "nudi": ogni citazione diventa automaticamente un link verificabile. | [⬇️ `.skill`](https://github.com/avvocati-e-mac/skill-legali/raw/main/normattiva/normattiva.skill) |
-| [**BuddaLaw**](./buddalaw/) | Ricerca live di sentenze (Cassazione, merito, TAR, CGT, Garante Privacy), normativa e prassi tributaria tramite il server MCP [BuddaLaw](https://buddalaw.it) *(banca dati a pagamento, con sistema a crediti)*. Claude non cita mai sentenze dalla memoria interna: ogni riferimento giurisprudenziale proviene da ricerca live con link verificabile. Include workflow per contratti (3 step) e atti processuali (2 step), con ordine obbligatorio per la prassi tributaria. | [⬇️ `.skill`](https://github.com/avvocati-e-mac/skill-legali/raw/main/buddalaw/buddalaw.skill) |
-| [**ricerca web (SearXNG)**](./ricerca%20con%20SearXNG%20e%20test/) | Ricerca su internet **gratuita e privata** per Claude, tramite un motore [SearXNG](https://docs.searxng.org) che installi sul tuo computer — l'alternativa per chi **non ha un abbonamento Perplexity**. Cura particolarmente le ricerche in italiano e quelle legali, con instradamento automatico verso Normattiva (norme), BuddaLaw (sentenze) e fonti di dottrina. La [guida passo-passo](./ricerca%20con%20SearXNG%20e%20test/README.md) spiega come creare il server SearXNG (Docker/OrbStack) e collegarlo a Claude. | [⬇️ `.skill`](https://github.com/avvocati-e-mac/skill-legali/raw/main/ricerca%20con%20SearXNG%20e%20test/ricerca-web-searXNG.skill) |
-| [**trascrizione audio**](./trascrizione%20audio/) | Trasforma un file audio in **testo e sottotitoli** (SRT/VTT/TXT) direttamente in Claude Code e Claude Desktop, lavorando **interamente sul tuo computer** (l'audio non viene mai caricato online). Adatta a registrazioni di udienze, colloqui col cliente e note vocali coperte da segreto professionale. Sceglie da sola lo strumento giusto in base all'hardware (Mac Apple Silicon, Mac Intel, Windows, Linux). | [⬇️ `.skill`](https://github.com/avvocati-e-mac/skill-legali/raw/main/trascrizione%20audio/audio-transcription.skill) |
+| [**normattiva**](./normattiva/) | Genera link ipertestuali cliccabili verso [Normattiva.it](https://www.normattiva.it) per ogni riferimento normativo italiano citato nel testo (art. X c.c., d.lgs., legge n., r.d., ecc.), usando il formato standard URN-NIR. L'assistente non produce riferimenti normativi "nudi": ogni citazione diventa automaticamente un link verificabile. | [⬇️ `.skill`](https://github.com/avvocati-e-mac/skill-legali/raw/main/normattiva/normattiva.skill) |
+| [**BuddaLaw**](./buddalaw/) | Ricerca live di sentenze (Cassazione, merito, TAR, CGT, Garante Privacy), normativa e prassi tributaria tramite il server MCP [BuddaLaw](https://buddalaw.it) *(banca dati a pagamento, con sistema a crediti)*. L'assistente non cita mai sentenze dalla memoria interna: ogni riferimento giurisprudenziale proviene da ricerca live con link verificabile. Include workflow per contratti (3 step) e atti processuali (2 step), con ordine obbligatorio per la prassi tributaria. | [⬇️ `.skill`](https://github.com/avvocati-e-mac/skill-legali/raw/main/buddalaw/buddalaw.skill) |
+| [**ricerca web (SearXNG)**](./ricerca%20con%20SearXNG%20e%20test/) | Ricerca su internet **gratuita e privata** tramite un motore [SearXNG](https://docs.searxng.org) che installi sul tuo computer — l'alternativa per chi **non ha un abbonamento Perplexity**. Cura particolarmente le ricerche in italiano e quelle legali, con instradamento automatico verso Normattiva (norme), BuddaLaw (sentenze) e fonti di dottrina. La [guida passo-passo](./ricerca%20con%20SearXNG%20e%20test/README.md) spiega come creare il server SearXNG (Docker/OrbStack) e collegarlo all'assistente. | [⬇️ `.skill`](https://github.com/avvocati-e-mac/skill-legali/raw/main/ricerca%20con%20SearXNG%20e%20test/ricerca-web-searXNG.skill) |
+| [**trascrizione audio**](./trascrizione%20audio/) | Trasforma un file audio in **testo e sottotitoli** (SRT/VTT/TXT), lavorando **interamente sul tuo computer** quando l'ambiente lo consente (l'audio non viene mai caricato online). Adatta a registrazioni di udienze, colloqui col cliente e note vocali coperte da segreto professionale. Sceglie da sola lo strumento giusto in base all'hardware (Mac Apple Silicon, Mac Intel, Windows, Linux). | [⬇️ `.skill`](https://github.com/avvocati-e-mac/skill-legali/raw/main/trascrizione%20audio/audio-transcription.skill) |
 
 ---
 
@@ -23,6 +23,7 @@ Ogni skill insegna a Claude comportamenti specifici — come generare automatica
 
 | Data | Skill | Aggiornamento |
 |------|-------|---------------|
+| 2 giugno 2026 | *(tutte)* | Aggiunta compatibilità esplicita con Codex/OpenAI, file `AGENTS.md` gemelli di `CLAUDE.md` e metadati `agents/openai.yaml` nelle skill |
 | 31 maggio 2026 | *(tutte)* | Aggiunti link di download diretti ai file `.skill` nelle guide e una colonna "Scarica" nella tabella delle skill |
 | 31 maggio 2026 | **trascrizione audio** | Primo rilascio: trascrizione audio→testo in locale (SRT/VTT/TXT), multi-piattaforma, con guida per avvocati |
 | 31 maggio 2026 | **ricerca web (SearXNG)** | Primo rilascio: ricerca web gratuita e privata via SearXNG, con guida all'installazione del server e routing legale |
@@ -47,7 +48,15 @@ Articoli, video e podcast su [avvocati-e-mac.it](https://avvocati-e-mac.it) che 
 
 ## Come installare una skill
 
-Scegli il prodotto Claude che usi:
+Se usi Claude, scarica il file `.skill`. Se usi Codex o un ambiente OpenAI, usa la cartella interna della skill, quella che contiene `SKILL.md`.
+
+### Compatibilità in breve
+
+- **Claude Desktop, Claude for Work/Cowork e Claude Code:** usa i file `.skill` scaricabili dalla tabella.
+- **Codex e ambienti OpenAI:** usa le cartelle sorgente con `SKILL.md`; ogni skill include anche `agents/openai.yaml` con metadati utili per l'interfaccia OpenAI.
+- Quando una procedura cambia in base all'ambiente, la skill contiene istruzioni separate per Claude e per OpenAI/Codex.
+
+Scegli il prodotto che usi:
 
 ### Claude Desktop (app per Mac e Windows)
 
@@ -84,6 +93,18 @@ oppure trascina il file `.skill` direttamente nella finestra di Claude Code.
    - **Windows:** `%APPDATA%\Claude\skills\`
 3. Riavvia Claude Code
 
+### Codex / ambienti OpenAI
+
+> Questa modalità è per utenti più avanzati.
+
+Le skill sono compatibili anche con ambienti che leggono cartelle contenenti `SKILL.md`.
+
+1. Apri la cartella della skill che ti interessa, ad esempio `normattiva/normattiva/`
+2. Usa o installa quella cartella nel tuo ambiente Codex/OpenAI secondo la configurazione locale
+3. Il file `agents/openai.yaml`, quando presente, fornisce nome, descrizione e metadati per l'interfaccia OpenAI
+
+I file `.skill` restano pensati soprattutto per l'installazione comoda in Claude.
+
 ---
 
 ## Come aggiornare una skill
@@ -105,12 +126,25 @@ Ogni skill è organizzata in una propria cartella:
 ```
 nome-skill/
 ├── nome-skill/
-│   ├── SKILL.md          ← istruzioni per Claude (non modificare)
+│   ├── SKILL.md          ← istruzioni principali della skill
+│   ├── agents/           ← metadati per ambienti OpenAI/Codex (se presenti)
+│   │   └── openai.yaml
 │   └── references/       ← tabelle e riferimenti di supporto (se presenti)
-└── nome-skill.skill      ← file preconfezionato, pronto per l'installazione
+└── nome-skill.skill      ← file preconfezionato, pronto per l'installazione Claude
 ```
 
-Il file `.skill` è quello che serve per installare la skill. La cartella interna contiene i dettagli tecnici, utili solo se vuoi capire come funziona la skill o modificarla.
+Il file `.skill` è quello che serve per installare comodamente la skill in Claude. La cartella interna contiene i dettagli tecnici e il file `SKILL.md`, utili per capire come funziona la skill, modificarla o usarla in ambienti compatibili con Codex/OpenAI.
+
+---
+
+## Per chi contribuisce
+
+Se modifichi questo repository:
+
+1. Mantieni allineati `CLAUDE.md` e `AGENTS.md`: sono file gemelli.
+2. Se aggiorni una skill, rigenera anche il relativo file `.skill`.
+3. Fai commit piccoli, atomici e descrittivi: ogni commit deve contenere una sola modifica logica completa.
+4. Dopo ogni commit, fai subito anche il push su GitHub.
 
 ---
 
