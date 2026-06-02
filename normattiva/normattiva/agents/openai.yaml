@@ -1,0 +1,7 @@
+interface:
+  display_name: "Normattiva"
+  short_description: "Linka riferimenti normativi italiani"
+  default_prompt: "Usa $normattiva per trasformare i riferimenti normativi italiani in link Normattiva verificabili."
+
+policy:
+  allow_implicit_invocation: true

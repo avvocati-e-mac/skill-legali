@@ -11,6 +11,14 @@ description: >
 
 # Normattiva – Link a norme italiane
 
+## Compatibilità runtime
+
+Questa skill deve funzionare sia in ambienti Claude sia in ambienti OpenAI/Codex.
+
+- **Se stai operando in Claude Desktop, Claude for Work/Cowork o Claude Code:** quando la skill suggerisce una delega, puoi usare il subagente Haiku o il meccanismo `Agent(...)` se disponibile.
+- **Se stai operando in Codex o in un ambiente OpenAI:** usa un subagente/tool multi-agent solo se l'ambiente lo espone esplicitamente; altrimenti genera i link direttamente nel modello principale seguendo le stesse regole.
+- In ogni runtime, non produrre riferimenti normativi italiani nudi: il requisito principale della skill non cambia.
+
 ## Regola fondamentale
 
 **Non è ammesso produrre testo con riferimenti normativi nudi.**
@@ -125,13 +133,20 @@ Preleva tipo, data, numero e allegato dalla tabella. Componi e restituisci subit
 Leggi `references/lookup-extended.md` per la tabella completa, i tipi di atto rari,
 le partizioni dettagliate (comma, lettera, allegato…) e gli errori comuni.
 
-### 3. Più link in un singolo blocco di testo → usa il subagente Haiku
+### 3. Più link in un singolo blocco di testo → delega condizionale
 
 Quando l'utente chiede di linkare **tutti i riferimenti normativi** presenti in un documento
-o in un elenco (tipicamente 5+ link), delega la generazione a un subagente Haiku.
-Questo libera il modello principale per attività più complesse e riduce il consumo di token.
+o in un elenco (tipicamente 5+ link), puoi delegare la generazione se il runtime offre
+un subagente adatto. Questo libera il modello principale per attività più complesse e riduce
+il consumo di token.
 
-**Come spawna il subagente:**
+**Se stai operando in Claude Desktop, Claude for Work/Cowork o Claude Code:** usa il subagente
+Haiku quando disponibile.
+
+**Se stai operando in Codex o in un ambiente OpenAI:** usa un subagente OpenAI/Codex solo se
+disponibile; se non lo è, resta nel modello principale e genera direttamente l'elenco dei link.
+
+**Percorso Claude — come spawna il subagente:**
 
 ```
 Agent(
