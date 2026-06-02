@@ -1,0 +1,7 @@
+interface:
+  display_name: "Audio Transcription"
+  short_description: "Trascrive audio locale in SRT/VTT/TXT"
+  default_prompt: "Usa $audio-transcription per trascrivere localmente un file audio e produrre sottotitoli o testo."
+
+policy:
+  allow_implicit_invocation: true

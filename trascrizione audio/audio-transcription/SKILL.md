@@ -15,6 +15,14 @@ scaricato una volta, al primo uso). Adatto a materiale riservato.
 Questo file è l'entry point: rileva la piattaforma e poi **carica il reference della piattaforma
 corrispondente** — i dettagli di installazione e i comandi sono lì, non qui (progressive disclosure).
 
+## Compatibilità runtime
+
+Questa skill deve funzionare sia in ambienti Claude sia in ambienti OpenAI/Codex.
+
+- **Se stai operando in Claude Desktop, Claude for Work/Cowork o Claude Code:** esegui i comandi tramite gli strumenti shell/terminale disponibili nell'ambiente Claude; se il runtime non consente comandi locali, fornisci istruzioni passo-passo all'utente.
+- **Se stai operando in Codex o in un ambiente OpenAI:** esegui i comandi tramite gli strumenti shell disponibili nel workspace; se installazioni o download richiedono rete o permessi esterni, usa il flusso di approvazione del runtime prima di procedere.
+- In ogni runtime, preserva l'obiettivo principale: trascrizione locale e nessun upload dell'audio a servizi esterni, salvo richiesta esplicita dell'utente.
+
 ## Step 1 — Rileva la piattaforma
 
 Esegui sempre questo comando per primo (funziona anche su Windows, dove `uname` non è affidabile):
