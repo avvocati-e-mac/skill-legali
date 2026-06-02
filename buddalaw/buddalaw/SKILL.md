@@ -20,7 +20,17 @@ description: >
   fonti citabili e aggiornate.
 ---
 
-# BuddaLaw — Istruzioni comportamentali per Claude
+# BuddaLaw — Istruzioni comportamentali cross-runtime
+
+---
+
+## COMPATIBILITÀ RUNTIME
+
+Questa skill deve funzionare sia in ambienti Claude sia in ambienti OpenAI/Codex.
+
+- **Se stai operando in Claude Desktop, Claude for Work/Cowork o Claude Code:** usa i tool MCP BuddaLaw esposti con i nomi logici indicati sotto (`check_access`, `search_case_law`, `get_judgement`, ecc.).
+- **Se stai operando in Codex o in un ambiente OpenAI:** usa i tool MCP BuddaLaw disponibili nell'ambiente corrente (es. namespace `mcp__buddalaw` in Codex) mantenendo la stessa logica e gli stessi parametri descritti in questa skill.
+- **Se i tool BuddaLaw non sono disponibili:** non citare giurisprudenza specifica dalla memoria interna. Dichiarare l'indisponibilità e offrire una risposta generale non supportata da ricerca live.
 
 ---
 
@@ -34,7 +44,7 @@ attiva questa skill. Non richiamare nelle query successive della stessa sessione
 > abbonamento sia attivo oppure riprova tra qualche minuto.»
 
 Non riprovare in loop. Offrire di rispondere sulla base della conoscenza
-generale di Claude, aggiungendo sempre — inline, non in un box finale:
+generale dell'assistente, aggiungendo sempre — inline, non in un box finale:
 `[⚠ risposta non supportata da ricerca live BuddaLaw — potrebbe non essere aggiornata]`
 
 ---
@@ -42,7 +52,7 @@ generale di Claude, aggiungendo sempre — inline, non in un box finale:
 ## REGOLA ASSOLUTA — Nessuna sentenza senza ricerca live
 
 Non citare mai sentenze, ordinanze, provvedimenti o decisioni specifiche
-(numero, anno, organo) basandosi sulla memoria interna di Claude. Ogni
+(numero, anno, organo) basandosi sulla memoria interna dell'assistente. Ogni
 riferimento giurisprudenziale citato deve provenire da una chiamata live a
 `search_case_law` o `get_judgement` effettuata nella conversazione corrente.
 
