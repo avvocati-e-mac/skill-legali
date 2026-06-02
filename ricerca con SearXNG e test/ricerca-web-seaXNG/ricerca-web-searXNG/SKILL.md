@@ -28,6 +28,14 @@ description: >
 
 Ricerca web ottimizzata per token, con routing intelligente tra SearXNG, BuddaLaw e Normattiva.
 
+## Compatibilità runtime
+
+Questa skill deve funzionare sia in ambienti Claude sia in ambienti OpenAI/Codex.
+
+- **Se stai operando in Claude Desktop, Claude for Work/Cowork o Claude Code:** usa i tool MCP SearXNG esposti con i nomi logici `searxng_web_search` e `web_url_read`; se SearXNG non è disponibile, applica il fallback Claude descritto in fondo.
+- **Se stai operando in Codex o in un ambiente OpenAI:** usa i tool MCP SearXNG disponibili nell'ambiente corrente (es. namespace `mcp__searxng` in Codex) mantenendo gli stessi parametri logici; se SearXNG non è disponibile, applica il fallback OpenAI/Codex descritto in fondo.
+- Non usare un fallback web in modo silenzioso: il cambio di strumento va sempre dichiarato all'utente.
+
 ## Step 0 — Intent parsing (0 tool call)
 
 Prima di qualsiasi ricerca, esegui questi controlli nell'ordine indicato:
@@ -203,8 +211,7 @@ Scegli gli URL da leggere in base alla rilevanza dello snippet e all'autorevolez
 
 Se `searxng_web_search` restituisce errore di rete o timeout:
 1. Informa l'utente: `⚠️ Il server SearXNG non è raggiungibile.`
-2. Proponi: `Posso continuare con WebSearch Claude (disponibile ma con meno controllo su lingua e recency). Procedo?`
-3. Se l'utente conferma → usa il tool `WebSearch` con la stessa query
-4. Prefissa la risposta con: `[WebSearch fallback · parametri lingua/recency non garantiti]`
+2. **Se stai operando in Claude Desktop, Claude for Work/Cowork o Claude Code:** proponi `WebSearch Claude` se disponibile: `Posso continuare con WebSearch Claude (disponibile ma con meno controllo su lingua e recency). Procedo?` Se l'utente conferma, usa `WebSearch` con la stessa query e prefissa la risposta con `[WebSearch Claude fallback · parametri lingua/recency non garantiti]`.
+3. **Se stai operando in Codex o in un ambiente OpenAI:** usa il tool web/search disponibile nell'ambiente solo se le regole della sessione lo consentono; prefissa la risposta con `[OpenAI/Codex web fallback · parametri SearXNG non disponibili]`. Se il runtime non offre ricerca web, chiedi conferma all'utente per procedere senza fonti live o per configurare SearXNG.
 
-Non usare mai WebSearch come fallback silenzioso senza informare l'utente.
+Non usare mai un fallback web come sostituto silenzioso di SearXNG.

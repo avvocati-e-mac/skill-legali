@@ -1,0 +1,13 @@
+interface:
+  display_name: "Ricerca Web SearXNG"
+  short_description: "Ricerca web privata via SearXNG MCP"
+  default_prompt: "Usa $ricerca-web-searXNG per cercare online con SearXNG e citare fonti web pertinenti."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "searxng"
+      description: "Server MCP SearXNG per ricerca web e lettura mirata delle pagine."
+
+policy:
+  allow_implicit_invocation: true
