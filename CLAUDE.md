@@ -58,6 +58,15 @@ Quando una procedura dipende dal runtime, differenzia sempre in modo esplicito:
 - **File chiave:** `buddalaw/buddalaw/SKILL.md`, `buddalaw/buddalaw/references/`
 - **File installazione Claude:** `buddalaw/buddalaw.skill`
 
+### GestioLex Corpus
+
+- **Cartella:** `Gestiolex Corpus/`
+- **Scopo:** ricerca testi normativi italiani e massime giurisprudenziali tramite MCP GestioLex Corpus
+- **Trigger:** richieste su articoli di codice, basi normative, orientamenti giurisprudenziali, massime o principi di diritto italiani
+- **Comportamento:** l'assistente sceglie il percorso piu preciso tra lettura esatta dell'articolo, ricerca normativa e ricerca giurisprudenziale, evitando ricerche parallele non necessarie
+- **File chiave:** `Gestiolex Corpus/gestiolex-corpus/SKILL.md`, `Gestiolex Corpus/gestiolex-corpus/references/query-patterns.md`
+- **File installazione Claude:** `Gestiolex Corpus/gestiolex-corpus.skill`
+
 ### ricerca-web-searXNG
 
 - **Cartella:** `ricerca con SearXNG e test/ricerca-web-seaXNG/`
@@ -194,6 +203,14 @@ In generale, **usa `gh` per gestire autenticazione e push**: è il modo affidabi
 - Il server MCP `buddalaw` può essere configurato localmente negli ambienti che lo supportano.
 - BuddaLaw è un servizio di ricerca giurisprudenziale e normativa italiana.
 - Le skill non devono presumere che il tool sia sempre disponibile: se manca, dichiararlo e usare il fallback previsto.
+
+### MCP GestioLex Corpus
+
+- Il server MCP `gestiolex_corpus` è sviluppato e messo a disposizione da GestioLex.
+- Endpoint remoto: `https://corpus.gestiolex.it/mcp`.
+- Serve a interrogare corpus normativi italiani e massime giurisprudenziali tramite strumenti MCP come `leggi_articolo`, `cerca_norma` e `cerca_giurisprudenza`.
+- Per Codex si configura in `~/.codex/config.toml`; per Claude Code e Claude Desktop si configura nelle impostazioni MCP o con il comando MCP remoto supportato dalla versione in uso.
+- La skill non contiene il server MCP: contiene solo le istruzioni per usarlo correttamente.
 
 ### File da non committare
 

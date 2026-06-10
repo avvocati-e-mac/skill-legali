@@ -1,0 +1,4 @@
+interface:
+  display_name: "GestioLex Corpus"
+  short_description: "Ricerca normativa e massime italiane"
+  default_prompt: "Use $gestiolex-corpus to find Italian statutes or case-law maxims with minimal token use."
