@@ -1,0 +1,79 @@
+{
+  "total_cases": 200,
+  "overall_winners": {
+    "normattiva": 90,
+    "gestiolex": 110
+  },
+  "categories": {
+    "exact_known_link": {
+      "count": 40,
+      "winner_counts": {
+        "normattiva": 40,
+        "gestiolex": 0,
+        "tie": 0
+      },
+      "normattiva_avg_score": 4.0,
+      "gestiolex_avg_score": 2.0
+    },
+    "exact_extended_link": {
+      "count": 30,
+      "winner_counts": {
+        "normattiva": 30,
+        "gestiolex": 0,
+        "tie": 0
+      },
+      "normattiva_avg_score": 4.0,
+      "gestiolex_avg_score": 2.0
+    },
+    "exact_text": {
+      "count": 30,
+      "winner_counts": {
+        "normattiva": 0,
+        "gestiolex": 30,
+        "tie": 0
+      },
+      "normattiva_avg_score": 3.0,
+      "gestiolex_avg_score": 4.0
+    },
+    "exploratory_norm": {
+      "count": 35,
+      "winner_counts": {
+        "normattiva": 0,
+        "gestiolex": 35,
+        "tie": 0
+      },
+      "normattiva_avg_score": 0.0,
+      "gestiolex_avg_score": 3.0
+    },
+    "case_law": {
+      "count": 35,
+      "winner_counts": {
+        "normattiva": 0,
+        "gestiolex": 35,
+        "tie": 0
+      },
+      "normattiva_avg_score": 0.0,
+      "gestiolex_avg_score": 5.0
+    },
+    "historical_version": {
+      "count": 20,
+      "winner_counts": {
+        "normattiva": 20,
+        "gestiolex": 0,
+        "tie": 0
+      },
+      "normattiva_avg_score": 5.0,
+      "gestiolex_avg_score": 0.0
+    },
+    "mixed_norm_juris": {
+      "count": 10,
+      "winner_counts": {
+        "normattiva": 0,
+        "gestiolex": 10,
+        "tie": 0
+      },
+      "normattiva_avg_score": 0.0,
+      "gestiolex_avg_score": 5.0
+    }
+  }
+}

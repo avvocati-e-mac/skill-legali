@@ -112,3 +112,13 @@ La skill è pensata per questi strumenti:
 - `cerca_giurisprudenza`: cerca massime e principi di diritto.
 
 Se questi strumenti non compaiono nell'ambiente in uso, il server MCP non è configurato correttamente o non è disponibile in quella sessione.
+
+## Materiali di test e confronto
+
+La cartella contiene anche un benchmark di confronto tra `normattiva` e `gestiolex-corpus`:
+
+- `normattiva_vs_gestiolex_report.md`: relazione leggibile con metodo, risultati e conclusioni;
+- `normattiva_vs_gestiolex_200_cases.csv`: elenco dei 200 casi valutati;
+- `normattiva_vs_gestiolex_200_summary.json`: riepilogo strutturato dei risultati.
+
+Questi file servono a documentare quando conviene usare GestioLex Corpus e quando resta preferibile la skill Normattiva. Non sono inclusi nel file `.skill`, perché non sono istruzioni operative da caricare nell'assistente durante l'uso normale.
