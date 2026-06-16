@@ -2,13 +2,14 @@
 
 Source verification is separate from LLM judging. A judge can assess plausibility, but official or paid legal sources must verify existence, currency, and holdings. In reports, explain `source_verification: not_performed` as: "le citazioni non sono state controllate su fonti ufficiali".
 
-## Confidentiality Gate
+## Route And Confidentiality Gate
 
 Before live search or cloud upload:
 
 1. Determine whether the material contains client facts, personal data, employee data, mailbox contents, litigation strategy, or confidential business facts.
-2. If yes, default to local-only extraction and offline scoring.
-3. Ask the user to approve any cloud route and disclose the intended provider/tool.
+2. If the user has not already specified the route, ask whether they want only local/offline processing or also online/live processing.
+3. Disclose the intended provider/tool before any cloud/live route.
+4. Do not choose local/offline or online/live silently based only on the confidentiality label.
 
 ## Verification Order
 
