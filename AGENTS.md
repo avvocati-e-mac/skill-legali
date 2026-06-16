@@ -85,6 +85,15 @@ Quando una procedura dipende dal runtime, differenzia sempre in modo esplicito:
 - **File chiave:** `trascrizione audio/audio-transcription/SKILL.md`, `trascrizione audio/audio-transcription/references/`
 - **File installazione Claude:** `trascrizione audio/audio-transcription.skill`
 
+### italian-legal-llm-panel
+
+- **Cartella:** `italian-legal-llm-panel/`
+- **Scopo:** valuta e confronta risposte di IA su quesiti di diritto italiano con una "giuria" di giudici (estrazione da DOCX/PDF/testo, confronto A/B/C, scoring su rubrica /39, verifica fonti, report leggibile)
+- **Trigger:** richieste di confrontare/valutare risposte legali di più IA, normalizzare casi A/B/C, controllare citazioni, GDPR/privacy, diritto del lavoro/societario o affidabilità della giurisprudenza, preparare workflow di giudizio e verifica fonti
+- **Comportamento:** è controllo di qualità e non sostituisce mai la verifica dell'avvocato; lavora in locale/offline finché l'utente non autorizza esplicitamente una verifica online; non installa tool né spende chiamate live senza approvazione
+- **File chiave:** `italian-legal-llm-panel/italian-legal-llm-panel/SKILL.md`, `italian-legal-llm-panel/italian-legal-llm-panel/references/`, `italian-legal-llm-panel/italian-legal-llm-panel/scripts/legal_panel.py`
+- **File installazione Claude:** `italian-legal-llm-panel/italian-legal-llm-panel.skill`
+
 ---
 
 ## Struttura standard di una skill
