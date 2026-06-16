@@ -81,7 +81,7 @@ LIVE_JUDGE_PROFILES = {
         "model_route": "perplexity:gpt55",
         "tool": "pwm",
         "priority": 5,
-        "role": "single fallback or tie-breaker judge",
+        "role": "fallback or tie-breaker judge; avoid as primary when Codex GPT-5.5 is already in panel",
         "command_hint": "pwm ask --json --source none --model gpt55 '<prompt>'",
     },
     "perplexity_gpt54": {
@@ -99,7 +99,7 @@ LIVE_JUDGE_PROFILES = {
         "model_route": "perplexity:gemini_pro",
         "tool": "pwm",
         "priority": 3,
-        "role": "single fallback or tie-breaker judge",
+        "role": "first-pass judge with Perplexity Gemini Pro route",
         "command_hint": "pwm ask --json --source none --model gemini_pro '<prompt>'",
     },
     "perplexity_kimi_k26": {
@@ -108,19 +108,29 @@ LIVE_JUDGE_PROFILES = {
         "model_route": "perplexity:kimi_k26",
         "tool": "pwm",
         "priority": 2,
-        "role": "single fallback or tie-breaker judge",
+        "role": "first-pass judge with Kimi route for model-family diversity",
         "command_hint": "pwm ask --json --source none --model kimi_k26 '<prompt>'",
+    },
+    "perplexity_nemotron": {
+        "judge_id": "perplexity_nemotron",
+        "display_name": "Perplexity Nemotron",
+        "model_route": "perplexity:nemotron",
+        "tool": "pwm",
+        "priority": 2,
+        "role": "diverse fallback judge when Kimi or Gemini is unavailable",
+        "command_hint": "pwm ask --json --source none --model nemotron '<prompt>'",
     },
 }
 
-PRIMARY_LIVE_JUDGES = ["claude_opus_4_8", "codex_gpt_5_5_xhigh"]
+MIN_LIVE_JUDGES = 3
+PRIMARY_LIVE_JUDGES = ["codex_gpt_5_5_xhigh", "perplexity_gemini_pro", "perplexity_kimi_k26"]
 FALLBACK_LIVE_JUDGES = [
+    "perplexity_nemotron",
     "claude_sonnet_recent",
     "perplexity_gpt55",
     "perplexity_gpt54",
-    "perplexity_gemini_pro",
-    "perplexity_kimi_k26",
 ]
+DEFAULT_SUPERVISOR_JUDGE = "claude_opus_4_8"
 
 JUDGES = [
     {
@@ -480,7 +490,7 @@ def source_tool_statuses(
             "status_message": (
                 "Perplexity CLI auth/quota appears usable."
                 if perplexity_auth_ok(tools)
-                else "Perplexity unavailable, unauthenticated, expired, or quota not confirmed."
+                else "Perplexity CLI detected; sandboxed auth/quota check is inconclusive or failed."
             ),
         },
         "workspace_skill_copy": installed_skill_delta(workspace_skill),
@@ -502,7 +512,7 @@ def perplexity_auth_ok(tools: dict[str, Any]) -> bool:
 def route_available(profile: dict[str, Any], tools: dict[str, Any]) -> bool:
     tool = profile["tool"]
     if tool == "pwm":
-        return perplexity_auth_ok(tools)
+        return bool(tools.get(tool, {}).get("available"))
     return bool(tools.get(tool, {}).get("available"))
 
 
@@ -522,11 +532,11 @@ def select_model_routes(tools: dict[str, Any]) -> dict[str, Any]:
         for judge_id in FALLBACK_LIVE_JUDGES
         if route_available(LIVE_JUDGE_PROFILES[judge_id], tools)
     ]
-    if len(selected) < 2:
+    if len(selected) < MIN_LIVE_JUDGES:
         for profile in fallback_order:
             if profile["judge_id"] not in {item["judge_id"] for item in selected}:
                 selected.append(profile)
-            if len(selected) >= 2:
+            if len(selected) >= MIN_LIVE_JUDGES:
                 break
 
     warnings: list[str] = []
@@ -535,9 +545,9 @@ def select_model_routes(tools: dict[str, Any]) -> dict[str, Any]:
     if not tools.get("codex", {}).get("available"):
         warnings.append("Codex CLI not available; cannot select GPT-5.5 route.")
     if tools.get("pwm", {}).get("available") and not perplexity_auth_ok(tools):
-        warnings.append("Perplexity CLI is installed but auth/quota is not currently usable.")
-    if len(selected) < 2:
-        warnings.append("Fewer than two top live judge routes are available.")
+        warnings.append("Perplexity CLI is installed; verify auth/quota outside the sandbox if live calls fail.")
+    if len(selected) < MIN_LIVE_JUDGES:
+        warnings.append("Fewer than three live judge routes are available.")
 
     spare = None
     for profile in fallback_order:
@@ -546,8 +556,9 @@ def select_model_routes(tools: dict[str, Any]) -> dict[str, Any]:
             break
 
     return {
-        "policy": "Use the best two available top judges. Perplexity is a single fallback/tie-breaker only.",
-        "selected_primary_judges": [compact_profile(profile) for profile in selected[:2]],
+        "policy": "Use three independent live judges, then a separate supervisor/meta-judge after normalization.",
+        "selected_primary_judges": [compact_profile(profile) for profile in selected[:MIN_LIVE_JUDGES]],
+        "supervisor_judge": compact_profile(LIVE_JUDGE_PROFILES.get(DEFAULT_SUPERVISOR_JUDGE)),
         "fallback_order": [compact_profile(profile) for profile in fallback_order],
         "perplexity_spare_judge": compact_profile(spare) if spare else None,
         "pwm_council_default_allowed": False,
@@ -1191,7 +1202,7 @@ def source_check_notes(case: dict[str, Any], context: dict[str, Any]) -> dict[st
     if context["risks"]["stale"]:
         notes.extend(context["risks"]["stale"])
     if case.get("confidential"):
-        notes.append("Confidentiality gate active: use local-only unless user approves cloud routing.")
+        notes.append("Route gate active: ask the user to choose local/offline or online/live unless already specified.")
     return {
         "status": "not_performed",
         "detected_sources": context["citations"],
@@ -1610,13 +1621,13 @@ def selected_judge_ids(raw: str | None, routing: dict[str, Any]) -> list[str]:
     return judge_ids
 
 
-def judge_prompt_schema() -> str:
+def judge_prompt_schema(case: dict[str, Any], profile: dict[str, Any]) -> str:
     return json.dumps(
         {
-            "judge_id": "claude_opus_4_8",
-            "model_route": "claude-code:claude-opus-4-8",
+            "judge_id": profile["judge_id"],
+            "model_route": profile["model_route"],
             "mode": "live_model",
-            "candidate_id": "A",
+            "candidate_id": case["candidate_id"],
             "source_verification": {
                 "status": "not_performed",
                 "notes": ["Le citazioni non sono state controllate su fonti ufficiali."],
@@ -1676,7 +1687,7 @@ ISTRUZIONI
 - Restituisci SOLO JSON valido, senza markdown e senza testo prima o dopo.
 - Usa esattamente questo schema e questi nomi di criterio:
 
-{judge_prompt_schema()}
+{judge_prompt_schema(case, profile)}
 
 CANDIDATO {case['candidate_id']}
 SOURCE_FILE: {case.get('source_file', '')}
@@ -1686,6 +1697,70 @@ FONTI_ESTRATTE_NON_VERIFICATE:
 
 RISPOSTA DA VALUTARE
 {case.get('risposta', '')}
+"""
+    )
+
+
+def supervisor_prompt_schema() -> str:
+    return json.dumps(
+        {
+            "supervisor_id": DEFAULT_SUPERVISOR_JUDGE,
+            "model_route": LIVE_JUDGE_PROFILES[DEFAULT_SUPERVISOR_JUDGE]["model_route"],
+            "mode": "supervisor_meta_judge",
+            "source_verification": {
+                "status": "not_performed",
+                "notes": ["Le citazioni non sono state controllate su fonti ufficiali."],
+            },
+            "ranking_confermato": True,
+            "ranking_finale": [
+                {"rank": 1, "candidate_id": "A", "score_supervisionato": 0}
+            ],
+            "disaccordi_rilevanti": [
+                {
+                    "candidate_id": "A",
+                    "tema": "Motivo del disaccordo.",
+                    "impatto": "Impatto sul ranking o sui flag.",
+                }
+            ],
+            "override_flags": [
+                {
+                    "candidate_id": "A",
+                    "flag": "human_review_required",
+                    "motivo": "Motivo sintetico.",
+                }
+            ],
+            "decisione_operativa": "Sintesi della decisione supervisionata.",
+            "punti_da_verificare": ["..."],
+        },
+        ensure_ascii=False,
+        indent=2,
+    )
+
+
+def build_supervisor_prompt(result: dict[str, Any]) -> str:
+    return clean_text(
+        f"""
+Sei il supervisore/meta-giudice di un Panel of Judges per risposte di diritto italiano.
+
+CONTESTO E LIMITI
+- Ricevi risultati gia' normalizzati di tre giudici indipendenti per candidato.
+- Non fare ricerche web, Normattiva, Garante, banche dati o altre verifiche esterne.
+- Non presentare citazioni, norme, sentenze o provvedimenti come verificati.
+- Il tuo compito non e' rifare tutti i giudizi, ma spiegare disaccordi, ranking finale, override e punti da controllare.
+- Mantieni separata la verifica fonti dal giudizio LLM.
+
+ISTRUZIONI
+- Analizza divergenza tra giudici, raw_errors, flag e ranking.
+- Se i giudici discordano per piu' di 8 punti su un candidato, spiega il tema del disaccordo.
+- Se il ranking va mantenuto, confermalo; se va corretto, spiega il motivo.
+- Usa flag_revisione_umana quando fonti non verificate, citazioni sospette o lacune rilevanti restano aperte.
+- Restituisci SOLO JSON valido, senza markdown e senza testo prima o dopo.
+- Usa questo schema:
+
+{supervisor_prompt_schema()}
+
+RISULTATI NORMALIZZATI DA SUPERVISIONARE
+{json.dumps(result, ensure_ascii=False, indent=2)}
 """
     )
 
@@ -1714,6 +1789,47 @@ def command_for_prompt(profile: dict[str, Any], prompt_path: Path, raw_path: Pat
     if profile["judge_id"] == "claude_sonnet_recent":
         return f"claude --model sonnet --print --output-format text \"{prompt}\" > {raw}"
     return f"# No command template for {profile['judge_id']}"
+
+
+def cmd_prepare_supervisor(args: argparse.Namespace) -> None:
+    result = json.loads(Path(args.input).read_text(encoding="utf-8"))
+    supervisor_id = args.supervisor
+    if supervisor_id not in LIVE_JUDGE_PROFILES:
+        raise ValueError(f"Unknown supervisor id: {supervisor_id}")
+    profile = LIVE_JUDGE_PROFILES[supervisor_id]
+    output_dir = Path(args.output_dir)
+    if output_dir.exists() and any(output_dir.iterdir()) and not args.force:
+        raise FileExistsError(f"Refusing to write into non-empty directory: {output_dir}")
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    prompt_path = output_dir / f"supervisor__{supervisor_id}.prompt.md"
+    raw_path = output_dir / f"supervisor__{supervisor_id}.raw.txt"
+    prompt_text = build_supervisor_prompt(result)
+    write_text_no_overwrite(prompt_path, prompt_text + "\n", force=args.force)
+    command = command_for_prompt(profile, prompt_path, raw_path)
+    run_lines = [
+        "#!/usr/bin/env bash",
+        "set -euo pipefail",
+        "",
+        "# Review command before running the live supervisor/meta-judge call.",
+        command,
+    ]
+    metadata = {
+        "generated_at": now_iso(),
+        "supervisor": compact_profile(profile),
+        "normalized_input": str(args.input),
+        "prompt_file": str(prompt_path),
+        "expected_raw_file": str(raw_path),
+        "command": command,
+        "run_supervisor_script": str(output_dir / "run-supervisor.sh"),
+        "notes": [
+            "Run only after the user has chosen the online/live route.",
+            "The supervisor reviews judge disagreement and ranking; it does not verify sources.",
+        ],
+    }
+    write_json_no_overwrite(output_dir / "metadata.json", metadata, force=args.force)
+    write_text_no_overwrite(output_dir / "run-supervisor.sh", "\n".join(run_lines) + "\n", force=args.force)
+    emit_json(metadata, args.output)
 
 
 def cmd_prepare_live(args: argparse.Namespace) -> None:
@@ -1791,8 +1907,8 @@ def cmd_prepare_live(args: argparse.Namespace) -> None:
         "run_live_script": str(output_dir / "run-live.sh"),
         "notes": [
             "Prompts are separate per candidate and judge.",
-            "Run live commands only after confirming the privacy gate and account approval.",
-            "Perplexity is reserved for fallback/tie-breaker use unless explicitly requested.",
+            "Run live commands only after the user has chosen the online/live route.",
+            "Use prepare-supervisor after normalize-live to create the separate supervisor/meta-judge prompt.",
         ],
     }
     write_json_no_overwrite(output_dir / "metadata.json", metadata, force=args.force)
@@ -2154,7 +2270,7 @@ def aggregate_live_results(
         if candidate["score_medio"] is None:
             fallback_reasons.append(f"{candidate['candidate_id']}: no live verdicts.")
         if candidate["divergenza_max"] is not None and candidate["divergenza_max"] > 8:
-            fallback_reasons.append(f"{candidate['candidate_id']}: primary judge divergence above 8.")
+            fallback_reasons.append(f"{candidate['candidate_id']}: judge divergence above 8.")
     if len(ranked) >= 2 and abs(ranked[0]["score_medio"] - ranked[1]["score_medio"]) <= 3:
         fallback_reasons.append("Top two candidates are within 3 points.")
 
@@ -2246,6 +2362,8 @@ def cmd_normalize_live(args: argparse.Namespace) -> None:
             )
             file_verdicts.extend(extracted)
             file_errors.extend(errors)
+        if file_verdicts:
+            file_errors = [error for error in file_errors if error != "Payload contains no judge verdict."]
         if not file_verdicts:
             raw_errors.append(
                 {
@@ -2527,9 +2645,9 @@ def report_from_result(data: dict[str, Any], sources: dict[str, Any] | list[dict
     routing = data.get("routing") or {}
     spare = routing.get("perplexity_spare_judge")
     if spare:
-        lines.append(f"- Perplexity fallback disponibile: {spare.get('display_name')} ({spare.get('model_route')}).")
+        lines.append(f"- Perplexity route disponibile: {spare.get('display_name')} ({spare.get('model_route')}).")
     else:
-        lines.append("- Perplexity fallback non usato o non disponibile; auth/quota non confermata nel risultato.")
+        lines.append("- Perplexity route non usata o non disponibile; auth/quota non confermata nel risultato.")
     availability = data.get("model_tool_availability") or {}
     pwm = (availability.get("tools") or {}).get("pwm") or {}
     if pwm:
@@ -2545,8 +2663,13 @@ def report_from_result(data: dict[str, Any], sources: dict[str, Any] | list[dict
                 if text:
                     text = re.sub(r"\s+", " ", text)
                     pwm_notes.append(f"{command}: {text}")
+        perplexity_live_routes = [
+            route for route in (data.get("model_routes_used") or []) if "perplexity:" in str(route)
+        ]
         if pwm_notes:
-            lines.append(f"- Perplexity auth/quota: {' | '.join(pwm_notes)}")
+            lines.append(f"- Perplexity check sandbox: {' | '.join(pwm_notes)}")
+        if perplexity_live_routes:
+            lines.append("- Perplexity live: raw acquisiti e normalizzati; il check sandbox non e' stato trattato come indisponibilita'.")
     if data.get("fallback_recommended"):
         reasons = [str(reason).strip().rstrip(".") for reason in (data.get("fallback_reasons") or [])]
         lines.append(f"- Fallback consigliato: sì ({'; '.join(reasons)}).")
@@ -2623,7 +2746,7 @@ def doctor() -> dict[str, Any]:
     if tools["pwm"]["available"]:
         auth_check = check_result_by_command(tools["pwm"], ["pwm", "login", "--check"])
         if auth_check and auth_check.get("exit_code") not in (0, None):
-            warnings.append("Perplexity auth may be missing or expired.")
+            warnings.append("Perplexity sandboxed auth check failed or was inconclusive; verify outside sandbox before treating it as unavailable.")
     if not tools["nlm"]["available"]:
         warnings.append("NotebookLM CLI nlm not found.")
     routing = select_model_routes(tools)
@@ -2862,6 +2985,14 @@ def build_parser() -> argparse.ArgumentParser:
     normalize_parser.add_argument("--raw-dir", required=True, help="Directory containing *.raw.txt or *.raw.json files.")
     normalize_parser.add_argument("--output", help="Write normalized JSON to this path.")
     normalize_parser.set_defaults(func=cmd_normalize_live)
+
+    supervisor_parser = sub.add_parser("prepare-supervisor", help="Prepare the supervisor/meta-judge prompt from normalized live results.")
+    supervisor_parser.add_argument("--input", required=True, help="Normalized JSON from normalize-live.")
+    supervisor_parser.add_argument("--output-dir", required=True, help="Directory for supervisor prompt, metadata, and raw output.")
+    supervisor_parser.add_argument("--supervisor", default=DEFAULT_SUPERVISOR_JUDGE, help="Supervisor judge id.")
+    supervisor_parser.add_argument("--output", help="Write metadata JSON to this path as well as stdout.")
+    supervisor_parser.add_argument("--force", action="store_true", help="Allow overwriting generated files.")
+    supervisor_parser.set_defaults(func=cmd_prepare_supervisor)
 
     verify_parser = sub.add_parser("verify-sources", help="Plan/check source verification for case citations.")
     verify_parser.add_argument("--cases", required=True, help="Cases JSON from extract or prepare-live.")

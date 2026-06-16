@@ -10,15 +10,15 @@ Use this skill to screen and rank Italian legal AI answers. Treat the panel as q
 ## Core Workflow
 
 1. Extract and normalize the candidates with `scripts/legal_panel.py`.
-2. Apply the privacy gate before any live/cloud route.
-3. Choose judges dynamically with `doctor`; prefer the best two available top models over fixed Perplexity routes.
+2. Apply the route gate before any live/cloud route: if the user has not already chosen, ask whether to run only locally/offline or also online/live.
+3. Choose three independent judges dynamically with `doctor`, then run a separate supervisor/meta-judge after normalization.
 4. Run separate prompts per candidate and per judge; save raw outputs separately.
-5. Normalize raw JSON, preserve malformed outputs, aggregate scores out of 39, and generate a readable Markdown report.
+5. Normalize raw JSON, preserve malformed outputs, aggregate scores out of 39, prepare supervisor review, and generate a readable Markdown report.
 6. State clearly whether source verification was `not_performed`, `partial`, or `verified`.
 
-## Privacy Gate
+## Route And Privacy Gate
 
-Default `confidential` to `true` when material includes client, employee, mailbox, personal-data, company, or litigation facts. Do not install tools, authenticate accounts, upload documents, or spend live model calls unless the user has approved that route or the current request explicitly authorizes it.
+Use `confidential` as a risk label, not as an automatic route decision. Default `confidential` to `true` when material includes client, employee, mailbox, personal-data, company, or litigation facts, but do not silently choose local/offline or online/live. If the user has not already specified the route, ask whether they want only local/offline processing or also online/live model calls, naming the intended providers/tools. Do not install tools, authenticate accounts, upload documents, or spend live model calls unless the user has approved that route or the current request explicitly authorizes it.
 
 ## Script
 
@@ -30,6 +30,7 @@ python3 italian-legal-llm-panel/scripts/legal_panel.py extract "answer.docx" --p
 python3 italian-legal-llm-panel/scripts/legal_panel.py compare "A.docx" "B.docx" "C.docx" --preset cda-resignation-mailbox
 python3 italian-legal-llm-panel/scripts/legal_panel.py prepare-live "A.docx" "B.docx" "C.docx" --preset cda-resignation-mailbox --output-dir panel-results-raw --cases-output panel-input.json
 python3 italian-legal-llm-panel/scripts/legal_panel.py normalize-live --cases panel-input.json --raw-dir panel-results-raw --output panel-results-normalized.json
+python3 italian-legal-llm-panel/scripts/legal_panel.py prepare-supervisor --input panel-results-normalized.json --output-dir panel-results-supervisor
 python3 italian-legal-llm-panel/scripts/legal_panel.py verify-sources --cases panel-input.json --output source-verification.json
 python3 italian-legal-llm-panel/scripts/legal_panel.py report --input panel-results-normalized.json --sources source-verification.json --output panel-results-report.md
 python3 italian-legal-llm-panel/scripts/legal_panel.py mock
@@ -62,4 +63,4 @@ python3 italian-legal-llm-panel/scripts/legal_panel.py prepare-live \
   --cases-output panel-input-abc-live.json
 ```
 
-Use Claude Opus 4.8 and Codex GPT-5.5 xhigh when available. Use Perplexity `pwm ask --json --source none` only as a single fallback or tie-breaker when a primary judge fails, judge divergence exceeds 8 points, or the top two candidates are within 3 points. Do not use `pwm council` by default; use it only when two better judges are unavailable and the user explicitly approves.
+Use three independent non-supervisor judges when available: Codex GPT-5.5 xhigh, Perplexity Gemini Pro, and Perplexity Kimi K2.6. Do not pair Codex GPT-5.5 with Perplexity GPT-5.5 as default primary judges; they are too similar for independence. Use Perplexity Nemotron or Perplexity GPT-5.5 only as fallback/tie-breaker when a diverse primary route fails. Reserve the strongest available model, currently Claude Opus 4.8, for the separate supervisor/meta-judge after `normalize-live`. If Perplexity is falsely marked unavailable by sandboxed checks, verify auth/quota outside the sandbox after approval or pass `--judges codex_gpt_5_5_xhigh,perplexity_gemini_pro,perplexity_kimi_k26`. Do not use `pwm council` by default; use separate judge calls so raw outputs remain isolated.

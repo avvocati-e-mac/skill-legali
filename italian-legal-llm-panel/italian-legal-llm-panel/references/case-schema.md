@@ -26,8 +26,8 @@ Use `ground_truth` as a structured checklist when a single model answer would be
 
 ```json
 {
-  "judge_id": "claude_opus_4_8",
-  "model_route": "claude-code:claude-opus-4-8",
+  "judge_id": "codex_gpt_5_5_xhigh",
+  "model_route": "codex:gpt-5.5:xhigh",
   "mode": "live_model",
   "candidate_id": "A",
   "source_verification": {"status": "not_performed", "notes": ["..."]},
@@ -45,7 +45,7 @@ Use `ground_truth` as a structured checklist when a single model answer would be
   "kappa_discrete_score": 2,
   "flag_revisione_umana": true,
   "punti_critici_per_avvocato": ["Verify case-law citations"],
-  "raw_file": "panel-results-raw/A__claude_opus_4_8.raw.txt"
+  "raw_file": "panel-results-raw/A__codex_gpt_5_5_xhigh.raw.txt"
 }
 ```
 

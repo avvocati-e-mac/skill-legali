@@ -3,12 +3,28 @@
 
 from __future__ import annotations
 
+import ast
 import re
 import sys
 from pathlib import Path
 
 
 NAME_RE = re.compile(r"^[a-z0-9-]{1,63}$")
+
+ARCHITECTURE_ANCHORS = (
+    "arXiv:2306.05685",
+    "arXiv:2412.05579",
+    "arXiv:2505.12864",
+    "arXiv:2504.21202",
+    "arXiv:2505.17267",
+    "PMC3900052",
+)
+
+EXPECTED_PRIMARY_LIVE_JUDGES = (
+    "codex_gpt_5_5_xhigh",
+    "perplexity_gemini_pro",
+    "perplexity_kimi_k26",
+)
 
 
 def parse_frontmatter(text: str) -> dict[str, str]:
@@ -26,6 +42,16 @@ def parse_frontmatter(text: str) -> dict[str, str]:
         key, value = line.split(":", 1)
         data[key.strip()] = value.strip().strip('"')
     return data
+
+
+def literal_assignment(text: str, name: str) -> object | None:
+    module = ast.parse(text)
+    for node in module.body:
+        if not isinstance(node, ast.Assign):
+            continue
+        if any(isinstance(target, ast.Name) and target.id == name for target in node.targets):
+            return ast.literal_eval(node.value)
+    return None
 
 
 def validate(path: Path) -> list[str]:
@@ -49,6 +75,9 @@ def validate(path: Path) -> list[str]:
     if any(key not in {"name", "description"} for key in frontmatter):
         errors.append("Frontmatter should contain only name and description.")
     for required in (
+        "ARCHITETTURA.md",
+        "CLAUDE.md",
+        "AGENTS.md",
         "references/rubric.md",
         "references/model-routing.md",
         "references/live-judging.md",
@@ -59,6 +88,32 @@ def validate(path: Path) -> list[str]:
     ):
         if not (path / required).exists():
             errors.append(f"Missing required support file: {required}")
+
+    claude_file = path / "CLAUDE.md"
+    agents_file = path / "AGENTS.md"
+    if claude_file.exists() and agents_file.exists():
+        if claude_file.read_bytes() != agents_file.read_bytes():
+            errors.append("CLAUDE.md and AGENTS.md must be byte-for-byte identical.")
+
+    architecture_file = path / "ARCHITETTURA.md"
+    if architecture_file.exists():
+        architecture_text = architecture_file.read_text(encoding="utf-8")
+        for anchor in ARCHITECTURE_ANCHORS:
+            if anchor not in architecture_text:
+                errors.append(f"ARCHITETTURA.md missing scientific anchor: {anchor}")
+    legal_panel_file = path / "scripts/legal_panel.py"
+    if legal_panel_file.exists():
+        legal_panel_text = legal_panel_file.read_text(encoding="utf-8")
+        try:
+            primary_judges = literal_assignment(legal_panel_text, "PRIMARY_LIVE_JUDGES")
+        except Exception as exc:
+            errors.append(f"Unable to parse PRIMARY_LIVE_JUDGES: {exc}")
+        else:
+            if tuple(primary_judges or ()) != EXPECTED_PRIMARY_LIVE_JUDGES:
+                errors.append(
+                    "PRIMARY_LIVE_JUDGES must be "
+                    f"{list(EXPECTED_PRIMARY_LIVE_JUDGES)!r} to avoid duplicate GPT-family primaries."
+                )
     return errors
 
 
