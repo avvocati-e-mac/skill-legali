@@ -22,7 +22,8 @@ Before live search or cloud upload:
    - Do not use Normattiva as the authority for GDPR text or EU-law currency.
 3. Case law and measures:
    - Use BuddaLaw MCP or another approved legal database first for Cassation, ordinary courts, TAR/CGT, Garante, and similar citations.
-   - If BuddaLaw is unavailable, use SearXNG when installed/configured.
+   - GestioLex Corpus MCP (also from `avvocati-e-mac/skill-legali`) is an acceptable approved database for Italian statutes and case-law maxims; use it when installed/approved, instead of or alongside BuddaLaw.
+   - If no approved legal database is available, use SearXNG when installed/configured.
    - If SearXNG is unavailable, use Perplexity only when authenticated and explicitly approved.
    - If Perplexity is unavailable/expired/not approved, use base web search only as discovery and confirm against official or authorized sources.
 4. Fallback:
@@ -31,7 +32,7 @@ Before live search or cloud upload:
 Use the script entrypoint for repeatable citation routing:
 
 ```bash
-python3 italian-legal-llm-panel/scripts/legal_panel.py verify-sources --cases panel-input.json --output source-verification.json
+python3 concilio-llm-prompt-legale/scripts/legal_panel.py verify-sources --cases panel-input.json --output source-verification.json
 ```
 
 Each record must include `citation`, `source_type`, `preferred_tool`, `tool_used`, `official_url`, `status`, `vigente_al`, `article_text_excerpt`, `finding`, and `score_impact`.

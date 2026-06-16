@@ -1,12 +1,12 @@
-# Italian Legal LLM Panel - Architettura
+# Concilio di LLM per valutazione risposta legale - Architettura
 
-Questo documento descrive l'architettura della skill `italian-legal-llm-panel`, il suo modello di scoring, i presidi contro bias e drift, e i riferimenti scientifici usati per motivare le scelte metodologiche.
+Questo documento descrive l'architettura della skill `concilio-llm-prompt-legale`, il suo modello di scoring, i presidi contro bias e drift, e i riferimenti scientifici usati per motivare le scelte metodologiche.
 
-La skill e' uno strumento di screening, ranking e quality control di risposte legali generate da AI. Non produce consulenza legale, non sostituisce l'avvocato italiano e non certifica la verita' delle citazioni. Ogni fonte usata in un fascicolo, in una comunicazione al cliente o in un atto deve essere verificata dal professionista su fonte ufficiale o banca dati autorizzata.
+La skill e' uno strumento di screening, ranking e quality control di risposte legali generate da AI, sui quattro rami del diritto italiano (civile, penale, tributario, amministrativo). Il caso d'uso primario e' confrontare la risposta base di un LLM con la versione ottenuta tramite un miglioratore di prompt, sullo stesso quesito; la skill supporta comunque confronto A/B/C e valutazione singola. Non produce consulenza legale, non sostituisce l'avvocato italiano e non certifica la verita' delle citazioni. Ogni fonte usata in un fascicolo, in una comunicazione al cliente o in un atto deve essere verificata dal professionista su fonte ufficiale o banca dati autorizzata.
 
 ## Panoramica operativa
 
-La skill valuta una o piu' risposte candidate rispetto a un quesito, una ground truth o checklist, e una rubric pesata. La CLI `scripts/legal_panel.py` offre workflow locali/offline per estrazione, mock scoring, confronto, preparazione di prompt live, normalizzazione di output live, verifica fonti e report.
+La skill valuta una o piu' risposte candidate rispetto a un quesito, una ground truth o checklist, e una rubric pesata. Nel confronto base-vs-prompt-migliorato i due testi sono trattati come candidati anonimi (ID neutri A/B) per evitare che il giudice premi la versione etichettata come "migliorata". La CLI `scripts/legal_panel.py` offre workflow locali/offline per estrazione, mock scoring, confronto, preparazione di prompt live, normalizzazione di output live, verifica fonti e report.
 
 Principi:
 
@@ -92,11 +92,11 @@ ranking + human_review_flags + kappa_ready
 Comandi:
 
 ```bash
-python3 italian-legal-llm-panel/scripts/legal_panel.py doctor
-python3 italian-legal-llm-panel/scripts/legal_panel.py extract "answer.docx" --preset cda-resignation-mailbox
-python3 italian-legal-llm-panel/scripts/legal_panel.py single "answer.docx" --ground-truth ground_truth.md
-python3 italian-legal-llm-panel/scripts/legal_panel.py compare "A.docx" "B.docx" "C.docx" --preset cda-resignation-mailbox
-python3 italian-legal-llm-panel/scripts/legal_panel.py mock
+python3 concilio-llm-prompt-legale/scripts/legal_panel.py doctor
+python3 concilio-llm-prompt-legale/scripts/legal_panel.py extract "answer.docx" --preset civile
+python3 concilio-llm-prompt-legale/scripts/legal_panel.py single "answer.docx" --ground-truth ground_truth.md
+python3 concilio-llm-prompt-legale/scripts/legal_panel.py compare "A.docx" "B.docx" "C.docx" --preset civile
+python3 concilio-llm-prompt-legale/scripts/legal_panel.py mock
 ```
 
 ## Workflow live
@@ -140,13 +140,13 @@ supervisor prompt + supervisor raw output
 Comandi:
 
 ```bash
-python3 italian-legal-llm-panel/scripts/legal_panel.py prepare-live \
+python3 concilio-llm-prompt-legale/scripts/legal_panel.py prepare-live \
   "A.docx" "B.docx" "C.docx" \
-  --preset cda-resignation-mailbox \
+  --preset civile \
   --output-dir panel-results-raw \
   --cases-output panel-input.json
 
-python3 italian-legal-llm-panel/scripts/legal_panel.py normalize-live \
+python3 concilio-llm-prompt-legale/scripts/legal_panel.py normalize-live \
   --cases panel-input.json \
   --raw-dir panel-results-raw \
   --output panel-results-normalized.json

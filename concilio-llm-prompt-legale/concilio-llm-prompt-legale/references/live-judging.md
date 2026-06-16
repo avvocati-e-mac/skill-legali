@@ -7,9 +7,9 @@ Use live judging only after the user has chosen the online/live route. Always ke
 Prepare prompts with:
 
 ```bash
-python3 italian-legal-llm-panel/scripts/legal_panel.py prepare-live \
+python3 concilio-llm-prompt-legale/scripts/legal_panel.py prepare-live \
   "A.docx" "B.docx" "C.docx" \
-  --preset cda-resignation-mailbox \
+  --preset civile \
   --output-dir panel-results-raw \
   --cases-output panel-input.json
 ```
@@ -55,7 +55,7 @@ Fallback order after the primary routes is `nemotron`, then `gpt55`, then `gpt54
 Normalize after collecting raw files:
 
 ```bash
-python3 italian-legal-llm-panel/scripts/legal_panel.py normalize-live \
+python3 concilio-llm-prompt-legale/scripts/legal_panel.py normalize-live \
   --cases panel-input.json \
   --raw-dir panel-results-raw \
   --output panel-results-normalized.json
@@ -68,7 +68,7 @@ Malformed outputs must remain in the raw folder and appear under `raw_errors` in
 Prepare the supervisor prompt after normalization. The supervisor must be the strongest available model and must not duplicate one of the three first-pass judges; the default is Claude Opus 4.8.
 
 ```bash
-python3 italian-legal-llm-panel/scripts/legal_panel.py prepare-supervisor \
+python3 concilio-llm-prompt-legale/scripts/legal_panel.py prepare-supervisor \
   --input panel-results-normalized.json \
   --output-dir panel-results-supervisor
 ```

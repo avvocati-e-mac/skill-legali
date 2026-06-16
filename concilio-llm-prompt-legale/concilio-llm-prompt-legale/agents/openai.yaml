@@ -1,0 +1,4 @@
+interface:
+  display_name: "Concilio di LLM per valutazione risposta legale"
+  short_description: "Confronta risposte legali AI (base vs prompt migliorato)"
+  default_prompt: "Use $concilio-llm-prompt-legale to compare an Italian legal AI answer against its prompt-improved version (or A/B/C candidates) and rank them with a source-aware panel of judges."

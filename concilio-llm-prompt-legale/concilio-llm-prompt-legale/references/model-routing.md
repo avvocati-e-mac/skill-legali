@@ -7,7 +7,7 @@ Choose three independent live judges dynamically, then run a separate supervisor
 Run:
 
 ```bash
-python3 italian-legal-llm-panel/scripts/legal_panel.py doctor
+python3 concilio-llm-prompt-legale/scripts/legal_panel.py doctor
 ```
 
 Use its `routing.selected_primary_judges`, aiming for three judges. Treat model names as route targets, not proof that the account can use them; the first live call still confirms authentication, subscription, and quota. If sandboxed checks say Perplexity is unavailable but the user expects it, verify `pwm login --check` and `pwm usage` outside the sandbox after approval.

@@ -155,50 +155,111 @@ JUDGES = [
     },
 ]
 
+# Preset tematici generici per i quattro rami del diritto italiano.
+# Le checklist sono volutamente generali: nessun fatto di parte, solo criteri di qualita'
+# della risposta legale e norme da verificare sempre su fonte ufficiale.
 PRESETS = {
-    "cda-resignation-mailbox": {
+    "civile": {
         "quesito": (
-            "Valutare una risposta sul caso di dimissioni da un consiglio di "
-            "amministrazione, possibili profili di diritto del lavoro, gestione "
-            "di email aziendali/forwarding, autoresponder, GDPR/privacy e "
-            "affidabilita delle citazioni giurisprudenziali."
+            "Valutare una risposta di diritto civile italiano su una questione di "
+            "obbligazioni, contratti, responsabilita o prescrizione."
         ),
         "ground_truth": (
-            "La risposta deve distinguere i profili societari da quelli di "
-            "eventuale rapporto di lavoro o collaborazione; verificare statuto, "
-            "deleghe, procure, poteri di firma, contratti e policy aziendali; "
-            "trattare il reindirizzamento email con base giuridica, minimizzazione, "
-            "informativa, limitazione temporale, segregazione dei contenuti, "
-            "autoresponder neutro e controllo dei dati personali; considerare "
-            "eventuali rischi ex Statuto dei lavoratori se vi sono email o "
-            "strumenti riferibili a un lavoratore; raccomandare verifica di "
-            "norme e sentenze su fonti ufficiali o banche dati autorizzate; "
-            "evitare citazioni di Cassazione non verificabili."
+            "La risposta deve individuare e citare l'articolo del codice civile o la "
+            "legge speciale pertinente nel testo vigente; distinguere fattispecie e "
+            "discipline simili (es. prescrizione ordinaria e termini speciali, "
+            "responsabilita contrattuale ed extracontrattuale); segnalare gli "
+            "orientamenti giurisprudenziali rilevanti senza inventare sentenze; "
+            "raccomandare la verifica di norme e pronunce su fonti ufficiali o "
+            "banche dati autorizzate."
         ),
         "required_topics": [
-            "societario",
-            "dimissioni",
-            "statuto",
-            "deleghe",
-            "lavoro",
-            "statuto dei lavoratori",
-            "gdpr",
-            "minimizzazione",
-            "informativa",
-            "forwarding",
-            "autoresponder",
-            "casella email",
+            "codice civile",
+            "norma vigente",
+            "articolo",
             "giurisprudenza",
-            "cassazione",
             "verifica fonti",
         ],
         "fonti": [
-            "Codice civile societario da verificare su Normattiva",
-            "GDPR artt. 5, 6, 12-14 da verificare su EUR-Lex",
-            "Statuto dei lavoratori art. 4 se applicabile",
-            "Garante Privacy / EDPB per email e controlli",
+            "Codice civile da verificare su Normattiva",
+            "Giurisprudenza da verificare su banca dati autorizzata",
         ],
-    }
+    },
+    "penale": {
+        "quesito": (
+            "Valutare una risposta di diritto penale italiano su una questione di "
+            "fattispecie di reato, elemento soggettivo, cause di non punibilita o "
+            "prescrizione del reato."
+        ),
+        "ground_truth": (
+            "La risposta deve citare l'articolo del codice penale o della legge "
+            "speciale nel testo vigente; distinguere dolo, colpa e preterintenzione "
+            "quando rilevante; trattare correttamente prescrizione e cause di "
+            "estinzione; segnalare contrasti giurisprudenziali senza inventare "
+            "pronunce; raccomandare la verifica su fonti ufficiali."
+        ),
+        "required_topics": [
+            "codice penale",
+            "norma vigente",
+            "elemento soggettivo",
+            "prescrizione",
+            "verifica fonti",
+        ],
+        "fonti": [
+            "Codice penale da verificare su Normattiva",
+            "Giurisprudenza di legittimita da verificare su banca dati autorizzata",
+        ],
+    },
+    "tributario": {
+        "quesito": (
+            "Valutare una risposta di diritto tributario italiano su una questione di "
+            "accertamento, termini di decadenza, sanzioni o processo tributario."
+        ),
+        "ground_truth": (
+            "La risposta deve citare la norma tributaria pertinente nel testo "
+            "vigente (es. statuto del contribuente, d.lgs. sul processo tributario); "
+            "trattare correttamente termini di decadenza e prescrizione; distinguere "
+            "tributi e fasi del procedimento; segnalare prassi e giurisprudenza "
+            "tributaria senza inventarle; raccomandare verifica su fonti ufficiali."
+        ),
+        "required_topics": [
+            "norma tributaria",
+            "norma vigente",
+            "decadenza",
+            "processo tributario",
+            "verifica fonti",
+        ],
+        "fonti": [
+            "Statuto del contribuente e d.lgs. 546/1992 da verificare su Normattiva",
+            "Prassi e giurisprudenza tributaria da verificare su banca dati autorizzata",
+        ],
+    },
+    "amministrativo": {
+        "quesito": (
+            "Valutare una risposta di diritto amministrativo italiano su una "
+            "questione di provvedimento, vizi dell'atto, termini di ricorso o "
+            "giurisdizione."
+        ),
+        "ground_truth": (
+            "La risposta deve citare la norma pertinente nel testo vigente (es. "
+            "l. 241/1990, codice del processo amministrativo); distinguere i vizi "
+            "dell'atto e i termini di impugnazione; individuare correttamente "
+            "giurisdizione e competenza; segnalare orientamenti del giudice "
+            "amministrativo senza inventarli; raccomandare verifica su fonti "
+            "ufficiali."
+        ),
+        "required_topics": [
+            "norma amministrativa",
+            "norma vigente",
+            "termini di ricorso",
+            "giurisdizione",
+            "verifica fonti",
+        ],
+        "fonti": [
+            "L. 241/1990 e d.lgs. 104/2010 (c.p.a.) da verificare su Normattiva",
+            "Giurisprudenza amministrativa da verificare su banca dati autorizzata",
+        ],
+    },
 }
 
 LEGAL_SKILLS_REPO = "avvocati-e-mac/skill-legali"
@@ -439,11 +500,14 @@ def source_tool_statuses(
 ) -> dict[str, Any]:
     normattiva = skill_dir_status("normattiva", aliases=["normattiva"])
     buddalaw_skill = skill_dir_status("buddalaw", aliases=["budda", "buddalaw"])
+    gestiolex_skill = skill_dir_status("gestiolex", aliases=["gestiolex", "gestiolex-corpus", "corpus"])
     searxng_skill = skill_dir_status("searxng", aliases=["searx", "searxng"])
     buddalaw_commands = command_paths(["buddalaw", "buddalaw-mcp"])
+    gestiolex_commands = command_paths(["gestiolex", "gestiolex-corpus", "gestiolex-mcp"])
     searxng_commands = command_paths(["searxng", "searxng-mcp", "searx"])
     normattiva_commands = command_paths(["normattiva", "normattiva-mcp"])
     buddalaw_config_hits = config_marker_hits(config_paths, ["buddalaw", "budda-law"])
+    gestiolex_config_hits = config_marker_hits(config_paths, ["gestiolex", "gestiolex-corpus"])
     searxng_config_hits = config_marker_hits(config_paths, ["searxng", "searx"])
     return {
         "normattiva": {
@@ -469,6 +533,19 @@ def source_tool_statuses(
                 "BuddaLaw appears installed/configured."
                 if buddalaw_skill["present"] or any(buddalaw_commands.values()) or buddalaw_config_hits
                 else "BuddaLaw not detected; do not configure paid/legal database access without approval."
+            ),
+        },
+        "gestiolex": {
+            **gestiolex_skill,
+            "commands": gestiolex_commands,
+            "mcp_config_detected": bool(gestiolex_config_hits),
+            "mcp_config_paths": gestiolex_config_hits,
+            "requires_account_or_config": True,
+            "install_or_config_requires_user_approval": True,
+            "status_message": (
+                "GestioLex Corpus appears installed/configured."
+                if gestiolex_skill["present"] or any(gestiolex_commands.values()) or gestiolex_config_hits
+                else "GestioLex Corpus not detected; do not configure the MCP route without approval."
             ),
         },
         "searxng": {
@@ -2761,13 +2838,19 @@ def doctor() -> dict[str, Any]:
     ):
         warnings.append("BuddaLaw MCP/legal database not detected.")
     if not (
+        source_tools["gestiolex"].get("present")
+        or source_tools["gestiolex"].get("mcp_config_detected")
+        or has_any_command(source_tools["gestiolex"])
+    ):
+        warnings.append("GestioLex Corpus MCP/legal database not detected.")
+    if not (
         source_tools["searxng"].get("present")
         or source_tools["searxng"].get("mcp_config_detected")
         or has_any_command(source_tools["searxng"])
     ):
         warnings.append("SearXNG skill/MCP not detected.")
     if source_tools["workspace_skill_copy"].get("differs"):
-        warnings.append("Installed italian-legal-llm-panel skill differs from workspace copy.")
+        warnings.append("Installed concilio-llm-prompt-legale skill differs from workspace copy.")
     return {
         "generated_at": now_iso(),
         "no_model_calls_spent": True,
@@ -2835,22 +2918,22 @@ def mock_cases() -> list[dict[str, Any]]:
         {
             "candidate_id": "correct",
             "source_file": "mock",
-            "quesito": PRESETS["cda-resignation-mailbox"]["quesito"],
+            "quesito": PRESETS["civile"]["quesito"],
             "risposta": (
-                "La gestione va separata tra profili societari e di lavoro. "
-                "Occorre verificare statuto, deleghe e procure. Per la casella "
-                "email aziendale, ogni forwarding deve avere base giuridica, "
-                "minimizzazione, informativa e durata limitata; meglio un "
-                "autoresponder neutro. Se il soggetto e anche lavoratore, va "
-                "considerato l'art. 4 Statuto dei lavoratori. Le citazioni di "
-                "Cassazione e il GDPR artt. 5 e 6 devono essere verificate su "
-                "fonti ufficiali."
+                "Il termine di prescrizione ordinario è decennale ai sensi "
+                "dell'art. 2946 c.c., salvo i termini speciali previsti dalla "
+                "legge. Per il risarcimento da fatto illecito si applica il "
+                "termine quinquennale dell'art. 2947 c.c., distinto dalla "
+                "responsabilità contrattuale. La norma va verificata nel testo "
+                "vigente su fonte ufficiale e gli orientamenti giurisprudenziali "
+                "vanno controllati su banca dati autorizzata, senza citare "
+                "sentenze non verificabili."
             ),
-            "ground_truth": PRESETS["cda-resignation-mailbox"]["ground_truth"],
-            "required_topics": PRESETS["cda-resignation-mailbox"]["required_topics"],
+            "ground_truth": PRESETS["civile"]["ground_truth"],
+            "required_topics": PRESETS["civile"]["required_topics"],
             "data_riferimento": today_iso(),
             "fonti": [],
-            "confidential": True,
+            "confidential": False,
             "extraction": {"format": "mock", "extracted_at": now_iso(), "notes": []},
         },
         {
