@@ -1,7 +1,7 @@
 # Skill legali per Claude, Codex e assistenti AI
 
 Raccolta di **skill** per Claude, Codex e altri assistenti AI utili nella pratica e nello studio dell'avvocato italiano.  
-Ogni skill insegna all'assistente comportamenti specifici — come generare automaticamente link alle norme, cercare giurisprudenza, fare ricerche sul web in modo riservato o trascrivere registrazioni — pensati per il lavoro quotidiano di chi fa l'avvocato.
+Ogni skill insegna all'assistente comportamenti specifici — come generare automaticamente link alle norme, cercare giurisprudenza, fare ricerche sul web in modo riservato, trascrivere registrazioni o confrontare e valutare le risposte di diverse IA su una domanda di diritto — pensati per il lavoro quotidiano di chi fa l'avvocato.
 
 > **A chi è rivolto questo repository**  
 > Queste istruzioni sono scritte per avvocati che non hanno familiarità con la programmazione. Niente paura: installare una skill richiede solo pochi clic.
@@ -17,6 +17,7 @@ Ogni skill insegna all'assistente comportamenti specifici — come generare auto
 | [**GestioLex Corpus**](./Gestiolex%20Corpus/) | Ricerca testi normativi e massime giurisprudenziali italiane tramite il server MCP GestioLex Corpus, sviluppato e messo a disposizione da [GestioLex](https://www.gestiolex.it/). Sceglie lo strumento piu adatto tra lettura esatta di articoli, ricerca normativa e orientamento giurisprudenziale. La [guida](./Gestiolex%20Corpus/README.md) spiega anche come configurare l'MCP in Claude Code e Codex. | [⬇️ `.skill`](https://github.com/avvocati-e-mac/skill-legali/raw/main/Gestiolex%20Corpus/gestiolex-corpus.skill) |
 | [**ricerca web (SearXNG)**](./ricerca%20con%20SearXNG%20e%20test/) | Ricerca su internet **gratuita e privata** tramite un motore [SearXNG](https://docs.searxng.org) che installi sul tuo computer — l'alternativa per chi **non ha un abbonamento Perplexity**. Cura particolarmente le ricerche in italiano e quelle legali, con instradamento automatico verso Normattiva (norme), BuddaLaw (sentenze) e fonti di dottrina. La [guida passo-passo](./ricerca%20con%20SearXNG%20e%20test/README.md) spiega come creare il server SearXNG (Docker/OrbStack) e collegarlo all'assistente. | [⬇️ `.skill`](https://github.com/avvocati-e-mac/skill-legali/raw/main/ricerca%20con%20SearXNG%20e%20test/ricerca-web-searXNG.skill) |
 | [**trascrizione audio**](./trascrizione%20audio/) | Trasforma un file audio in **testo e sottotitoli** (SRT/VTT/TXT), lavorando **interamente sul tuo computer** quando l'ambiente lo consente (l'audio non viene mai caricato online). Adatta a registrazioni di udienze, colloqui col cliente e note vocali coperte da segreto professionale. Sceglie da sola lo strumento giusto in base all'hardware (Mac Apple Silicon, Mac Intel, Windows, Linux). | [⬇️ `.skill`](https://github.com/avvocati-e-mac/skill-legali/raw/main/trascrizione%20audio/audio-transcription.skill) |
+| [**italian-legal-llm-panel**](./italian-legal-llm-panel/) | Mette a confronto e dà un voto alle risposte di diverse IA su una **stessa domanda di diritto italiano**. Estrae il testo dei pareri da Word/PDF/testo, li confronta tra loro (A/B/C) con una "giuria" di più giudici e controlla i punti critici: **citazioni** delle norme e delle sentenze, **privacy/GDPR**, **diritto del lavoro**, **diritto societario** e affidabilità della giurisprudenza, producendo infine un report leggibile. È pensata come **controllo di qualità: non sostituisce mai la verifica dell'avvocato**. Lavora con i soli strumenti del tuo computer finché non sei tu ad autorizzare una verifica online. | [⬇️ `.skill`](https://github.com/avvocati-e-mac/skill-legali/raw/main/italian-legal-llm-panel/italian-legal-llm-panel.skill) |
 
 ---
 
@@ -24,6 +25,7 @@ Ogni skill insegna all'assistente comportamenti specifici — come generare auto
 
 | Data | Skill | Aggiornamento |
 |------|-------|---------------|
+| 16 giugno 2026 | **italian-legal-llm-panel** | Primo rilascio: giuria di IA per valutare e confrontare risposte legali italiane (punteggio su 39, confronto A/B/C, verifica delle fonti, report leggibile) |
 | 10 giugno 2026 | **GestioLex Corpus** | Primo rilascio: ricerca normativa e massime italiane tramite MCP GestioLex Corpus, con routing tra articoli esatti, norme e giurisprudenza |
 | 2 giugno 2026 | *(tutte)* | Aggiunta compatibilità esplicita con Codex/OpenAI, file `AGENTS.md` gemelli di `CLAUDE.md` e metadati `agents/openai.yaml` nelle skill |
 | 31 maggio 2026 | *(tutte)* | Aggiunti link di download diretti ai file `.skill` nelle guide e una colonna "Scarica" nella tabella delle skill |
