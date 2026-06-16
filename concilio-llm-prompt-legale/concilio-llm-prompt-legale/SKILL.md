@@ -13,19 +13,20 @@ verified by the professional.
 ## Caso d'uso principale: risposta base vs prompt migliorato
 
 Lo scopo primario è valutare **la stessa domanda legale risposta da un LLM in due versioni**: quella
-generata dal prompt base e quella generata dopo un miglioratore di prompt. Si confrontano come due
-candidati sullo stesso `quesito` e `ground_truth`, con ID neutri per evitare bias a favore della
-versione "migliorata":
+generata dal prompt base e quella generata dopo un miglioratore di prompt. Usa il comando dedicato
+`prompt-eval`, che assegna da solo ID neutri (A=base, B=migliorato) per evitare bias a favore della
+versione "migliorata", impone lo stesso quesito e aggiunge una checklist orientata al *delta*:
 
 ```bash
-python3 concilio-llm-prompt-legale/scripts/legal_panel.py compare \
-  "risposta-base.md" "risposta-prompt-migliorato.md" \
-  --quesito "<quesito di diritto>" --ground-truth "checklist.md" \
-  --candidate-id A --candidate-id B
+python3 concilio-llm-prompt-legale/scripts/legal_panel.py prompt-eval \
+  --baseline "risposta-base.md" --improved "risposta-prompt-migliorato.md" \
+  --preset civile --quesito "<quesito di diritto>"
 ```
 
-La skill resta generica: gli stessi comandi servono per confronto A/B/C di più IA e per valutazione
-singola. Per casi tipici usa un preset tematico: `civile`, `penale`, `tributario`, `amministrativo`.
+La skill resta generica: `compare` serve per confronto A/B/C di più IA e `single` per la valutazione
+di una singola risposta. Per casi tipici usa un preset tematico: `civile`, `penale`, `tributario`,
+`amministrativo`. Se il quesito non è nel documento né passato con `--quesito`, lo script avvisa
+(campo `warnings`): chiedilo all'utente invece di valutare senza domanda di riferimento.
 
 ## Core Workflow
 
@@ -68,7 +69,7 @@ The script is local/offline unless you run the prompts with external CLIs yourse
 - Read `references/model-routing.md` before choosing Claude, Codex, Perplexity, NotebookLM, or `pwm council`.
 - Read `references/live-judging.md` before preparing or running live judge calls.
 - Read `references/reporting.md` before writing user-facing reports.
-- Read `references/source-workflow.md` before verifying citations or configuring MCP tools.
+- Read `references/source-workflow.md` before verifying citations: la verifica fonti reale va delegata a un **subagente** (non nel thread principale, per non bruciare token), che recupera le fonti e ritorna solo i verdetti.
 - Read `references/case-schema.md` when producing or consuming case/result JSON.
 
 ## Live Judges

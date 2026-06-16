@@ -770,13 +770,25 @@ def split_sections(text: str) -> dict[str, str]:
     heading_map = {
         "quesito": "quesito",
         "domanda": "quesito",
+        "quesito giuridico": "quesito",
+        "oggetto": "quesito",
+        "oggetto del quesito": "quesito",
+        "si chiede": "quesito",
+        "problema": "quesito",
+        "problema giuridico": "quesito",
+        "richiesta": "quesito",
+        "question": "quesito",
         "prompt": "quesito",
         "risposta": "risposta",
         "answer": "risposta",
+        "parere": "risposta",
+        "analisi": "risposta",
         "ground truth": "ground_truth",
         "risposta di riferimento": "ground_truth",
+        "checklist": "ground_truth",
         "fonti": "fonti",
         "sources": "fonti",
+        "riferimenti": "fonti",
     }
     for raw_line in text.splitlines():
         stripped = raw_line.strip().strip("#:").strip()
@@ -981,23 +993,90 @@ def detect_source_citations(case: dict[str, Any]) -> list[dict[str, Any]]:
     return deduped[:120]
 
 
-def infer_confidential(text: str) -> bool:
+# Domini/local-part chiaramente fittizi: una email che li usa NON è un dato personale reale.
+PLACEHOLDER_EMAIL_DOMAINS = (
+    "azienda.it",
+    "esempio.it",
+    "esempio.com",
+    "example.com",
+    "example.org",
+    "email.com",
+    "dominio.it",
+    "test.it",
+    "pec.it",
+)
+PLACEHOLDER_EMAIL_LOCALPARTS = (
+    "nome.cognome",
+    "nome",
+    "cognome",
+    "mario.rossi",
+    "info",
+    "amministrazione",
+    "utente",
+    "user",
+)
+EMAIL_RE = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
+# Codice fiscale persona fisica: 6 lettere, 2 cifre, lettera, 2 cifre, lettera, 3 cifre, lettera.
+CODICE_FISCALE_RE = re.compile(r"\b[A-Z]{6}\d{2}[A-Z]\d{2}[A-Z]\d{3}[A-Z]\b")
+
+
+def is_placeholder_email(addr: str) -> bool:
+    addr = addr.lower()
+    local, _, domain = addr.partition("@")
+    if domain in PLACEHOLDER_EMAIL_DOMAINS:
+        return True
+    if local in PLACEHOLDER_EMAIL_LOCALPARTS:
+        return True
+    return False
+
+
+def real_emails(text: str) -> list[str]:
+    """Email che non sembrano placeholder/esempi."""
+    found = []
+    for addr in EMAIL_RE.findall(text):
+        if not is_placeholder_email(addr):
+            found.append(addr)
+    return sorted(set(found))
+
+
+def infer_confidential_detail(text: str) -> tuple[bool, list[str]]:
+    """Restituisce (confidential, reasons).
+
+    Si basa su segnali FORTI di dato personale reale (email non placeholder, codici
+    fiscali). Le parole-tema (email, società, lavoratore, GDPR) da sole non bastano:
+    indicano l'argomento, non la riservatezza. Così un parere anonimizzato con sole
+    email-esempio (es. nome.cognome@azienda.it) non viene trattato come riservato.
+    """
+    reasons: list[str] = []
+    emails = real_emails(text)
+    if emails:
+        reasons.append(f"email reale rilevata ({', '.join(emails[:3])})")
+    if CODICE_FISCALE_RE.search(text):
+        reasons.append("codice fiscale rilevato")
+    if reasons:
+        return True, reasons
+    # Nessun dato personale reale: segnaliamo solo che il tema è sensibile.
     norm = normalize_for_match(text)
-    markers = [
-        "cliente",
+    topic_markers = [
         "dipendente",
         "lavoratore",
         "email",
         "mailbox",
         "casella",
-        "societa",
-        "datore di lavoro",
         "dati personali",
         "contenzioso",
         "licenziamento",
-        "cda",
+        "gdpr",
+        "privacy",
     ]
-    return any(marker in norm for marker in markers)
+    if any(marker in norm for marker in topic_markers):
+        return False, ["solo tema lavoro/privacy/dati, nessun dato personale reale rilevato"]
+    return False, ["nessun segnale di materiale riservato"]
+
+
+def infer_confidential(text: str) -> bool:
+    confidential, _ = infer_confidential_detail(text)
+    return confidential
 
 
 def candidate_id_for(path: Path, explicit: str | None = None, index: int = 0) -> str:
@@ -1025,6 +1104,12 @@ def build_case(
     sections = split_sections(text)
     preset_data = PRESETS.get(preset or "", {})
     answer_text = sections.get("risposta") or text
+    inferred_confidential, confidential_reason = infer_confidential_detail(text)
+    if confidential is None:
+        case_confidential = inferred_confidential
+    else:
+        case_confidential = confidential
+        confidential_reason = [f"override esplicito: --{'confidential' if confidential else 'no-confidential'}"]
     case = {
         "candidate_id": candidate_id_for(path, candidate_id, index),
         "source_file": str(path),
@@ -1035,12 +1120,18 @@ def build_case(
         or preset_data.get("ground_truth", ""),
         "data_riferimento": data_riferimento or today_iso(),
         "fonti": extract_sources(text) or preset_data.get("fonti", []),
-        "confidential": infer_confidential(text) if confidential is None else confidential,
+        "confidential": case_confidential,
+        "confidential_reason": confidential_reason,
         "extraction": extraction,
     }
     if preset:
         case["preset"] = preset
         case["required_topics"] = preset_data.get("required_topics", [])
+    if not (case["quesito"] or "").strip():
+        case.setdefault("warnings", []).append(
+            "Quesito non trovato nel documento e non fornito: passa --quesito o usa --preset, "
+            "altrimenti i giudici valutano senza la domanda di riferimento."
+        )
     return case
 
 
@@ -1320,6 +1411,8 @@ def aggregate_candidate(
         "kappa_discrete_score": score_to_discrete(mean_score),
         "flag_revisione_umana": bool(flags),
         "human_review_flags": sorted(set(flags)),
+        "confidential_reason": case.get("confidential_reason", []),
+        "warnings": case.get("warnings", []),
         "source_check": source_check_notes(case, context),
         "coverage": round(context["coverage"], 3),
         "missing_topics": context["missing_topics"][:20],
@@ -1331,10 +1424,14 @@ def aggregate_comparison(candidates: list[dict[str, Any]], availability: dict[st
     ranking = sorted(candidates, key=lambda item: item["score_medio"], reverse=True)
     for idx, item in enumerate(ranking, start=1):
         item["rank"] = idx
+    aggregated_warnings = sorted(
+        {w for item in ranking for w in item.get("warnings", [])}
+    )
     return {
         "generated_at": now_iso(),
         "mode": "offline_mock",
         "score_massimo": MAX_SCORE,
+        "warnings": aggregated_warnings,
         "ranking": [
             {
                 "rank": item["rank"],
@@ -1846,25 +1943,46 @@ def shell_quote(path: Path) -> str:
     return "'" + str(path).replace("'", "'\"'\"'") + "'"
 
 
-def command_for_prompt(profile: dict[str, Any], prompt_path: Path, raw_path: Path) -> str:
+# Wrapper di timeout portabile (macOS non ha sempre `timeout`/`gtimeout`).
+# `perl alarm` interrompe il comando dopo N secondi con exit code 142.
+TIMEOUT_WRAPPER = "perl -e 'alarm shift; exec @ARGV' {seconds} "
+
+
+def with_timeout(inner: str, raw: str, timeout: int | None) -> str:
+    """Avvolge `inner` (comando-giudice senza redirezione) con timeout e redirige su raw."""
+    if timeout and timeout > 0:
+        return TIMEOUT_WRAPPER.format(seconds=timeout) + inner + f" > {raw}"
+    return inner + f" > {raw}"
+
+
+def command_for_prompt(
+    profile: dict[str, Any],
+    prompt_path: Path,
+    raw_path: Path,
+    timeout: int | None = None,
+) -> str:
     prompt = f"$(cat {shell_quote(prompt_path)})"
     raw = shell_quote(raw_path)
     if profile["judge_id"] == "claude_opus_4_8":
-        return (
+        inner = (
             "claude --model claude-opus-4-8 --effort xhigh --print "
-            f"--output-format text \"{prompt}\" > {raw}"
+            f"--output-format text \"{prompt}\""
         )
+        return with_timeout(inner, raw, timeout)
     if profile["judge_id"] == "codex_gpt_5_5_xhigh":
-        return (
+        inner = (
             "codex exec --skip-git-repo-check --ephemeral -m gpt-5.5 "
             "-c 'model_reasoning_effort=\"xhigh\"' "
-            f"\"{prompt}\" > {raw}"
+            f"\"{prompt}\""
         )
+        return with_timeout(inner, raw, timeout)
     if profile["tool"] == "pwm":
         model = profile["model_route"].split(":", 1)[1]
-        return f"pwm ask --json --source none --model {model} \"{prompt}\" > {raw}"
+        inner = f"pwm ask --json --source none --model {model} \"{prompt}\""
+        return with_timeout(inner, raw, timeout)
     if profile["judge_id"] == "claude_sonnet_recent":
-        return f"claude --model sonnet --print --output-format text \"{prompt}\" > {raw}"
+        inner = f"claude --model sonnet --print --output-format text \"{prompt}\""
+        return with_timeout(inner, raw, timeout)
     return f"# No command template for {profile['judge_id']}"
 
 
@@ -1941,12 +2059,23 @@ def cmd_prepare_live(args: argparse.Namespace) -> None:
     if args.cases_output:
         write_json_no_overwrite(Path(args.cases_output), {"cases": cases}, force=args.force)
 
+    judge_timeout = getattr(args, "judge_timeout", 240)
+    fallback_ids = [
+        prof.get("judge_id")
+        for prof in availability["routing"].get("fallback_order", [])
+        if prof.get("judge_id") and prof.get("judge_id") not in judge_ids
+    ]
     prompt_records: list[dict[str, Any]] = []
     run_lines = [
         "#!/usr/bin/env bash",
         "set -euo pipefail",
         "",
         "# Review commands before running live model calls.",
+        f"# Ogni chiamata ha un timeout di {judge_timeout}s (exit 142 = timeout).",
+        "# FALLBACK SINGOLA CELLA: se UN giudice va in timeout o errore, NON rifare l'intero",
+        "#   panel. Rilancia solo quel candidato x giudice con un modello di FAMIGLIA DIVERSA",
+        f"#   tra i fallback disponibili: {', '.join(fallback_ids) or '(nessuno)'}.",
+        "#   Mantieni lo stesso numero di giudici per ogni candidato per un confronto equo.",
     ]
     for case in cases:
         candidate = safe_id(case["candidate_id"])
@@ -1957,7 +2086,7 @@ def cmd_prepare_live(args: argparse.Namespace) -> None:
             raw_path = output_dir / f"{candidate}__{judge_id}.raw.txt"
             prompt_text = build_judge_prompt(case, profile)
             write_text_no_overwrite(prompt_path, prompt_text + "\n", force=args.force)
-            command = command_for_prompt(profile, prompt_path, raw_path)
+            command = command_for_prompt(profile, prompt_path, raw_path, timeout=judge_timeout)
             prompt_records.append(
                 {
                     "candidate_id": case["candidate_id"],
@@ -1982,6 +2111,12 @@ def cmd_prepare_live(args: argparse.Namespace) -> None:
         "model_tool_availability": availability,
         "prompts": prompt_records,
         "run_live_script": str(output_dir / "run-live.sh"),
+        "judge_timeout_seconds": judge_timeout,
+        "single_cell_fallback": {
+            "rule": "Se un giudice va in timeout/errore, sostituisci solo quella cella (candidato x giudice) con un fallback di famiglia diversa; non rifare l'intero panel.",
+            "fallback_judges": fallback_ids,
+        },
+        "warnings": sorted({w for case in cases for w in case.get("warnings", [])}),
         "notes": [
             "Prompts are separate per candidate and judge.",
             "Run live commands only after the user has chosen the online/live route.",
@@ -2913,6 +3048,55 @@ def cmd_compare(args: argparse.Namespace) -> None:
     emit_json(result, args.output)
 
 
+# Checklist orientata al delta per il confronto base-vs-prompt-migliorato.
+PROMPT_EVAL_DELTA_CHECKLIST = (
+    "Confronto risposta base vs versione da miglioratore di prompt sullo stesso quesito. "
+    "Valutare se la versione migliorata: aggiunge norme/citazioni corrette e pertinenti; "
+    "riduce allucinazioni e citazioni non verificabili; resta pertinente al quesito senza "
+    "andare fuori tema; migliora completezza e segnalazione dell'incertezza senza gonfiare "
+    "lo stile. Non premiare la versione 'migliorata' per lunghezza o formattazione: contano "
+    "solo correttezza, fonti verificabili e pertinenza."
+)
+
+
+def cmd_prompt_eval(args: argparse.Namespace) -> None:
+    """Caso d'uso primario: risposta base (A) vs versione da prompt migliorato (B).
+
+    ID neutri A/B per evitare bias verso la versione 'migliorata'; stesso quesito condiviso;
+    checklist orientata al delta. Riusa build_case/evaluate_case/aggregate_comparison.
+    """
+    ground_truth = load_ground_truth(args.ground_truth)
+    if ground_truth:
+        ground_truth = f"{ground_truth}\n\n{PROMPT_EVAL_DELTA_CHECKLIST}"
+    else:
+        ground_truth = PROMPT_EVAL_DELTA_CHECKLIST
+    pairs = [("A", args.baseline), ("B", args.improved)]
+    candidates = []
+    shared_quesito = args.quesito
+    for idx, (cand_id, file_name) in enumerate(pairs):
+        case = build_case(
+            Path(file_name),
+            candidate_id=cand_id,
+            index=idx,
+            preset=args.preset,
+            quesito=shared_quesito,
+            ground_truth=ground_truth,
+            confidential=args.confidential,
+            data_riferimento=args.data_riferimento,
+        )
+        # Il quesito del primo candidato (se estratto dal file) diventa quello condiviso.
+        if not shared_quesito:
+            shared_quesito = case.get("quesito") or None
+            case["quesito"] = shared_quesito or case.get("quesito", "")
+        candidates.append(evaluate_case(case))
+    result = aggregate_comparison(candidates)
+    result["mode"] = "prompt_eval_base_vs_improved"
+    result.setdefault("notes", []).insert(
+        0, "A = risposta base; B = risposta da miglioratore di prompt (ID anonimi per i giudici)."
+    )
+    emit_json(result, args.output)
+
+
 def mock_cases() -> list[dict[str, Any]]:
     return [
         {
@@ -3043,6 +3227,25 @@ def build_parser() -> argparse.ArgumentParser:
     add_case_args(compare_parser, multiple=True)
     compare_parser.set_defaults(func=cmd_compare)
 
+    prompt_eval_parser = sub.add_parser(
+        "prompt-eval",
+        help="Caso primario: confronta risposta base vs versione da miglioratore di prompt (ID neutri A/B).",
+    )
+    prompt_eval_parser.add_argument("--baseline", required=True, help="Risposta base (candidato A).")
+    prompt_eval_parser.add_argument("--improved", required=True, help="Risposta da prompt migliorato (candidato B).")
+    prompt_eval_parser.add_argument("--preset", choices=sorted(PRESETS), help="Built-in case checklist.")
+    prompt_eval_parser.add_argument("--quesito", help="Quesito condiviso (se assente, usa quello del file A).")
+    prompt_eval_parser.add_argument("--ground-truth", help="Ground-truth text or path.")
+    prompt_eval_parser.add_argument("--data-riferimento", help="Reference date, default today.")
+    prompt_eval_parser.add_argument(
+        "--confidential",
+        action=argparse.BooleanOptionalAction,
+        default=None,
+        help="Override confidentiality inference.",
+    )
+    prompt_eval_parser.add_argument("--output", help="Write JSON to this path.")
+    prompt_eval_parser.set_defaults(func=cmd_prompt_eval)
+
     prepare_parser = sub.add_parser("prepare-live", help="Prepare one prompt per candidate and live judge.")
     prepare_parser.add_argument("files", nargs="*", help="Candidate files to extract.")
     prepare_parser.add_argument("--input-json", help="Existing cases JSON instead of files.")
@@ -3057,6 +3260,12 @@ def build_parser() -> argparse.ArgumentParser:
         help="Override confidentiality inference.",
     )
     prepare_parser.add_argument("--judges", default="auto", help="Comma-separated live judge ids, or auto.")
+    prepare_parser.add_argument(
+        "--judge-timeout",
+        type=int,
+        default=240,
+        help="Timeout per chiamata giudice in run-live.sh (secondi, 0 = nessun timeout).",
+    )
     prepare_parser.add_argument("--output-dir", required=True, help="Directory for prompts, metadata, and raw outputs.")
     prepare_parser.add_argument("--cases-output", help="Write extracted cases JSON to this path.")
     prepare_parser.add_argument("--output", help="Write metadata JSON to this path as well as stdout.")

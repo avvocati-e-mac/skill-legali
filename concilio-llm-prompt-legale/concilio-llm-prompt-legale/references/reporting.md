@@ -26,7 +26,11 @@ Write reports for non-specialist readers first, with technical details moved to 
    - raw files directory;
    - malformed JSON or missing raw files;
    - Perplexity auth/quota notes and whether fallback was run;
+   - se una cella giudice è andata in timeout/errore ed è stata sostituita con un fallback di famiglia diversa, indicarlo;
    - limitations.
+
+Se la verifica fonti è stata eseguita (dal subagente), riportare l'esito **verificato** per citazione
+(`verified`/`mismatch`/`not_found`), non lo stato grezzo `not_performed` del solo wrapper di routing.
 
 ## Tone
 

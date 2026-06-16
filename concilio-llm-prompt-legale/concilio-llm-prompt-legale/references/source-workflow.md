@@ -2,11 +2,37 @@
 
 Source verification is separate from LLM judging. A judge can assess plausibility, but official or paid legal sources must verify existence, currency, and holdings. In reports, explain `source_verification: not_performed` as: "le citazioni non sono state controllate su fonti ufficiali".
 
+## Esegui la verifica con un SUBAGENTE (non nel thread principale)
+
+`verify-sources` **instrada e classifica** le citazioni come entità (norma italiana, norma UE/GDPR,
+sentenza, provvedimento del Garante) e prepara il registro con `preferred_tool` e gli URL ufficiali,
+ma **non scarica i testi** (lo stato resta `not_performed`/`unsupported`). La verifica vera va svolta
+da un **subagente dedicato**, non leggendo le pagine nel thread principale: ogni lookup web/Normattiva
+restituisce pagine lunghe e brucerebbe un'infinità di token nel contesto principale.
+
+Protocollo per il subagente di verifica fonti:
+
+1. Ricevi il registro prodotto da `verify-sources` (lista di citazioni con `source_type`,
+   `preferred_tool`, `official_url`).
+2. Per ciascuna citazione, recupera la fonte **reale**:
+   - norma italiana → skill Normattiva (se installata) o `official_url` Normattiva;
+   - norma UE/GDPR → EUR-Lex;
+   - sentenza/provvedimento → BuddaLaw o GestioLex Corpus se presenti, altrimenti ricerca web.
+3. Valuta **esistenza E pertinenza**: non basta che la fonte esista, deve sostenere l'uso che la
+   risposta ne fa. Esempi reali: `Cass. 5318/2025` esiste ma è sezione tributaria → se usata per altro,
+   `status = mismatch`; un numero di sentenza inesistente → `not_found`.
+4. **Ritorna SOLO il registro JSON compilato** (un record per citazione con `status`
+   `verified`/`mismatch`/`not_found`/`unavailable`, `official_url`, breve `finding`). Nessun dump di
+   pagine web nel contesto principale.
+
+Vale sia in Claude (lancia un subagente/Agent) sia in Codex (subagente/processo separato). Il report
+deve riportare l'esito **verificato dal subagente**, non lo stato grezzo `not_performed` del wrapper.
+
 ## Route And Confidentiality Gate
 
 Before live search or cloud upload:
 
-1. Determine whether the material contains client facts, personal data, employee data, mailbox contents, litigation strategy, or confidential business facts.
+1. Leggi `confidential_reason` del caso: se il flag è scattato solo per il tema (o non è scattato) e non risultano dati personali reali (email non placeholder, codici fiscali, parti nominate), **non** trattare il materiale come riservato. Un parere anonimizzato con sole email-esempio non attiva il gate.
 2. If the user has not already specified the route, ask whether they want only local/offline processing or also online/live processing.
 3. Disclose the intended provider/tool before any cloud/live route.
 4. Do not choose local/offline or online/live silently based only on the confidentiality label.

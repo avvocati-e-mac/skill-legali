@@ -25,6 +25,7 @@ Ogni skill insegna all'assistente comportamenti specifici — come generare auto
 
 | Data | Skill | Aggiornamento |
 |------|-------|---------------|
+| 16 giugno 2026 | **Concilio di LLM** | Migliorie dopo prova reale: comando dedicato `prompt-eval` per il confronto base-vs-prompt-migliorato (ID neutri A/B); timeout per giudice e fallback automatico della singola cella in caso di modello bloccato; verifica fonti delegata a un subagente; riconoscimento confidenzialità basato su dati personali reali (non sulle parole-tema); estrazione del quesito più robusta |
 | 16 giugno 2026 | **Concilio di LLM** | Rifocalizzata e rinominata (`concilio-llm-prompt-legale`): scopo principale = confronto risposta base vs versione da miglioratore di prompt; esempi generali sui quattro rami del diritto italiano (civile, penale, tributario, amministrativo) con preset dedicati |
 | 16 giugno 2026 | **italian-legal-llm-panel** | Primo rilascio: giuria di IA per valutare e confrontare risposte legali italiane (punteggio su 39, confronto A/B/C, verifica delle fonti, report leggibile) |
 | 10 giugno 2026 | **GestioLex Corpus** | Primo rilascio: ricerca normativa e massime italiane tramite MCP GestioLex Corpus, con routing tra articoli esatti, norme e giurisprudenza |

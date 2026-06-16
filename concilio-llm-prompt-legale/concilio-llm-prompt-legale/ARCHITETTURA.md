@@ -46,7 +46,7 @@ Un caso normalizzato contiene:
 - `ground_truth`: risposta di riferimento o checklist strutturata;
 - `data_riferimento`: data di aggiornamento normativo richiesta;
 - `fonti`: citazioni rilevate o fonti attese;
-- `confidential`: default prudente quando il testo contiene fatti di cliente, lavoratore, email, contenzioso o dati personali;
+- `confidential`: si basa su segnali FORTI di dato personale reale (email non placeholder, codice fiscale), non sulle sole parole-tema; un parere anonimizzato con sole email-esempio (es. `nome.cognome@azienda.it`) resta `false`. Accompagnato da `confidential_reason` che spiega perché il flag è (o non è) scattato;
 - `extraction`: formato, timestamp e note di estrazione.
 
 ### Judge Verdict
@@ -206,6 +206,8 @@ online/live choice  --> run approved live workflow
 ```
 
 Il gate vale anche quando l'utente ha installato gli strumenti live: disponibilita' tecnica non equivale ad autorizzazione. L'agente non deve decidere da solo "solo locale" o "online"; se la route non e' chiara, deve chiederla.
+
+Prima di attivare il gate, l'agente deve leggere `confidential_reason`: se il flag `confidential` e' scattato solo per il tema (o non e' scattato) e non risultano dati personali reali, non trattare il materiale come riservato e non sovra-attivare il gate. La riservatezza si valuta sui dati effettivi (email reali, codici fiscali, parti nominate), non sulla presenza di parole come "email" o "GDPR".
 
 ## Scoring 0-39
 

@@ -40,6 +40,18 @@ Save each response as:
 
 If a CLI can write JSON or a final message file, saving that output as `.raw.json` or `.raw.txt` is acceptable. Do not combine multiple candidates or judges in one raw file.
 
+## Timeout e fallback per singola cella
+
+Ogni comando in `run-live.sh` è avvolto da un timeout (default 240s, configurabile con
+`--judge-timeout`; exit code 142 = timeout). Se un giudice va in timeout o errore:
+
+- **non rifare l'intero panel** e non rimescolare tutti i giudici;
+- rilancia **solo quella cella** (`<candidate>__<judge>`) usando un giudice di **famiglia diversa**
+  preso da `single_cell_fallback.fallback_judges` in `metadata.json` (es. `perplexity_nemotron`,
+  poi `claude_sonnet_recent`), così resta la diversità di famiglia e si evita il self-enhancement bias;
+- mantieni lo **stesso numero di giudici per ogni candidato** per un confronto equo;
+- documenta nel report quale cella è stata sostituita e perché (timeout/errore).
+
 ## Perplexity Spare Judge
 
 Use Perplexity as two independent first-pass judges from different model families when authenticated and approved. Use an additional Perplexity route only when a fallback trigger in `model-routing.md` fires:

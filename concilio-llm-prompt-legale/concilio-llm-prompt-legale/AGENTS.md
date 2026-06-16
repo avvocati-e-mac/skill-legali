@@ -10,8 +10,9 @@ Core CLI commands:
 python3 concilio-llm-prompt-legale/scripts/legal_panel.py doctor
 python3 concilio-llm-prompt-legale/scripts/legal_panel.py extract "answer.docx" --preset civile
 python3 concilio-llm-prompt-legale/scripts/legal_panel.py single "answer.docx" --ground-truth ground_truth.md
-python3 concilio-llm-prompt-legale/scripts/legal_panel.py compare "base.md" "migliorato.md" --preset civile --candidate-id A --candidate-id B
-python3 concilio-llm-prompt-legale/scripts/legal_panel.py prepare-live "A.md" "B.md" --output-dir panel-results-raw --cases-output panel-input.json
+python3 concilio-llm-prompt-legale/scripts/legal_panel.py prompt-eval --baseline base.md --improved migliorato.md --preset civile
+python3 concilio-llm-prompt-legale/scripts/legal_panel.py compare "A.md" "B.md" "C.md" --preset civile
+python3 concilio-llm-prompt-legale/scripts/legal_panel.py prepare-live "A.md" "B.md" --judge-timeout 240 --output-dir panel-results-raw --cases-output panel-input.json
 python3 concilio-llm-prompt-legale/scripts/legal_panel.py normalize-live --cases panel-input.json --raw-dir panel-results-raw --output panel-results-normalized.json
 python3 concilio-llm-prompt-legale/scripts/legal_panel.py prepare-supervisor --input panel-results-normalized.json --output-dir panel-results-supervisor
 python3 concilio-llm-prompt-legale/scripts/legal_panel.py verify-sources --cases panel-input.json --output source-verification.json
@@ -19,7 +20,7 @@ python3 concilio-llm-prompt-legale/scripts/legal_panel.py report panel-results-n
 python3 concilio-llm-prompt-legale/scripts/legal_panel.py mock
 ```
 
-Available presets: `civile`, `penale`, `tributario`, `amministrativo`. When comparing a baseline answer with a prompt-improved one, use neutral candidate IDs (A/B) so no judge is biased toward the "improved" label.
+Available presets: `civile`, `penale`, `tributario`, `amministrativo`. Per il caso primario (base vs prompt migliorato) usa `prompt-eval`: assegna da solo ID neutri A/B per evitare bias. In `run-live.sh` ogni giudice ha un timeout (`--judge-timeout`, default 240s); se una cella va in timeout, sostituisci solo quella con un fallback di famiglia diversa, non rifare il panel. La verifica fonti reale va delegata a un subagente (vedi `references/source-workflow.md`). `confidential` si basa su dati personali reali, non sulle parole-tema: leggi `confidential_reason` prima di attivare il gate.
 
 Route and privacy gate: do not decide local/offline or online/live silently. If the user has not already specified the route, ask whether they want only local/offline processing or also online/live model calls, naming the intended providers/tools. Do not install tools, authenticate accounts, upload documents, run live Perplexity/NotebookLM/BuddaLaw/GestioLex/cloud-model workflows, or spend live model calls unless the user has explicitly approved that route.
 
