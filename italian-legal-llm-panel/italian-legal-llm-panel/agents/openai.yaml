@@ -1,0 +1,4 @@
+interface:
+  display_name: "Italian Legal LLM Panel"
+  short_description: "Judge Italian legal AI answers"
+  default_prompt: "Use $italian-legal-llm-panel to compare legal AI answers from DOCX files and rank them with a source-aware panel."
