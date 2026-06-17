@@ -65,12 +65,12 @@ con la skill BuddaLaw attiva e verifica che Claude produca esattamente il
 
 ---
 
-## Gruppo 7 — Score basso e risultati assenti
+## Gruppo 7 — Pertinenza, score e risultati assenti
 
 | # | Sezione | Prompt di input | Comportamento atteso |
 |---|---|---|---|
-| T18 | Score basso | Query molto specifica su argomento di nicchia che produce score < 0.5 | Segnala `[rilevanza bassa]` inline, riformula la query, ritenta con `semantic_weight` diverso. |
-| T19 ⚡ | Nessun risultato | Due tentativi consecutivi senza risultati pertinenti | Dopo il secondo tentativo: «Non ho trovato sentenze pertinenti per questo quesito nella banca dati selezionata.» — non inventa sentenze. |
+| T18 | Score basso ma pertinente | Query che restituisce, come risultato più centrale, una sentenza con score basso (es. ~0.30) la cui `sintesi` è chiaramente in tema | NON scarta né etichetta come "rilevanza bassa" la sentenza per via dello score: la valuta sulla `sintesi`/`caso_concreto` e la cita normalmente. Non riformula solo perché lo score è basso. |
+| T19 ⚡ | Nessun risultato | Due tentativi consecutivi con risultati realmente fuori tema | Dopo il secondo tentativo: «Non ho trovato sentenze pertinenti per questo quesito nella banca dati selezionata.» — non inventa sentenze. |
 
 ---
 
@@ -142,3 +142,16 @@ con la skill BuddaLaw attiva e verifica che Claude produca esattamente il
 | T39 ⚡ | Filtro data_deposito sui risultati | «Cerca le sentenze più recenti sulla responsabilità medica» (ultimo anno) | Usa `data_deposito` corretto; dopo la ricerca scarta i risultati con `data_deposito` anteriore al filtro prima di presentarli. Non presenta mai come "recente" una sentenza del 2019 anche se restituita dal server. |
 | T40 ⚡ | Deduplicazione search_case_law | Query che produce lo stesso `idatto` più volte nei risultati | Presenta ogni sentenza una sola volta — la prima occorrenza per `idatto`. Non cita due volte la stessa sentenza. |
 | T41 | Deduplicazione search_articles | Query normativa che produce lo stesso articolo con due `fonte_normativa` diverse (es. «Decreto Legislativo 81/2008» e «Decreto Legislativo n. 81 del 2008») | Presenta ogni articolo una sola volta — deduplicare per `numero` + numero identificativo della legge (es. «81/2008»), non per la stringa completa del nome fonte. |
+
+---
+
+## Gruppo 15 — Migliorie v8.4
+
+| # | Sezione | Prompt di input | Comportamento atteso |
+|---|---|---|---|
+| T42 ⚡ | Score basso non scartato | «Chi ha l'onere di provare il nesso causale nella responsabilità medica?» (lo `search_case_law` su `civile` restituisce la sentenza che enuncia il principio con score ~0.30) | Cita la sentenza a score basso come fonte centrale, valutandola sulla `sintesi`. Non la declassa né la etichetta come "rilevanza bassa" per lo score. |
+| T43 ⚡ | Contrasto da esporre (non solo civile) | «La clausola penale verso il consumatore è vessatoria ex art. 1341 c.c.?» (emergono pronunce di merito di segno opposto / piani diversi B2B vs consumatore) | Espone i due orientamenti distinguendo i piani (rapporti tra imprenditori ex art. 1341 vs consumatore ex Codice del Consumo) e indica il principio risolutivo — non li appiattisce. |
+| T44 ⚡ | SU/Adunanza Plenaria ≥ 2019 | Quesito in cui emerge una pronuncia a Sezioni Unite (o Adunanza Plenaria) del 2020+ rilevante | Chiama `get_judgement` (idatto+dominio) per leggerne il testo integrale prima di redigere; espone contrasto e principio di diritto. |
+| T45 ⚡ | Fallback SU ante-2019 | Quesito in cui la pronuncia nomofilattica cardine è ante-2019 (es. SU Cass. 577/2008 sul contatto sociale) | NON insiste con `get_judgement` (HTTP 400) e NON inventa un link: espone contrasto e principio come riportati nella sentenza che la cita, in forma testuale senza `public_url`. |
+| T46 | modules_available vuoto | `check_access` restituisce `has_access: true` ma `modules_available: []` | Procede normalmente con le ricerche: non blocca né limita le funzioni in base a `modules_available`. |
+| T47 | Verifica citazione ↔ link | Risposta che cita una Cassazione richiamata *dentro* la motivazione di un'altra decisione | Verifica che `numero`/`anno` corrispondano al documento puntato dal `public_url` effettivamente restituito; non accosta un link a un numero/anno non confermato dal tool. |

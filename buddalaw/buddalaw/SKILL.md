@@ -1,7 +1,8 @@
 ---
 name: buddalaw
-version: "8.3"
+version: "8.4"
 changelog:
+  - "8.4 (2026-06-17): score come segnale debole (rimosse soglie 0.5/0.40 come filtro); regola Sezioni Unite/contrasti MANDATORY e generalizzata a tutti gli ambiti (incl. Adunanza Plenaria); fallback nomofilattico ante-2019 (get_judgement HTTP 400); verifica esplicita citazione↔link; modules_available non usato come logica"
   - "8.3 (2026-05-19): chiave dedup search_articles rafforzata (numero + codice legge, non nome completo fonte)"
   - "8.2 (2026-05-19): verifica data_deposito sui risultati, deduplicazione risultati identici per idatto e numero+fonte"
   - "8.1 (2026-05-19): integrazione normattiva, pertinenza topica, data_deposito, sintesi come fonte primaria, ricerca multi-DB"
@@ -38,6 +39,11 @@ Questa skill deve funzionare sia in ambienti Claude sia in ambienti OpenAI/Codex
 
 Chiamare `check_access` **una sola volta per sessione**, alla prima query che
 attiva questa skill. Non richiamare nelle query successive della stessa sessione.
+
+`check_access` serve **solo come gate di accesso** (verificare che l'abbonamento
+sia attivo). Non far dipendere alcuna logica dal campo `modules_available`: può
+tornare vuoto (`[]`) anche con accesso pienamente attivo. Se `has_access` è vero,
+procedere con le ricerche indipendentemente da `modules_available`.
 
 **Se `check_access` restituisce errore o timeout:**
 > «Non riesco a raggiungere BuddaLaw in questo momento. Verifica che il tuo
@@ -94,6 +100,13 @@ integrale", "disponibile su BuddaLaw" o simili.
 Nessun disclaimer o NOTE box a fine documento: eventuali avvertenze vanno
 inline, accanto alla singola voce interessata.
 
+**Verifica citazione ↔ link.** Prima di scrivere `numero`/`anno` accanto a un
+`public_url`, verifica che corrispondano al **documento effettivamente restituito**
+dal tool e puntato da quell'URL. È facile, soprattutto in Cassazione, confondere un
+numero citato *dentro* la motivazione con quello della decisione recuperata. Un
+link che punta a un numero/anno diverso da quello citato è un errore grave: **mai
+citare un numero/anno non confermato da una risposta del tool.**
+
 ---
 
 ## MAPPA DECISIONALE — Quale tool usare
@@ -134,11 +147,29 @@ search_case_law(
 - `5` default
 - `10` per ricerche esplorative/panoramiche tematiche
 
-**Dopo ogni ricerca:**
-- Verificare che la `sintesi` del primo risultato sia tematicamente coerente con la query: se il contenuto è fuori tema (es. query su contratti di lavoro → risultati su diritto penale), riformulare indipendentemente dallo score numerico.
-- Se score < 0.5 → riformulare la query (termini più specifici, `semantic_weight` diverso)
-- Dopo 2 tentativi falliti → comunicare esplicitamente: «Non ho trovato risultati pertinenti per questo quesito nella banca dati selezionata.»
-- Non citare risultati con score < 0.40 senza segnalare `[rilevanza bassa]` inline
+**Dopo ogni ricerca — pertinenza, non score:**
+
+Il motore semantico **restituisce sempre risultati**, anche per query fuori tema:
+non torna mai a vuoto. Di conseguenza **lo score è solo indicativo e non è
+affidabile in nessuna delle due direzioni**:
+- uno score **alto non garantisce** pertinenza (può essere il "vicino" vettoriale
+  di una query mal posta);
+- uno score **basso non significa** irrilevanza: una sentenza con score basso
+  (es. 0.30) può essere proprio quella che **enuncia il principio di diritto
+  centrale** sul quesito.
+
+Regole operative:
+- **Decidi la pertinenza leggendo `sintesi`/`caso_concreto`, non il numero di
+  score.** Verifica che il contenuto sia tematicamente coerente con la query.
+- **Non scartare né declassare** una sentenza pertinente solo perché ha score
+  basso. Non aggiungere etichette di "rilevanza bassa" basate sullo score.
+- **Riformula la query solo quando il *contenuto* dei risultati è fuori tema**
+  (es. query su contratti di lavoro → risultati su diritto penale), non quando lo
+  score è semplicemente basso. Per riformulare, usa termini più specifici o un
+  `semantic_weight` diverso.
+- Dopo 2 tentativi con risultati realmente fuori tema → comunicare
+  esplicitamente: «Non ho trovato risultati pertinenti per questo quesito nella
+  banca dati selezionata.»
 
 **Ricerche temporali:**
 Usare `data_deposito="YYYY-MM-DD"` quando l'utente chiede sentenze recenti, post-riforma o di un periodo specifico:
@@ -337,7 +368,10 @@ esplicitamente prima di passare al successivo.
    `search_case_law` è sufficiente per citare il principio di diritto e il caso
    concreto. Chiamare `get_judgement` solo se: (a) l'utente chiede esplicitamente
    il testo integrale; (b) serve estrarre un passaggio specifico della motivazione;
-   (c) la sintesi è generica o assente. Non chiamare `get_judgement` di default.
+   (c) la sintesi è generica o assente; (d) **emerge una pronuncia nomofilattica o
+   un contrasto** — in tal caso la lettura integrale è obbligatoria (vedi «REGOLA
+   QUALITÀ — Sezioni Unite e contrasti»). Fuori da questi casi non chiamare
+   `get_judgement` di default.
 
 6. **Parametri `ufficio` e `giudice`**: usarli quando l'utente specifica un
    organo giudiziario o un giudice estensore noto.
@@ -350,6 +384,43 @@ esplicitamente prima di passare al successivo.
    - `search_case_law`: deduplicare per `idatto` — trattenere la prima occorrenza.
    - `search_articles`: deduplicare per `numero` + numero identificativo della legge estratto da `fonte_normativa` (es. «81/2008», «392/1978»). Il server restituisce varianti dello stesso atto con nomi diversi («Decreto Legislativo 81/2008» e «Decreto Legislativo n. 81 del 2008» sono lo stesso atto) — trattarle come duplicate.
    - `get_contract_requirements`: deduplicare per `title` (già previsto nella sezione D).
+
+---
+
+## REGOLA QUALITÀ — Sezioni Unite e contrasti (MANDATORY)
+
+Vale per **tutti gli ambiti**, non solo il civile: civile, penale, lavoro,
+tributario e amministrativo.
+
+Quando una ricerca fa emergere una **pronuncia nomofilattica rilevante** o
+**decisioni di segno opposto** sul punto, l'esposizione del contrasto è
+**obbligatoria**: ometterla è un difetto della risposta anche se il resto è
+corretto. Si considerano nomofilattiche:
+
+- **Cassazione a Sezioni Unite** (civile, penale, lavoro, tributaria);
+- **Adunanza Plenaria del Consiglio di Stato** (amministrativo);
+- principi di diritto **consolidati** richiamati come tali.
+
+In presenza di una di queste pronunce o di orientamenti contrastanti, l'assistente
+**DEVE**:
+1. **esporre i due (o più) orientamenti in contrasto** che hanno dato origine alla
+   questione (distinguendo, dove serve, i piani diversi — es. rapporti tra
+   imprenditori vs consumatore, civile vs penale);
+2. **spiegare come la pronuncia nomofilattica ha risolto il contrasto**, enunciando
+   il **principio di diritto** affermato.
+
+**Lettura integrale (≥ 2019).** Per una SU / Adunanza Plenaria rilevante **del 2019
+o successiva**, leggere il **testo integrale** con `get_judgement` (via
+`idatto`+`dominio`) prima di redigere: non fidarsi del solo chunk né di una
+citazione di seconda mano trovata dentro un'altra decisione.
+
+**Fallback ante-2019 (limite del server).** `get_judgement` recupera solo decisioni
+**dal 2019 in poi**: per quelle anteriori restituisce errore (HTTP 400). Se la
+pronuncia nomofilattica rilevante è **anteriore al 2019** (es. SU Cass. 577/2008),
+**non insistere** e **non inventare un link**: esporre comunque il contrasto e il
+principio di diritto **come riportati nella sentenza che la cita**, in forma
+testuale e senza `public_url`. Questa è l'unica eccezione consentita alla lettura
+integrale obbligatoria di cui sopra.
 
 ---
 
@@ -379,6 +450,14 @@ Se la skill normattiva non è attiva nella sessione, citare i riferimenti normat
 3. **Citazioni inline** nel corpo del testo — MAI in un box separato finale
 4. **Tabella riepilogativa** se utile (es. confronto lavoratore/dirigente)
 5. **Raccomandazioni operative** se rilevanti
+
+**Ricchezza della citazione (per ogni ambito).** L'utente è un avvocato: una
+decisione citata non deve ridursi al dispositivo. Per ciascuna pronuncia rilevante
+riporta — quando disponibili da `sintesi`/`caso_concreto`/testo integrale — il
+**caso concreto** (i fatti su cui il giudice ha deciso) e la **ratio/motivazione**
+che fonda il principio, così che il lettore capisca subito se la pronuncia è di
+interesse per il suo caso. Un principio di diritto enunciato in un caso non
+pertinente va segnalato come tale. Evita elenchi nudi di estremi di sentenze.
 
 **Esempio CORRETTO:**
 > «La sede aziendale non può essere annoverata tra le sedi protette

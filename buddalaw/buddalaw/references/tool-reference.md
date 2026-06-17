@@ -34,6 +34,17 @@ Ricerca sentenze e provvedimenti nelle banche dati giurisprudenziali.
 
 **Valori `search_category`:** `civile` · `penale` · `tributari` · `prassi` · `merito` · `privacy` · `amministrativo`
 
+**Note operative sui risultati:**
+- **Lo score è solo indicativo.** Il motore semantico restituisce sempre risultati
+  (non torna mai a vuoto): uno score alto non garantisce pertinenza e uno score
+  basso non implica irrilevanza — una pronuncia con score 0.30 può essere quella
+  che enuncia il principio cardine. Valutare la pertinenza su `sintesi`/`caso_concreto`,
+  non sul numero.
+- **`data_deposito` non è garantito dal server.** Il filtro per data viene spesso
+  ignorato silenziosamente: dopo una ricerca con `data_deposito`, verificare il
+  campo `data_deposito` di ciascun risultato e scartare quelli anteriori al limite
+  prima di presentarli.
+
 ---
 
 ## get_judgement
@@ -53,6 +64,8 @@ Recupera il testo completo di una sentenza o provvedimento.
 **Valori `dominio`:** `civile` · `penale` · `tributario` · `tributario-prassi` · `merito` · `amministrativo` · `privacy` · `lavoro` · `data-protection-authority`
 
 **Nota Cassazione:** per sezioni lavoro, commerciale, tributaria (Sez. V) usare sempre `dominio="civile"`. Il dominio `lavoro` è disponibile per corti di merito. Il dominio `data-protection-authority` è alias di `privacy` per il Garante.
+
+**Limite temporale (≥ 2019):** `get_judgement` recupera solo decisioni **dal 2019 in poi**. Per le decisioni anteriori restituisce **HTTP 400** e non trova nulla: non insistere. Quando la decisione ante-2019 è una pronuncia nomofilattica (Sezioni Unite, Adunanza Plenaria) rilevante per il quesito, applicare il **fallback** descritto in SKILL.md → «REGOLA QUALITÀ — Sezioni Unite e contrasti»: citarla come riportata nella sentenza che la richiama, in forma testuale e senza inventare un link.
 
 ---
 
