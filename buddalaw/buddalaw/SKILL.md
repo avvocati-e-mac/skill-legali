@@ -2,7 +2,7 @@
 name: buddalaw
 version: "8.4"
 changelog:
-  - "8.4 (2026-06-17): score come segnale debole (rimosse soglie 0.5/0.40 come filtro); regola Sezioni Unite/contrasti MANDATORY e generalizzata a tutti gli ambiti (incl. Adunanza Plenaria); fallback nomofilattico ante-2019 (get_judgement HTTP 400); verifica esplicita citazione↔link; modules_available non usato come logica"
+  - "8.4 (2026-06-17): score come segnale debole (rimosse soglie 0.5/0.40 come filtro); regola Sezioni Unite/contrasti MANDATORY e generalizzata a tutti gli ambiti (incl. Adunanza Plenaria), con nota su temi a doppio binario (ricerche dedicate per ciascun piano); fallback nomofilattico ante-2019 (get_judgement HTTP 400); verifica esplicita citazione↔link; modules_available non usato come logica"
   - "8.3 (2026-05-19): chiave dedup search_articles rafforzata (numero + codice legge, non nome completo fonte)"
   - "8.2 (2026-05-19): verifica data_deposito sui risultati, deduplicazione risultati identici per idatto e numero+fonte"
   - "8.1 (2026-05-19): integrazione normattiva, pertinenza topica, data_deposito, sintesi come fonte primaria, ricerca multi-DB"
@@ -408,6 +408,15 @@ In presenza di una di queste pronunce o di orientamenti contrastanti, l'assisten
    imprenditori vs consumatore, civile vs penale);
 2. **spiegare come la pronuncia nomofilattica ha risolto il contrasto**, enunciando
    il **principio di diritto** affermato.
+
+**Il contrasto può non emergere da una sola query.** Quando il tema ha un **doppio
+binario** (es. clausola vessatoria tra imprenditori ex art. 1341 c.c. *vs* verso il
+consumatore ex Codice del Consumo; responsabilità civile *vs* penale; tutela reale
+*vs* obbligatoria), una sola ricerca tende a restituire solo uno dei due piani. Per
+questi temi **lancia ricerche dedicate a ciascun piano** — anche su banche dati
+diverse (es. `merito` per il lato consumeristico, `civile`/Cassazione per il lato
+B2B) — **prima di concludere che non esiste contrasto**. Non dedurre l'assenza di
+orientamenti opposti da un'unica query.
 
 **Lettura integrale (≥ 2019).** Per una SU / Adunanza Plenaria rilevante **del 2019
 o successiva**, leggere il **testo integrale** con `get_judgement` (via
