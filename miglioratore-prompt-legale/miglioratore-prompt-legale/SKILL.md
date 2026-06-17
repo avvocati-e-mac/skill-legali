@@ -32,6 +32,16 @@ legali affidabili, precise e azionabili da un avvocato.
 Se l'utente vuole la risposta e non il prompt, instrada alle skill di ricerca (buddalaw,
 gestiolex-corpus, ricerca-web-searXNG) e non costruire un prompt.
 
+## Quando attivarla
+
+- **Invocazione esplicita consigliata.** Questa skill non sempre scatta in automatico: per essere
+  sicuri che si attivi conviene richiamarla esplicitamente (es. "usa il miglioratore di prompt
+  legale" / `$miglioratore-prompt-legale`). Se l'utente la nomina, attivala senza esitazioni.
+- **Costo vs qualità.** Costruire il prompt strutturato consuma più token rispetto a rispondere
+  direttamente, ma produce un risultato migliore (prompt più completo → ricerca legale più
+  affidabile). Da preferire per i quesiti che meritano una ricerca accurata; per richieste banali
+  o puramente informative si può rispondere direttamente, senza passare dalla skill.
+
 ## Compatibilità runtime
 
 Questa skill deve funzionare sia in ambienti Claude sia in ambienti OpenAI/Codex.
