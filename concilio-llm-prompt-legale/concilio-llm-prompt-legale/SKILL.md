@@ -34,7 +34,7 @@ di una singola risposta. Per casi tipici usa un preset tematico: `civile`, `pena
 2. Apply the route gate before any live/cloud route: if the user has not already chosen, ask whether to run only locally/offline or also online/live.
 3. Choose three independent judges dynamically with `doctor`, then run a separate supervisor/meta-judge after normalization.
 4. Run separate prompts per candidate and per judge; save raw outputs separately.
-5. Normalize raw JSON, preserve malformed outputs, aggregate scores out of 39, prepare supervisor review, and generate a readable Markdown report.
+5. Normalize raw JSON, preserve malformed outputs, aggregate scores out of 39, prepare supervisor review, and generate `report-finale.md` with `legal_panel.py report`. Do not hand-write the final report from partial notes: the command adds candidate explanations, source links, and lawyer-facing next steps.
 6. Keep `panel_ranking` separate from `legal_final_assessment`: without explicit human review, the final legal assessment remains `non_determinato`.
 7. State clearly whether source verification was `not_performed`, `partial`, or `verified`, and whether `source_gate` is `passed`, `passed_with_findings`, `failed`, or `not_performed`.
 
@@ -57,11 +57,13 @@ python3 concilio-llm-prompt-legale/scripts/legal_panel.py normalize-live --cases
 python3 concilio-llm-prompt-legale/scripts/legal_panel.py prepare-supervisor --input panel-results-normalized.json --output-dir panel-results-supervisor
 python3 concilio-llm-prompt-legale/scripts/legal_panel.py verify-sources --cases panel-input.json --output source-verification.json
 python3 concilio-llm-prompt-legale/scripts/normattiva_fetch.py --sources source-verification.json --output-json normattiva-verification.json --output-md normattiva-verification.md --articles-dir normattiva-articles
-python3 concilio-llm-prompt-legale/scripts/legal_panel.py report --input panel-results-normalized.json --sources source-verification.json --sources normattiva-verification.json --output panel-results-report.md
+python3 concilio-llm-prompt-legale/scripts/legal_panel.py report --input panel-results-normalized.json --candidate-map candidate-map.json --sources source-verification.json --sources normattiva-verification.json --output report-finale.md
 python3 concilio-llm-prompt-legale/scripts/legal_panel.py mock
 ```
 
 The script is local/offline unless you run the prompts with external CLIs yourself. It validates extraction, scoring, prompt preparation, aggregation, malformed raw preservation, and report generation.
+
+For randomizzato A/B/C runs, pass `--candidate-map` only at the report stage, after live judging is complete. The report must be understandable to an Italian lawyer who is not familiar with LLM evaluation: start from the practical outcome, explain what remains unverified, and render source URLs as Markdown links instead of plain text.
 
 `verify-sources` only classifies/routs citations. `normattiva_fetch.py` performs the official
 Normattiva web fetch for Italian statutes and stores HTML/TXT article files. Run it only after the

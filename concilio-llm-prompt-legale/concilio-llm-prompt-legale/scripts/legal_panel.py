@@ -1688,10 +1688,33 @@ def official_url_for_source(item: dict[str, Any]) -> str:
     return ""
 
 
+SOURCE_STATUS_ALIASES = {
+    "verified_downloaded": "verified",
+    "verified": "verified",
+    "mismatch": "mismatch",
+    "not_found": "not_found",
+    "pending_external_verification": "not_performed",
+    "pending_buddalaw_live_verification": "not_performed",
+    "pending": "not_performed",
+    "unsupported": "unsupported",
+    "unavailable": "unavailable",
+    "not_performed": "not_performed",
+}
+
+
+def normalize_source_status_value(status: Any) -> str:
+    value = str(status or "not_performed").strip()
+    return SOURCE_STATUS_ALIASES.get(value, value or "not_performed")
+
+
+def source_record_status(record: dict[str, Any]) -> str:
+    return normalize_source_status_value(record.get("status"))
+
+
 def verification_status_summary(records: list[dict[str, Any]]) -> str:
     if not records:
         return "not_performed"
-    statuses = {record.get("status") for record in records}
+    statuses = {source_record_status(record) for record in records}
     live_statuses = {"verified", "mismatch", "not_found"}
     if statuses == {"verified"}:
         return "verified"
@@ -2820,6 +2843,234 @@ def md_cell(value: Any, *, maximum: int = 90) -> str:
     return text or "n.d."
 
 
+def md_link(label: Any, url: Any, *, maximum: int = 90) -> str:
+    text = md_cell(label, maximum=maximum)
+    raw_url = str(url or "").strip()
+    if not raw_url.startswith(("http://", "https://")):
+        return text
+    safe_url = raw_url.replace(" ", "%20").replace(")", "%29").replace("(", "%28")
+    return f"[{text}]({safe_url})"
+
+
+def report_text(value: Any, *, maximum: int = 260) -> str:
+    text = "" if value is None else str(value)
+    text = re.sub(r"\s+", " ", text).strip()
+    if len(text) > maximum:
+        text = text[: maximum - 1].rstrip() + "…"
+    return text or "n.d."
+
+
+def candidate_labels_from_map(candidate_map: dict[str, Any] | None) -> dict[str, str]:
+    labels: dict[str, str] = {}
+    if not isinstance(candidate_map, dict):
+        return labels
+    for item in candidate_map.get("candidates", []):
+        if not isinstance(item, dict):
+            continue
+        candidate_id = str(item.get("candidate_id") or "").strip()
+        source_label = str(item.get("source_label") or "").strip()
+        if candidate_id and source_label:
+            labels[candidate_id] = source_label
+    return labels
+
+
+def candidate_display(candidate_id: Any, labels: dict[str, str]) -> str:
+    cid = str(candidate_id or "n.d.")
+    label = labels.get(cid)
+    if not label:
+        return f"Candidato {cid}"
+    return f"Candidato {cid} ({label})"
+
+
+def source_type_for_report(record: dict[str, Any]) -> str:
+    source_type = str(record.get("source_type") or "").strip()
+    if source_type:
+        return source_type
+    citation = normalize_for_match(str(record.get("citation") or ""))
+    if (
+        record.get("urn_url")
+        or record.get("urn_final_url")
+        or record.get("endpoint_url")
+        or record.get("raw_html_file")
+        or record.get("plain_text_file")
+        or record.get("act")
+    ):
+        return "italian_statute"
+    statute_markers = [
+        "ccii",
+        "c.c.",
+        "c.p.c.",
+        "c.p.",
+        "cost.",
+        "l.fall",
+        "legge",
+        "d.lgs",
+        "dpr",
+        "d.p.r",
+    ]
+    if citation.startswith("art.") and any(marker in citation for marker in statute_markers):
+        return "italian_statute"
+    if "gdpr" in citation or "eur-lex" in citation:
+        return "eu_law"
+    if record.get("public_url") or record.get("buddalaw_result"):
+        return "case_law_or_authority"
+    authority_markers = ["cass.", "trib.", "tar ", "cons. stato", "corte cost", "garante"]
+    if any(marker in citation for marker in authority_markers):
+        return "case_law_or_authority"
+    return "unknown"
+
+
+def source_url_for_report(record: dict[str, Any]) -> str:
+    for key in ("official_url", "urn_url", "urn_final_url", "public_url", "endpoint_url"):
+        url = str(record.get(key) or "").strip()
+        if url.startswith(("http://", "https://")):
+            return url
+    fallback = official_url_for_source(record)
+    return fallback if fallback.startswith(("http://", "https://")) else ""
+
+
+def source_tool_label(record: dict[str, Any]) -> str:
+    explicit = record.get("tool_used") or record.get("preferred_tool")
+    if explicit:
+        return str(explicit)
+    source_type = source_type_for_report(record)
+    if source_type == "italian_statute":
+        return "Normattiva"
+    if source_type == "eu_law":
+        return "EUR-Lex"
+    if source_type == "case_law_or_authority":
+        return "BuddaLaw / banca dati"
+    return "controllo manuale"
+
+
+def source_status_label(record: dict[str, Any]) -> str:
+    raw = str(record.get("status") or "not_performed")
+    normalized = source_record_status(record)
+    labels = {
+        "verified": "verificata",
+        "mismatch": "non coerente",
+        "not_found": "non trovata",
+        "unavailable": "non disponibile",
+        "unsupported": "non supportata",
+        "not_performed": "da verificare",
+    }
+    if raw == "verified_downloaded":
+        return "verificata su Normattiva"
+    if raw.startswith("pending_"):
+        return "da verificare"
+    return labels.get(normalized, raw)
+
+
+def source_impact_label(record: dict[str, Any]) -> str:
+    impact = str(record.get("score_impact") or "").strip()
+    if impact:
+        return impact
+    status = source_record_status(record)
+    if status == "verified":
+        return "nessuna penalità automatica"
+    if status in {"mismatch", "not_found"}:
+        return "rischio da correggere prima del riuso"
+    return "controllo necessario"
+
+
+def source_problem_counts(records: list[dict[str, Any]]) -> dict[str, int]:
+    counts = {status: 0 for status in ["verified", "mismatch", "not_found", "unavailable", "unsupported", "not_performed"]}
+    for record in records:
+        status = source_record_status(record)
+        counts[status] = counts.get(status, 0) + 1
+    return counts
+
+
+def adapt_candidate_summary_result(data: dict[str, Any]) -> dict[str, Any]:
+    if data.get("candidates") or not isinstance(data.get("candidate_summary"), list):
+        return data
+
+    verdicts = [item for item in data.get("verdicts", []) if isinstance(item, dict)]
+    by_candidate: dict[str, list[dict[str, Any]]] = {}
+    for verdict in verdicts:
+        by_candidate.setdefault(str(verdict.get("candidate_id") or ""), []).append(verdict)
+
+    candidates: list[dict[str, Any]] = []
+    for summary in data.get("candidate_summary", []):
+        if not isinstance(summary, dict):
+            continue
+        candidate_id = str(summary.get("candidate_id") or "").strip()
+        candidate_verdicts = by_candidate.get(candidate_id, [])
+        scores = [score for score in summary.get("scores", []) if isinstance(score, (int, float))]
+        flags: list[str] = []
+        if summary.get("flag_revisione_umana"):
+            flags.append("judge_flagged_review")
+        if scores and max(scores) - min(scores) > 8:
+            flags.append("judge_divergence_above_8")
+        flags.append("source_verification_not_performed")
+        candidates.append(
+            {
+                "candidate_id": candidate_id,
+                "score_medio": summary.get("average_score"),
+                "score_massimo": summary.get("score_massimo") or MAX_SCORE,
+                "percentuale_media": summary.get("average_percentuale"),
+                "divergenza_max": round(max(scores) - min(scores), 2) if scores else None,
+                "criterion_averages": criterion_averages(candidate_verdicts),
+                "flag_revisione_umana": bool(summary.get("flag_revisione_umana", True)),
+                "human_review_flags": sorted(set(flags)),
+                "rank": summary.get("ranking"),
+                "verdetti_individuali": candidate_verdicts,
+                "punti_critici_per_avvocato": sorted(
+                    {
+                        point
+                        for verdict in candidate_verdicts
+                        for point in verdict.get("punti_critici_per_avvocato", [])
+                    }
+                ),
+            }
+        )
+
+    ranked = sorted(candidates, key=lambda item: (item.get("rank") is None, item.get("rank") or 9999))
+    ranking = [
+        {
+            "rank": item.get("rank"),
+            "candidate_id": item.get("candidate_id"),
+            "score_medio": item.get("score_medio"),
+            "percentuale_media": item.get("percentuale_media"),
+            "flag_revisione_umana": item.get("flag_revisione_umana", True),
+            "human_review_flags": item.get("human_review_flags", []),
+        }
+        for item in ranked
+    ]
+    model_routes = sorted(
+        {
+            f"{verdict.get('judge_id')} ({verdict.get('model_route')})"
+            for verdict in verdicts
+            if verdict.get("judge_id") or verdict.get("model_route")
+        }
+    )
+
+    adapted = dict(data)
+    adapted["score_massimo"] = data.get("score_massimo") or MAX_SCORE
+    adapted["candidate_order"] = [item["candidate_id"] for item in candidates]
+    adapted["ranking"] = ranking
+    adapted["panel_ranking"] = {
+        "status": "available" if ranking else "not_available",
+        "best_candidate_id": ranking[0]["candidate_id"] if ranking else None,
+        "ranking": ranking,
+        "notes": ["Ranking del panel LLM: non equivale a valutazione legale finale."],
+    }
+    adapted["legal_final_assessment"] = data.get("legal_final_assessment") or {
+        "status": "non_determinato",
+        "reason": "Nessuna revisione umana esplicita registrata nel risultato.",
+    }
+    adapted["source_gate"] = data.get("source_gate") or {
+        "status": "not_performed",
+        "source_verification_status": "not_performed",
+        "legal_final_assessment": "non_determinato",
+        "notes": ["Le fonti non sono state verificate su fonti ufficiali o banche dati autorizzate."],
+    }
+    adapted["candidates"] = ranked
+    adapted["raw_errors"] = data.get("raw_errors") or []
+    adapted["model_routes_used"] = data.get("model_routes_used") or model_routes
+    return adapted
+
+
 SOURCE_STATUS_PRIORITY = {
     "not_performed": 0,
     "unsupported": 1,
@@ -2865,8 +3116,8 @@ def source_record_merge_key(record: dict[str, Any]) -> tuple[str, str, str]:
 
 
 def stronger_source_record(left: dict[str, Any], right: dict[str, Any]) -> dict[str, Any]:
-    left_status = str(left.get("status") or "not_performed")
-    right_status = str(right.get("status") or "not_performed")
+    left_status = source_record_status(left)
+    right_status = source_record_status(right)
     if SOURCE_STATUS_PRIORITY.get(right_status, 0) > SOURCE_STATUS_PRIORITY.get(left_status, 0):
         base, extra = right, left
     else:
@@ -2911,7 +3162,7 @@ def merge_source_payloads(payloads: list[dict[str, Any] | list[dict[str, Any]]])
 def source_gate_from_records(records: list[dict[str, Any]]) -> dict[str, Any]:
     counts = {status: 0 for status in ["verified", "mismatch", "not_found", "unavailable", "unsupported", "not_performed"]}
     for record in records:
-        status = str(record.get("status") or "not_performed")
+        status = source_record_status(record)
         counts[status] = counts.get(status, 0) + 1
 
     verified = counts.get("verified", 0)
@@ -3012,34 +3263,38 @@ def append_source_verification_section(
     statute_records = [
         record
         for record in records
-        if record.get("source_type") in {"italian_statute", "eu_law"}
+        if source_type_for_report(record) in {"italian_statute", "eu_law"}
     ]
     authority_records = [
         record
         for record in records
-        if record.get("source_type") not in {"italian_statute", "eu_law"}
+        if source_type_for_report(record) not in {"italian_statute", "eu_law"}
     ]
 
     if statute_records:
         lines.append("### Norme")
         lines.append("")
-        lines.append("| Citazione | Fonte ufficiale | Contenuto verificato | Vigenza | Impatto |")
-        lines.append("| --- | --- | --- | --- | --- |")
+        lines.append("| Candidato | Citazione | Stato | Fonte | Risultato sintetico | Impatto |")
+        lines.append("| --- | --- | --- | --- | --- | --- |")
         for record in statute_records:
-            source = record.get("tool_used") or record.get("preferred_tool") or "n.d."
-            url = record.get("official_url")
-            if url:
-                source = f"{source}: {url}"
-            content = record.get("article_text_excerpt") or f"{record.get('status', 'n.d.')}: {record.get('finding', '')}"
+            url = source_url_for_report(record)
+            content = (
+                record.get("article_text_excerpt")
+                or record.get("text_excerpt")
+                or record.get("finding")
+                or record.get("note")
+                or record.get("status")
+            )
             lines.append(
                 "| "
                 + " | ".join(
                     [
-                        md_cell(record.get("citation")),
-                        md_cell(source, maximum=120),
+                        md_cell(record.get("candidate_id") or "tutti/non indicato"),
+                        md_link(record.get("citation"), url),
+                        md_cell(source_status_label(record)),
+                        md_link(source_tool_label(record), url),
                         md_cell(content, maximum=130),
-                        md_cell(record.get("vigente_al")),
-                        md_cell(record.get("score_impact")),
+                        md_cell(source_impact_label(record)),
                     ]
                 )
                 + " |"
@@ -3049,18 +3304,20 @@ def append_source_verification_section(
     if authority_records:
         lines.append("### Giurisprudenza e provvedimenti")
         lines.append("")
-        lines.append("| Citazione | Tool usato | Stato | Esito | Impatto |")
-        lines.append("| --- | --- | --- | --- | --- |")
+        lines.append("| Candidato | Citazione | Stato | Fonte | Esito | Impatto |")
+        lines.append("| --- | --- | --- | --- | --- | --- |")
         for record in authority_records:
+            url = source_url_for_report(record)
             lines.append(
                 "| "
                 + " | ".join(
                     [
-                        md_cell(record.get("citation")),
-                        md_cell(record.get("tool_used") or record.get("preferred_tool")),
-                        md_cell(record.get("status")),
+                        md_cell(record.get("candidate_id") or "tutti/non indicato"),
+                        md_link(record.get("citation"), url),
+                        md_cell(source_status_label(record)),
+                        md_link(source_tool_label(record), url),
                         md_cell(record.get("finding"), maximum=130),
-                        md_cell(record.get("score_impact")),
+                        md_cell(source_impact_label(record)),
                     ]
                 )
                 + " |"
@@ -3068,19 +3325,28 @@ def append_source_verification_section(
         lines.append("")
 
 
-def report_from_result(data: dict[str, Any], sources: dict[str, Any] | list[dict[str, Any]] | None = None) -> str:
+def report_from_result(
+    data: dict[str, Any],
+    sources: dict[str, Any] | list[dict[str, Any]] | None = None,
+    candidate_map: dict[str, Any] | None = None,
+) -> str:
+    data = adapt_candidate_summary_result(data)
+    candidate_labels = candidate_labels_from_map(candidate_map)
     candidates_by_id = {candidate["candidate_id"]: candidate for candidate in data.get("candidates", [])}
     candidate_order = data.get("candidate_order") or [candidate["candidate_id"] for candidate in data.get("candidates", [])]
     ranking = [item for item in data.get("ranking", []) if item.get("rank")]
     best = ranking[0] if ranking else None
     source_status = source_status_from_payload(data, sources)
     source_gate = source_gate_from_payload(data, sources)
+    source_records = source_records_from_payload(sources)
+    source_counts = source_problem_counts(source_records)
     best_candidate = candidates_by_id.get(best["candidate_id"]) if best else None
     best_score = best_candidate.get("score_medio") if best_candidate else None
 
     if best:
+        best_name = candidate_display(best["candidate_id"], candidate_labels)
         panel_ranking_text = (
-            f"Il candidato migliore è {best['candidate_id']} con "
+            f"Il migliore per il panel è {best_name} con "
             f"{display_score(best_score, MAX_SCORE)}. "
             f"Affidabilità pratica: {reliability_label(best_score, source_status)}"
         )
@@ -3089,33 +3355,72 @@ def report_from_result(data: dict[str, Any], sources: dict[str, Any] | list[dict
 
     provisional = source_gate.get("status") != "passed"
     report_status = (
-        "Report tecnico provvisorio: il gate fonti non è pienamente superato."
+        "Relazione provvisoria: alcune fonti non sono ancora pulite o verificate. Non usare la bozza direttamente."
         if provisional
-        else "Report tecnico con gate fonti superato; resta necessaria revisione legale umana."
+        else "Relazione con controllo fonti superato; resta necessaria revisione legale umana."
     )
 
     lawyer_checks = (
-        "Un avvocato deve verificare norme, sentenze, provvedimenti del Garante, "
-        "statuto, deleghe/procure, poteri di firma, contratti e policy IT/privacy "
-        "prima di riutilizzare il contenuto."
+        "Prima del riuso professionale l'avvocato deve controllare il fatto concreto, "
+        "il testo vigente delle norme, la pertinenza delle sentenze citate e la coerenza "
+        "della conclusione con la domanda originaria."
     )
 
     lines: list[str] = [
-        "# Report Panel Legale A/B/C",
+        "# Report finale per l'avvocato",
         "",
         "## Risposta breve",
         "",
         report_status,
         "",
-        f"Panel ranking: {panel_ranking_text}",
+        f"Esito del panel: {panel_ranking_text}",
         "",
         "Legal final assessment: `non_determinato`. Il panel non registra una revisione umana esplicita e non sostituisce il giudizio dell'avvocato.",
         "",
         lawyer_checks,
         "",
-        "## A colpo d'occhio",
+        "## Cosa fare adesso",
         "",
     ]
+
+    if best:
+        lines.append(f"1. Usare {candidate_display(best['candidate_id'], candidate_labels)} solo come bozza da controllare, non come parere pronto.")
+    else:
+        lines.append("1. Non scegliere una bozza: mancano giudizi validi del panel.")
+    if source_counts.get("mismatch") or source_counts.get("not_found"):
+        lines.append("2. Correggere o rimuovere subito le citazioni segnate come `non coerente` o `non trovata` nella sezione fonti.")
+    elif source_counts.get("not_performed") or source_counts.get("unavailable") or source_counts.get("unsupported"):
+        lines.append("2. Completare la verifica delle citazioni ancora segnate come `da verificare` o `non disponibile`.")
+    else:
+        lines.append("2. Controllare comunque che le fonti verificate sostengano proprio l'uso giuridico fatto dalla bozza.")
+    lines.extend(
+        [
+            "3. Dopo la correzione delle fonti, rieseguire il report o annotare manualmente l'esito della revisione umana.",
+            "",
+        ]
+    )
+
+    if candidate_labels:
+        lines.extend(
+            [
+                "## Mappa candidati",
+                "",
+                "I giudici hanno lavorato su ID anonimi. Questa mappa serve solo a leggere il risultato dopo la valutazione.",
+                "",
+                "| ID | Provenienza |",
+                "| --- | --- |",
+            ]
+        )
+        for candidate_id in candidate_order:
+            lines.append(f"| {md_cell(candidate_id)} | {md_cell(candidate_labels.get(candidate_id, 'n.d.'), maximum=140)} |")
+        lines.append("")
+
+    lines.extend(
+        [
+            "## A colpo d'occhio",
+            "",
+        ]
+    )
 
     header = ["Criterio", *candidate_order]
     lines.append("| " + " | ".join(header) + " |")
@@ -3142,7 +3447,9 @@ def report_from_result(data: dict[str, Any], sources: dict[str, Any] | list[dict
             "",
             "## Come leggere il risultato",
             "",
-            f"`source_verification: {source_status}` e `source_gate: {source_gate.get('status', 'not_performed')}` riguardano solo il controllo delle fonti. I punteggi misurano la qualità interna delle risposte, non la verità delle citazioni né la pertinenza giuridica finale.",
+            f"`source_verification: {source_status}` indica quanto sono state controllate le citazioni. `source_gate: {source_gate.get('status', 'not_performed')}` indica se il report può considerare superato il controllo fonti. I punteggi misurano la qualità interna delle risposte, non la verità delle citazioni né la pertinenza giuridica finale.",
+            "",
+            "In pratica: il ranking aiuta a decidere da quale bozza partire, mentre la sezione fonti dice cosa l'avvocato deve verificare prima di usare il testo.",
             "",
         ]
     )
@@ -3153,13 +3460,20 @@ def report_from_result(data: dict[str, Any], sources: dict[str, Any] | list[dict
     lines.append("")
     for candidate_id in candidate_order:
         candidate = candidates_by_id.get(candidate_id, {})
-        lines.append(f"### Candidato {candidate_id}")
+        lines.append(f"### {candidate_display(candidate_id, candidate_labels)}")
         lines.append("")
         lines.append(f"- Punteggio medio: {display_score(candidate.get('score_medio'), MAX_SCORE)}.")
         lines.append(f"- Revisione umana: {'sì' if candidate.get('flag_revisione_umana', True) else 'no'}.")
         flags = candidate.get("human_review_flags") or []
         if flags:
             lines.append(f"- Flag principali: {', '.join(flags[:6])}.")
+        verdicts = candidate.get("verdetti_individuali") or []
+        if verdicts:
+            lines.append("- Sintesi dei giudici:")
+            for verdict in verdicts[:4]:
+                judge = verdict.get("judge_id") or verdict.get("model_route") or "giudice"
+                score = display_score(verdict.get("score_ponderato"), MAX_SCORE)
+                lines.append(f"  - {judge}: {score}. {report_text(verdict.get('sintesi'))}")
         points = candidate.get("punti_critici_per_avvocato") or []
         if points:
             lines.append("- Punti da controllare:")
@@ -3182,9 +3496,15 @@ def report_from_result(data: dict[str, Any], sources: dict[str, Any] | list[dict
         lines.append(f"  - `{error.get('raw_file')}`: {'; '.join(error.get('errors', []))}")
 
     routing = data.get("routing") or {}
+    model_routes_used = data.get("model_routes_used") or []
+    perplexity_live_routes = [
+        route for route in model_routes_used if "perplexity:" in str(route)
+    ]
     spare = routing.get("perplexity_spare_judge")
     if spare:
         lines.append(f"- Perplexity route disponibile: {spare.get('display_name')} ({spare.get('model_route')}).")
+    elif perplexity_live_routes:
+        lines.append("- Perplexity live: raw acquisiti e normalizzati.")
     else:
         lines.append("- Perplexity route non usata o non disponibile; auth/quota non confermata nel risultato.")
     availability = data.get("model_tool_availability") or {}
@@ -3202,9 +3522,6 @@ def report_from_result(data: dict[str, Any], sources: dict[str, Any] | list[dict
                 if text:
                     text = re.sub(r"\s+", " ", text)
                     pwm_notes.append(f"{command}: {text}")
-        perplexity_live_routes = [
-            route for route in (data.get("model_routes_used") or []) if "perplexity:" in str(route)
-        ]
         if pwm_notes:
             lines.append(f"- Perplexity check sandbox: {' | '.join(pwm_notes)}")
         if perplexity_live_routes:
@@ -3216,7 +3533,7 @@ def report_from_result(data: dict[str, Any], sources: dict[str, Any] | list[dict
         lines.append("- Fallback consigliato: no, secondo le soglie del normalizzatore.")
     lines.extend(
         [
-            "- Limitazione principale: nessuna verifica ufficiale delle fonti e nessuna consulenza legale sostitutiva.",
+            f"- Limitazione principale: source_verification `{source_status}`; il report resta controllo qualità e non consulenza legale sostitutiva.",
             "",
         ]
     )
@@ -3227,7 +3544,8 @@ def cmd_report(args: argparse.Namespace) -> None:
     data = json.loads(Path(args.input).read_text(encoding="utf-8"))
     source_payloads = [json.loads(Path(path).read_text(encoding="utf-8")) for path in (args.sources or [])]
     sources = merge_source_payloads(source_payloads) if source_payloads else None
-    report = report_from_result(data, sources=sources)
+    candidate_map = json.loads(Path(args.candidate_map).read_text(encoding="utf-8")) if args.candidate_map else None
+    report = report_from_result(data, sources=sources, candidate_map=candidate_map)
     if args.output:
         write_text_no_overwrite(Path(args.output), report + "\n", force=args.force)
     else:
@@ -3635,6 +3953,10 @@ def build_parser() -> argparse.ArgumentParser:
         "--sources",
         action="append",
         help="Source-verification JSON; repeat to merge Normattiva and case-law checks.",
+    )
+    report_parser.add_argument(
+        "--candidate-map",
+        help="Optional randomization map JSON used to explain A/B/C after judging.",
     )
     report_parser.add_argument("--output", help="Write Markdown report to this path.")
     report_parser.add_argument("--force", action="store_true", help="Allow overwriting the report path.")
