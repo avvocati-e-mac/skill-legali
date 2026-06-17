@@ -1,24 +1,18 @@
 ---
 name: miglioratore-prompt-legale
 description: >
-  Trasforma un quesito giuridico italiano — anche solo abbozzato — in un prompt ottimizzato
-  e strutturato per ricerche legali affidabili e direttamente utilizzabili da un professionista
-  del diritto. Funziona per qualsiasi ramo del diritto italiano (civile, penale, tributario, del
-  lavoro, amministrativo, crisi d'impresa, ecc.). Restituisce SOLO il prompt migliorato (meno di
-  750 parole), eventualmente dopo domande di chiarimento; non risponde al quesito e non inventa
-  norme o sentenze. Usa progressive disclosure: il workflow è qui, il template completo e i
-  guardrail stanno nei reference, caricati solo quando servono. Se servono dati aggiornati per
-  migliorare il prompt, propone (chiedendo conferma) una ricerca online tramite le skill
-  ricerca-web-searXNG o perplexity-web-mcp, o la ricerca web nativa.
-
-  MANDATORY TRIGGERS: qualsiasi quesito giuridico italiano su cui l'utente vuole una ricerca o un
-  parere affidabile; richieste tipo "migliora questo prompt legale", "scrivimi un prompt per un
-  parere su…", "ottimizza la mia domanda di diritto"; quando l'utente fornisce una domanda di
-  diritto vaga o incompleta che trarrebbe beneficio da un prompt strutturato prima della ricerca.
-
-  NOT-TRIGGER: quesiti non giuridici; quando l'utente vuole DIRETTAMENTE la risposta al quesito e
-  non il prompt (in tal caso instrada a buddalaw, gestiolex-corpus o ricerca-web-searXNG);
-  semplici citazioni normative da linkare (usa la skill normattiva).
+  Trasforma un quesito giuridico italiano (anche abbozzato) in un prompt ottimizzato e strutturato
+  per ricerche legali affidabili, per qualsiasi ramo del diritto (civile, penale, tributario,
+  lavoro, amministrativo, crisi d'impresa). Restituisce SOLO il prompt migliorato (<750 parole),
+  eventualmente dopo domande di chiarimento; non risponde al quesito né inventa norme o sentenze.
+  Se servono dati aggiornati propone, su conferma, una ricerca online (skill ricerca-web-searXNG o
+  perplexity-web-mcp, o web nativo).
+  MANDATORY TRIGGERS: quesiti giuridici italiani su cui l'utente vuole una ricerca/parere
+  affidabile; richieste tipo "migliora questo prompt legale" o "scrivimi un prompt per un parere
+  su…"; domande di diritto vaghe o incomplete che migliorerebbero con un prompt strutturato.
+  NOT-TRIGGER: quesiti non giuridici; quando l'utente vuole DIRETTAMENTE la risposta e non il
+  prompt (instrada a buddalaw, gestiolex-corpus o ricerca-web-searXNG); semplici citazioni
+  normative da linkare (usa normattiva).
 ---
 
 # Miglioratore di prompt legale
