@@ -2,7 +2,7 @@
 
 Follow `SKILL.md` for quick operating instructions. Read `ARCHITETTURA.md` for architecture, scoring, bias controls, source verification, kappa calibration, supervisor flow, and scientific references.
 
-Use this skill to screen and rank Italian legal AI answers across civil, criminal, tax, and administrative law. Its primary use case is comparing an LLM's baseline answer with the version produced after a prompt improver, on the same legal question. It is not legal advice and never substitutes review by an Italian lawyer. Keep LLM judging separate from official source verification.
+Use this skill to screen and rank Italian legal AI answers across civil, criminal, administrative, and tax law. Its primary use case is comparing an LLM's baseline answer with the version produced after a prompt improver, on the same legal question. It is not legal advice and never substitutes review by an Italian lawyer. Keep LLM judging separate from official source verification.
 
 Core CLI commands:
 
@@ -16,11 +16,12 @@ python3 concilio-llm-prompt-legale/scripts/legal_panel.py prepare-live "A.md" "B
 python3 concilio-llm-prompt-legale/scripts/legal_panel.py normalize-live --cases panel-input.json --raw-dir panel-results-raw --output panel-results-normalized.json
 python3 concilio-llm-prompt-legale/scripts/legal_panel.py prepare-supervisor --input panel-results-normalized.json --output-dir panel-results-supervisor
 python3 concilio-llm-prompt-legale/scripts/legal_panel.py verify-sources --cases panel-input.json --output source-verification.json
-python3 concilio-llm-prompt-legale/scripts/legal_panel.py report panel-results-normalized.json --output panel-report.md
+python3 concilio-llm-prompt-legale/scripts/normattiva_fetch.py --sources source-verification.json --output-json normattiva-verification.json --output-md normattiva-verification.md --articles-dir normattiva-articles
+python3 concilio-llm-prompt-legale/scripts/legal_panel.py report --input panel-results-normalized.json --sources source-verification.json --sources normattiva-verification.json --output panel-report.md
 python3 concilio-llm-prompt-legale/scripts/legal_panel.py mock
 ```
 
-Available presets: `civile`, `penale`, `tributario`, `amministrativo`. Per il caso primario (base vs prompt migliorato) usa `prompt-eval`: assegna da solo ID neutri A/B per evitare bias. In `run-live.sh` ogni giudice ha un timeout (`--judge-timeout`, default 240s); se una cella va in timeout, sostituisci solo quella con un fallback di famiglia diversa, non rifare il panel. La verifica fonti reale va delegata a un subagente (vedi `references/source-workflow.md`). `confidential` si basa su dati personali reali, non sulle parole-tema: leggi `confidential_reason` prima di attivare il gate.
+Available presets: `civile`, `penale`, `tributario`, `amministrativo`. Per il caso primario (base vs prompt migliorato) usa `prompt-eval`: assegna da solo ID neutri A/B per evitare bias. In `run-live.sh` ogni giudice ha un timeout (`--judge-timeout`, default 240s); se una cella va in timeout, sostituisci solo quella con un fallback di famiglia diversa, non rifare il panel. `verify-sources` instrada le citazioni; `normattiva_fetch.py` scarica da Normattiva il testo delle norme italiane quando la route fonti è approvata; giurisprudenza e provvedimenti vanno verificati con BuddaLaw/GestioLex o fallback documentato (vedi `references/source-workflow.md`). `panel_ranking` non è `legal_final_assessment`: senza revisione umana esplicita resta `non_determinato`. `confidential` si basa su dati personali reali, non sulle parole-tema: leggi `confidential_reason` prima di attivare il gate.
 
 Route and privacy gate: do not decide local/offline or online/live silently. If the user has not already specified the route, ask whether they want only local/offline processing or also online/live model calls, naming the intended providers/tools. Do not install tools, authenticate accounts, upload documents, run live Perplexity/NotebookLM/BuddaLaw/GestioLex/cloud-model workflows, or spend live model calls unless the user has explicitly approved that route.
 

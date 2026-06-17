@@ -283,10 +283,59 @@ NORMATTIVA_BASE_URL = "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:"
 NORMATTIVA_ACT_URLS = {
     "c.c.": NORMATTIVA_BASE_URL + "regio.decreto:1942-03-16;262:2",
     "codice civile": NORMATTIVA_BASE_URL + "regio.decreto:1942-03-16;262:2",
+    "c.p.c.": NORMATTIVA_BASE_URL + "regio.decreto:1940-10-28;1443:1",
+    "codice procedura civile": NORMATTIVA_BASE_URL + "regio.decreto:1940-10-28;1443:1",
+    "codice di procedura civile": NORMATTIVA_BASE_URL + "regio.decreto:1940-10-28;1443:1",
+    "c.p.": NORMATTIVA_BASE_URL + "regio.decreto:1930-10-19;1398:1",
+    "codice penale": NORMATTIVA_BASE_URL + "regio.decreto:1930-10-19;1398:1",
+    "c.p.p.": NORMATTIVA_BASE_URL + "decreto.del.presidente.della.repubblica:1988-09-22;447",
+    "codice procedura penale": NORMATTIVA_BASE_URL + "decreto.del.presidente.della.repubblica:1988-09-22;447",
+    "codice di procedura penale": NORMATTIVA_BASE_URL + "decreto.del.presidente.della.repubblica:1988-09-22;447",
+    "cost.": NORMATTIVA_BASE_URL + "costituzione:1947-12-27",
+    "costituzione": NORMATTIVA_BASE_URL + "costituzione:1947-12-27",
     "l. 300/1970": NORMATTIVA_BASE_URL + "legge:1970-05-20;300",
     "statuto dei lavoratori": NORMATTIVA_BASE_URL + "legge:1970-05-20;300",
+    "l.fall.": NORMATTIVA_BASE_URL + "regio.decreto:1942-01-16;267:1",
+    "legge fallimentare": NORMATTIVA_BASE_URL + "regio.decreto:1942-01-16;267:1",
+    "r.d. 267/1942": NORMATTIVA_BASE_URL + "regio.decreto:1942-01-16;267:1",
+    "d.lgs. 14/2019": NORMATTIVA_BASE_URL + "decreto.legislativo:2019-01-12;14",
+    "ccii": NORMATTIVA_BASE_URL + "decreto.legislativo:2019-01-12;14",
+    "codice crisi": NORMATTIVA_BASE_URL + "decreto.legislativo:2019-01-12;14",
     "d.lgs. 151/2015": NORMATTIVA_BASE_URL + "decreto.legislativo:2015-09-14;151",
+    "d.lgs. 81/2015": NORMATTIVA_BASE_URL + "decreto.legislativo:2015-06-15;81",
+    "d.lgs. 81/2008": NORMATTIVA_BASE_URL + "decreto.legislativo:2008-04-09;81",
+    "d.lgs. 231/2001": NORMATTIVA_BASE_URL + "decreto.legislativo:2001-06-08;231",
     "d.lgs. 196/2003": NORMATTIVA_BASE_URL + "decreto.legislativo:2003-06-30;196",
+    "d.lgs. 206/2005": NORMATTIVA_BASE_URL + "decreto.legislativo:2005-09-06;206",
+    "d.lgs. 209/2005": NORMATTIVA_BASE_URL + "decreto.legislativo:2005-09-07;209",
+    "d.lgs. 50/2016": NORMATTIVA_BASE_URL + "decreto.legislativo:2016-04-18;50",
+    "d.lgs. 36/2023": NORMATTIVA_BASE_URL + "decreto.legislativo:2023-03-31;36",
+    "d.lgs. 267/2000": NORMATTIVA_BASE_URL + "decreto.legislativo:2000-08-18;267",
+    "d.lgs. 165/2001": NORMATTIVA_BASE_URL + "decreto.legislativo:2001-03-30;165",
+    "d.lgs. 286/1998": NORMATTIVA_BASE_URL + "decreto.legislativo:1998-07-25;286",
+    "l. 241/1990": NORMATTIVA_BASE_URL + "legge:1990-08-07;241",
+    "d.lgs. 104/2010": NORMATTIVA_BASE_URL + "decreto.legislativo:2010-07-02;104",
+    "c.p.a.": NORMATTIVA_BASE_URL + "decreto.legislativo:2010-07-02;104",
+    "codice processo amministrativo": NORMATTIVA_BASE_URL + "decreto.legislativo:2010-07-02;104",
+    "codice del processo amministrativo": NORMATTIVA_BASE_URL + "decreto.legislativo:2010-07-02;104",
+    "d.lgs. 152/2006": NORMATTIVA_BASE_URL + "decreto.legislativo:2006-04-03;152",
+    "codice ambiente": NORMATTIVA_BASE_URL + "decreto.legislativo:2006-04-03;152",
+    "d.lgs. 33/2013": NORMATTIVA_BASE_URL + "decreto.legislativo:2013-03-14;33",
+    "d.lgs. 82/2005": NORMATTIVA_BASE_URL + "decreto.legislativo:2005-03-07;82",
+    "cad": NORMATTIVA_BASE_URL + "decreto.legislativo:2005-03-07;82",
+    "d.lgs. 546/1992": NORMATTIVA_BASE_URL + "decreto.legislativo:1992-12-31;546",
+    "l. 212/2000": NORMATTIVA_BASE_URL + "legge:2000-07-27;212",
+    "statuto del contribuente": NORMATTIVA_BASE_URL + "legge:2000-07-27;212",
+    "d.p.r. 917/1986": NORMATTIVA_BASE_URL + "decreto.del.presidente.della.repubblica:1986-12-22;917",
+    "tuir": NORMATTIVA_BASE_URL + "decreto.del.presidente.della.repubblica:1986-12-22;917",
+    "d.p.r. 600/1973": NORMATTIVA_BASE_URL + "decreto.del.presidente.della.repubblica:1973-09-29;600",
+    "d.p.r. 602/1973": NORMATTIVA_BASE_URL + "decreto.del.presidente.della.repubblica:1973-09-29;602",
+    "d.p.r. 633/1972": NORMATTIVA_BASE_URL + "decreto.del.presidente.della.repubblica:1972-10-26;633",
+    "d.lgs. 472/1997": NORMATTIVA_BASE_URL + "decreto.legislativo:1997-12-18;472",
+    "d.lgs. 74/2000": NORMATTIVA_BASE_URL + "decreto.legislativo:2000-03-10;74",
+    "d.p.r. 380/2001": NORMATTIVA_BASE_URL + "decreto.del.presidente.della.repubblica:2001-06-06;380",
+    "r.d. 327/1942": NORMATTIVA_BASE_URL + "regio.decreto:1942-03-30;327",
+    "codice navigazione": NORMATTIVA_BASE_URL + "regio.decreto:1942-03-30;327",
 }
 EURLEX_GDPR_URL = "https://eur-lex.europa.eu/legal-content/IT/TXT/?uri=CELEX%3A32016R0679"
 
@@ -813,11 +862,19 @@ def split_sections(text: str) -> dict[str, str]:
 
 def extract_sources(text: str) -> list[str]:
     patterns = [
-        r"\bartt?\.?\s+\d+[a-zA-Z-]*(?:\s*(?:,|e|-)\s*\d+[a-zA-Z-]*)*(?:\s*,?\s*(?:co\.|comma)\s*\d+)?(?:\s+(?:c\.c\.|c\.p\.c\.|c\.p\.|GDPR|Statuto dei lavoratori|L\.?\s*\d+/\d{4}|D\.?\s*Lgs\.?\s*\d+/\d{4}))?",
+        r"\bartt?\.?\s+\d+[a-zA-Z-]*(?:\s*(?:,|e|-)\s*\d+[a-zA-Z-]*)*(?:\s*,?\s*(?:co\.|comma)\s*\d+)?(?:\s+(?:c\.c\.|c\.p\.c\.|c\.p\.p\.|c\.p\.(?![a-z])|Cost\.?|GDPR|Statuto dei lavoratori|L\.?\s*\d+/\d{4}|D\.?\s*Lgs\.?\s*\d+/\d{4}|D\.?\s*P\.?\s*R\.?\s*\d+/\d{4}|R\.?\s*D\.?\s*\d+/\d{4}))?",
         r"\b(?:GDPR|Regolamento\s+\(UE\)\s+2016/679)\s*(?:artt?\.?|articoli?)?\s+\d+(?:\s*(?:,|e|-)\s*\d+)*",
         r"\b(?:Codice civile|c\.c\.)\s*(?:artt?\.?|articoli?)?\s+\d+(?:\s*(?:,|e|-)\s*\d+)*",
+        r"\b(?:Codice\s+(?:di\s+)?procedura\s+civile|c\.p\.c\.)\s*(?:artt?\.?|articoli?)?\s+\d+(?:\s*(?:,|e|-)\s*\d+)*",
+        r"\b(?:Codice penale|c\.p\.)\s*(?:artt?\.?|articoli?)?\s+\d+(?:\s*(?:,|e|-)\s*\d+)*",
+        r"\b(?:Codice\s+(?:di\s+)?procedura\s+penale|c\.p\.p\.)\s*(?:artt?\.?|articoli?)?\s+\d+(?:\s*(?:,|e|-)\s*\d+)*",
+        r"\b(?:Cost\.?|Costituzione)\s*(?:artt?\.?|articoli?)?\s+\d+(?:\s*(?:,|e|-)\s*\d+)*",
+        r"\b(?:c\.p\.a\.|Codice\s+(?:del\s+)?processo\s+amministrativo)\s*(?:artt?\.?|articoli?)?\s+\d+(?:\s*(?:,|e|-)\s*\d+)*",
+        r"\b(?:Statuto del contribuente|TUIR|T\.?\s*U\.?\s*I\.?\s*R\.?|CAD)\s*(?:artt?\.?|articoli?)?\s+\d+(?:\s*(?:,|e|-)\s*\d+)*",
         r"\bD\.?\s*Lgs\.?\s+\d+/\d{4}",
         r"\bD\.?\s*L\.?\s+\d+/\d{4}",
+        r"\bD\.?\s*P\.?\s*R\.?\s+\d+/\d{4}",
+        r"\bR\.?\s*D\.?\s+\d+/\d{4}",
         r"\bL\.?\s+\d+/\d{4}",
         r"\bRegolamento\s+\(UE\)\s+\d+/\d{4}",
         r"\bCass\.?\s+(?:civ\.?|pen\.?)?.{0,50}?\b\d{1,6}/\d{4}",
@@ -844,13 +901,45 @@ def norm_act(value: str) -> str:
     normalized = normalize_for_match(value)
     normalized = normalized.replace("cod. civ.", "codice civile")
     normalized = normalized.replace("cod civ", "codice civile")
+    normalized = normalized.replace("cod. proc. civ.", "codice procedura civile")
+    normalized = normalized.replace("cod proc civ", "codice procedura civile")
+    normalized = normalized.replace("cod. proc. pen.", "codice procedura penale")
+    normalized = normalized.replace("cod proc pen", "codice procedura penale")
     normalized = re.sub(r"\bd\s*lgs\b", "d.lgs.", normalized)
     normalized = re.sub(r"\bd\s*l\b", "d.l.", normalized)
+    normalized = re.sub(r"\bd\s*p\s*r\b", "d.p.r.", normalized)
+    normalized = re.sub(r"\br\s*d\b", "r.d.", normalized)
     normalized = re.sub(r"\bl\s+(\d+/\d{4})", r"l. \1", normalized)
+    normalized = re.sub(r"\blegge\s+n?\.?\s*(\d+/\d{4})", r"l. \1", normalized)
     normalized = re.sub(r"\bd\.lgs\.?\s+(\d+/\d{4})", r"d.lgs. \1", normalized)
     normalized = re.sub(r"\bd\.l\.?\s+(\d+/\d{4})", r"d.l. \1", normalized)
+    normalized = re.sub(r"\bd\.p\.r\.?\s+(\d+/\d{4})", r"d.p.r. \1", normalized)
+    normalized = re.sub(r"\br\.d\.?\s+(\d+/\d{4})", r"r.d. \1", normalized)
+    normalized = re.sub(r"\bl\.?\s*fall\.?", "l.fall.", normalized)
     if normalized in {"cc", "c.c", "c.c.", "codice civile"}:
         return "c.c."
+    if normalized in {"cpc", "c.p.c", "c.p.c.", "codice procedura civile", "codice di procedura civile"}:
+        return "c.p.c."
+    if normalized in {"cp", "c.p", "c.p.", "codice penale"}:
+        return "c.p."
+    if normalized in {"cpp", "c.p.p", "c.p.p.", "codice procedura penale", "codice di procedura penale"}:
+        return "c.p.p."
+    if normalized in {"cost", "cost.", "costituzione"}:
+        return "cost."
+    if normalized in {"l.fall", "l.fall.", "legge fallimentare"}:
+        return "l.fall."
+    if "codice della crisi" in normalized or "codice crisi" in normalized or normalized == "ccii":
+        return "d.lgs. 14/2019"
+    if normalized in {"cpa", "c.p.a", "c.p.a.", "codice processo amministrativo", "codice del processo amministrativo"}:
+        return "c.p.a."
+    if "statuto del contribuente" in normalized:
+        return "l. 212/2000"
+    if normalized in {"tuir", "t.u.i.r.", "t.u.i.r"}:
+        return "tuir"
+    if normalized in {"cad", "codice amministrazione digitale", "codice dell amministrazione digitale"}:
+        return "cad"
+    if "codice ambiente" in normalized or "codice dell ambiente" in normalized:
+        return "d.lgs. 152/2006"
     if "statuto dei lavoratori" in normalized:
         return "l. 300/1970"
     if "gdpr" in normalized or "regolamento (ue) 2016/679" in normalized:
@@ -880,12 +969,29 @@ def expand_article_numbers(raw: str) -> list[str]:
     return deduped
 
 
+ITALIAN_ACT_PATTERN = (
+    r"c\.c\.|codice civile|cod\.?\s*civ\.?|"
+    r"c\.p\.c\.|codice\s+(?:di\s+)?procedura\s+civile|cod\.?\s*proc\.?\s*civ\.?|"
+    r"c\.p\.p\.|codice\s+(?:di\s+)?procedura\s+penale|cod\.?\s*proc\.?\s*pen\.?|"
+    r"c\.p\.a\.|codice\s+(?:del\s+)?processo\s+amministrativo|"
+    r"c\.p\.|codice penale|"
+    r"Cost\.?|Costituzione|"
+    r"l\.?\s*fall\.?|legge fallimentare|"
+    r"Statuto dei lavoratori|"
+    r"Statuto del contribuente|"
+    r"L\.?\s*\d+/\d{4}|Legge\s+n?\.?\s*\d+/\d{4}|"
+    r"D\.?\s*Lgs\.?\s*\d+/\d{4}|D\.?\s*L\.?\s*\d+/\d{4}|"
+    r"D\.?\s*P\.?\s*R\.?\s*\d+/\d{4}|R\.?\s*D\.?\s*\d+/\d{4}|"
+    r"CCII|Codice della crisi|Codice crisi|T\.?\s*U\.?\s*I\.?\s*R\.?|TUIR|CAD|"
+    r"Codice\s+(?:dell['’]\s*)?amministrazione\s+digitale|Codice\s+(?:dell['’]\s*)?ambiente|"
+    r"GDPR|Regolamento\s+\(UE\)\s*2016/679"
+)
 ARTICLE_THEN_ACT_RE = re.compile(
-    r"\bartt?\.?\s*(?P<arts>\d+[a-zA-Z]?(?:\s*(?:,|e|-)\s*\d+[a-zA-Z]?)*)(?:\s*,?\s*(?:co\.|comma)\s*\d+)?\s*(?:del(?:la)?\s+)?(?P<act>c\.c\.|codice civile|cod\.?\s*civ\.?|Statuto dei lavoratori|L\.?\s*\d+/\d{4}|D\.?\s*Lgs\.?\s*\d+/\d{4}|D\.?\s*L\.?\s*\d+/\d{4}|GDPR|Regolamento\s+\(UE\)\s*2016/679)",
+    rf"\bartt?\.?\s*(?P<arts>\d+[a-zA-Z]?(?:\s*(?:,|e|-)\s*\d+[a-zA-Z]?)*)(?:\s*,?\s*(?:co\.|comma)\s*\d+)?\s*(?:del(?:la)?\s+)?(?P<act>{ITALIAN_ACT_PATTERN})",
     flags=re.IGNORECASE,
 )
 ACT_THEN_ARTICLE_RE = re.compile(
-    r"\b(?P<act>GDPR|Regolamento\s+\(UE\)\s*2016/679|Codice civile|c\.c\.|Statuto dei lavoratori|L\.?\s*\d+/\d{4}|D\.?\s*Lgs\.?\s*\d+/\d{4}|D\.?\s*L\.?\s*\d+/\d{4})(?:[^.\n]{0,50}?)(?:artt?\.?|articoli?)\s*(?P<arts>\d+[a-zA-Z]?(?:\s*(?:,|e|-)\s*\d+[a-zA-Z]?)*)",
+    rf"\b(?P<act>{ITALIAN_ACT_PATTERN})(?:\s*(?:,|:|-|\(|\)|del|della|articoli?))*\s*(?:artt?\.?|articoli?)\s*(?P<arts>\d+[a-zA-Z]?(?:\s*(?:,|e|-)\s*\d+[a-zA-Z]?)*)",
     flags=re.IGNORECASE,
 )
 
@@ -896,7 +1002,33 @@ def source_type_for(act: str, raw: str) -> str:
         return "eu_law"
     if any(marker in norm for marker in ("cass", "tar", "cgt", "corte di cassazione", "garante", "provvedimento", "sentenza")):
         return "case_law_or_authority"
-    if any(marker in norm for marker in ("c.c", "codice civile", "statuto dei lavoratori", "l. ", "legge", "d.lgs", "d.l.", "decreto")):
+    if any(
+        marker in norm
+        for marker in (
+            "c.c",
+            "c.p.c",
+            "c.p.p",
+            "c.p",
+            "codice civile",
+            "codice penale",
+            "cost",
+            "costituzione",
+            "statuto dei lavoratori",
+            "l. ",
+            "l.fall",
+            "legge",
+            "d.lgs",
+            "d.l.",
+            "d.p.r",
+            "r.d",
+            "decreto",
+            "ccii",
+            "tuir",
+            "c.p.a",
+            "statuto del contribuente",
+            "cad",
+        )
+    ):
         return "italian_statute"
     return "unknown"
 
@@ -951,6 +1083,10 @@ def detect_source_citations(case: dict[str, Any]) -> list[dict[str, Any]]:
 
     for pattern in (ARTICLE_THEN_ACT_RE, ACT_THEN_ARTICLE_RE):
         for match in pattern.finditer(text):
+            if pattern is ACT_THEN_ARTICLE_RE:
+                before = text[max(0, match.start() - 24) : match.start()]
+                if re.search(r"\bartt?\.?\s*\d+[a-zA-Z]?\s*$", before, flags=re.IGNORECASE):
+                    continue
             act = match.group("act")
             for article in expand_article_numbers(match.group("arts")):
                 raw = compact_ws(match.group(0))
@@ -975,7 +1111,7 @@ def detect_source_citations(case: dict[str, Any]) -> list[dict[str, Any]]:
         item = {
             "citation": compact_ws(raw),
             "article": None,
-            "act": "",
+            "act": norm_act(raw) if raw_type == "italian_statute" else "",
             "source_type": raw_type,
             "raw_match": compact_ws(raw),
         }
@@ -990,7 +1126,21 @@ def detect_source_citations(case: dict[str, Any]) -> list[dict[str, Any]]:
             continue
         seen.add(key)
         deduped.append(item)
-    return deduped[:120]
+    acts_with_articles = {
+        str(item.get("act") or "")
+        for item in deduped
+        if item.get("source_type") == "italian_statute" and item.get("article") and item.get("act")
+    }
+    filtered = [
+        item
+        for item in deduped
+        if not (
+            item.get("source_type") == "italian_statute"
+            and not item.get("article")
+            and str(item.get("act") or "") in acts_with_articles
+        )
+    ]
+    return filtered[:120]
 
 
 # Domini/local-part chiaramente fittizi: una email che li usa NON è un dato personale reale.
@@ -1427,22 +1577,39 @@ def aggregate_comparison(candidates: list[dict[str, Any]], availability: dict[st
     aggregated_warnings = sorted(
         {w for item in ranking for w in item.get("warnings", [])}
     )
+    compact_ranking = [
+        {
+            "rank": item["rank"],
+            "candidate_id": item["candidate_id"],
+            "score_medio": item["score_medio"],
+            "percentuale_media": item["percentuale_media"],
+            "flag_revisione_umana": item["flag_revisione_umana"],
+            "human_review_flags": item["human_review_flags"],
+        }
+        for item in ranking
+    ]
     return {
         "generated_at": now_iso(),
         "mode": "offline_mock",
         "score_massimo": MAX_SCORE,
         "warnings": aggregated_warnings,
-        "ranking": [
-            {
-                "rank": item["rank"],
-                "candidate_id": item["candidate_id"],
-                "score_medio": item["score_medio"],
-                "percentuale_media": item["percentuale_media"],
-                "flag_revisione_umana": item["flag_revisione_umana"],
-                "human_review_flags": item["human_review_flags"],
-            }
-            for item in ranking
-        ],
+        "ranking": compact_ranking,
+        "panel_ranking": {
+            "status": "available" if compact_ranking else "not_available",
+            "best_candidate_id": compact_ranking[0]["candidate_id"] if compact_ranking else None,
+            "ranking": compact_ranking,
+            "notes": ["Ranking del panel LLM: non equivale a valutazione legale finale."],
+        },
+        "legal_final_assessment": {
+            "status": "non_determinato",
+            "reason": "Nessuna revisione umana esplicita registrata nel risultato.",
+        },
+        "source_gate": {
+            "status": "not_performed",
+            "source_verification_status": "not_performed",
+            "legal_final_assessment": "non_determinato",
+            "notes": ["Le fonti non sono state verificate su fonti ufficiali o banche dati autorizzate."],
+        },
         "candidates": ranking,
         "model_tool_availability": availability or {},
         "kappa_ready": [
@@ -1557,6 +1724,8 @@ def unavailable_record(
         raise ValueError(f"Unsupported source verification status: {status}")
     return {
         "citation": item.get("citation", ""),
+        "article": item.get("article"),
+        "act": item.get("act", ""),
         "source_type": item.get("source_type", "unknown"),
         "preferred_tool": preferred_tool,
         "tool_used": tool_used,
@@ -2502,6 +2671,22 @@ def aggregate_live_results(
         "score_massimo": MAX_SCORE,
         "candidate_order": [case["candidate_id"] for case in cases],
         "ranking": ranking,
+        "panel_ranking": {
+            "status": "available" if ranking else "not_available",
+            "best_candidate_id": ranked[0]["candidate_id"] if ranked else None,
+            "ranking": ranking,
+            "notes": ["Ranking del panel LLM: non equivale a valutazione legale finale."],
+        },
+        "legal_final_assessment": {
+            "status": "non_determinato",
+            "reason": "Nessuna revisione umana esplicita registrata nel risultato.",
+        },
+        "source_gate": {
+            "status": "not_performed",
+            "source_verification_status": "not_performed",
+            "legal_final_assessment": "non_determinato",
+            "notes": ["Le fonti non sono state verificate su fonti ufficiali o banche dati autorizzate."],
+        },
         "candidates": [*ranked, *unranked],
         "source_verification": source_verification,
         "source_check": source_verification,
@@ -2635,11 +2820,29 @@ def md_cell(value: Any, *, maximum: int = 90) -> str:
     return text or "n.d."
 
 
+SOURCE_STATUS_PRIORITY = {
+    "not_performed": 0,
+    "unsupported": 1,
+    "unavailable": 2,
+    "verified": 3,
+    "not_found": 4,
+    "mismatch": 5,
+}
+
+
 def source_records_from_payload(sources: dict[str, Any] | list[dict[str, Any]] | None) -> list[dict[str, Any]]:
     if not sources:
         return []
     if isinstance(sources, list):
-        return [item for item in sources if isinstance(item, dict)]
+        records: list[dict[str, Any]] = []
+        for item in sources:
+            if not isinstance(item, dict):
+                continue
+            if item.get("citation") or item.get("source_type"):
+                records.append(item)
+            else:
+                records.extend(source_records_from_payload(item))
+        return records
     if isinstance(sources.get("records"), list):
         return [item for item in sources["records"] if isinstance(item, dict)]
     records: list[dict[str, Any]] = []
@@ -2649,11 +2852,120 @@ def source_records_from_payload(sources: dict[str, Any] | list[dict[str, Any]] |
     return records
 
 
+def source_record_merge_key(record: dict[str, Any]) -> tuple[str, str, str]:
+    citation = normalize_for_match(str(record.get("citation") or ""))
+    citation = citation.replace("artt.", "art.").replace("artt ", "art ")
+    citation = re.sub(r"\bc\.?\s*c\.?\b", "c.c.", citation)
+    citation = re.sub(r"\s+", " ", citation).strip(" .")
+    return (
+        str(record.get("candidate_id") or ""),
+        citation,
+        str(record.get("source_type") or "unknown"),
+    )
+
+
+def stronger_source_record(left: dict[str, Any], right: dict[str, Any]) -> dict[str, Any]:
+    left_status = str(left.get("status") or "not_performed")
+    right_status = str(right.get("status") or "not_performed")
+    if SOURCE_STATUS_PRIORITY.get(right_status, 0) > SOURCE_STATUS_PRIORITY.get(left_status, 0):
+        base, extra = right, left
+    else:
+        base, extra = left, right
+    merged = dict(extra)
+    merged.update({key: value for key, value in base.items() if value not in (None, "", [])})
+    if extra.get("raw_match") and not merged.get("raw_match"):
+        merged["raw_match"] = extra["raw_match"]
+    return merged
+
+
+def source_status_from_records(records: list[dict[str, Any]]) -> str:
+    return verification_status_summary(records)
+
+
+def merge_source_payloads(payloads: list[dict[str, Any] | list[dict[str, Any]]]) -> dict[str, Any]:
+    by_key: dict[tuple[str, str, str], dict[str, Any]] = {}
+    for payload in payloads:
+        for record in source_records_from_payload(payload):
+            key = source_record_merge_key(record)
+            if key in by_key:
+                by_key[key] = stronger_source_record(by_key[key], record)
+            else:
+                by_key[key] = dict(record)
+    records = list(by_key.values())
+    status = source_status_from_records(records)
+    return {
+        "generated_at": now_iso(),
+        "status": status,
+        "source_verification": {
+            "status": status,
+            "notes": [
+                "Registro fonti unificato da uno o piu' file --sources.",
+                "Il record piu' verificato prevale sui record grezzi di routing.",
+            ],
+        },
+        "records": records,
+        "source_gate": source_gate_from_records(records),
+    }
+
+
+def source_gate_from_records(records: list[dict[str, Any]]) -> dict[str, Any]:
+    counts = {status: 0 for status in ["verified", "mismatch", "not_found", "unavailable", "unsupported", "not_performed"]}
+    for record in records:
+        status = str(record.get("status") or "not_performed")
+        counts[status] = counts.get(status, 0) + 1
+
+    verified = counts.get("verified", 0)
+    problems = counts.get("mismatch", 0) + counts.get("not_found", 0)
+    unresolved = counts.get("unavailable", 0) + counts.get("unsupported", 0) + counts.get("not_performed", 0)
+    performed = verified + problems
+
+    if not records or performed == 0:
+        status = "not_performed"
+        passed = False
+        notes = ["Nessuna fonte e' stata confermata da fonte ufficiale o banca dati autorizzata."]
+    elif problems:
+        status = "passed_with_findings" if verified else "failed"
+        passed = False
+        notes = ["Almeno una fonte e' stata verificata, ma esistono mismatch o fonti non trovate."]
+    elif unresolved:
+        status = "passed_with_findings"
+        passed = False
+        notes = ["Almeno una fonte e' verificata, ma restano citazioni non risolte o non supportate."]
+    else:
+        status = "passed"
+        passed = True
+        notes = ["Le fonti nel registro allegato risultano verificate."]
+
+    return {
+        "status": status,
+        "passed": passed,
+        "source_verification_status": source_status_from_records(records),
+        "counts": counts,
+        "legal_final_assessment": "non_determinato",
+        "notes": notes,
+    }
+
+
+def source_gate_from_payload(
+    data: dict[str, Any],
+    sources: dict[str, Any] | list[dict[str, Any]] | None,
+) -> dict[str, Any]:
+    records = source_records_from_payload(sources)
+    if records:
+        return source_gate_from_records(records)
+    gate = data.get("source_gate")
+    if isinstance(gate, dict):
+        return gate
+    return source_gate_from_records([])
+
+
 def source_status_from_payload(
     data: dict[str, Any],
     sources: dict[str, Any] | list[dict[str, Any]] | None,
 ) -> str:
     if isinstance(sources, dict):
+        if isinstance(sources.get("source_gate"), dict):
+            return str(sources["source_gate"].get("source_verification_status") or sources.get("status") or "not_performed")
         if isinstance(sources.get("source_verification"), dict):
             return str(sources["source_verification"].get("status") or sources.get("status") or "not_performed")
         if sources.get("status"):
@@ -2670,11 +2982,14 @@ def append_source_verification_section(
 ) -> None:
     records = source_records_from_payload(sources)
     source_status = source_status_from_payload(data, sources)
+    source_gate = source_gate_from_payload(data, sources)
     lines.extend(
         [
             "## Verifica fonti ufficiali",
             "",
             "Ordine applicato: norme italiane su Normattiva; GDPR e diritto UE su EUR-Lex; giurisprudenza e provvedimenti con BuddaLaw, poi SearXNG, poi Perplexity se approvato e autenticato, poi ricerca web base solo come scoperta.",
+            "",
+            f"Gate fonti: `source_gate: {source_gate.get('status', 'not_performed')}`. Valutazione legale finale: `legal_final_assessment: non_determinato` finché non risulta una revisione umana esplicita.",
             "",
         ]
     )
@@ -2759,17 +3074,25 @@ def report_from_result(data: dict[str, Any], sources: dict[str, Any] | list[dict
     ranking = [item for item in data.get("ranking", []) if item.get("rank")]
     best = ranking[0] if ranking else None
     source_status = source_status_from_payload(data, sources)
+    source_gate = source_gate_from_payload(data, sources)
     best_candidate = candidates_by_id.get(best["candidate_id"]) if best else None
     best_score = best_candidate.get("score_medio") if best_candidate else None
 
     if best:
-        short_answer = (
+        panel_ranking_text = (
             f"Il candidato migliore è {best['candidate_id']} con "
             f"{display_score(best_score, MAX_SCORE)}. "
             f"Affidabilità pratica: {reliability_label(best_score, source_status)}"
         )
     else:
-        short_answer = "Non c'è un candidato migliore: mancano verdict live validi."
+        panel_ranking_text = "Non c'è un candidato migliore: mancano verdict live validi."
+
+    provisional = source_gate.get("status") != "passed"
+    report_status = (
+        "Report tecnico provvisorio: il gate fonti non è pienamente superato."
+        if provisional
+        else "Report tecnico con gate fonti superato; resta necessaria revisione legale umana."
+    )
 
     lawyer_checks = (
         "Un avvocato deve verificare norme, sentenze, provvedimenti del Garante, "
@@ -2782,7 +3105,11 @@ def report_from_result(data: dict[str, Any], sources: dict[str, Any] | list[dict
         "",
         "## Risposta breve",
         "",
-        short_answer,
+        report_status,
+        "",
+        f"Panel ranking: {panel_ranking_text}",
+        "",
+        "Legal final assessment: `non_determinato`. Il panel non registra una revisione umana esplicita e non sostituisce il giudizio dell'avvocato.",
         "",
         lawyer_checks,
         "",
@@ -2815,7 +3142,7 @@ def report_from_result(data: dict[str, Any], sources: dict[str, Any] | list[dict
             "",
             "## Come leggere il risultato",
             "",
-            f"`source_verification: {source_status}` significa che le citazioni non sono state controllate su fonti ufficiali. I punteggi misurano la qualità interna delle risposte, non la verità delle citazioni.",
+            f"`source_verification: {source_status}` e `source_gate: {source_gate.get('status', 'not_performed')}` riguardano solo il controllo delle fonti. I punteggi misurano la qualità interna delle risposte, non la verità delle citazioni né la pertinenza giuridica finale.",
             "",
         ]
     )
@@ -2898,7 +3225,8 @@ def report_from_result(data: dict[str, Any], sources: dict[str, Any] | list[dict
 
 def cmd_report(args: argparse.Namespace) -> None:
     data = json.loads(Path(args.input).read_text(encoding="utf-8"))
-    sources = json.loads(Path(args.sources).read_text(encoding="utf-8")) if args.sources else None
+    source_payloads = [json.loads(Path(path).read_text(encoding="utf-8")) for path in (args.sources or [])]
+    sources = merge_source_payloads(source_payloads) if source_payloads else None
     report = report_from_result(data, sources=sources)
     if args.output:
         write_text_no_overwrite(Path(args.output), report + "\n", force=args.force)
@@ -3303,7 +3631,11 @@ def build_parser() -> argparse.ArgumentParser:
 
     report_parser = sub.add_parser("report", help="Generate a non-technical Markdown report from normalized JSON.")
     report_parser.add_argument("--input", required=True, help="Normalized JSON input.")
-    report_parser.add_argument("--sources", help="Source-verification JSON from verify-sources.")
+    report_parser.add_argument(
+        "--sources",
+        action="append",
+        help="Source-verification JSON; repeat to merge Normattiva and case-law checks.",
+    )
     report_parser.add_argument("--output", help="Write Markdown report to this path.")
     report_parser.add_argument("--force", action="store_true", help="Allow overwriting the report path.")
     report_parser.set_defaults(func=cmd_report)

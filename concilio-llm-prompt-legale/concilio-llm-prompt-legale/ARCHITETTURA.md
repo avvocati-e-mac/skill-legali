@@ -30,6 +30,7 @@ Principi:
 | `references/case-schema.md` | Schema JSON per casi, verdetti, aggregati e verifiche fonti. |
 | `references/reporting.md` | Struttura dei report per lettori non specialisti. |
 | `scripts/legal_panel.py` | CLI operativa offline/live/source verification/report. |
+| `scripts/normattiva_fetch.py` | Scarico ufficiale Normattiva per norme italiane dopo autorizzazione della route fonti. |
 | `scripts/quick_validate.py` | Validatore documentale e anti-drift. |
 | `CLAUDE.md`, `AGENTS.md` | Promemoria identici per runtime agentici diversi. |
 
@@ -64,7 +65,11 @@ Ogni giudice produce un verdetto JSON per singolo candidato. Campi principali:
 
 ### Aggregated Result
 
-L'aggregato ordina i candidati per `score_medio`, calcola `divergenza_max`, propaga flag di revisione umana e mantiene `kappa_ready` per calibrazione futura.
+L'aggregato ordina i candidati per `score_medio`, calcola `divergenza_max`, propaga flag di revisione umana e mantiene `kappa_ready` per calibrazione futura. I campi di interpretazione restano separati:
+
+- `panel_ranking`: classifica tecnica del panel LLM;
+- `source_gate`: gate fonti calcolato dai registri Normattiva/BuddaLaw/GestioLex allegati;
+- `legal_final_assessment`: resta `non_determinato` finche' non risulta una revisione umana esplicita.
 
 ## Workflow offline
 
@@ -162,7 +167,7 @@ candidate answers + extracted citations
         v
 classify citation type
         |
-        +-- Italian statute ------------> Normattiva skill / official URL
+        +-- Italian statute ------------> verify-sources -> normattiva_fetch.py -> official text files
         |
         +-- EU/GDPR law ----------------> EUR-Lex / official EU source
         |
@@ -184,6 +189,25 @@ Stati ammessi:
 - `unsupported`: tipo fonte non gestito.
 
 Regola di reporting: `source_verification: not_performed` significa che le citazioni non sono state controllate su fonti ufficiali. Non deve essere presentato come verifica parziale o implicita.
+
+Workflow operativo:
+
+```bash
+python3 concilio-llm-prompt-legale/scripts/legal_panel.py verify-sources --cases panel-input.json --output source-verification.json
+python3 concilio-llm-prompt-legale/scripts/normattiva_fetch.py --sources source-verification.json --output-json normattiva-verification.json --output-md normattiva-verification.md --articles-dir normattiva-articles
+python3 concilio-llm-prompt-legale/scripts/legal_panel.py report --input panel-results-normalized.json --sources source-verification.json --sources normattiva-verification.json --output panel-results-report.md
+```
+
+`normattiva_fetch.py` effettua una chiamata web ufficiale a Normattiva e va eseguito solo quando
+l'utente ha autorizzato la route fonti. Il suo `verified` conferma esistenza e testo dell'articolo,
+non la pertinenza giuridica dell'uso fatto dalla risposta candidata.
+
+`source_gate` usa gli stati dei record:
+
+- `passed`: tutti i record allegati sono verificati;
+- `passed_with_findings`: almeno una fonte e' verificata, ma restano record problematici o non risolti;
+- `failed`: ci sono `mismatch`/`not_found` senza fonti verificate;
+- `not_performed`: nessun controllo ufficiale o banca dati approvata e' stato eseguito.
 
 ## Privacy gate
 
