@@ -94,6 +94,15 @@ Quando una procedura dipende dal runtime, differenzia sempre in modo esplicito:
 - **File chiave:** `concilio-llm-prompt-legale/concilio-llm-prompt-legale/SKILL.md`, `concilio-llm-prompt-legale/concilio-llm-prompt-legale/references/`, `concilio-llm-prompt-legale/concilio-llm-prompt-legale/scripts/legal_panel.py`
 - **File installazione Claude:** `concilio-llm-prompt-legale/concilio-llm-prompt-legale.skill`
 
+### miglioratore-prompt-legale (Miglioratore di prompt legale)
+
+- **Cartella:** `miglioratore-prompt-legale/`
+- **Scopo:** trasforma un quesito giuridico italiano (anche abbozzato) in un prompt ottimizzato e strutturato per ricerche legali affidabili; vale per qualsiasi ramo del diritto italiano (civile, penale, tributario, lavoro, amministrativo, crisi d'impresa)
+- **Trigger:** quesiti giuridici su cui l'utente vuole una ricerca/parere affidabile; richieste tipo "migliora questo prompt legale", "scrivimi un prompt per un parere su…"; domande di diritto vaghe o incomplete che migliorerebbero con un prompt strutturato
+- **Comportamento:** restituisce SOLO il prompt migliorato (meno di 750 parole), eventualmente dopo domande di chiarimento; non risponde al quesito e non inventa norme o sentenze; lavora offline di default e propone la ricerca online (ricerca-web-searXNG → perplexity-web-mcp → web nativo) solo per colmare lacune utili al prompt e dopo conferma dell'utente
+- **File chiave:** `miglioratore-prompt-legale/miglioratore-prompt-legale/SKILL.md`, `miglioratore-prompt-legale/miglioratore-prompt-legale/references/`
+- **File installazione Claude:** `miglioratore-prompt-legale/miglioratore-prompt-legale.skill`
+
 ---
 
 ## Struttura standard di una skill
