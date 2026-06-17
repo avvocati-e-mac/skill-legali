@@ -137,6 +137,8 @@ description: >
 
 Il frontmatter deve restare compatibile con Claude e Codex: non usare campi proprietari che rendano il file illeggibile da uno dei due ambienti.
 
+> ⚠️ **Limite description: massimo 1024 caratteri.** Il campo `description` non può superare i 1024 caratteri, altrimenti Claude Cowork rifiuta l'installazione con l'errore `field 'description' in SKILL.md must be at most 1024 characters`. Il limite vale sul valore "appiattito" dallo YAML (con `description: >` le righe non vuote vengono unite da spazi singoli). Tieni la description concisa e, in caso di dubbio, verifica la lunghezza prima di rigenerare il `.skill`.
+
 ---
 
 ## Come aggiungere una nuova skill
