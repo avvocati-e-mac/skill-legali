@@ -2019,11 +2019,79 @@ def judge_prompt_schema(case: dict[str, Any], profile: dict[str, Any]) -> str:
     )
 
 
-def build_judge_prompt(case: dict[str, Any], profile: dict[str, Any]) -> str:
+def verdict_cache_key(answer: str, judge_id: str, model_route: str) -> str:
+    """Chiave stabile per la cache verdetti: (hash risposta, giudice, route modello).
+
+    Include `model_route` perché un aggiornamento del modello deve invalidare la
+    cache (model drift). Helper riusabile per il flag sperimentale --verdict-cache.
+    """
+    digest = hashlib.sha256(normalize_for_match(answer).encode("utf-8")).hexdigest()[:16]
+    return f"{digest}__{safe_id(judge_id)}__{safe_id(model_route)}"
+
+
+def compress_answer(answer: str, *, max_sentences: int = 24) -> str:
+    """Compressione estrattiva deterministica di una risposta candidata.
+
+    Mantiene le frasi che portano segnale legale (citazioni, marcatori di
+    incertezza, struttura argomentativa) e scarta il polish. Riduce i token del
+    prompt giudice e, riducendo la formattazione, attenua lo style bias. È un
+    flag sperimentale: il default resta il testo integrale.
+    """
+    text = re.sub(r"^#{1,6}\s*", "", answer, flags=re.MULTILINE)
+    text = text.replace("**", "").replace("__", "")
+    sentences = re.split(r"(?<=[.;:])\s+|\n+", text)
+    signal_markers = (
+        "art.", "art ", "cass", "garante", "d.lgs", "gdpr", "comma", "co.",
+        "dipende", "salvo", "controvers", "orientament", "verificare", "rischio",
+        "prescriz", "termine", "nullit", "decadenz",
+    )
+    kept: list[str] = []
+    for raw_sentence in sentences:
+        sentence = compact_ws(raw_sentence)
+        if not sentence:
+            continue
+        norm = normalize_for_match(sentence)
+        if any(marker in norm for marker in signal_markers) or len(kept) < 3:
+            kept.append(sentence)
+        if len(kept) >= max_sentences:
+            break
+    compressed = " ".join(kept)
+    return compressed if compressed else compact_ws(answer)
+
+
+def build_judge_prompt(
+    case: dict[str, Any],
+    profile: dict[str, Any],
+    *,
+    compact: bool = False,
+    compress: bool = False,
+) -> str:
     criteria_lines = [
         f"- {CRITERION_LABELS[name]}: score 0-3, peso {WEIGHTS[name]}, massimo {WEIGHTS[name] * 3}"
         for name in CRITERION_ORDER
     ]
+    answer_text = case.get("risposta", "")
+    if compress:
+        answer_text = compress_answer(answer_text)
+    if compact:
+        # Variante compatta: rubrica per riferimento, meno boilerplate. Flag sperimentale.
+        return clean_text(
+            f"""
+Giudice indipendente, diritto italiano. Valuta SOLO il candidato {case['candidate_id']}.
+Vincoli: source_verification not_performed; nessuna verifica esterna; ignora stile/lunghezza; non dichiarare fonti verificate.
+
+QUESITO: {case.get('quesito', '')}
+CHECKLIST: {case.get('ground_truth', '')}
+RUBRICA: 6 criteri 0-3 con pesi {{correttezza_normativa:3, aggiornamento:2, completezza:2, assenza_allucinazioni:3, citazione_fonti:2, segnalazione_incertezza:1}}, massimo 39.
+
+Restituisci SOLO questo JSON:
+{judge_prompt_schema(case, profile)}
+
+FONTI_NON_VERIFICATE: {json.dumps(case.get('fonti', []), ensure_ascii=False)}
+RISPOSTA:
+{answer_text}
+"""
+        )
     return clean_text(
         f"""
 Sei un giudice indipendente per valutare una risposta di diritto italiano.
@@ -2062,7 +2130,7 @@ FONTI_ESTRATTE_NON_VERIFICATE:
 {json.dumps(case.get('fonti', []), ensure_ascii=False, indent=2)}
 
 RISPOSTA DA VALUTARE
-{case.get('risposta', '')}
+{answer_text}
 """
     )
 
@@ -2178,12 +2246,43 @@ def command_for_prompt(
     return f"# No command template for {profile['judge_id']}"
 
 
+def panel_max_divergence(result: dict[str, Any]) -> float:
+    """Massima divergenza tra giudici osservata nei candidati del panel."""
+    divergences: list[float] = []
+    for candidate in result.get("candidates", []) or result.get("ranking", []):
+        value = candidate.get("divergenza_max")
+        if isinstance(value, (int, float)):
+            divergences.append(float(value))
+    return max(divergences) if divergences else 0.0
+
+
 def cmd_prepare_supervisor(args: argparse.Namespace) -> None:
     result = json.loads(Path(args.input).read_text(encoding="utf-8"))
     supervisor_id = args.supervisor
     if supervisor_id not in LIVE_JUDGE_PROFILES:
         raise ValueError(f"Unknown supervisor id: {supervisor_id}")
     profile = LIVE_JUDGE_PROFILES[supervisor_id]
+
+    skip_threshold = getattr(args, "skip_if_agreement", 0)
+    if skip_threshold and skip_threshold > 0:
+        divergence = panel_max_divergence(result)
+        if divergence <= skip_threshold:
+            payload = {
+                "generated_at": now_iso(),
+                "supervisor_prepared": False,
+                "skipped_reason": (
+                    f"Divergenza massima {divergence} <= soglia {skip_threshold}: i giudici concordano, "
+                    "supervisore saltato (flag --skip-if-agreement)."
+                ),
+                "max_divergence": divergence,
+                "skip_threshold": skip_threshold,
+                "notes": [
+                    "Il supervisore è stato saltato per accordo tra giudici; il salto è registrato per audit.",
+                    "Rieseguire senza --skip-if-agreement per forzare il meta-giudice.",
+                ],
+            }
+            emit_json(payload, getattr(args, "output", None))
+            return
     output_dir = Path(args.output_dir)
     if output_dir.exists() and any(output_dir.iterdir()) and not args.force:
         raise FileExistsError(f"Refusing to write into non-empty directory: {output_dir}")
@@ -2276,19 +2375,27 @@ def cmd_prepare_live(args: argparse.Namespace) -> None:
             judge_id = profile["judge_id"]
             prompt_path = output_dir / f"{candidate}__{judge_id}.prompt.md"
             raw_path = output_dir / f"{candidate}__{judge_id}.raw.txt"
-            prompt_text = build_judge_prompt(case, profile)
+            prompt_text = build_judge_prompt(
+                case,
+                profile,
+                compact=getattr(args, "compact_prompts", False),
+                compress=getattr(args, "compress_answer", False),
+            )
             write_text_no_overwrite(prompt_path, prompt_text + "\n", force=args.force)
             command = command_for_prompt(profile, prompt_path, raw_path, timeout=judge_timeout)
-            prompt_records.append(
-                {
-                    "candidate_id": case["candidate_id"],
-                    "judge_id": judge_id,
-                    "model_route": profile["model_route"],
-                    "prompt_file": str(prompt_path),
-                    "expected_raw_file": str(raw_path),
-                    "command": command,
-                }
-            )
+            record = {
+                "candidate_id": case["candidate_id"],
+                "judge_id": judge_id,
+                "model_route": profile["model_route"],
+                "prompt_file": str(prompt_path),
+                "expected_raw_file": str(raw_path),
+                "command": command,
+            }
+            if getattr(args, "verdict_cache", None):
+                record["verdict_cache_key"] = verdict_cache_key(
+                    case.get("risposta", ""), judge_id, profile["model_route"]
+                )
+            prompt_records.append(record)
             run_lines.append(command)
 
     metadata = {
@@ -3324,6 +3431,71 @@ def append_source_verification_section(
             )
         lines.append("")
 
+    append_deterministic_hallucination_block(lines, records)
+
+
+def deterministic_hallucination_findings(
+    records: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Citazioni deterministicamente confutate da fonte ufficiale o form-check.
+
+    Una citazione con stato `not_found` o `mismatch` proveniente da un controllo
+    deterministico (Normattiva/verify_statutes per le norme, caselaw_formcheck per
+    la giurisprudenza) è un segnale di allucinazione PIÙ FORTE del parere di un
+    giudice LLM: l'esistenza/coerenza di una fonte è una proprietà del mondo,
+    verificata contro una banca dati, non una stima di plausibilità testuale.
+
+    Restituisce solo i record confutati (non decide il punteggio runtime, che
+    resta invariante: serve a rendere esplicita la gerarchia nel report e nei
+    flag di revisione).
+    """
+    confuted: list[dict[str, Any]] = []
+    for record in records:
+        if source_record_status(record) in {"not_found", "mismatch"}:
+            confuted.append(record)
+    return confuted
+
+
+def append_deterministic_hallucination_block(
+    lines: list[str],
+    records: list[dict[str, Any]],
+) -> None:
+    confuted = deterministic_hallucination_findings(records)
+    lines.append("### Allucinazioni: controllo deterministico (prevale sul parere LLM)")
+    lines.append("")
+    lines.append(
+        "Per le allucinazioni di fonte (norma o sentenza inesistente/incoerente) il driver è "
+        "deterministico: l'esistenza/vigenza si verifica contro banca dati ufficiale "
+        "(Normattiva, form-check giurisprudenza), non con la stima di un giudice LLM. "
+        "Una citazione `not_found`/`mismatch` qui abbassa l'affidabilità a prescindere dal "
+        "punteggio LLM su `assenza_allucinazioni`. La fedeltà semantica fonte↔affermazione e i "
+        "fatti privi di citazione restano valutazione LLM subordinata, sempre con revisione umana."
+    )
+    lines.append("")
+    if not confuted:
+        lines.append(
+            "Nessuna citazione risulta deterministicamente confutata nei record allegati "
+            "(questo non conferma le citazioni: le `unsupported`/`unavailable` restano da verificare)."
+        )
+        lines.append("")
+        return
+    lines.append("| Candidato | Citazione | Stato deterministico | Esito |")
+    lines.append("| --- | --- | --- | --- |")
+    for record in confuted:
+        lines.append(
+            "| "
+            + " | ".join(
+                [
+                    md_cell(record.get("candidate_id") or "tutti/non indicato"),
+                    md_cell(record.get("citation")),
+                    md_cell(source_record_status(record)),
+                    md_cell(record.get("finding"), maximum=130),
+                ]
+            )
+            + " |"
+        )
+    lines.append("")
+
 
 def report_from_result(
     data: dict[str, Any],
@@ -3912,6 +4084,24 @@ def build_parser() -> argparse.ArgumentParser:
         default=240,
         help="Timeout per chiamata giudice in run-live.sh (secondi, 0 = nessun timeout).",
     )
+    prepare_parser.add_argument(
+        "--compact-prompts",
+        action="store_true",
+        help="[sperimentale, off-default] Prompt giudice compatto (rubrica per riferimento, meno boilerplate). "
+        "Riduce i token ma va misurato il tasso di parse JSON.",
+    )
+    prepare_parser.add_argument(
+        "--compress-answer",
+        action="store_true",
+        help="[sperimentale, off-default] Compressione estrattiva deterministica della risposta prima del giudizio "
+        "(tiene le frasi con segnale legale). Riduce token e attenua lo style bias.",
+    )
+    prepare_parser.add_argument(
+        "--verdict-cache",
+        metavar="DIR",
+        help="[sperimentale, off-default] Registra nel metadata una chiave di cache verdetti "
+        "(sha256 risposta + giudice + model_route) per evitare di rigiudicare testo identico.",
+    )
     prepare_parser.add_argument("--output-dir", required=True, help="Directory for prompts, metadata, and raw outputs.")
     prepare_parser.add_argument("--cases-output", help="Write extracted cases JSON to this path.")
     prepare_parser.add_argument("--output", help="Write metadata JSON to this path as well as stdout.")
@@ -3928,6 +4118,14 @@ def build_parser() -> argparse.ArgumentParser:
     supervisor_parser.add_argument("--input", required=True, help="Normalized JSON from normalize-live.")
     supervisor_parser.add_argument("--output-dir", required=True, help="Directory for supervisor prompt, metadata, and raw output.")
     supervisor_parser.add_argument("--supervisor", default=DEFAULT_SUPERVISOR_JUDGE, help="Supervisor judge id.")
+    supervisor_parser.add_argument(
+        "--skip-if-agreement",
+        type=float,
+        default=0,
+        metavar="PUNTI",
+        help="[sperimentale, off-default] Salta il supervisore se la divergenza massima tra giudici è <= PUNTI "
+        "(es. 5). Il salto è registrato per audit. Default 0 = supervisore sempre preparato.",
+    )
     supervisor_parser.add_argument("--output", help="Write metadata JSON to this path as well as stdout.")
     supervisor_parser.add_argument("--force", action="store_true", help="Allow overwriting generated files.")
     supervisor_parser.set_defaults(func=cmd_prepare_supervisor)

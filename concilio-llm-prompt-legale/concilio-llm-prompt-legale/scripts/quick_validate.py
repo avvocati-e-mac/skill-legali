@@ -85,6 +85,9 @@ def validate(path: Path) -> list[str]:
         "references/source-workflow.md",
         "references/case-schema.md",
         "scripts/legal_panel.py",
+        "scripts/normattiva_fetch.py",
+        "scripts/verify_statutes.py",
+        "scripts/caselaw_formcheck.py",
     ):
         if not (path / required).exists():
             errors.append(f"Missing required support file: {required}")

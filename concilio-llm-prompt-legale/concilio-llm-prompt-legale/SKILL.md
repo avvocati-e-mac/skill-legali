@@ -56,10 +56,13 @@ python3 concilio-llm-prompt-legale/scripts/legal_panel.py prepare-live "A.md" "B
 python3 concilio-llm-prompt-legale/scripts/legal_panel.py normalize-live --cases panel-input.json --raw-dir panel-results-raw --output panel-results-normalized.json
 python3 concilio-llm-prompt-legale/scripts/legal_panel.py prepare-supervisor --input panel-results-normalized.json --output-dir panel-results-supervisor
 python3 concilio-llm-prompt-legale/scripts/legal_panel.py verify-sources --cases panel-input.json --output source-verification.json
-python3 concilio-llm-prompt-legale/scripts/normattiva_fetch.py --sources source-verification.json --output-json normattiva-verification.json --output-md normattiva-verification.md --articles-dir normattiva-articles
-python3 concilio-llm-prompt-legale/scripts/legal_panel.py report --input panel-results-normalized.json --candidate-map candidate-map.json --sources source-verification.json --sources normattiva-verification.json --output report-finale.md
+python3 concilio-llm-prompt-legale/scripts/verify_statutes.py --sources source-verification.json --articles-dir normattiva-articles --output statutes-verification.json   # offline di default; aggiungi --allow-network solo dopo l'OK route fonti
+python3 concilio-llm-prompt-legale/scripts/caselaw_formcheck.py --sources source-verification.json --output caselaw-formcheck.json   # offline, form-check deterministico delle citazioni giurisprudenziali
+python3 concilio-llm-prompt-legale/scripts/legal_panel.py report --input panel-results-normalized.json --candidate-map candidate-map.json --sources source-verification.json --sources statutes-verification.json --sources caselaw-formcheck.json --output report-finale.md
 python3 concilio-llm-prompt-legale/scripts/legal_panel.py mock
 ```
+
+`verify_statutes.py` è un wrapper deterministico su `normattiva_fetch.py`: **offline di default** (legge solo HTML in cache), esegue il fetch live a Normattiva solo con `--allow-network` dopo l'approvazione della route fonti. `caselaw_formcheck.py` valida **solo la forma** delle citazioni giurisprudenziali (corte/sezione/numero/anno) e scarta placeholder/anni futuri/incoerenze: forma valida ≠ esistenza ≠ massima, non emette mai `verified`. Le citazioni plausibili restano da verificare con BuddaLaw/MCP o controllo umano. Per le allucinazioni di fonte il driver è deterministico (questi due script), il giudizio LLM è subordinato: vedi `references/rubric.md` e `ARCHITETTURA.md`.
 
 The script is local/offline unless you run the prompts with external CLIs yourself. It validates extraction, scoring, prompt preparation, aggregation, malformed raw preservation, and report generation.
 
@@ -84,3 +87,20 @@ whether the statute legally supports the candidate's argument.
 ## Live Judges
 
 Default: three independent judges + a separate stronger supervisor. Anonymize candidates with neutral IDs (A/B/C) so no judge is biased toward a "base" or "improved" label. See `references/model-routing.md` and `references/live-judging.md` for the exact routes, fallbacks, and supervisor flow before running any live call.
+
+## Efficienza dei token
+
+- **Non ri-estrarre le citazioni a mano**: usa l'output deterministico di `detect_source_citations`/`verify-sources`. Rileggere il testo per estrarre le citazioni spreca contesto e introduce errori.
+- **Progressive disclosure**: leggi ogni file di `references/` solo quando arrivi alla fase relativa (rubric prima del giudizio, source-workflow prima della verifica fonti, ecc.), non tutti in anticipo.
+- Flag sperimentali **off-default** per ridurre i token (l'utente decide se attivarli, misura l'effetto col profiler in `test/profile_skill.py`): `prepare-live --compact-prompts` (prompt giudice compatto), `--compress-answer` (compressione estrattiva della risposta), `--judges 2` (due giudici invece di tre per lo screening), `--verdict-cache DIR` (evita di rigiudicare testo identico); `prepare-supervisor --skip-if-agreement 5` (salta il supervisore se i giudici concordano). Modelli più leggeri per lo screening: vedi `references/model-routing.md`.
+
+## Runtime: Codex e sandbox
+
+Se stai operando in **Codex / ambiente OpenAI**:
+
+- **Comandi nel sandbox** (sicuri, deterministici, offline): `doctor`, `extract`, `single`, `compare`, `prompt-eval`, `verify-sources` (senza `--allow-cloud/--allow-web`), `prepare-live`, `normalize-live`, `prepare-supervisor`, `report`, `mock`, `caselaw_formcheck.py`, `verify_statutes.py` **senza** `--allow-network`, e l'harness in `test/`.
+- **Comandi FUORI dal sandbox** (login/rete: nel sandbox falliscono — login Perplexity/Claude non riusciti, ecc.): tutte le chiamate live ai giudici (`pwm`, `codex exec`, `claude`), BuddaLaw/GestioLex MCP, e `verify_statutes.py --allow-network` (fetch Normattiva). Eseguili fuori dal sandbox.
+- **Autorizzazione unica a monte**: prima di partire, NON lanciare comandi live e poi chiedere a metà. Enumera in un solo passaggio TUTTO il necessario — route (locale/offline vs online/live), provider/tool coinvolti, login richiesti, esecuzione fuori sandbox — e chiedi l'approvazione una volta sola. Autorizza esattamente ciò che serve, senza estendere il consenso oltre.
+- **BuddaLaw via Claude**: se in Codex usi Claude per accedere a BuddaLaw e la skill `buddalaw` è presente (repo/ambiente), **caricala prima** di interrogare BuddaLaw, così Claude ha le istruzioni corrette della banca dati.
+
+Se stai operando in **Claude Desktop / Claude for Work / Claude Code**: usa i tool, i subagenti e i fallback dell'ambiente Claude; per ricerche live ampie delega a un subagente così il thread principale riceve solo i record-verdetto.

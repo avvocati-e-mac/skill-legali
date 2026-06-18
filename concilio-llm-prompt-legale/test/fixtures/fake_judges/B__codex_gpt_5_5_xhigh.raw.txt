@@ -1,0 +1,58 @@
+{
+  "judge_id": "codex_gpt_5_5_xhigh",
+  "model_route": "codex:gpt-5.5",
+  "mode": "live_model",
+  "candidate_id": "B",
+  "source_verification": {
+    "status": "not_performed",
+    "notes": [
+      "fixture"
+    ]
+  },
+  "criteria": {
+    "correttezza_normativa": {
+      "score": 3,
+      "weight": 3,
+      "weighted": 9,
+      "motivazione": "Motivazione fixture."
+    },
+    "aggiornamento": {
+      "score": 3,
+      "weight": 2,
+      "weighted": 6,
+      "motivazione": "Motivazione fixture."
+    },
+    "completezza": {
+      "score": 2,
+      "weight": 2,
+      "weighted": 4,
+      "motivazione": "Motivazione fixture."
+    },
+    "assenza_allucinazioni": {
+      "score": 3,
+      "weight": 3,
+      "weighted": 9,
+      "motivazione": "Motivazione fixture."
+    },
+    "citazione_fonti": {
+      "score": 2,
+      "weight": 2,
+      "weighted": 4,
+      "motivazione": "Motivazione fixture."
+    },
+    "segnalazione_incertezza": {
+      "score": 1,
+      "weight": 1,
+      "weighted": 1,
+      "motivazione": "Motivazione fixture."
+    }
+  },
+  "score_ponderato": 33,
+  "score_massimo": 39,
+  "percentuale": 84.6,
+  "flag_revisione_umana": false,
+  "punti_critici_per_avvocato": [
+    "fixture"
+  ],
+  "sintesi": "fixture"
+}

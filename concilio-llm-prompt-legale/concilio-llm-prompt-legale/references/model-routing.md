@@ -58,3 +58,19 @@ If Perplexity authentication or quota is unavailable, disclose that the Perplexi
 ## Local/Offline
 
 Use `mock`, `extract`, `single`, `compare`, `prepare-live`, `normalize-live`, and `report` for local validation and deterministic screening. Offline scores are not legal conclusions; they catch missing topics, citation risk, stale-law traps, and aggregation regressions.
+
+## Risparmio token (flag sperimentali off-default)
+
+Tutti off-default; l'utente decide e misura l'effetto col profiler (`test/profile_skill.py`):
+
+- `prepare-live --judges 2`: due giudici di famiglia diversa invece di tre per lo screening (≈ -1/3 dei round-trip). Indebolisce la calibrazione kappa: solo screening, non set pilota.
+- `prepare-live --compact-prompts`: prompt giudice compatto (rubrica per riferimento). Riduce i token di input ma va misurato il tasso di parse JSON.
+- `prepare-live --compress-answer`: compressione estrattiva deterministica della risposta prima del giudizio (tiene le frasi con segnale legale). Riduce token e attenua lo style bias.
+- `prepare-supervisor --skip-if-agreement 5`: salta il meta-giudice se la divergenza massima tra giudici è ≤ 5 punti; il salto è registrato per audit.
+- `prepare-live --verdict-cache DIR`: registra una chiave `(sha256 risposta, giudice, model_route)` per non rigiudicare testo identico. La chiave include `model_route` così un aggiornamento del modello invalida la cache.
+
+**Modelli leggeri per screening**: per un primo passaggio a basso rischio si possono usare giudici di classe più leggera (es. Claude Sonnet/Haiku, route Perplexity meno costose) ed escalare ai modelli forti solo su ambiguità (divergenza alta o top-2 ravvicinati). Cautela: giudici più deboli hanno più bias — vale solo per screening, mai per la valutazione definitiva.
+
+## Sandbox e autorizzazioni (Codex)
+
+In Codex, i comandi con login/rete (chiamate live ai giudici `pwm`/`codex exec`/`claude`, BuddaLaw/GestioLex MCP, `verify_statutes.py --allow-network`) vanno eseguiti **fuori dal sandbox**; nel sandbox falliscono (login non riusciti). I comandi deterministici/offline girano nel sandbox. Chiedi **una sola autorizzazione a monte** che enumeri route, provider/tool, login ed esecuzione fuori sandbox, invece di lanciare e poi chiedere a metà. Se usi Claude per BuddaLaw, carica prima la skill `buddalaw` se presente.

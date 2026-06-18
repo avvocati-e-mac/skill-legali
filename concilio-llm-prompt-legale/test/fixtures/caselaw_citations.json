@@ -1,0 +1,50 @@
+[
+  {
+    "id": "placeholder-99999",
+    "citation": "Cass. civ. Sez. II n. 99999/2024",
+    "expect_status": "not_found",
+    "expect_flag": "placeholder_number"
+  },
+  {
+    "id": "repdigit-11111",
+    "citation": "Cass. civ. Sez. I n. 11111/2020",
+    "expect_status": "not_found",
+    "expect_flag": "placeholder_number"
+  },
+  {
+    "id": "future-year",
+    "citation": "Cons. Stato sez. IV n. 1234/2030",
+    "expect_status": "mismatch",
+    "expect_flag": "future_year"
+  },
+  {
+    "id": "section-incoherent",
+    "citation": "Cass. pen. sez. lavoro n. 4567/2021",
+    "expect_status": "mismatch",
+    "expect_flag": "court_section_incoherent"
+  },
+  {
+    "id": "plausible-civ",
+    "citation": "Cass. civ. sez. III n. 12567/2019",
+    "expect_status": "unsupported",
+    "expect_plausibility": "plausible"
+  },
+  {
+    "id": "plausible-cass-unite",
+    "citation": "Cass. civ. Sez. Unite n. 8203/2018",
+    "expect_status": "unsupported",
+    "expect_plausibility": "plausible"
+  },
+  {
+    "id": "malformed",
+    "citation": "una sentenza qualsiasi senza forma riconoscibile",
+    "expect_status": "unsupported",
+    "expect_plausibility": "malformed"
+  },
+  {
+    "id": "self-declared-invented",
+    "citation": "questa è una sentenza inventata per esempio",
+    "expect_status": "not_found",
+    "expect_flag": "self_declared_invented"
+  }
+]
