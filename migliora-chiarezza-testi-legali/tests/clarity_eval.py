@@ -53,6 +53,13 @@ LEGAL_REFERENCE_PATTERNS = (
     re.compile(r"\bCost\.\s*[^.;:\n]*", re.IGNORECASE),
 )
 LEGAL_REF_NUMBER_RE = re.compile(r"\d+")
+SECTION_HEADER_RE = re.compile(
+    r"^[ \t]*(?:#{1,6}[ \t]*)?(?:\*\*)?"
+    r"(PRIMA|DOPO|Motivo)"
+    r"(?:\s*\([^:\n]*\))?"
+    r"(?:(:)(?:\*\*)?|(?:\*\*)|[ \t]*$)[ \t]*",
+    re.IGNORECASE | re.MULTILINE,
+)
 
 
 @dataclass
@@ -163,6 +170,18 @@ def find_case(cases: list[dict[str, Any]], case_id: str) -> dict[str, Any]:
 
 
 def extract_do_text(output: str) -> str:
+    sections = list(SECTION_HEADER_RE.finditer(output))
+    if sections:
+        blocks: list[str] = []
+        for index, section in enumerate(sections):
+            if section.group(1).lower() != "dopo":
+                continue
+            start = section.end()
+            end = sections[index + 1].start() if index + 1 < len(sections) else len(output)
+            blocks.append(output[start:end].strip())
+        if blocks:
+            return "\n".join(blocks)
+
     matches = re.findall(r"DOPO:\s*(.*?)(?=\n\s*(?:PRIMA:|Motivo:)|\Z)", output, flags=re.DOTALL | re.IGNORECASE)
     return "\n".join(match.strip() for match in matches)
 

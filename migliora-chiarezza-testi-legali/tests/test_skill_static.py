@@ -162,6 +162,31 @@ class SkillStaticTests(unittest.TestCase):
         good_result = self.eval.evaluate_output(case, good)
         self.assertTrue(good_result.passed, good_result.as_dict())
 
+    def test_eval_harness_scopes_do_block_with_markdown_colon_headings(self) -> None:
+        case = next(case for case in self.cases if case["id"] == "C006")
+        output = (
+            f"**PRIMA:**\n{case['input_text']}\n\n"
+            "**DOPO:**\n"
+            "La controparte eccepisce la prescrizione del diritto azionato, poiche' e' decorso il termine decennale.\n\n"
+            "**Motivo:**\n"
+            "La forma passiva viene sostituita dalla forma attiva; la formula essendo decorso viene resa esplicita."
+        )
+        result = self.eval.evaluate_output(case, output)
+        self.assertTrue(result.passed, result.as_dict())
+
+    def test_eval_harness_keeps_format_fail_separate_from_do_content(self) -> None:
+        case = self.cases[0]
+        output = (
+            f"**PRIMA**\n{case['input_text']}\n\n"
+            f"**DOPO**\n{case['acceptable_rewrites'][0]['text']}\n\n"
+            "**Motivo**\n"
+            "Elimina le formule massima diligenza e qualsiasi danno."
+        )
+        result = self.eval.evaluate_output(case, output)
+        self.assertFalse(result.passed)
+        self.assertTrue(any("Formato obbligatorio mancante" in item for item in result.fatal_failures))
+        self.assertFalse(any("Espressione vietata nel DOPO" in item for item in result.fatal_failures))
+
     def test_eval_harness_catches_c004_result_obligation_regression(self) -> None:
         case = next(case for case in self.cases if case["id"] == "C004")
         output = (
