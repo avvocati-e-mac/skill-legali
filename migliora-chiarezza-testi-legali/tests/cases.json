@@ -1,0 +1,942 @@
+[
+  {
+    "id": "C001",
+    "title": "Clausola di custodia con standard vago",
+    "document_type": "contratto",
+    "input_text": "Il Conduttore si obbliga a utilizzare l'automezzo con la massima diligenza e a custodirlo. E' responsabile per qualsiasi danno, furto o deterioramento, anche se causato da propri dipendenti o ausiliari.",
+    "expected_issues": [
+      {
+        "code": "standard-vago",
+        "severity": "alta",
+        "description": "L'espressione 'massima diligenza' non indica un parametro verificabile."
+      },
+      {
+        "code": "responsabilita-assoluta",
+        "severity": "alta",
+        "description": "La responsabilita' per qualsiasi danno, furto o deterioramento non distingue il caso imputabile dal caso fortuito o forza maggiore."
+      },
+      {
+        "code": "nominalizzazione",
+        "severity": "media",
+        "description": "La formula 'si obbliga a utilizzare' puo' essere resa con un verbo diretto."
+      }
+    ],
+    "legal_invariants": [
+      "Il Conduttore resta il soggetto obbligato all'uso e alla custodia dell'automezzo.",
+      "La responsabilita' riguarda danno, furto e deterioramento.",
+      "La responsabilita' puo' derivare anche da dipendenti o ausiliari del Conduttore.",
+      "La riscrittura non deve trasformare la clausola in una garanzia assoluta se si introduce un'esimente."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "parametro-oggettivo-con-esimenti",
+        "text": "Il Conduttore utilizza l'automezzo secondo le regole del codice della strada e lo custodisce con diligenza. Risponde di ogni danno, furto o deterioramento, anche se causato dai propri dipendenti o ausiliari, salvo caso fortuito o forza maggiore non a lui imputabile."
+      }
+    ],
+    "forbidden_changes": [
+      "Sostituire il Conduttore con il Noleggiatore come soggetto obbligato.",
+      "Eliminare la responsabilita' per dipendenti o ausiliari.",
+      "Aggiungere coperture assicurative o franchigie non presenti nel testo.",
+      "Trasformare la custodia in un obbligo del proprietario."
+    ],
+    "required_reference": [
+      "references/principi-garner.md"
+    ],
+    "human_notes": "Caso da validare: la clausola e' tratta da un contesto di noleggio e la scelta dell'esimente va confermata rispetto all'assetto negoziale voluto.",
+    "adjudication_status": "draft_codex",
+    "validation_rationale": "Il caso misura la capacita' di sostituire uno standard generico con un parametro controllabile senza spostare soggetti o rischio contrattuale.",
+    "annotations": {
+      "codex": {
+        "status": "drafted",
+        "notes": "Prima bozza derivata dalla reference Garner gia' presente nella skill."
+      },
+      "opus": {
+        "status": "not_run",
+        "model_command": "claude --model opus --effort high --print --output-format json"
+      },
+      "human": {
+        "status": "pending",
+        "notes": ""
+      }
+    },
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_literals": [
+        "Conduttore",
+        "automezzo",
+        "danno",
+        "furto",
+        "deterioramento",
+        "dipendenti",
+        "ausiliari"
+      ],
+      "fatal_forbidden_after": [
+        "massima diligenza",
+        "qualsiasi danno"
+      ],
+      "allowed_legal_references": []
+    }
+  },
+  {
+    "id": "C002",
+    "title": "Garanzia ATP e impianto refrigerante",
+    "document_type": "contratto",
+    "input_text": "Il Noleggiatore garantisce che l'automezzo e' conforme alle normative vigenti, inclusa la normativa ATP, e che l'impianto refrigerante e' perfettamente funzionante.",
+    "expected_issues": [
+      {
+        "code": "avverbio-superfluo",
+        "severity": "media",
+        "description": "'Perfettamente' e' enfatico ma non verificabile."
+      },
+      {
+        "code": "parametro-mancante",
+        "severity": "alta",
+        "description": "La funzionalita' dell'impianto refrigerante va collegata a un criterio tecnico controllabile."
+      }
+    ],
+    "legal_invariants": [
+      "Il Noleggiatore resta il soggetto che garantisce la conformita'.",
+      "L'automezzo deve restare collegato alle normative vigenti e alla normativa ATP.",
+      "L'impianto refrigerante deve restare oggetto della garanzia."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "temperatura-atp",
+        "text": "L'automezzo rispetta le normative vigenti, inclusa la normativa ATP. L'impianto refrigerante funziona correttamente e mantiene le temperature dichiarate nella certificazione ATP."
+      }
+    ],
+    "forbidden_changes": [
+      "Omettere la normativa ATP.",
+      "Sostituire la garanzia con un mero impegno di manutenzione.",
+      "Inserire temperature numeriche non presenti nella certificazione.",
+      "Trasferire la garanzia dal Noleggiatore al Conduttore."
+    ],
+    "required_reference": [
+      "references/principi-garner.md",
+      "references/interpretazione-civilistica.md"
+    ],
+    "human_notes": "Da verificare con il fascicolo se esiste una certificazione ATP allegata con temperature specifiche.",
+    "adjudication_status": "draft_codex",
+    "validation_rationale": "Il caso controlla la riduzione di un'espressione polisenso senza inventare specifiche tecniche.",
+    "annotations": {
+      "codex": {
+        "status": "drafted",
+        "notes": "Caso gia' coerente con gli esempi centrali della skill."
+      },
+      "opus": {
+        "status": "not_run",
+        "model_command": "claude --model opus --effort high --print --output-format json"
+      },
+      "human": {
+        "status": "pending",
+        "notes": ""
+      }
+    },
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_literals": [
+        "automezzo",
+        "normative vigenti",
+        "ATP",
+        "impianto refrigerante"
+      ],
+      "fatal_forbidden_after": [
+        "perfettamente funzionante"
+      ],
+      "allowed_legal_references": [
+        "ATP"
+      ]
+    }
+  },
+  {
+    "id": "C003",
+    "title": "Aumento canone in forma passiva",
+    "document_type": "contratto",
+    "input_text": "Il canone potra' essere aumentato annualmente.",
+    "expected_issues": [
+      {
+        "code": "passivo-opaco",
+        "severity": "alta",
+        "description": "La forma passiva nasconde chi decide l'aumento."
+      },
+      {
+        "code": "condizioni-mancanti",
+        "severity": "alta",
+        "description": "Mancano criteri, preavviso e limiti temporali dell'aumento."
+      }
+    ],
+    "legal_invariants": [
+      "La clausola riguarda un aumento del canone.",
+      "La periodicita' massima resta annuale.",
+      "La riscrittura deve chiarire chi esercita il potere senza inventare un indice economico non indicato."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "soggetto-e-preavviso",
+        "text": "Il locatore puo' aumentare il canone una volta all'anno, con preavviso scritto di 30 giorni al conduttore."
+      },
+      {
+        "label": "con-segnaposto-criterio",
+        "text": "Il locatore puo' aumentare il canone una volta all'anno solo secondo il criterio indicato nel contratto, comunicandolo per iscritto al conduttore prima della scadenza prevista."
+      }
+    ],
+    "forbidden_changes": [
+      "Attribuire il potere di aumento al conduttore.",
+      "Prevedere aumenti mensili o plurimi nello stesso anno.",
+      "Inserire automaticamente un indice ISTAT se non presente nel testo o nel contratto.",
+      "Rendere l'aumento retroattivo."
+    ],
+    "required_reference": [
+      "references/principi-garner.md",
+      "references/interpretazione-civilistica.md"
+    ],
+    "human_notes": "Il revisore deve scegliere se accettare il preavviso di 30 giorni come proposta redazionale o sostituirlo con un segnaposto.",
+    "adjudication_status": "ambiguous",
+    "validation_rationale": "Il caso e' volutamente ambiguo: chiarire il soggetto e' necessario, ma alcune condizioni richiedono istruzioni del cliente.",
+    "annotations": {
+      "codex": {
+        "status": "drafted",
+        "notes": "La riscrittura con 30 giorni viene dalla reference; quella con segnaposto evita invenzioni."
+      },
+      "opus": {
+        "status": "not_run",
+        "model_command": "claude --model opus --effort high --print --output-format json"
+      },
+      "human": {
+        "status": "pending",
+        "notes": ""
+      }
+    },
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_literals": [
+        "canone",
+        "ann"
+      ],
+      "fatal_forbidden_after": [
+        "potra' essere aumentato",
+        "potrà essere aumentato"
+      ],
+      "allowed_legal_references": []
+    }
+  },
+  {
+    "id": "C004",
+    "title": "Obbligazione di mezzi o risultato",
+    "document_type": "contratto",
+    "input_text": "Il prestatore si adoperera' al meglio per garantire il funzionamento del sistema entro i tempi concordati.",
+    "expected_issues": [
+      {
+        "code": "mezzi-risultato",
+        "severity": "alta",
+        "description": "Il testo non chiarisce se il prestatore garantisce un risultato o soltanto l'impiego di mezzi adeguati."
+      },
+      {
+        "code": "tempi-indeterminati",
+        "severity": "media",
+        "description": "'Tempi concordati' richiede un rinvio preciso o una data."
+      },
+      {
+        "code": "standard-vago",
+        "severity": "media",
+        "description": "'Al meglio' non e' un criterio giuridico operativo."
+      }
+    ],
+    "legal_invariants": [
+      "Il prestatore resta il soggetto obbligato.",
+      "L'oggetto resta il funzionamento del sistema.",
+      "La riscrittura non deve scegliere definitivamente tra obbligazione di mezzi e di risultato senza istruzioni del cliente."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "risultato",
+        "text": "Se le parti intendono un'obbligazione di risultato: Il prestatore consegna il sistema funzionante entro il termine indicato nel contratto. Il sistema si considera funzionante quando supera i test di accettazione previsti nell'allegato tecnico."
+      },
+      {
+        "label": "mezzi",
+        "text": "Se le parti intendono un'obbligazione di mezzi: Il prestatore impiega personale qualificato e le risorse concordate per completare i lavori entro il termine indicato nel contratto, salvo cause a lui non imputabili."
+      }
+    ],
+    "forbidden_changes": [
+      "Trasformare automaticamente l'obbligazione in garanzia di risultato.",
+      "Eliminare il riferimento al funzionamento del sistema.",
+      "Inserire una data specifica non presente nel testo.",
+      "Omettere l'avviso che serve una scelta negoziale."
+    ],
+    "required_reference": [
+      "references/principi-garner.md"
+    ],
+    "human_notes": "Non usare come benchmark automatico rigido finche' l'avvocato non indica la qualificazione voluta dell'obbligazione.",
+    "adjudication_status": "ambiguous",
+    "validation_rationale": "Il caso serve a premiare l'emersione dell'ambiguita', non una sola riscrittura ideale.",
+    "annotations": {
+      "codex": {
+        "status": "drafted",
+        "notes": "Due riscritture alternative derivate dalla reference sul contratto d'opera/appalto."
+      },
+      "opus": {
+        "status": "not_run",
+        "model_command": "claude --model opus --effort high --print --output-format json"
+      },
+      "human": {
+        "status": "pending",
+        "notes": ""
+      }
+    },
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_literals": [
+        "prestatore",
+        "sistema",
+        "funzion"
+      ],
+      "fatal_forbidden_after": [
+        "si adoperera' al meglio",
+        "si adopererà al meglio"
+      ],
+      "must_include_one_of": [
+        {
+          "label": "scelta mezzi/risultato",
+          "terms": [
+            "obbligazione di mezzi",
+            "obbligazione di risultato",
+            "se le parti intendono",
+            "serve una scelta",
+            "scelta negoziale",
+            "istruzioni del cliente"
+          ]
+        }
+      ],
+      "allowed_legal_references": []
+    }
+  },
+  {
+    "id": "C005",
+    "title": "Diffida con soggetto nascosto e subordinate",
+    "document_type": "diffida",
+    "input_text": "In difetto l'eventuale blocco della produzione della societa', in quanto non rispetta le normativa HACCP e quindi con il rischio che la relativa licenza sia revocata, qualora l'AUSL di Modena provveda ad ulteriori verifiche, sara' da imputare alla Vostra negligenza.",
+    "expected_issues": [
+      {
+        "code": "periodo-sovraccarico",
+        "severity": "alta",
+        "description": "Un'unica frase contiene condizione, rischio, evento futuro e imputazione di responsabilita'."
+      },
+      {
+        "code": "soggetto-nascosto",
+        "severity": "alta",
+        "description": "Non e' immediato chi non rispetta le norme HACCP e chi subisce il blocco."
+      },
+      {
+        "code": "nesso-causale-opaco",
+        "severity": "media",
+        "description": "Il rapporto tra verifiche AUSL, revoca licenza e blocco produzione va ordinato."
+      }
+    ],
+    "legal_invariants": [
+      "La societa' destinataria resta il soggetto cui si imputa la negligenza.",
+      "Devono restare HACCP, AUSL di Modena, verifiche ulteriori, licenza e blocco produzione.",
+      "La revoca della licenza resta formulata come rischio, non come fatto gia' avvenuto."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "sequenza-causale",
+        "text": "Se la Vostra societa' non rispetta le normative HACCP e l'AUSL di Modena effettua ulteriori verifiche, la licenza potrebbe essere revocata e la produzione bloccata. La responsabilita' di questo blocco sara' interamente Vostra."
+      }
+    ],
+    "forbidden_changes": [
+      "Dire che la licenza e' gia' stata revocata.",
+      "Omettere l'AUSL di Modena.",
+      "Eliminare il nesso con le normative HACCP.",
+      "Attribuire la negligenza all'AUSL o al mittente della diffida."
+    ],
+    "required_reference": [
+      "references/principi-garner.md"
+    ],
+    "human_notes": "Caso adatto a test automatico di formato e preservazione dei fatti; resta da validare il tono della diffida.",
+    "adjudication_status": "draft_codex",
+    "validation_rationale": "Misura la capacita' di spezzare una frase complessa preservando modalita' e causalita'.",
+    "annotations": {
+      "codex": {
+        "status": "drafted",
+        "notes": "Esempio presente nel corpo della skill, qui formalizzato come golden packet."
+      },
+      "opus": {
+        "status": "not_run",
+        "model_command": "claude --model opus --effort high --print --output-format json"
+      },
+      "human": {
+        "status": "pending",
+        "notes": ""
+      }
+    },
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_literals": [
+        "HACCP",
+        "AUSL di Modena",
+        "licenza",
+        "produzione",
+        "Vostra"
+      ],
+      "fatal_forbidden_after": [
+        "provveda ad ulteriori verifiche"
+      ],
+      "allowed_legal_references": []
+    }
+  },
+  {
+    "id": "C006",
+    "title": "Comparsa con eccezione in forma passiva",
+    "document_type": "atto_giudiziario",
+    "input_text": "Dalla controparte viene eccepita la prescrizione del diritto azionato, essendo decorso il termine decennale.",
+    "expected_issues": [
+      {
+        "code": "forma-passiva",
+        "severity": "media",
+        "description": "La forma passiva rende meno diretto il rapporto tra controparte ed eccezione."
+      },
+      {
+        "code": "subordinata-gerundiva",
+        "severity": "bassa",
+        "description": "La causa della prescrizione e' espressa con una formula piu' opaca del necessario."
+      }
+    ],
+    "legal_invariants": [
+      "La controparte resta il soggetto che eccepisce la prescrizione.",
+      "Il diritto azionato resta oggetto dell'eccezione.",
+      "Il termine resta decennale.",
+      "La riscrittura non deve affermare che la prescrizione e' accolta dal giudice."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "attiva",
+        "text": "La controparte eccepisce la prescrizione del diritto azionato, poiche' e' decorso il termine decennale."
+      }
+    ],
+    "forbidden_changes": [
+      "Sostituire la prescrizione con decadenza.",
+      "Modificare il termine decennale.",
+      "Dire che il giudice ha gia' dichiarato la prescrizione.",
+      "Attribuire l'eccezione all'attore se il testo parla di controparte."
+    ],
+    "required_reference": [
+      "references/esempi-atti-giudiziari.md",
+      "references/principi-garner.md"
+    ],
+    "human_notes": "Opus ha segnalato che, in un atto rivolto a giudice e controparte tecnica, alcuni tecnicismi possono essere fisiologici; serve revisione umana prima di usarlo come benchmark rigido.",
+    "adjudication_status": "ambiguous",
+    "validation_rationale": "Controlla forma attiva e chiarezza sintattica in un atto giudiziario senza alterare il contenuto processuale, ma resta ambiguo perche' il registro forense puo' rendere accettabili termini come prescrizione e diritto azionato.",
+    "annotations": {
+      "codex": {
+        "status": "drafted",
+        "notes": "Esempio presente nelle reference atti giudiziari e principi Garner."
+      },
+      "opus": {
+        "status": "reviewed",
+        "model_command": "claude --model opus --effort high --print --output-format json",
+        "notes": "Opus ha proposto adjudication_status ambiguous: criticita' reali ma di gravita' contenuta; opportunita' della semplificazione dipendente dal destinatario dell'atto."
+      },
+      "human": {
+        "status": "pending",
+        "notes": ""
+      }
+    },
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_literals": [
+        "controparte",
+        "prescrizione",
+        "diritto azionato",
+        "decennale"
+      ],
+      "fatal_forbidden_after": [
+        "viene eccepita",
+        "essendo decorso"
+      ],
+      "allowed_legal_references": []
+    }
+  },
+  {
+    "id": "C007",
+    "title": "Atto di appello con motivi fusi",
+    "document_type": "atto_giudiziario",
+    "input_text": "L'appellante, come sopra rappresentato e difeso, con il presente atto intende impugnare la sentenza n. 123/2023 resa dal Tribunale di Roma in data 10.07.2023, notificata in data 30.07.2023, deducendo che la stessa risulta viziata da errori in fatto e in diritto, avendo il giudicante omesso di valutare correttamente le doglianze attoree, in particolare per quanto riguarda la mancata ammissione della prova per testi e la erronea interpretazione delle risultanze istruttorie nonche' il travisamento delle argomentazioni sviluppate in sede di discussione finale.",
+    "expected_issues": [
+      {
+        "code": "motivi-non-separati",
+        "severity": "alta",
+        "description": "I motivi di appello sono fusi in un solo periodo e non sono numerati."
+      },
+      {
+        "code": "formalismi",
+        "severity": "media",
+        "description": "Formule come 'come sopra rappresentato e difeso' e 'con il presente atto intende' appesantiscono l'incipit."
+      },
+      {
+        "code": "specificita",
+        "severity": "alta",
+        "description": "La chiarezza richiede separare prova per testi, risultanze istruttorie e travisamento argomentativo."
+      }
+    ],
+    "legal_invariants": [
+      "La sentenza resta la n. 123/2023 del Tribunale di Roma.",
+      "Le date 10.07.2023 e 30.07.2023 devono restare invariate.",
+      "Devono restare i tre nuclei: mancata ammissione della prova per testi, erronea interpretazione delle risultanze istruttorie, travisamento delle argomentazioni.",
+      "La riscrittura non deve aggiungere un motivo nuovo non presente nel testo."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "motivi-numerati",
+        "text": "L'appellante impugna la sentenza n. 123/2023 del Tribunale di Roma, resa il 10.07.2023 e notificata il 30.07.2023, per tre motivi: 1. Mancata ammissione della prova per testi. Il Tribunale non ha ammesso la prova richiesta dall'appellante. 2. Erronea interpretazione delle risultanze istruttorie. Il Tribunale ha valutato in modo errato le prove acquisite. 3. Travisamento delle argomentazioni difensive. Il Tribunale non ha considerato correttamente le argomentazioni svolte nella discussione finale."
+      }
+    ],
+    "forbidden_changes": [
+      "Cambiare numero della sentenza, ufficio giudiziario o date.",
+      "Sostituire appello con ricorso per cassazione.",
+      "Aggiungere violazioni normative non presenti nel testo.",
+      "Eliminare uno dei tre nuclei di censura."
+    ],
+    "required_reference": [
+      "references/esempi-atti-giudiziari.md"
+    ],
+    "human_notes": "Il contenuto e' ancora generico: l'avvocato deve integrare la specificita' dei motivi, ma la struttura numerata e' valutabile.",
+    "adjudication_status": "draft_codex",
+    "validation_rationale": "Misura la capacita' di rispettare chiarezza/sinteticita' negli atti e di non confondere pulizia stilistica con aggiunta di motivi.",
+    "annotations": {
+      "codex": {
+        "status": "drafted",
+        "notes": "Dalla reference sugli atti giudiziari, adattato a packet."
+      },
+      "opus": {
+        "status": "not_run",
+        "model_command": "claude --model opus --effort high --print --output-format json"
+      },
+      "human": {
+        "status": "pending",
+        "notes": ""
+      }
+    },
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_literals": [
+        "123/2023",
+        "Tribunale di Roma",
+        "10.07.2023",
+        "30.07.2023",
+        "prova per testi",
+        "risultanze istruttorie",
+        "travisamento"
+      ],
+      "fatal_forbidden_after": [
+        "come sopra rappresentato e difeso",
+        "con il presente atto intende"
+      ],
+      "allowed_legal_references": []
+    }
+  },
+  {
+    "id": "C008",
+    "title": "Topic sentence prima della giurisprudenza",
+    "document_type": "atto_giudiziario",
+    "input_text": "La Suprema Corte di Cassazione, con la nota sentenza n. 12345 del 2022, ha avuto modo di stabilire che il termine di prescrizione per l'azione di risarcimento del danno da fatto illecito decorre dal giorno in cui il fatto si e' verificato.",
+    "expected_issues": [
+      {
+        "code": "citazione-prima-del-punto",
+        "severity": "media",
+        "description": "La citazione giurisprudenziale precede il punto processuale e rende meno chiara la tesi."
+      },
+      {
+        "code": "assenza-applicazione",
+        "severity": "alta",
+        "description": "Il testo enuncia una massima ma non la collega ai fatti del caso."
+      }
+    ],
+    "legal_invariants": [
+      "La citazione resta Cassazione n. 12345 del 2022.",
+      "La regola resta la decorrenza della prescrizione dal giorno del fatto illecito.",
+      "La riscrittura non deve inventare date del sinistro o della notifica se non presenti nel fascicolo."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "topic-sentence-senza-date-inventate",
+        "text": "Il punto da chiarire e' quando decorre la prescrizione dell'azione di risarcimento da fatto illecito. Secondo la Cassazione n. 12345 del 2022, il termine decorre dal giorno in cui il fatto si e' verificato. Questa regola va poi applicata alle date del caso concreto."
+      }
+    ],
+    "forbidden_changes": [
+      "Inventare data del sinistro, data di notifica o numero di anni del termine se non presenti.",
+      "Sostituire la Cassazione con una fonte diversa.",
+      "Affermare che la domanda e' prescritta senza i fatti necessari."
+    ],
+    "required_reference": [
+      "references/esempi-atti-giudiziari.md",
+      "references/principi-garner.md"
+    ],
+    "human_notes": "La reference contiene un esempio con date; qui le date sono volutamente assenti per testare l'assenza di invenzioni.",
+    "adjudication_status": "draft_codex",
+    "validation_rationale": "Il caso distingue topic sentence e invenzione fattuale: la skill deve migliorare ordine e utilita', non completare il fascicolo.",
+    "annotations": {
+      "codex": {
+        "status": "drafted",
+        "notes": "Adattamento prudenziale dell'esempio in cui le date non sono disponibili."
+      },
+      "opus": {
+        "status": "not_run",
+        "model_command": "claude --model opus --effort high --print --output-format json"
+      },
+      "human": {
+        "status": "pending",
+        "notes": ""
+      }
+    },
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_literals": [
+        "Cassazione",
+        "12345",
+        "2022",
+        "prescrizione",
+        "fatto illecito"
+      ],
+      "fatal_forbidden_after": [
+        "15.01.2018",
+        "20.02.2023"
+      ],
+      "allowed_legal_references": [
+        "Cassazione n. 12345 del 2022"
+      ]
+    }
+  },
+  {
+    "id": "C009",
+    "title": "Parere con preambolo invece di deep issue",
+    "document_type": "parere",
+    "input_text": "Il cliente ci ha incaricato di esaminare la posizione contrattuale relativa al contratto di locazione stipulato in data 1/3/2024, con particolare riferimento alla questione dei ritardi nei pagamenti che si sono succeduti negli ultimi mesi e alle possibili conseguenze che tali condotte potrebbero determinare rispetto alla permanenza del rapporto contrattuale.",
+    "expected_issues": [
+      {
+        "code": "preambolo-lungo",
+        "severity": "media",
+        "description": "Il testo arriva tardi alla domanda giuridica."
+      },
+      {
+        "code": "deep-issue-mancante",
+        "severity": "alta",
+        "description": "Il parere dovrebbe formulare subito il problema operativo per il cliente."
+      }
+    ],
+    "legal_invariants": [
+      "Il contratto resta di locazione.",
+      "La data 1/3/2024 deve restare invariata.",
+      "Il problema riguarda ritardi nei pagamenti e permanenza o risoluzione del rapporto.",
+      "La riscrittura non deve affermare che la risoluzione e' certamente possibile senza leggere contratto e pagamenti."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "domanda-operativa",
+        "text": "Il conduttore ha pagato in ritardo piu' volte dopo la stipula del contratto di locazione del 1/3/2024: questi ritardi consentono al locatore di chiedere la risoluzione del contratto o giustificano solo un sollecito formale?"
+      }
+    ],
+    "forbidden_changes": [
+      "Cambiare la data del contratto.",
+      "Trasformare i ritardi in mancati pagamenti totali.",
+      "Dare una risposta di merito al quesito invece di migliorare la formulazione.",
+      "Citando norme o sentenze non presenti nel testo."
+    ],
+    "required_reference": [
+      "references/principi-garner.md"
+    ],
+    "human_notes": "Il caso e' adatto a valutare se la skill produce un problema leggibile senza scivolare nel parere giuridico.",
+    "adjudication_status": "draft_codex",
+    "validation_rationale": "Misura deep issue e utilita' pratica per l'avvocato preservando il perimetro informativo.",
+    "annotations": {
+      "codex": {
+        "status": "drafted",
+        "notes": "Basato sulla sezione deep issue della reference Garner."
+      },
+      "opus": {
+        "status": "not_run",
+        "model_command": "claude --model opus --effort high --print --output-format json"
+      },
+      "human": {
+        "status": "pending",
+        "notes": ""
+      }
+    },
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_literals": [
+        "locazione",
+        "1/3/2024",
+        "ritardi",
+        "pagamenti"
+      ],
+      "fatal_forbidden_after": [
+        "ci ha incaricato di esaminare",
+        "con particolare riferimento"
+      ],
+      "allowed_legal_references": []
+    }
+  },
+  {
+    "id": "C010",
+    "title": "Conclusioni con formula rituale vuota",
+    "document_type": "atto_giudiziario",
+    "input_text": "Per tutto quanto sopra esposto, dedotto e documentato, e che qui deve intendersi integralmente richiamato e trascritto all'uopo, si insiste per l'accoglimento delle gia' rassegnate conclusioni.",
+    "expected_issues": [
+      {
+        "code": "formula-vuota",
+        "severity": "media",
+        "description": "La formula rituale non aggiunge contenuto processuale."
+      },
+      {
+        "code": "ridondanza",
+        "severity": "media",
+        "description": "Le coppie 'esposto, dedotto e documentato' e 'richiamato e trascritto' appesantiscono il testo."
+      }
+    ],
+    "legal_invariants": [
+      "La richiesta resta l'accoglimento delle conclusioni.",
+      "La riscrittura non deve modificare il contenuto delle conclusioni gia' rassegnate.",
+      "Non deve aggiungere domande nuove."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "formula-breve",
+        "text": "Per i motivi esposti, si chiede l'accoglimento delle conclusioni."
+      }
+    ],
+    "forbidden_changes": [
+      "Aggiungere condanna alle spese se non presente nelle conclusioni da riscrivere.",
+      "Sostituire accoglimento con rigetto.",
+      "Aggiungere richieste istruttorie nuove.",
+      "Omettere il riferimento alle conclusioni."
+    ],
+    "required_reference": [
+      "references/esempi-atti-giudiziari.md"
+    ],
+    "human_notes": "Caso semplice: utile per verificare che il judge non premi riscritture piu' ornate.",
+    "adjudication_status": "draft_codex",
+    "validation_rationale": "Misura eliminazione di legalese senza alterare la domanda processuale.",
+    "annotations": {
+      "codex": {
+        "status": "drafted",
+        "notes": "Esempio tratto dalla reference sugli atti giudiziari."
+      },
+      "opus": {
+        "status": "not_run",
+        "model_command": "claude --model opus --effort high --print --output-format json"
+      },
+      "human": {
+        "status": "pending",
+        "notes": ""
+      }
+    },
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_literals": [
+        "conclusioni"
+      ],
+      "fatal_forbidden_after": [
+        "integralmente richiamato",
+        "trascritto all'uopo",
+        "gia' rassegnate",
+        "già rassegnate"
+      ],
+      "allowed_legal_references": []
+    }
+  },
+  {
+    "id": "C011",
+    "title": "Manutenzione ordinaria non definita",
+    "document_type": "contratto",
+    "input_text": "Sono a carico del Conduttore tutte le spese di manutenzione ordinaria del veicolo, mentre restano a carico del Noleggiatore le spese di manutenzione straordinaria, salvo diverso accordo tra le parti.",
+    "expected_issues": [
+      {
+        "code": "categorie-non-definite",
+        "severity": "alta",
+        "description": "Manutenzione ordinaria e straordinaria sono categorie potenzialmente litigiose se non esemplificate."
+      },
+      {
+        "code": "eccezione-generica",
+        "severity": "media",
+        "description": "'Salvo diverso accordo' non indica forma, momento o prova dell'accordo."
+      }
+    ],
+    "legal_invariants": [
+      "Le spese ordinarie restano a carico del Conduttore.",
+      "Le spese straordinarie restano a carico del Noleggiatore.",
+      "La clausola riguarda il veicolo.",
+      "La riscrittura non deve invertire la ripartizione dei costi."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "definizioni-con-esempi",
+        "text": "Il Conduttore paga le spese di manutenzione ordinaria del veicolo, come controlli periodici, rabbocchi e sostituzione dei materiali di consumo. Il Noleggiatore paga le spese di manutenzione straordinaria, come riparazioni strutturali o sostituzioni non dipendenti dall'uso ordinario. Le parti possono modificare questa ripartizione solo con accordo scritto."
+      }
+    ],
+    "forbidden_changes": [
+      "Invertire ordinaria e straordinaria.",
+      "Eliminare la possibilita' di diverso accordo se il testo la prevede.",
+      "Inserire franchigie o massimali non presenti.",
+      "Trasformare ogni manutenzione in obbligo del Conduttore."
+    ],
+    "required_reference": [
+      "references/principi-garner.md",
+      "references/interpretazione-civilistica.md"
+    ],
+    "human_notes": "Il contenuto degli esempi di manutenzione va verificato rispetto al settore e agli allegati tecnici.",
+    "adjudication_status": "draft_codex",
+    "validation_rationale": "Misura definizioni operative e gestione delle eccezioni senza alterare l'allocazione economica del rischio.",
+    "annotations": {
+      "codex": {
+        "status": "drafted",
+        "notes": "Costruito dai principi su standard vaghi e categorie non definite."
+      },
+      "opus": {
+        "status": "not_run",
+        "model_command": "claude --model opus --effort high --print --output-format json"
+      },
+      "human": {
+        "status": "pending",
+        "notes": ""
+      }
+    },
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_literals": [
+        "Conduttore",
+        "Noleggiatore",
+        "manutenzione ordinaria",
+        "manutenzione straordinaria",
+        "veicolo"
+      ],
+      "fatal_forbidden_after": [
+        "salvo diverso accordo"
+      ],
+      "allowed_legal_references": []
+    }
+  },
+  {
+    "id": "C012",
+    "title": "Atto giudiziario con struttura D.M. 110/2023",
+    "document_type": "atto_giudiziario",
+    "input_text": "La presente causa trae origine dall'opposizione a decreto ingiuntivo n. 123/2023, notificato in data 15.06.2023. Invero, in data 01.02.2022, le parti avevano stipulato un contratto di fornitura e, a seguito di diffida ad adempiere inviata il 10.03.2023 per il mancato pagamento di fatture emesse tra aprile e dicembre 2022, era stato richiesto il suddetto provvedimento monitorio.",
+    "expected_issues": [
+      {
+        "code": "cronologia-invertita",
+        "severity": "media",
+        "description": "Il testo apre con il decreto ingiuntivo e solo dopo ricostruisce il rapporto contrattuale."
+      },
+      {
+        "code": "atto-giudiziario",
+        "severity": "alta",
+        "description": "Essendo un atto giudiziario, la skill deve considerare chiarezza, sinteticita' e struttura dei fatti."
+      }
+    ],
+    "legal_invariants": [
+      "Devono restare decreto ingiuntivo n. 123/2023 e notifica del 15.06.2023.",
+      "Devono restare contratto di fornitura del 01.02.2022 e fatture aprile-dicembre 2022.",
+      "Deve restare la diffida del 10.03.2023.",
+      "La riscrittura non deve cambiare opposizione, decreto ingiuntivo o fornitura."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "cronologia-lineare",
+        "text": "In data 01.02.2022, le parti stipulavano un contratto di fornitura. Tra aprile e dicembre 2022 venivano emesse fatture rimaste impagate. Il 10.03.2023 veniva inviata diffida ad adempiere. In seguito, e' stato richiesto e ottenuto il decreto ingiuntivo n. 123/2023, notificato il 15.06.2023, contro cui e' stata proposta opposizione."
+      }
+    ],
+    "forbidden_changes": [
+      "Cambiare le date o il numero del decreto.",
+      "Trasformare la fornitura in appalto o locazione.",
+      "Dire che la diffida e' stata contestata se il testo non lo dice.",
+      "Omettere che vi e' opposizione a decreto ingiuntivo."
+    ],
+    "required_reference": [
+      "references/esempi-atti-giudiziari.md"
+    ],
+    "human_notes": "Il revisore deve verificare se l'atto richiede anche parole chiave, indice documenti o sezioni separate ai sensi del D.M. 110/2023.",
+    "adjudication_status": "draft_codex",
+    "validation_rationale": "Il caso controlla l'apertura automatica della reference sugli atti giudiziari e la riscrittura cronologica dei fatti.",
+    "annotations": {
+      "codex": {
+        "status": "drafted",
+        "notes": "Esempio derivato dalla reference atti giudiziari."
+      },
+      "opus": {
+        "status": "not_run",
+        "model_command": "claude --model opus --effort high --print --output-format json"
+      },
+      "human": {
+        "status": "pending",
+        "notes": ""
+      }
+    },
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_literals": [
+        "123/2023",
+        "15.06.2023",
+        "01.02.2022",
+        "10.03.2023",
+        "fornitura",
+        "aprile",
+        "dicembre 2022",
+        "opposizione"
+      ],
+      "fatal_forbidden_after": [
+        "Invero"
+      ],
+      "allowed_legal_references": [
+        "D.M. 110/2023",
+        "art. 121 c.p.c."
+      ]
+    }
+  }
+]
