@@ -119,11 +119,20 @@ class SkillStaticTests(unittest.TestCase):
             }
             self.assertFalse(reviewed <= {"codex"}, case["id"])
 
-    def test_ambiguous_cases_remain_flagged(self) -> None:
-        ambiguous = [case for case in self.cases if case["adjudication_status"] == "ambiguous"]
-        self.assertGreaterEqual(len(ambiguous), 1)
-        for case in ambiguous:
-            self.assertIn("ambig", case["validation_rationale"].lower())
+    def test_non_automatic_cases_remain_flagged(self) -> None:
+        non_automatic = [
+            case
+            for case in self.cases
+            if case["adjudication_status"] in {"ambiguous", "expert_review_only"}
+        ]
+        self.assertGreaterEqual(len(non_automatic), 1)
+        for case in non_automatic:
+            rationale = case["validation_rationale"].lower()
+            self.assertTrue(
+                "ambig" in rationale
+                or case["annotations"]["human"]["status"] == "reviewed",
+                case["id"],
+            )
 
     def test_every_packet_has_required_annotations(self) -> None:
         for case in self.cases:

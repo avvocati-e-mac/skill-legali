@@ -43,7 +43,7 @@
       "references/principi-garner.md"
     ],
     "human_notes": "Caso da validare: la clausola e' tratta da un contesto di noleggio e la scelta dell'esimente va confermata rispetto all'assetto negoziale voluto.",
-    "adjudication_status": "draft_codex",
+    "adjudication_status": "expert_review_only",
     "validation_rationale": "Il caso misura la capacita' di sostituire uno standard generico con un parametro controllabile senza spostare soggetti o rischio contrattuale.",
     "annotations": {
       "codex": {
@@ -51,12 +51,35 @@
         "notes": "Prima bozza derivata dalla reference Garner gia' presente nella skill."
       },
       "opus": {
-        "status": "not_run",
-        "model_command": "claude --model opus --effort high --print --output-format json"
+        "status": "reviewed",
+        "model_command": "claude --model opus --effort high --print --output-format json",
+        "review_source": "human_reviews.json",
+        "human_decision": "usable",
+        "human_flags": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "ok"
+        },
+        "human_notes": "ha inserito il caso fortuito e forza maggiore ok"
       },
       "human": {
-        "status": "pending",
-        "notes": ""
+        "status": "reviewed",
+        "reviewed_at": "human_reviews.json",
+        "final_status": "expert_review_only",
+        "notes": "Nota finale revisore: meglio opus; opus: decisione=usable; senso=ok, fatti=ok, chiarezza=ok, formato=ok; note revisore: ha inserito il caso fortuito e forza maggiore ok; glm52: decisione=reject; senso=problem, fatti=ok, chiarezza=ok, formato=ok"
+      },
+      "glm52": {
+        "status": "reviewed",
+        "review_source": "human_reviews.json",
+        "human_decision": "reject",
+        "human_flags": {
+          "legal_meaning": "problem",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "ok"
+        },
+        "human_notes": ""
       }
     },
     "automation": {
@@ -120,7 +143,7 @@
       "references/interpretazione-civilistica.md"
     ],
     "human_notes": "Da verificare con il fascicolo se esiste una certificazione ATP allegata con temperature specifiche.",
-    "adjudication_status": "draft_codex",
+    "adjudication_status": "expert_review_only",
     "validation_rationale": "Il caso controlla la riduzione di un'espressione polisenso senza inventare specifiche tecniche.",
     "annotations": {
       "codex": {
@@ -128,12 +151,35 @@
         "notes": "Caso gia' coerente con gli esempi centrali della skill."
       },
       "opus": {
-        "status": "not_run",
-        "model_command": "claude --model opus --effort high --print --output-format json"
+        "status": "reviewed",
+        "model_command": "claude --model opus --effort high --print --output-format json",
+        "review_source": "human_reviews.json",
+        "human_decision": "usable",
+        "human_flags": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "ok"
+        },
+        "human_notes": ""
       },
       "human": {
-        "status": "pending",
-        "notes": ""
+        "status": "reviewed",
+        "reviewed_at": "human_reviews.json",
+        "final_status": "expert_review_only",
+        "notes": "Nota finale revisore: nulla da eccepire; opus: decisione=usable; senso=ok, fatti=ok, chiarezza=ok, formato=ok; glm52: decisione=usable; senso=ok, fatti=ok, chiarezza=ok, formato=ok"
+      },
+      "glm52": {
+        "status": "reviewed",
+        "review_source": "human_reviews.json",
+        "human_decision": "usable",
+        "human_flags": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "ok"
+        },
+        "human_notes": ""
       }
     },
     "automation": {
@@ -199,7 +245,7 @@
       "references/interpretazione-civilistica.md"
     ],
     "human_notes": "Il revisore deve scegliere se accettare il preavviso di 30 giorni come proposta redazionale o sostituirlo con un segnaposto.",
-    "adjudication_status": "ambiguous",
+    "adjudication_status": "expert_review_only",
     "validation_rationale": "Il caso e' volutamente ambiguo: chiarire il soggetto e' necessario, ma alcune condizioni richiedono istruzioni del cliente.",
     "annotations": {
       "codex": {
@@ -207,12 +253,35 @@
         "notes": "La riscrittura con 30 giorni viene dalla reference; quella con segnaposto evita invenzioni."
       },
       "opus": {
-        "status": "not_run",
-        "model_command": "claude --model opus --effort high --print --output-format json"
+        "status": "reviewed",
+        "model_command": "claude --model opus --effort high --print --output-format json",
+        "review_source": "human_reviews.json",
+        "human_decision": "usable",
+        "human_flags": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "ok"
+        },
+        "human_notes": ""
       },
       "human": {
-        "status": "pending",
-        "notes": ""
+        "status": "reviewed",
+        "reviewed_at": "human_reviews.json",
+        "final_status": "expert_review_only",
+        "notes": "opus: decisione=usable; senso=ok, fatti=ok, chiarezza=ok, formato=ok; glm52: decisione=usable; senso=ok, fatti=ok, chiarezza=ok, formato=ok"
+      },
+      "glm52": {
+        "status": "reviewed",
+        "review_source": "human_reviews.json",
+        "human_decision": "usable",
+        "human_flags": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "ok"
+        },
+        "human_notes": ""
       }
     },
     "automation": {
@@ -279,7 +348,7 @@
       "references/principi-garner.md"
     ],
     "human_notes": "Non usare come benchmark automatico rigido finche' l'avvocato non indica la qualificazione voluta dell'obbligazione.",
-    "adjudication_status": "ambiguous",
+    "adjudication_status": "expert_review_only",
     "validation_rationale": "Il caso serve a premiare l'emersione dell'ambiguita', non una sola riscrittura ideale.",
     "annotations": {
       "codex": {
@@ -287,12 +356,35 @@
         "notes": "Due riscritture alternative derivate dalla reference sul contratto d'opera/appalto."
       },
       "opus": {
-        "status": "not_run",
-        "model_command": "claude --model opus --effort high --print --output-format json"
+        "status": "reviewed",
+        "model_command": "claude --model opus --effort high --print --output-format json",
+        "review_source": "human_reviews.json",
+        "human_decision": "usable",
+        "human_flags": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "ok"
+        },
+        "human_notes": ""
       },
       "human": {
-        "status": "pending",
-        "notes": ""
+        "status": "reviewed",
+        "reviewed_at": "human_reviews.json",
+        "final_status": "expert_review_only",
+        "notes": "opus: decisione=usable; senso=ok, fatti=ok, chiarezza=ok, formato=ok; glm52: decisione=usable; senso=ok, fatti=ok, chiarezza=ok, formato=ok"
+      },
+      "glm52": {
+        "status": "reviewed",
+        "review_source": "human_reviews.json",
+        "human_decision": "usable",
+        "human_flags": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "ok"
+        },
+        "human_notes": ""
       }
     },
     "automation": {
@@ -369,7 +461,7 @@
       "references/principi-garner.md"
     ],
     "human_notes": "Caso adatto a test automatico di formato e preservazione dei fatti; resta da validare il tono della diffida.",
-    "adjudication_status": "draft_codex",
+    "adjudication_status": "expert_review_only",
     "validation_rationale": "Misura la capacita' di spezzare una frase complessa preservando modalita' e causalita'.",
     "annotations": {
       "codex": {
@@ -377,12 +469,35 @@
         "notes": "Esempio presente nel corpo della skill, qui formalizzato come golden packet."
       },
       "opus": {
-        "status": "not_run",
-        "model_command": "claude --model opus --effort high --print --output-format json"
+        "status": "reviewed",
+        "model_command": "claude --model opus --effort high --print --output-format json",
+        "review_source": "human_reviews.json",
+        "human_decision": "reject",
+        "human_flags": {
+          "legal_meaning": "problem",
+          "no_new_facts": "problem",
+          "clarity": "problem",
+          "format": "ok"
+        },
+        "human_notes": "sbaglia il soggetto è nostra non vostra"
       },
       "human": {
-        "status": "pending",
-        "notes": ""
+        "status": "reviewed",
+        "reviewed_at": "human_reviews.json",
+        "final_status": "expert_review_only",
+        "notes": "opus: decisione=reject; senso=problem, fatti=problem, chiarezza=problem, formato=ok; note revisore: sbaglia il soggetto è nostra non vostra; glm52: decisione=reject; senso=problem, fatti=problem, chiarezza=problem, formato=ok; note revisore: sbaglia il soggetto è nostra non vostra"
+      },
+      "glm52": {
+        "status": "reviewed",
+        "review_source": "human_reviews.json",
+        "human_decision": "reject",
+        "human_flags": {
+          "legal_meaning": "problem",
+          "no_new_facts": "problem",
+          "clarity": "problem",
+          "format": "ok"
+        },
+        "human_notes": "sbaglia il soggetto è nostra non vostra"
       }
     },
     "automation": {
@@ -444,7 +559,7 @@
       "references/principi-garner.md"
     ],
     "human_notes": "Opus ha segnalato che, in un atto rivolto a giudice e controparte tecnica, alcuni tecnicismi possono essere fisiologici; serve revisione umana prima di usarlo come benchmark rigido.",
-    "adjudication_status": "ambiguous",
+    "adjudication_status": "expert_review_only",
     "validation_rationale": "Controlla forma attiva e chiarezza sintattica in un atto giudiziario senza alterare il contenuto processuale, ma resta ambiguo perche' il registro forense puo' rendere accettabili termini come prescrizione e diritto azionato.",
     "annotations": {
       "codex": {
@@ -454,11 +569,34 @@
       "opus": {
         "status": "reviewed",
         "model_command": "claude --model opus --effort high --print --output-format json",
-        "notes": "Opus ha proposto adjudication_status ambiguous: criticita' reali ma di gravita' contenuta; opportunita' della semplificazione dipendente dal destinatario dell'atto."
+        "notes": "Opus ha proposto adjudication_status ambiguous: criticita' reali ma di gravita' contenuta; opportunita' della semplificazione dipendente dal destinatario dell'atto.",
+        "review_source": "human_reviews.json",
+        "human_decision": "usable",
+        "human_flags": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "ok"
+        },
+        "human_notes": ""
       },
       "human": {
-        "status": "pending",
-        "notes": ""
+        "status": "reviewed",
+        "reviewed_at": "human_reviews.json",
+        "final_status": "expert_review_only",
+        "notes": "opus: decisione=usable; senso=ok, fatti=ok, chiarezza=ok, formato=ok; glm52: decisione=usable; senso=ok, fatti=ok, chiarezza=ok, formato=ok"
+      },
+      "glm52": {
+        "status": "reviewed",
+        "review_source": "human_reviews.json",
+        "human_decision": "usable",
+        "human_flags": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "ok"
+        },
+        "human_notes": ""
       }
     },
     "automation": {
@@ -524,7 +662,7 @@
       "references/esempi-atti-giudiziari.md"
     ],
     "human_notes": "Il contenuto e' ancora generico: l'avvocato deve integrare la specificita' dei motivi, ma la struttura numerata e' valutabile.",
-    "adjudication_status": "draft_codex",
+    "adjudication_status": "expert_review_only",
     "validation_rationale": "Misura la capacita' di rispettare chiarezza/sinteticita' negli atti e di non confondere pulizia stilistica con aggiunta di motivi.",
     "annotations": {
       "codex": {
@@ -532,12 +670,35 @@
         "notes": "Dalla reference sugli atti giudiziari, adattato a packet."
       },
       "opus": {
-        "status": "not_run",
-        "model_command": "claude --model opus --effort high --print --output-format json"
+        "status": "reviewed",
+        "model_command": "claude --model opus --effort high --print --output-format json",
+        "review_source": "human_reviews.json",
+        "human_decision": "reject",
+        "human_flags": {
+          "legal_meaning": "problem",
+          "no_new_facts": "ok",
+          "clarity": "problem",
+          "format": "ok"
+        },
+        "human_notes": "la riformulazione è ripetitiva: ad esempio  **Erronea valutazione delle risultanze istruttorie.** Il Tribunale ha interpretato in modo errato le prove acquisite."
       },
       "human": {
-        "status": "pending",
-        "notes": ""
+        "status": "reviewed",
+        "reviewed_at": "human_reviews.json",
+        "final_status": "expert_review_only",
+        "notes": "Nota finale revisore: opus non va bene; opus: decisione=reject; senso=problem, fatti=ok, chiarezza=problem, formato=ok; note revisore: la riformulazione è ripetitiva: ad esempio  **Erronea valutazione delle risultanze istruttorie.** Il Tribunale ha interpretato in modo errato le prove acquisite.; glm52: decisione=usable; senso=ok, fatti=ok, chiarezza=ok, formato=ok; note revisore: ok"
+      },
+      "glm52": {
+        "status": "reviewed",
+        "review_source": "human_reviews.json",
+        "human_decision": "usable",
+        "human_flags": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "ok"
+        },
+        "human_notes": "ok"
       }
     },
     "automation": {
@@ -600,7 +761,7 @@
       "references/principi-garner.md"
     ],
     "human_notes": "La reference contiene un esempio con date; qui le date sono volutamente assenti per testare l'assenza di invenzioni.",
-    "adjudication_status": "draft_codex",
+    "adjudication_status": "expert_review_only",
     "validation_rationale": "Il caso distingue topic sentence e invenzione fattuale: la skill deve migliorare ordine e utilita', non completare il fascicolo.",
     "annotations": {
       "codex": {
@@ -608,12 +769,35 @@
         "notes": "Adattamento prudenziale dell'esempio in cui le date non sono disponibili."
       },
       "opus": {
-        "status": "not_run",
-        "model_command": "claude --model opus --effort high --print --output-format json"
+        "status": "reviewed",
+        "model_command": "claude --model opus --effort high --print --output-format json",
+        "review_source": "human_reviews.json",
+        "human_decision": "minor_issue",
+        "human_flags": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "problem"
+        },
+        "human_notes": "non so se voluto ma ha aggiunto del testo inutile: (pulizia lessicale, senza aggiungere fatti — sempre applicabile):"
       },
       "human": {
-        "status": "pending",
-        "notes": ""
+        "status": "reviewed",
+        "reviewed_at": "human_reviews.json",
+        "final_status": "expert_review_only",
+        "notes": "opus: decisione=minor_issue; senso=ok, fatti=ok, chiarezza=ok, formato=problem; note revisore: non so se voluto ma ha aggiunto del testo inutile: (pulizia lessicale, senza aggiungere fatti — sempre applicabile):; glm52: decisione=usable; senso=ok, fatti=ok, chiarezza=ok, formato=ok"
+      },
+      "glm52": {
+        "status": "reviewed",
+        "review_source": "human_reviews.json",
+        "human_decision": "usable",
+        "human_flags": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "ok"
+        },
+        "human_notes": ""
       }
     },
     "automation": {
@@ -677,7 +861,7 @@
       "references/principi-garner.md"
     ],
     "human_notes": "Il caso e' adatto a valutare se la skill produce un problema leggibile senza scivolare nel parere giuridico.",
-    "adjudication_status": "draft_codex",
+    "adjudication_status": "expert_review_only",
     "validation_rationale": "Misura deep issue e utilita' pratica per l'avvocato preservando il perimetro informativo.",
     "annotations": {
       "codex": {
@@ -685,12 +869,35 @@
         "notes": "Basato sulla sezione deep issue della reference Garner."
       },
       "opus": {
-        "status": "not_run",
-        "model_command": "claude --model opus --effort high --print --output-format json"
+        "status": "reviewed",
+        "model_command": "claude --model opus --effort high --print --output-format json",
+        "review_source": "human_reviews.json",
+        "human_decision": "reject",
+        "human_flags": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "problem",
+          "format": "problem"
+        },
+        "human_notes": "non mi piace la risposta, troppo gergale"
       },
       "human": {
-        "status": "pending",
-        "notes": ""
+        "status": "reviewed",
+        "reviewed_at": "human_reviews.json",
+        "final_status": "expert_review_only",
+        "notes": "Nota finale revisore: opus mi lascia sempre perplesso; opus: decisione=reject; senso=ok, fatti=ok, chiarezza=problem, formato=problem; note revisore: non mi piace la risposta, troppo gergale; glm52: decisione=usable; senso=ok, fatti=ok, chiarezza=ok, formato=ok"
+      },
+      "glm52": {
+        "status": "reviewed",
+        "review_source": "human_reviews.json",
+        "human_decision": "usable",
+        "human_flags": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "ok"
+        },
+        "human_notes": ""
       }
     },
     "automation": {
@@ -750,7 +957,7 @@
       "references/esempi-atti-giudiziari.md"
     ],
     "human_notes": "Caso semplice: utile per verificare che il judge non premi riscritture piu' ornate.",
-    "adjudication_status": "draft_codex",
+    "adjudication_status": "expert_review_only",
     "validation_rationale": "Misura eliminazione di legalese senza alterare la domanda processuale.",
     "annotations": {
       "codex": {
@@ -758,12 +965,35 @@
         "notes": "Esempio tratto dalla reference sugli atti giudiziari."
       },
       "opus": {
-        "status": "not_run",
-        "model_command": "claude --model opus --effort high --print --output-format json"
+        "status": "reviewed",
+        "model_command": "claude --model opus --effort high --print --output-format json",
+        "review_source": "human_reviews.json",
+        "human_decision": "minor_issue",
+        "human_flags": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "ok"
+        },
+        "human_notes": "molto legalese Comunque: già rassegnate."
       },
       "human": {
-        "status": "pending",
-        "notes": ""
+        "status": "reviewed",
+        "reviewed_at": "human_reviews.json",
+        "final_status": "expert_review_only",
+        "notes": "Nota finale revisore: sempre meglio GLM; opus: decisione=minor_issue; senso=ok, fatti=ok, chiarezza=ok, formato=ok; note revisore: molto legalese Comunque: già rassegnate.; glm52: decisione=usable; senso=ok, fatti=ok, chiarezza=ok, formato=problem; note revisore: c’è la citazione che non va bene ma per il resto meglio di opus"
+      },
+      "glm52": {
+        "status": "reviewed",
+        "review_source": "human_reviews.json",
+        "human_decision": "usable",
+        "human_flags": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "problem"
+        },
+        "human_notes": "c’è la citazione che non va bene ma per il resto meglio di opus"
       }
     },
     "automation": {
@@ -824,7 +1054,7 @@
       "references/interpretazione-civilistica.md"
     ],
     "human_notes": "Il contenuto degli esempi di manutenzione va verificato rispetto al settore e agli allegati tecnici.",
-    "adjudication_status": "draft_codex",
+    "adjudication_status": "expert_review_only",
     "validation_rationale": "Misura definizioni operative e gestione delle eccezioni senza alterare l'allocazione economica del rischio.",
     "annotations": {
       "codex": {
@@ -832,12 +1062,35 @@
         "notes": "Costruito dai principi su standard vaghi e categorie non definite."
       },
       "opus": {
-        "status": "not_run",
-        "model_command": "claude --model opus --effort high --print --output-format json"
+        "status": "reviewed",
+        "model_command": "claude --model opus --effort high --print --output-format json",
+        "review_source": "human_reviews.json",
+        "human_decision": "usable",
+        "human_flags": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "ok"
+        },
+        "human_notes": "unico difetto sposta il problema ad un elenco a parte"
       },
       "human": {
-        "status": "pending",
-        "notes": ""
+        "status": "reviewed",
+        "reviewed_at": "human_reviews.json",
+        "final_status": "expert_review_only",
+        "notes": "Nota finale revisore: Opus qui è meglio; opus: decisione=usable; senso=ok, fatti=ok, chiarezza=ok, formato=ok; note revisore: unico difetto sposta il problema ad un elenco a parte; glm52: decisione=minor_issue; senso=ok, fatti=ok, chiarezza=ok, formato=ok; note revisore: manca la parte per iscritto delle diverse pattuizioni"
+      },
+      "glm52": {
+        "status": "reviewed",
+        "review_source": "human_reviews.json",
+        "human_decision": "minor_issue",
+        "human_flags": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "ok"
+        },
+        "human_notes": "manca la parte per iscritto delle diverse pattuizioni"
       }
     },
     "automation": {
@@ -898,7 +1151,7 @@
       "references/esempi-atti-giudiziari.md"
     ],
     "human_notes": "Il revisore deve verificare se l'atto richiede anche parole chiave, indice documenti o sezioni separate ai sensi del D.M. 110/2023.",
-    "adjudication_status": "draft_codex",
+    "adjudication_status": "expert_review_only",
     "validation_rationale": "Il caso controlla l'apertura automatica della reference sugli atti giudiziari e la riscrittura cronologica dei fatti.",
     "annotations": {
       "codex": {
@@ -906,12 +1159,35 @@
         "notes": "Esempio derivato dalla reference atti giudiziari."
       },
       "opus": {
-        "status": "not_run",
-        "model_command": "claude --model opus --effort high --print --output-format json"
+        "status": "reviewed",
+        "model_command": "claude --model opus --effort high --print --output-format json",
+        "review_source": "human_reviews.json",
+        "human_decision": "usable",
+        "human_flags": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "ok"
+        },
+        "human_notes": ""
       },
       "human": {
-        "status": "pending",
-        "notes": ""
+        "status": "reviewed",
+        "reviewed_at": "human_reviews.json",
+        "final_status": "expert_review_only",
+        "notes": "opus: decisione=usable; senso=ok, fatti=ok, chiarezza=ok, formato=ok; glm52: decisione=usable; senso=ok, fatti=ok, chiarezza=ok, formato=ok; note revisore: non mi piace"
+      },
+      "glm52": {
+        "status": "reviewed",
+        "review_source": "human_reviews.json",
+        "human_decision": "usable",
+        "human_flags": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "ok"
+        },
+        "human_notes": "non mi piace"
       }
     },
     "automation": {
