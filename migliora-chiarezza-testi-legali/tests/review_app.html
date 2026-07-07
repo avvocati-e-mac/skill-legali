@@ -44,6 +44,11 @@
       min-height: 100vh;
       display: grid;
       grid-template-columns: minmax(220px, 280px) 1fr;
+      transition: grid-template-columns 0.18s ease;
+    }
+
+    .app.sidebar-collapsed {
+      grid-template-columns: 56px 1fr;
     }
 
     .sidebar {
@@ -54,6 +59,11 @@
       top: 0;
       height: 100vh;
       overflow: auto;
+    }
+
+    .app.sidebar-collapsed .sidebar {
+      padding: 12px 8px;
+      overflow: hidden;
     }
 
     .brand {
@@ -71,10 +81,67 @@
       font-weight: 700;
     }
 
+    .sidebar-toggle {
+      width: 32px;
+      min-width: 32px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 7px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #f8fafc;
+      cursor: pointer;
+      box-shadow: none;
+    }
+
+    .sidebar-toggle:hover {
+      background: rgba(255, 255, 255, 0.14);
+    }
+
+    .sidebar-toggle .open-icon {
+      display: none;
+    }
+
+    .app.sidebar-collapsed .sidebar-toggle .close-icon {
+      display: none;
+    }
+
+    .app.sidebar-collapsed .sidebar-toggle .open-icon {
+      display: inline;
+    }
+
     .counter {
       color: #cbd5e1;
       font-size: 12px;
       white-space: nowrap;
+    }
+
+    .app.sidebar-collapsed .brand {
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .app.sidebar-collapsed .brand h1,
+    .app.sidebar-collapsed .case-list .name {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .app.sidebar-collapsed .counter {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      font-size: 11px;
     }
 
     .case-list {
@@ -98,6 +165,13 @@
       cursor: pointer;
     }
 
+    .app.sidebar-collapsed .case-button {
+      grid-template-columns: 1fr;
+      justify-items: center;
+      min-height: 36px;
+      padding: 6px 4px;
+    }
+
     .case-button:hover,
     .case-button.active {
       background: rgba(255, 255, 255, 0.1);
@@ -107,6 +181,10 @@
     .case-button .id {
       font-weight: 700;
       font-size: 13px;
+    }
+
+    .app.sidebar-collapsed .case-button .id {
+      font-size: 11px;
     }
 
     .case-button .name {
@@ -122,6 +200,11 @@
       height: 9px;
       border-radius: 999px;
       background: #64748b;
+    }
+
+    .app.sidebar-collapsed .dot {
+      width: 7px;
+      height: 7px;
     }
 
     .dot.done {
@@ -399,10 +482,32 @@
         grid-template-columns: 1fr;
       }
 
+      .app.sidebar-collapsed {
+        grid-template-columns: 1fr;
+      }
+
       .sidebar {
         position: static;
         height: auto;
         max-height: 260px;
+      }
+
+      .app.sidebar-collapsed .sidebar {
+        max-height: 56px;
+      }
+
+      .app.sidebar-collapsed .brand {
+        flex-direction: row;
+        justify-content: flex-start;
+      }
+
+      .app.sidebar-collapsed .counter {
+        writing-mode: horizontal-tb;
+        transform: none;
+      }
+
+      .app.sidebar-collapsed .case-list {
+        display: none;
       }
 
       .layout,
@@ -423,10 +528,14 @@
   </style>
 </head>
 <body>
-  <div class="app">
+  <div class="app" id="appShell">
     <aside class="sidebar">
       <div class="brand">
         <h1>Revisione chiarezza</h1>
+        <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Comprimi elenco casi" title="Comprimi elenco casi">
+          <span class="close-icon" aria-hidden="true">‹</span>
+          <span class="open-icon" aria-hidden="true">›</span>
+        </button>
         <div class="counter" id="progressCounter">0/0</div>
       </div>
       <div class="case-list" id="caseList"></div>
@@ -527,8 +636,17 @@
     let reviews = {version: 1, updated_at: null, reviews: {}};
     let currentIndex = 0;
     let saveTimer = null;
+    let sidebarCollapsed = localStorage.getItem("clarityReviewSidebarCollapsed") === "true";
 
     const byId = (id) => document.getElementById(id);
+
+    function applySidebarState() {
+      const shell = byId("appShell");
+      const toggle = byId("sidebarToggle");
+      shell.classList.toggle("sidebar-collapsed", sidebarCollapsed);
+      toggle.setAttribute("aria-label", sidebarCollapsed ? "Espandi elenco casi" : "Comprimi elenco casi");
+      toggle.setAttribute("title", sidebarCollapsed ? "Espandi elenco casi" : "Comprimi elenco casi");
+    }
 
     function textNodeList(parent, items) {
       parent.innerHTML = "";
@@ -849,6 +967,13 @@
 
     byId("saveButton").addEventListener("click", saveReviews);
 
+    byId("sidebarToggle").addEventListener("click", () => {
+      sidebarCollapsed = !sidebarCollapsed;
+      localStorage.setItem("clarityReviewSidebarCollapsed", String(sidebarCollapsed));
+      applySidebarState();
+    });
+
+    applySidebarState();
     loadApp().catch((error) => {
       byId("caseTitle").textContent = "Errore di caricamento";
       byId("caseMeta").textContent = error.message;
