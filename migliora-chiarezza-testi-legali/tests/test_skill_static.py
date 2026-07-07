@@ -30,6 +30,16 @@ def load_clarity_eval():
     return module
 
 
+def load_review_app():
+    spec = importlib.util.spec_from_file_location("review_app", TEST_DIR / "review_app.py")
+    module = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    sys.modules.setdefault("clarity_eval", load_clarity_eval())
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
 def frontmatter(text: str) -> dict[str, str]:
     if not text.startswith("---\n"):
         raise AssertionError("SKILL.md deve iniziare con frontmatter YAML.")
@@ -206,6 +216,34 @@ class SkillStaticTests(unittest.TestCase):
         prompt_ba = self.eval.build_ab_prompt(case, first, second, "BA")
         self.assertIn("OUTPUT A:\noutput originale", prompt_ab)
         self.assertIn("OUTPUT A:\noutput alternativo", prompt_ba)
+
+    def test_review_app_builds_review_payload_without_raw_outputs(self) -> None:
+        review_app = load_review_app()
+        payload = review_app.build_review_data(raw_dir=TEST_DIR / "missing-raw-dir")
+        self.assertEqual(len(payload["cases"]), len(self.cases))
+        self.assertIn("opus", payload["outputs"]["C001"])
+        self.assertFalse(payload["outputs"]["C001"]["opus"]["available"])
+        self.assertEqual(payload["outputs"]["C001"]["opus"]["automatic_check"]["case_id"], "C001")
+
+    def test_review_app_save_and_load_reviews(self) -> None:
+        review_app = load_review_app()
+        review_path = TEST_DIR / "__tmp_human_reviews.json"
+        self.addCleanup(lambda: review_path.unlink(missing_ok=True))
+        saved = review_app.save_reviews(
+            {
+                "reviews": {
+                    "C002": {
+                        "final_status": "ambiguous",
+                        "notes": "Da verificare con fascicolo.",
+                        "models": {"opus": {"legal_meaning": "ok"}},
+                    }
+                }
+            },
+            review_path,
+        )
+        loaded = review_app.load_reviews(review_path)
+        self.assertEqual(saved["reviews"], loaded["reviews"])
+        self.assertEqual(loaded["reviews"]["C002"]["final_status"], "ambiguous")
 
     def test_skill_archive_contains_installable_skill_files(self) -> None:
         self.assertTrue(ARCHIVE.exists())

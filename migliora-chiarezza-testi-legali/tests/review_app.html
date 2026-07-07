@@ -1,0 +1,858 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Revisione chiarezza legale</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4f6f8;
+      --surface: #ffffff;
+      --surface-2: #eef2f6;
+      --text: #17202a;
+      --muted: #5b6672;
+      --line: #d9e0e7;
+      --accent: #1b6ca8;
+      --accent-2: #0f766e;
+      --danger: #b42318;
+      --warn: #9a6700;
+      --ok: #18794e;
+      --shadow: 0 1px 2px rgba(16, 24, 40, 0.08);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    button,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: minmax(220px, 280px) 1fr;
+    }
+
+    .sidebar {
+      background: #18212b;
+      color: #f8fafc;
+      padding: 18px 14px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .brand h1 {
+      font-size: 17px;
+      line-height: 1.2;
+      margin: 0;
+      font-weight: 700;
+    }
+
+    .counter {
+      color: #cbd5e1;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .case-list {
+      display: grid;
+      gap: 6px;
+    }
+
+    .case-button {
+      width: 100%;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 8px;
+      align-items: center;
+      min-height: 40px;
+      padding: 8px;
+      border: 1px solid transparent;
+      border-radius: 7px;
+      background: transparent;
+      color: inherit;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .case-button:hover,
+    .case-button.active {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.16);
+    }
+
+    .case-button .id {
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .case-button .name {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 13px;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: #64748b;
+    }
+
+    .dot.done {
+      background: #22c55e;
+    }
+
+    .dot.priority {
+      outline: 2px solid #fbbf24;
+      outline-offset: 1px;
+    }
+
+    .main {
+      min-width: 0;
+      padding: 18px;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .title-group {
+      min-width: 0;
+    }
+
+    .title-group h2 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+
+    .meta-line {
+      color: var(--muted);
+      margin-top: 4px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 13px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .button {
+      min-height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 7px 11px;
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      box-shadow: var(--shadow);
+    }
+
+    .button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    .button:disabled {
+      opacity: 0.55;
+      cursor: default;
+    }
+
+    .save-state {
+      min-width: 120px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(280px, 420px) 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      min-width: 0;
+    }
+
+    .panel-header {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .panel-header h3 {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.2;
+    }
+
+    .panel-body {
+      padding: 14px;
+    }
+
+    .stack {
+      display: grid;
+      gap: 14px;
+    }
+
+    .prebox {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      margin: 0;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.5;
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 10px;
+      max-height: 360px;
+      overflow: auto;
+    }
+
+    .checklist {
+      margin: 0;
+      padding-left: 18px;
+      display: grid;
+      gap: 6px;
+      color: #26323f;
+    }
+
+    .checklist li::marker {
+      color: var(--accent);
+    }
+
+    details {
+      border-top: 1px solid var(--line);
+      padding: 10px 14px;
+    }
+
+    details:first-of-type {
+      border-top: 0;
+    }
+
+    summary {
+      cursor: pointer;
+      color: var(--text);
+      font-weight: 650;
+    }
+
+    .model-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      border-radius: 999px;
+      padding: 3px 9px;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      background: var(--surface-2);
+      white-space: nowrap;
+    }
+
+    .badge.ok {
+      color: var(--ok);
+      background: #e9f8ef;
+      border-color: #b7e4c7;
+    }
+
+    .badge.fail {
+      color: var(--danger);
+      background: #fff0f0;
+      border-color: #f5c2c0;
+    }
+
+    .badge.warn {
+      color: var(--warn);
+      background: #fff8e6;
+      border-color: #f1d08a;
+    }
+
+    .review-form {
+      display: grid;
+      gap: 9px;
+      margin-top: 12px;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: minmax(110px, 1fr) minmax(120px, 170px);
+      align-items: center;
+      gap: 8px;
+    }
+
+    label {
+      color: #26323f;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: white;
+      color: var(--text);
+    }
+
+    select {
+      min-height: 34px;
+      padding: 5px 8px;
+    }
+
+    textarea {
+      min-height: 92px;
+      resize: vertical;
+      padding: 8px 9px;
+      line-height: 1.4;
+    }
+
+    .messages {
+      display: grid;
+      gap: 6px;
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .messages.fail {
+      color: var(--danger);
+    }
+
+    .messages.warn {
+      color: var(--warn);
+    }
+
+    .decision {
+      margin-top: 14px;
+    }
+
+    .decision-grid {
+      display: grid;
+      grid-template-columns: minmax(180px, 260px) 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .empty {
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    @media (max-width: 980px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+        height: auto;
+        max-height: 260px;
+      }
+
+      .layout,
+      .model-grid,
+      .decision-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .toolbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .actions {
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <h1>Revisione chiarezza</h1>
+        <div class="counter" id="progressCounter">0/0</div>
+      </div>
+      <div class="case-list" id="caseList"></div>
+    </aside>
+
+    <main class="main">
+      <div class="toolbar">
+        <div class="title-group">
+          <h2 id="caseTitle">Caricamento</h2>
+          <div class="meta-line" id="caseMeta"></div>
+        </div>
+        <div class="actions">
+          <button class="button" id="prevButton" type="button">Precedente</button>
+          <button class="button" id="nextButton" type="button">Successivo</button>
+          <button class="button primary" id="saveButton" type="button">Salva</button>
+          <span class="save-state" id="saveState">Non salvato</span>
+        </div>
+      </div>
+
+      <div class="layout">
+        <section class="panel" aria-labelledby="packetTitle">
+          <div class="panel-header">
+            <h3 id="packetTitle">Caso</h3>
+            <span class="badge" id="caseStatus">status</span>
+          </div>
+          <div class="panel-body stack">
+            <div>
+              <h3>Testo originale</h3>
+              <pre class="prebox" id="inputText"></pre>
+            </div>
+          </div>
+          <details open>
+            <summary>Criticita' attese</summary>
+            <ul class="checklist" id="expectedIssues"></ul>
+          </details>
+          <details open>
+            <summary>Da non cambiare</summary>
+            <ul class="checklist" id="legalInvariants"></ul>
+          </details>
+          <details>
+            <summary>Errori vietati</summary>
+            <ul class="checklist" id="forbiddenChanges"></ul>
+          </details>
+          <details>
+            <summary>Note</summary>
+            <div class="panel-body" id="humanNotes"></div>
+          </details>
+        </section>
+
+        <section class="stack">
+          <div class="model-grid" id="modelGrid"></div>
+
+          <section class="panel decision">
+            <div class="panel-header">
+              <h3>Decisione sul caso</h3>
+              <span class="badge warn" id="priorityBadge">priorita'</span>
+            </div>
+            <div class="panel-body decision-grid">
+              <div>
+                <label for="finalStatus">Stato finale</label>
+                <select id="finalStatus"></select>
+              </div>
+              <div>
+                <label for="caseNotes">Note finali</label>
+                <textarea id="caseNotes" placeholder="Es. GLM aggiunge un fatto; Opus ok ma troppo prolisso."></textarea>
+              </div>
+            </div>
+          </section>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const criterionOptions = [
+      ["", "Da decidere"],
+      ["ok", "OK"],
+      ["problem", "Problema"],
+      ["unsure", "Non so"]
+    ];
+
+    const modelDecisionOptions = [
+      ["", "Da decidere"],
+      ["usable", "Usabile"],
+      ["minor_issue", "Piccolo problema"],
+      ["major_issue", "Problema serio"],
+      ["reject", "Scarta"]
+    ];
+
+    const criterionLabels = {
+      legal_meaning: "Senso giuridico",
+      no_new_facts: "Niente invenzioni",
+      clarity: "Chiarezza",
+      format: "Formato"
+    };
+
+    let reviewData = null;
+    let reviews = {version: 1, updated_at: null, reviews: {}};
+    let currentIndex = 0;
+    let saveTimer = null;
+
+    const byId = (id) => document.getElementById(id);
+
+    function textNodeList(parent, items) {
+      parent.innerHTML = "";
+      if (!items || items.length === 0) {
+        const li = document.createElement("li");
+        li.className = "empty";
+        li.textContent = "Nessuna voce.";
+        parent.appendChild(li);
+        return;
+      }
+      items.forEach((text) => {
+        const li = document.createElement("li");
+        li.textContent = text;
+        parent.appendChild(li);
+      });
+    }
+
+    function optionList(select, options, value) {
+      select.innerHTML = "";
+      options.forEach(([optionValue, label]) => {
+        const option = document.createElement("option");
+        option.value = optionValue;
+        option.textContent = label;
+        select.appendChild(option);
+      });
+      select.value = value || "";
+    }
+
+    function currentCase() {
+      return reviewData.cases[currentIndex];
+    }
+
+    function defaultModelReview() {
+      return {
+        legal_meaning: "",
+        no_new_facts: "",
+        clarity: "",
+        format: "",
+        decision: "",
+        notes: ""
+      };
+    }
+
+    function ensureCaseReview(caseId) {
+      if (!reviews.reviews[caseId]) {
+        reviews.reviews[caseId] = {
+          final_status: "",
+          notes: "",
+          models: {}
+        };
+      }
+      reviewData.models.forEach((model) => {
+        if (!reviews.reviews[caseId].models[model.id]) {
+          reviews.reviews[caseId].models[model.id] = defaultModelReview();
+        }
+      });
+      return reviews.reviews[caseId];
+    }
+
+    function isCaseReviewed(caseId) {
+      const review = reviews.reviews[caseId];
+      return Boolean(review && (review.final_status || review.notes));
+    }
+
+    function reviewedCount() {
+      return reviewData.cases.filter((item) => isCaseReviewed(item.id)).length;
+    }
+
+    function renderSidebar() {
+      const list = byId("caseList");
+      list.innerHTML = "";
+      reviewData.cases.forEach((item, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "case-button" + (index === currentIndex ? " active" : "");
+        button.addEventListener("click", () => {
+          currentIndex = index;
+          renderCase();
+        });
+
+        const id = document.createElement("span");
+        id.className = "id";
+        id.textContent = item.id;
+
+        const name = document.createElement("span");
+        name.className = "name";
+        name.textContent = item.title;
+
+        const dot = document.createElement("span");
+        dot.className = "dot";
+        if (item.priority) dot.classList.add("priority");
+        if (isCaseReviewed(item.id)) dot.classList.add("done");
+
+        button.append(id, name, dot);
+        list.appendChild(button);
+      });
+      byId("progressCounter").textContent = `${reviewedCount()}/${reviewData.cases.length}`;
+    }
+
+    function badgeForCheck(check) {
+      if (!check || !check.available && !check.output) return ["fail", "non trovato"];
+      if (check.automatic_check && check.automatic_check.passed) return ["ok", "check OK"];
+      return ["fail", "check fail"];
+    }
+
+    function renderMessages(title, items, className) {
+      const wrap = document.createElement("div");
+      const label = document.createElement("label");
+      label.textContent = title;
+      const list = document.createElement("ul");
+      list.className = `messages ${className || ""}`;
+      if (!items || items.length === 0) {
+        const li = document.createElement("li");
+        li.className = "empty";
+        li.textContent = "Nessuna voce.";
+        list.appendChild(li);
+      } else {
+        items.forEach((item) => {
+          const li = document.createElement("li");
+          li.textContent = item;
+          list.appendChild(li);
+        });
+      }
+      wrap.append(label, list);
+      return wrap;
+    }
+
+    function bindModelSelect(select, caseId, modelId, key) {
+      select.addEventListener("change", () => {
+        ensureCaseReview(caseId).models[modelId][key] = select.value;
+        markDirty();
+        renderSidebar();
+      });
+    }
+
+    function renderModelPanel(caseItem, model) {
+      const output = reviewData.outputs[caseItem.id][model.id];
+      const review = ensureCaseReview(caseItem.id).models[model.id];
+      const [badgeClass, badgeText] = badgeForCheck(output);
+
+      const panel = document.createElement("section");
+      panel.className = "panel";
+
+      const header = document.createElement("div");
+      header.className = "panel-header";
+      const title = document.createElement("h3");
+      title.textContent = model.label;
+      const badge = document.createElement("span");
+      badge.className = `badge ${badgeClass}`;
+      badge.textContent = badgeText;
+      header.append(title, badge);
+
+      const body = document.createElement("div");
+      body.className = "panel-body";
+
+      const pre = document.createElement("pre");
+      pre.className = "prebox";
+      pre.textContent = output.output || `Output non trovato: ${output.path}`;
+
+      const check = output.automatic_check || {};
+      const messages = document.createElement("div");
+      messages.className = "stack";
+      messages.append(
+        renderMessages("Problemi automatici", check.fatal_failures || [], "fail"),
+        renderMessages("Avvisi", check.warnings || [], "warn")
+      );
+
+      const form = document.createElement("div");
+      form.className = "review-form";
+      Object.entries(criterionLabels).forEach(([key, labelText]) => {
+        const row = document.createElement("div");
+        row.className = "field-row";
+        const label = document.createElement("label");
+        label.textContent = labelText;
+        const select = document.createElement("select");
+        optionList(select, criterionOptions, review[key]);
+        bindModelSelect(select, caseItem.id, model.id, key);
+        row.append(label, select);
+        form.appendChild(row);
+      });
+
+      const decisionRow = document.createElement("div");
+      decisionRow.className = "field-row";
+      const decisionLabel = document.createElement("label");
+      decisionLabel.textContent = "Decisione output";
+      const decisionSelect = document.createElement("select");
+      optionList(decisionSelect, modelDecisionOptions, review.decision);
+      bindModelSelect(decisionSelect, caseItem.id, model.id, "decision");
+      decisionRow.append(decisionLabel, decisionSelect);
+      form.appendChild(decisionRow);
+
+      const notesLabel = document.createElement("label");
+      notesLabel.textContent = "Note modello";
+      const notes = document.createElement("textarea");
+      notes.value = review.notes || "";
+      notes.placeholder = "Es. conserva il senso, ma introduce una fonte non richiesta.";
+      notes.addEventListener("input", () => {
+        ensureCaseReview(caseItem.id).models[model.id].notes = notes.value;
+        markDirty();
+      });
+      form.append(notesLabel, notes);
+
+      body.append(pre, messages, form);
+      panel.append(header, body);
+      return panel;
+    }
+
+    function renderFinalStatus(caseItem) {
+      const review = ensureCaseReview(caseItem.id);
+      const finalStatus = byId("finalStatus");
+      finalStatus.innerHTML = "";
+      reviewData.status_options.forEach((item) => {
+        const option = document.createElement("option");
+        option.value = item.value;
+        option.textContent = item.label;
+        finalStatus.appendChild(option);
+      });
+      finalStatus.value = review.final_status || "";
+      finalStatus.onchange = () => {
+        ensureCaseReview(caseItem.id).final_status = finalStatus.value;
+        markDirty();
+        renderSidebar();
+      };
+
+      const notes = byId("caseNotes");
+      notes.value = review.notes || "";
+      notes.oninput = () => {
+        ensureCaseReview(caseItem.id).notes = notes.value;
+        markDirty();
+        renderSidebar();
+      };
+    }
+
+    function renderCase() {
+      const item = currentCase();
+      ensureCaseReview(item.id);
+      window.location.hash = item.id;
+
+      byId("caseTitle").textContent = `${item.id} - ${item.title}`;
+      byId("caseMeta").innerHTML = "";
+      [item.document_type, item.priority ? "priorita'" : "standard"].forEach((text) => {
+        const span = document.createElement("span");
+        span.className = "badge";
+        span.textContent = text;
+        byId("caseMeta").appendChild(span);
+      });
+      byId("caseStatus").textContent = item.adjudication_status;
+      byId("priorityBadge").style.display = item.priority ? "inline-flex" : "none";
+      byId("inputText").textContent = item.input_text;
+      textNodeList(byId("expectedIssues"), item.expected_issues);
+      textNodeList(byId("legalInvariants"), item.legal_invariants);
+      textNodeList(byId("forbiddenChanges"), item.forbidden_changes);
+      byId("humanNotes").textContent = item.human_notes || item.validation_rationale || "";
+
+      const modelGrid = byId("modelGrid");
+      modelGrid.innerHTML = "";
+      reviewData.models.forEach((model) => {
+        modelGrid.appendChild(renderModelPanel(item, model));
+      });
+
+      renderFinalStatus(item);
+      byId("prevButton").disabled = currentIndex === 0;
+      byId("nextButton").disabled = currentIndex === reviewData.cases.length - 1;
+      renderSidebar();
+    }
+
+    function markDirty() {
+      byId("saveState").textContent = "Da salvare";
+      if (saveTimer) window.clearTimeout(saveTimer);
+      saveTimer = window.setTimeout(saveReviews, 900);
+    }
+
+    async function saveReviews() {
+      if (!reviewData) return;
+      byId("saveState").textContent = "Salvataggio...";
+      const response = await fetch("/api/reviews", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({reviews: reviews.reviews})
+      });
+      if (!response.ok) {
+        const payload = await response.json().catch(() => ({error: "Errore sconosciuto"}));
+        byId("saveState").textContent = payload.error || "Errore";
+        return;
+      }
+      reviews = await response.json();
+      byId("saveState").textContent = "Salvato";
+      renderSidebar();
+    }
+
+    async function loadApp() {
+      const [dataResponse, reviewsResponse] = await Promise.all([
+        fetch("/api/review-data"),
+        fetch("/api/reviews")
+      ]);
+      reviewData = await dataResponse.json();
+      reviews = await reviewsResponse.json();
+      const hash = decodeURIComponent(window.location.hash.replace(/^#/, ""));
+      const hashIndex = reviewData.cases.findIndex((item) => item.id === hash);
+      currentIndex = hashIndex >= 0 ? hashIndex : reviewData.cases.findIndex((item) => item.priority);
+      if (currentIndex < 0) currentIndex = 0;
+      renderCase();
+    }
+
+    byId("prevButton").addEventListener("click", () => {
+      if (currentIndex > 0) {
+        currentIndex -= 1;
+        renderCase();
+      }
+    });
+
+    byId("nextButton").addEventListener("click", () => {
+      if (currentIndex < reviewData.cases.length - 1) {
+        currentIndex += 1;
+        renderCase();
+      }
+    });
+
+    byId("saveButton").addEventListener("click", saveReviews);
+
+    loadApp().catch((error) => {
+      byId("caseTitle").textContent = "Errore di caricamento";
+      byId("caseMeta").textContent = error.message;
+    });
+  </script>
+</body>
+</html>
