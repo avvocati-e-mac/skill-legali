@@ -67,6 +67,15 @@ Quando una procedura dipende dal runtime, differenzia sempre in modo esplicito:
 - **File chiave:** `Gestiolex Corpus/gestiolex-corpus/SKILL.md`, `Gestiolex Corpus/gestiolex-corpus/references/query-patterns.md`
 - **File installazione Claude:** `Gestiolex Corpus/gestiolex-corpus.skill`
 
+### memo-legale-strutturato
+
+- **Cartella:** `memo-legale-strutturato/`
+- **Scopo:** redige memo legali italiani chiari, sintetici e operativi per uso interno dell'avvocato o dello studio
+- **Trigger:** memo legale, memorandum, parere interno, nota per avvocato, case assessment, legal risk assessment, strategia precontenziosa/processuale o trasformazione di ricerche/fonti in memo operativo
+- **Comportamento:** usa progressive disclosure per consumare pochi token, sceglie tra memo rapido/standard/complesso, adatta i modelli di legal memo al diritto italiano e verifica BuddaLaw/Perplexity quando disponibili
+- **File chiave:** `memo-legale-strutturato/memo-legale-strutturato/SKILL.md`, `memo-legale-strutturato/memo-legale-strutturato/references/`
+- **File installazione Claude:** `memo-legale-strutturato/memo-legale-strutturato.skill`
+
 ### ricerca-web-searXNG
 
 - **Cartella:** `ricerca con SearXNG e test/ricerca-web-seaXNG/`
