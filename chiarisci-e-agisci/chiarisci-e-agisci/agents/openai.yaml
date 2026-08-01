@@ -1,0 +1,7 @@
+interface:
+  display_name: "Chiarisci e agisci"
+  short_description: "Chiarisce obiettivi e trasforma il lavoro in azioni"
+  default_prompt: "Usa $chiarisci-e-agisci per aiutarmi a chiarire questo lavoro e trasformarlo in passi concreti."
+
+policy:
+  allow_implicit_invocation: true

@@ -76,6 +76,15 @@ Quando una procedura dipende dal runtime, differenzia sempre in modo esplicito:
 - **File chiave:** `memo-legale-strutturato/memo-legale-strutturato/SKILL.md`, `memo-legale-strutturato/memo-legale-strutturato/references/`
 - **File installazione Claude:** `memo-legale-strutturato/memo-legale-strutturato.skill`
 
+### chiarisci-e-agisci
+
+- **Cartella:** `chiarisci-e-agisci/`
+- **Scopo:** accompagna l'avvocato dall'incertezza alla prima azione concreta mediante domande maieutiche, scomposizione e checkpoint
+- **Trigger:** difficoltà a iniziare o organizzare un lavoro, preparazione dei prodromi alla redazione, scelta delle priorità per urgenza e importanza
+- **Comportamento:** durante il chiarimento pone domande mirate, segnala lacune e contraddizioni, distingue dati forniti/inferiti/mancanti e non modifica file o workflow senza approvazione
+- **File chiave:** `chiarisci-e-agisci/chiarisci-e-agisci/SKILL.md`, `chiarisci-e-agisci/chiarisci-e-agisci/references/`
+- **File installazione Claude:** `chiarisci-e-agisci/chiarisci-e-agisci.skill`
+
 ### ricerca-web-searXNG
 
 - **Cartella:** `ricerca con SearXNG e test/ricerca-web-seaXNG/`
