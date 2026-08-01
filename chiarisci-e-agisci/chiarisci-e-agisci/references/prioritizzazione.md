@@ -2,6 +2,8 @@
 
 Usare questo flusso quando l'utente deve ordinare più attività professionali. Trattare il punteggio come supporto alla decisione, non come decisione automatica.
 
+Prima di rispondere, sostituire nomi, codici o identificativi ricevuti con segnaposto neutrali come `[PRATICA-1]`. Non ripetere l'identificativo originale, anche quando è artificiale o già presente nel messaggio.
+
 ## Separare i criteri
 
 Valutare tre dimensioni distinte:
@@ -25,11 +27,14 @@ Per ogni attività chiarire soltanto ciò che serve:
 - rilevanza del cliente secondo criteri dichiarati dall'utente;
 - impegni già comunicati.
 
-Se una scadenza non è verificata, marcarla come tale. Non inventare date e non calcolare termini legali senza fonti adeguate.
+Se una scadenza non è verificata, marcarla come tale. Non inventare date e non calcolare termini legali senza fonti adeguate. Chiedere prima soltanto la fonte della scadenza; chiedere la conseguenza del ritardo in un turno successivo. Non unire i due dati nella stessa domanda. Usare un solo punto interrogativo complessivo: presentare eventuali esempi come testo dichiarativo, non come un'altra domanda. Non nominare questa reference nella risposta.
+Non interrogare meccanicamente tutte le dimensioni per ogni attività: chiedere prima il dato mancante che può cambiare l'ordine. Dopo tre turni senza dati decisivi, presentare una valutazione provvisoria con le lacune esplicite.
 
 ## Scala proposta
 
-Usare la scala 0–3 solo dopo averne chiesto l'approvazione:
+Prima di proporre la scala, raccogliere almeno i dati mancanti capaci di cambiare l'ordine, in particolare fonte della scadenza e conseguenza del ritardo. Non chiedere di approvare punteggi quando questi dati decisivi mancano.
+
+Usare la scala 0–3 solo dopo averne chiesto l'approvazione. L'approvazione della scala non approva l'ordine:
 
 - **0**: irrilevante o non applicabile;
 - **1**: basso;
@@ -60,4 +65,4 @@ Applicare nell'ordine:
 
 ## Checkpoint
 
-Chiedere all'utente di correggere dati e pesi prima di rendere definitivo l'ordine. Dopo l'approvazione, passare a [organizzazione-del-lavoro.md](organizzazione-del-lavoro.md) per scomporre la prima attività.
+Chiedere all'utente di correggere dati e pesi prima di rendere definitivo l'ordine. Solo dopo l'approvazione esplicita dell'ordine, e se l'utente autorizza anche la transizione, passare a [organizzazione-del-lavoro.md](organizzazione-del-lavoro.md) per scomporre la prima attività. Non aprire quel riferimento in anticipo.

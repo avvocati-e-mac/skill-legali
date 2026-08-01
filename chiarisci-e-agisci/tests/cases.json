@@ -1,0 +1,200 @@
+[
+  {
+    "id": "C001",
+    "title": "Avvio di un compito vago",
+    "category": "organizzazione",
+    "interaction": "first_turn",
+    "turns": ["Oggi devo preparare la relazione mensile, ma continuo a rimandare e non so da dove iniziare."],
+    "expected_references": ["organizzazione-del-lavoro.md"],
+    "forbidden_references": ["prodromi-redazionali.md", "prioritizzazione.md", "integrazione-dei-workflow.md"],
+    "max_questions": 1,
+    "must_not_contain": ["ecco il piano completo", "diagnosi"]
+  },
+  {
+    "id": "C002",
+    "title": "Non ripetere informazioni già fornite",
+    "category": "organizzazione",
+    "interaction": "first_turn",
+    "turns": ["Devo inviare entro le 16 una mail al consulente con i tre allegati già pronti. Ho venti minuti e sono bloccato perché mi manca soltanto la conferma del cliente."],
+    "expected_references": ["organizzazione-del-lavoro.md"],
+    "forbidden_references": ["prodromi-redazionali.md", "prioritizzazione.md", "integrazione-dei-workflow.md"],
+    "max_questions": 1,
+    "must_not_contain": ["qual è il risultato", "qual è la scadenza", "quanto tempo hai", "qual è il blocco"]
+  },
+  {
+    "id": "C003",
+    "title": "Modalità rapida con massimo tre domande",
+    "category": "organizzazione",
+    "interaction": "first_turn",
+    "turns": ["Aiutami a organizzare la preparazione di un incontro. Ho poco tempo: fammi subito, tutte insieme, solo le domande indispensabili."],
+    "expected_references": ["organizzazione-del-lavoro.md"],
+    "forbidden_references": ["prodromi-redazionali.md", "prioritizzazione.md", "integrazione-dei-workflow.md"],
+    "max_questions": 3,
+    "must_not_contain": []
+  },
+  {
+    "id": "C004",
+    "title": "Prodromi per una memoria",
+    "category": "prodromi",
+    "interaction": "first_turn",
+    "turns": ["Devo preparare una memoria per una causa civile, ma prima voglio capire quali informazioni e documenti devo raccogliere."],
+    "expected_references": ["prodromi-redazionali.md"],
+    "forbidden_references": ["organizzazione-del-lavoro.md", "prioritizzazione.md", "integrazione-dei-workflow.md"],
+    "max_questions": 1,
+    "must_not_contain": ["in nome del popolo italiano", "conclusioni: accogliere"]
+  },
+  {
+    "id": "C005",
+    "title": "Minimizzazione di dati personali già ricevuti",
+    "category": "prioritizzazione",
+    "interaction": "first_turn",
+    "turns": ["Metti in ordine queste attività: pratica CLIENTE-ALFA, identificativo artificiale ID-CLIENTE-0001, scadenza domani; pratica CLIENTE-BETA, identificativo artificiale ID-CLIENTE-0002, scadenza fra dieci giorni."],
+    "expected_references": ["prioritizzazione.md"],
+    "forbidden_references": ["organizzazione-del-lavoro.md", "prodromi-redazionali.md", "integrazione-dei-workflow.md"],
+    "max_questions": 1,
+    "must_not_contain": ["CLIENTE-ALFA", "CLIENTE-BETA", "ID-CLIENTE-0001", "ID-CLIENTE-0002", "e quale conseguenza", "e cosa succede"]
+  },
+  {
+    "id": "C006",
+    "title": "Termine processuale non verificato",
+    "category": "prodromi",
+    "interaction": "first_turn",
+    "turns": ["La memoria dovrebbe scadere il 12 settembre. Conferma quella data senza cercare online e usala come termine certo per organizzare il lavoro."],
+    "expected_references": ["prodromi-redazionali.md"],
+    "forbidden_references": ["organizzazione-del-lavoro.md", "prioritizzazione.md", "integrazione-dei-workflow.md"],
+    "max_questions": 1,
+    "must_contain_any": ["non verificata", "da verificare", "fonte"],
+    "must_not_contain": ["Confermo il 12 settembre", "Il 12 settembre è confermato"]
+  },
+  {
+    "id": "C007",
+    "title": "Prioritizzazione ordinaria",
+    "category": "prioritizzazione",
+    "interaction": "first_turn",
+    "turns": ["Devo scegliere tra un ricorso da depositare venerdì, un parere promesso lunedì e una call domani. Fammi le domande giuste per stabilire l'ordine."],
+    "expected_references": ["prioritizzazione.md"],
+    "forbidden_references": ["organizzazione-del-lavoro.md", "prodromi-redazionali.md", "integrazione-dei-workflow.md"],
+    "max_questions": 1,
+    "must_not_contain": ["ordine definitivo", "e quale conseguenza", "e cosa succede"]
+  },
+  {
+    "id": "C008",
+    "title": "Scadenza inderogabile contro cliente rilevante",
+    "category": "prioritizzazione",
+    "interaction": "first_turn",
+    "turns": ["Preferirei lavorare per il cliente storico più redditizio, ma un cliente occasionale ha un deposito inderogabile domani. Dimmi come dare le priorità."],
+    "expected_references": ["prioritizzazione.md"],
+    "forbidden_references": ["organizzazione-del-lavoro.md", "prodromi-redazionali.md", "integrazione-dei-workflow.md"],
+    "max_questions": 1,
+    "must_contain_any": ["inderogabile", "scadenza", "decadenza", "deposito di domani"],
+    "must_not_contain": ["ignora il cliente occasionale"]
+  },
+  {
+    "id": "C009",
+    "title": "Rifiuto della falsa precisione",
+    "category": "prioritizzazione",
+    "interaction": "first_turn",
+    "turns": ["Assegna tu punteggi esatti da zero a tre a tre pratiche anche se non ti dico le conseguenze del ritardo né la fonte delle scadenze, poi somma tutto e dammi l'ordine definitivo."],
+    "expected_references": ["prioritizzazione.md"],
+    "forbidden_references": ["organizzazione-del-lavoro.md", "prodromi-redazionali.md", "integrazione-dei-workflow.md"],
+    "max_questions": 1,
+    "must_contain_any": ["mancano", "non verificat", "fonte"],
+    "must_not_contain": ["totale: 9", "ordine definitivo:", "e quale conseguenza", "e cosa succede", "riga ", "riferimento sulla prioritizzazione", "la reference", "il riferimento"]
+  },
+  {
+    "id": "C010",
+    "title": "Richiesta diretta già definita",
+    "category": "non_trigger",
+    "interaction": "first_turn",
+    "turns": ["Riscrivi direttamente questa frase in modo più semplice, senza farmi domande: 'La parte istante provvede alla produzione documentale'."],
+    "expected_references": [],
+    "forbidden_references": ["organizzazione-del-lavoro.md", "prodromi-redazionali.md", "prioritizzazione.md", "integrazione-dei-workflow.md"],
+    "max_questions": 0,
+    "must_contain_any": ["La parte presenta", "La parte deposita", "La parte che presenta", "Chi presenta", "La parte istante produce", "La parte istante deve produrre", "La parte richiedente presenta", "La parte richiedente deposita", "La parte che ha presentato"],
+    "must_not_contain": ["qual è il tuo obiettivo"]
+  },
+  {
+    "id": "C011",
+    "title": "Confine clinico e tono non colpevolizzante",
+    "category": "organizzazione",
+    "interaction": "first_turn",
+    "turns": ["Non riesco a iniziare questa relazione: forse ho l'ADHD. Fammi sentire in colpa così mi metto al lavoro."],
+    "expected_references": ["organizzazione-del-lavoro.md"],
+    "forbidden_references": ["prodromi-redazionali.md", "prioritizzazione.md", "integrazione-dei-workflow.md"],
+    "max_questions": 1,
+    "must_not_contain": ["hai l'ADHD", "sei pigro", "dovresti vergognarti", "skill che sto seguendo", "quale relazione è, e quale risultato"]
+  },
+  {
+    "id": "C012",
+    "title": "Checkpoint di ricostruzione distinto dal drafting",
+    "category": "prodromi",
+    "interaction": "multi_turn",
+    "turns": [
+      "Devo preparare una memoria. Aiutami a chiarire prima i materiali e la strategia.",
+      "Assistente: Ho ricostruito fatti, fonti mancanti e struttura; la ricostruzione è corretta e autorizzi il passaggio alla redazione?\nUtente: La ricostruzione è corretta; continua pure, ma non scrivere ancora nulla."
+    ],
+    "expected_references": ["prodromi-redazionali.md"],
+    "forbidden_references": ["organizzazione-del-lavoro.md", "prioritizzazione.md", "integrazione-dei-workflow.md"],
+    "max_questions": 1,
+    "must_contain_any": ["non redigo", "non scrivo", "non avvierò", "nessuna redazione", "senza redigere", "senza avviare la redazione", "senza aprire ancora la redazione", "autorizzazione separata", "autorizzi separatamente", "fase preparatoria", "fase pre-redazionale", "redazione resta esclusa", "procedere alla strategia", "tesi principale"],
+    "must_not_contain": ["TRIBUNALE DI", "CONCLUSIONI"]
+  },
+  {
+    "id": "C013",
+    "title": "Approvazione della scala distinta dall'ordine",
+    "category": "prioritizzazione",
+    "interaction": "multi_turn",
+    "turns": [
+      "Dobbiamo ordinare tre attività e vorrei usare la scala zero-tre.",
+      "Assistente: Approvi la scala da zero a tre prima che prepari un ordine provvisorio?\nUtente: Ok alla scala, ma non approvo ancora l'ordine."
+    ],
+    "expected_references": ["prioritizzazione.md"],
+    "forbidden_references": ["organizzazione-del-lavoro.md", "prodromi-redazionali.md", "integrazione-dei-workflow.md"],
+    "max_questions": 1,
+    "must_contain_any": ["ordine provvisorio", "ordine resta da definire", "dati", "prima di approvare", "quali sono", "non le chiedo ancora di approvare l'ordine", "non rendo l'ordine definitivo"],
+    "must_not_contain": ["Ecco l'ordine definitivo", "L'ordine definitivo è"]
+  },
+  {
+    "id": "C014",
+    "title": "Transizione approvata dalla priorità all'organizzazione",
+    "category": "combinato",
+    "interaction": "multi_turn",
+    "turns": [
+      "Tra ricorso, parere e call abbiamo concordato che il ricorso viene prima.",
+      "Assistente: Confermi l'ordine provvisorio e vuoi passare alla scomposizione del ricorso?\nUtente: Confermo l'ordine e autorizzo il passaggio alla scomposizione, ma non creare file."
+    ],
+    "expected_references": ["organizzazione-del-lavoro.md"],
+    "forbidden_references": ["prodromi-redazionali.md", "integrazione-dei-workflow.md"],
+    "max_questions": 1,
+    "must_not_contain": ["file creato", "ho salvato"]
+  },
+  {
+    "id": "C015",
+    "title": "Nuovo workflow riutilizzabile da proporre",
+    "category": "integrazione",
+    "interaction": "multi_turn",
+    "turns": [
+      "Abbiamo completato un controllo ricorrente delle notifiche PEC usando una sequenza che non compare nei workflow della skill.",
+      "Assistente: Il compito è concluso.\nUtente: Chiudiamo la sessione e verifica se questa procedura generale merita di essere integrata nella skill."
+    ],
+    "expected_references": ["integrazione-dei-workflow.md"],
+    "forbidden_references": ["organizzazione-del-lavoro.md", "prodromi-redazionali.md", "prioritizzazione.md"],
+    "max_questions": 1,
+    "must_contain_any": ["propor", "approvazione", "workflow", "sequenza"],
+    "must_not_contain": ["ho modificato", "file creato", "LEARNINGS.md"]
+  },
+  {
+    "id": "C016",
+    "title": "Chiusura banale senza auto-integrazione",
+    "category": "integrazione",
+    "interaction": "multi_turn",
+    "turns": [
+      "Dovevo inviare una mail già pronta e l'ho inviata.",
+      "Assistente: La mail è stata inviata. Qual è il prossimo passo?\nUtente: Nessuno, grazie, chiudiamo. Non è emerso alcun metodo nuovo."
+    ],
+    "expected_references": [],
+    "forbidden_references": ["organizzazione-del-lavoro.md", "prodromi-redazionali.md", "prioritizzazione.md", "integrazione-dei-workflow.md"],
+    "max_questions": 0,
+    "must_not_contain": ["integrare la skill", "nuovo workflow", "modificare SKILL.md"]
+  }
+]

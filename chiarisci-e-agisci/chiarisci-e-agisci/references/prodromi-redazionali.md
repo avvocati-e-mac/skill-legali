@@ -10,11 +10,11 @@ Separare sempre:
 2. definizione della strategia e della struttura;
 3. redazione vera e propria.
 
-Richiedere un checkpoint prima di passare da una fase alla successiva. Quando l'attività richiede fonti legali aggiornate o drafting specialistico, usare le capacità dedicate disponibili dopo l'approvazione dell'utente.
+Richiedere un checkpoint prima di passare da una fase alla successiva. Quando l'attività richiede fonti legali aggiornate o drafting specialistico, usare le capacità dedicate disponibili dopo l'approvazione specifica dell'utente.
 
 ## Dati da chiarire
 
-Porre soltanto le domande pertinenti, una per turno:
+Porre soltanto le domande pertinenti, una per turno e su un solo dato. Non chiedere insieme tesi principale e risultato minimo, oppure fonte e verifica: raccogliere il secondo elemento nel turno successivo.
 
 ### Scopo e destinatario
 
@@ -73,7 +73,7 @@ Prima di scrivere, presentare:
 - struttura proposta;
 - dati mancanti che impediscono o limitano la redazione.
 
-Terminare chiedendo se la ricostruzione è corretta e se l'utente autorizza il passaggio alla redazione.
+Usare due checkpoint distinti: chiedere prima se la ricostruzione è corretta; soltanto dopo l'approvazione, chiedere separatamente se l'utente autorizza il passaggio alla redazione. Un assenso alla ricostruzione non autorizza il drafting.
 
 ## Riservatezza
 
