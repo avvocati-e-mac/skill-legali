@@ -58,23 +58,63 @@ https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:{tipo}:{YYYY-MM-DD};{numero
 
 | Nome                  | Sigla       | Tipo URN          | Data           | Numero | All. |
 |-----------------------|-------------|-------------------|----------------|--------|:----:|
+| Preleggi              | disp. prel. | `regio.decreto`   | `1942-03-16`   | `262`  | `:1` |
 | Codice Civile         | c.c.        | `regio.decreto`   | `1942-03-16`   | `262`  | `:2` |
 | Cod. Proc. Civile     | c.p.c.      | `regio.decreto`   | `1940-10-28`   | `1443` | `:1` |
 | Codice Penale         | c.p.        | `regio.decreto`   | `1930-10-19`   | `1398` | `:1` |
 | Cod. Proc. Penale     | c.p.p.      | `decreto.del.presidente.della.repubblica` | `1988-09-22` | `447` | — |
-| Legge Fallimentare    | l.fall.     | `regio.decreto`   | `1942-01-16`   | `267`  | `:1` |
+| Cod. Proc. Amministrativo | c.p.a.  | `decreto.legislativo` | `2010-07-02` | `104` | `:2` |
+| Legge Fallimentare    | l.fall.     | `regio.decreto`   | `1942-03-16`   | `267`  | `:1` |
 | Costituzione          | Cost.       | `costituzione`    | `1947-12-27`   | —      | — |
 | Statuto Lavoratori    | L. 300/1970 | `legge`           | `1970-05-20`   | `300`  | — |
+| L. 241/1990 (proc. amm.) | —        | `legge`           | `1990-08-07`   | `241`  | — |
 | D.Lgs. 231/2001       | —           | `decreto.legislativo` | `2001-06-08` | `231` | — |
 | D.Lgs. 196/2003 (Privacy) | —       | `decreto.legislativo` | `2003-06-30` | `196` | — |
 | D.Lgs. 81/2008 (Sic. Lav.) | —      | `decreto.legislativo` | `2008-04-09` | `81`  | — |
 
-> Per altri atti (D.Lgs. 36/2023, TUEL, T.U.I.R., ecc.) leggi `references/lookup-extended.md`.
+> Per altri atti (codice della strada, ambiente, appalti, TUEL, T.U.I.R.,
+> mediazione, spese di giustizia, locazioni, famiglia…) leggi
+> `references/lookup-extended.md`.
+> Tutte le voci sono state verificate contro Normattiva il **2026-08-06**.
 
 ### Tipo atto (principali)
 
 `legge` · `regio.decreto` · `decreto.legislativo` · `decreto.legge` ·
 `decreto.del.presidente.della.repubblica` · `costituzione`
+
+I **decreti ministeriali non sono su Normattiva** (compreso il d.m. 55/2014 sui
+parametri forensi): non produrre link per quelli.
+
+---
+
+## Tre regole da non sbagliare
+
+**1. «bis» e «ter» si scrivono attaccati.** `~art2645ter`, non `~art2645-ter`.
+Col trattino il link non arriva all'articolo.
+
+**2. Il comma non si mette nel link.** Si linka **l'articolo intero** e il comma
+si scrive nell'etichetta. Le forme con `-com` e `-let` non funzionano, e non
+danno nemmeno un errore: aprono la stessa pagina dell'articolo.
+
+```markdown
+[art. 7, co. 1, L. 300/1970](https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:legge:1970-05-20;300~art7)
+```
+
+**3. Se una norma è abrogata, dillo e proponi la versione dell'epoca.** Aggiungi
+`!vig=` con la data dei fatti e indica quale versione stai citando. Vale in
+particolare per **T.U.I.R. e IVA, riformati nel 2026**, per la legge fallimentare
+e per il vecchio codice appalti.
+
+> ### Due avvertenze che valgono più delle regole
+>
+> **L'anno è l'unica parte che non puoi sbagliare.** Normattiva tollera un tipo
+> di atto o un giorno sbagliati e apre lo stesso l'atto giusto; con un **anno**
+> sbagliato apre **un atto diverso**, senza alcun avviso. Se non sei sicuro
+> dell'anno, dillo invece di produrre un link plausibile.
+>
+> **Che un link si apra non prova che sia giusto.** Normattiva risponde con una
+> pagina anche a riferimenti inesistenti. Il modo di verificare davvero è in
+> `references/api-e-verifica.md`.
 
 ---
 
@@ -114,10 +154,13 @@ Consulta la tabella "Norme abrogate o integralmente riformate" in `references/lo
 [art. 2051 c.c.](https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;262:2~art2051)
 [art. 83 c.p.c.](https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1940-10-28;1443:1~art83)
 [art. 30bis c.p.c.](https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1940-10-28;1443:1~art30bis)
-[art. 42 l.fall.](https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-01-16;267:1~art42)
+[art. 42 l.fall.](https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;267:1~art42)
 [art. 24 Cost.](https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:costituzione:1947-12-27~art24)
 [art. 35, L. 300/1970](https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:legge:1970-05-20;300~art35)
-[art. 7, co. 1, L. 300/1970](https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:legge:1970-05-20;300~art7-com1)
+[art. 7, co. 1, L. 300/1970](https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:legge:1970-05-20;300~art7)
+[art. 422 cod. nav.](https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-30;327:1~art422)
+[art. 29 c.p.a.](https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2010-07-02;104:2~art29)
+[art. 12 disp. prel.](https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;262:1~art12)
 ```
 
 ---
@@ -163,7 +206,11 @@ LOOKUP (tipo | data | numero | allegato):
 - c.p.c.         → regio.decreto | 1940-10-28 | 1443 | :1
 - c.p.           → regio.decreto | 1930-10-19 | 1398 | :1
 - c.p.p.         → decreto.del.presidente.della.repubblica | 1988-09-22 | 447 | (nessuno)
-- l.fall.        → regio.decreto | 1942-01-16 | 267  | :1  ⚠️ ABROGATA dal 15/07/2022
+- l.fall.        → regio.decreto | 1942-03-16 | 267  | :1  ⚠️ ABROGATA dal 15/07/2022
+- disp. prel.    → regio.decreto | 1942-03-16 | 262  | :1  (preleggi, art. 12 interpretazione)
+- c.p.a.         → decreto.legislativo | 2010-07-02 | 104 | :2
+- cod. nav.      → regio.decreto | 1942-03-30 | 327  | :1
+- L.241/1990     → legge         | 1990-08-07 | 241  | (nessuno)
 - Cost.          → costituzione  | 1947-12-27 | —    | (nessuno)
 - L.300/1970     → legge         | 1970-05-20 | 300  | (nessuno)
 - D.Lgs.231/2001 → decreto.legislativo | 2001-06-08 | 231 | (nessuno)
@@ -171,8 +218,10 @@ LOOKUP (tipo | data | numero | allegato):
 - D.Lgs.81/2008  → decreto.legislativo | 2008-04-09 | 81  | (nessuno)
 - D.Lgs.14/2019  → decreto.legislativo | 2019-01-12 | 14  | (nessuno)  [sostituisce l.fall. dal 15/07/2022]
 
-Per articoli "bis/ter": ~art30bis, ~art1ter ecc.
-Per comma: ~art{N}-com{C}
+Per articoli "bis/ter": ~art30bis, ~art1ter ecc. — SEMPRE attaccati, mai ~art30-bis.
+NON mettere MAI il comma o la lettera nell'URN: -comN e -letX non funzionano.
+Il comma va solo nell'etichetta: [art. 7, co. 1, L. 300/1970](...~art7)
+I decreti ministeriali NON sono su Normattiva: non produrre link per quelli.
 Per versioni storiche: aggiungi !vig=AAAA-MM-GG in coda (es. ~art18!vig=2015-03-06)
 
 NORME ABROGATE — segnala in output:
