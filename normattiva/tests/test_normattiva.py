@@ -35,14 +35,16 @@ def build_urn_link(
     Implementa la logica di composizione URN-NIR della skill normattiva.
 
     Pattern:
-        stato:{tipo}:{data};{numero}[:{allegato}][~art{N}[suffix][-com{C}][-let{L}]][!vig=AAAA-MM-GG]
+        stato:{tipo}:{data};{numero}[:{allegato}][~art{N}[suffix]][!vig=AAAA-MM-GG]
 
     Regole:
     - allegato (:N) va dopo il numero per i Regi Decreti storici (c.c., c.p.c., c.p., l.fall.)
     - articolo (art~N) va dopo l'allegato
-    - art_suffix (bis, ter, septies…) va attaccato al numero articolo
-    - comma (-comN) va dopo articolo
-    - lettera (-letX) va dopo comma
+    - art_suffix (bis, ter, septies…) va attaccato al numero articolo, SENZA trattino
+    - comma e lettera NON entrano nell'URN: verificato il 2026-08-06 che
+      `-comN` e `-letX` non producono alcun effetto sul portale (pagina
+      byte-identica a quella senza) e danno errore sull'API. Il comma si
+      indica nell'etichetta del link, non nell'URL.
     - !vig=data va sempre in coda, dopo tutto il resto
     - Costituzione: nessun numero nell'URN
     - Nessun URL-encoding di : ; ~ ! =
@@ -58,10 +60,7 @@ def build_urn_link(
         fragment = f"~art{articolo}"
         if art_suffix:
             fragment += art_suffix
-        if comma is not None:
-            fragment += f"-com{comma}"
-            if lettera is not None:
-                fragment += f"-let{lettera}"
+        # comma e lettera sono deliberatamente ignorati: vedi docstring
         urn += fragment
 
     if data_storica is not None:
@@ -199,22 +198,35 @@ def test_articolo_nel_frammento(case):
         )
 
 
-def test_comma_nel_frammento(case):
-    """Se comma è specificato, -comN deve essere presente nell'URL."""
-    if case.get("comma") is not None:
-        expected = f"-com{case['comma']}"
-        assert expected in case["url_atteso"], (
-            f"Frammento comma '{expected}' mancante in: {case['url_atteso']}"
-        )
+def test_comma_mai_nel_frammento(case):
+    """Il comma non entra MAI nell'URN.
+
+    Verificato contro Normattiva il 2026-08-06: `~art7-com1` apre una pagina
+    byte-identica a `~art7` (il portale ignora il frammento) e dà errore
+    sull'API. Il comma si indica nell'etichetta del link, non nell'URL.
+    """
+    assert "-com" not in case["url_atteso"], (
+        f"Il comma non deve entrare nell'URN: {case['url_atteso']}"
+    )
 
 
-def test_lettera_nel_frammento(case):
-    """Se lettera è specificata, -letX deve essere presente nell'URL."""
-    if case.get("lettera") is not None:
-        expected = f"-let{case['lettera']}"
-        assert expected in case["url_atteso"], (
-            f"Frammento lettera '{expected}' mancante in: {case['url_atteso']}"
-        )
+def test_lettera_mai_nel_frammento(case):
+    """La lettera non entra MAI nell'URN. Stessa verifica del comma."""
+    assert "-let" not in case["url_atteso"], (
+        f"La lettera non deve entrare nell'URN: {case['url_atteso']}"
+    )
+
+
+def test_bis_ter_senza_trattino(case):
+    """`bis`/`ter` vanno attaccati al numero: `~art2645ter`, non `~art2645-ter`.
+
+    Verificato il 2026-08-06: col trattino l'API dà errore e il portale apre
+    una pagina che non aggancia l'articolo.
+    """
+    assert not re.search(
+        r"~art\d+-(bis|ter|quater|quinquies|sexies|septies|octies)",
+        case["url_atteso"],
+    ), f"Suffisso staccato dal numero d'articolo: {case['url_atteso']}"
 
 
 def test_tipo_atto_corretto(case):

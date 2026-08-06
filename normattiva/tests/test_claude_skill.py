@@ -60,7 +60,7 @@ CASES: list[TestCase] = [
         query="Cita l'art. 42 della legge fallimentare sullo spossessamento del fallito.",
         checks=[
             {"type": "contains_url",
-             "pattern": r"normattiva\.it.*regio\.decreto:1942-01-16;267:1~art42"},
+             "pattern": r"normattiva\.it.*regio\.decreto:1942-03-16;267:1~art42"},
             {"type": "contains_text",
              "pattern": r"(?i)(abrogate?|non.*pi[uù].*vigente|15.?07.?2022|luglio.*2022|codice.*crisi)"},
         ],
@@ -149,7 +149,7 @@ CASES: list[TestCase] = [
         ),
         checks=[
             {"type": "contains_url",
-             "pattern": r"normattiva\.it.*262:2~art2477-com3!vig=201[0-3]-\d{2}-\d{2}"},
+             "pattern": r"normattiva\.it.*262:2~art2477!vig=201[0-3]-\d{2}-\d{2}"},
         ],
     ),
     TestCase(

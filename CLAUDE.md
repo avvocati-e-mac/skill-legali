@@ -46,8 +46,16 @@ Quando una procedura dipende dal runtime, differenzia sempre in modo esplicito:
 - **Scopo:** genera link cliccabili verso [Normattiva.it](https://www.normattiva.it) per ogni riferimento normativo italiano nel testo, usando il formato URN-NIR
 - **Trigger:** qualsiasi risposta che contiene citazioni normative (art. X c.c., d.lgs., legge n., r.d., d.p.r., Cost., ecc.)
 - **Comportamento:** l'assistente non produce riferimenti normativi "nudi": ogni citazione diventa un link inline
-- **File chiave:** `normattiva/normattiva/SKILL.md`, `normattiva/normattiva/references/lookup-extended.md`
+- **File chiave:** `normattiva/normattiva/SKILL.md`, `normattiva/normattiva/references/lookup-extended.md`, `normattiva/normattiva/references/api-e-verifica.md`
 - **File installazione Claude:** `normattiva/normattiva.skill`
+- **Lookup verificata contro l'API Normattiva il 2026-08-06.** Ogni voce e' stata
+  interrogata davvero e restituisce l'articolo richiesto. Il metodo, i limiti e le
+  trappole note (un URN sbagliato apre spesso una pagina plausibile) sono in
+  `references/api-e-verifica.md`.
+- **Prima di modificare la lookup**, esegui il livello C dei test:
+  `NORMATTIVA_LIVE=1 pytest normattiva/tests/test_api_live.py`. I test strutturali
+  da soli non possono accorgersi di un URN formalmente perfetto che punta al nulla:
+  e' cosi' che due errori sono sopravvissuti fino al 2026-08-06.
 
 ### buddalaw
 
