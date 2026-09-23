@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Revisione cieca A/B</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4f6f8;
+      --surface: #ffffff;
+      --surface-2: #eef2f6;
+      --text: #17202a;
+      --muted: #5b6672;
+      --line: #d9e0e7;
+      --accent: #1b6ca8;
+      --shadow: 0 1px 2px rgba(16, 24, 40, 0.08);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    button, select, textarea { font: inherit; }
+
+    .wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .topbar h1 {
+      font-size: 19px;
+      margin: 0;
+    }
+
+    .progress-line {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .progress-bar {
+      width: 160px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--surface-2);
+      overflow: hidden;
+      border: 1px solid var(--line);
+    }
+
+    .progress-bar > div {
+      height: 100%;
+      background: var(--accent);
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .button {
+      min-height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 7px 12px;
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      box-shadow: var(--shadow);
+    }
+
+    .button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    .button:disabled { opacity: 0.5; cursor: default; }
+
+    .save-state {
+      min-width: 100px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      margin-bottom: 14px;
+    }
+
+    .panel-header {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .panel-header h2 { margin: 0; font-size: 15px; }
+
+    .panel-body { padding: 14px; }
+
+    .meta-line {
+      color: var(--muted);
+      font-size: 13px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .prebox {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      margin: 0;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.5;
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 10px;
+      max-height: 460px;
+      overflow: auto;
+    }
+
+    .columns {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .column-title {
+      font-weight: 700;
+      font-size: 15px;
+      margin-bottom: 8px;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: minmax(140px, 1fr) minmax(120px, 150px);
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    label { color: #26323f; font-weight: 600; font-size: 13px; }
+
+    select, textarea, input[type="text"] {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: white;
+      color: var(--text);
+    }
+
+    select { min-height: 34px; padding: 5px 8px; }
+
+    textarea {
+      min-height: 60px;
+      resize: vertical;
+      padding: 8px 9px;
+      line-height: 1.4;
+    }
+
+    .fatti-row {
+      display: grid;
+      grid-template-columns: minmax(140px, 1fr) minmax(120px, 150px);
+      align-items: start;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .fatti-nota { margin-top: 6px; }
+
+    .preferenza-options {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin: 8px 0 12px;
+    }
+
+    .preferenza-options label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .empty {
+      color: var(--muted);
+      font-style: italic;
+      padding: 24px;
+      text-align: center;
+    }
+
+    @media (max-width: 860px) {
+      .columns { grid-template-columns: 1fr; }
+      .topbar { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap" id="appRoot">
+    <div class="topbar">
+      <h1>Revisione cieca A/B</h1>
+      <div class="progress-line">
+        <span id="progressText">0/0 valutate</span>
+        <div class="progress-bar"><div id="progressFill" style="width:0%"></div></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <h2 id="pairTitle">Coppia</h2>
+        <div class="toolbar">
+          <button class="button" id="prevButton" type="button">Precedente</button>
+          <button class="button" id="nextButton" type="button">Successivo</button>
+          <button class="button primary" id="saveButton" type="button">Salva</button>
+          <span class="save-state" id="saveState">Non salvato</span>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="meta-line" id="caseMeta"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header"><h2>Testo originale</h2></div>
+      <div class="panel-body">
+        <pre class="prebox" id="inputText"></pre>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-body columns" id="textColumns"></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header"><h2>Il tuo giudizio complessivo</h2></div>
+      <div class="panel-body">
+        <label>Quale testo preferisci?</label>
+        <div class="preferenza-options" id="preferenzaOptions"></div>
+        <label for="notaLibera">Note libere (facoltative)</label>
+        <textarea id="notaLibera" placeholder="Qualsiasi altra osservazione sulla coppia."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const criteria = [
+      ["fedelta_giuridica", "Fedelta' giuridica"],
+      ["chiarezza", "Chiarezza"],
+      ["fluidita", "Fluidita' (si legge bene, non a singhiozzo)"],
+      ["naturalezza", "Suona naturale (non sembra scritto da un'IA)"]
+    ];
+
+    const scoreOptions = [
+      ["", "Da valutare"],
+      ["0", "0"],
+      ["1", "1"],
+      ["2", "2"],
+      ["3", "3"]
+    ];
+
+    const fattiOptions = [
+      ["", "Da valutare"],
+      ["no", "No"],
+      ["si", "Si'"]
+    ];
+
+    let pairsPayload = null;
+    let answersPayload = { version: 1, updated_at: null, answers: {} };
+    let currentIndex = 0;
+    let saveTimer = null;
+
+    const byId = (id) => document.getElementById(id);
+
+    function pairs() {
+      return pairsPayload ? pairsPayload.pairs : [];
+    }
+
+    function currentPair() {
+      return pairs()[currentIndex];
+    }
+
+    function defaultTextAnswer() {
+      return {
+        fedelta_giuridica: "",
+        chiarezza: "",
+        fluidita: "",
+        naturalezza: "",
+        fatti_aggiunti_persi: "",
+        fatti_nota: ""
+      };
+    }
+
+    function ensureAnswer(pairId) {
+      if (!answersPayload.answers[pairId]) {
+        answersPayload.answers[pairId] = {
+          testo_1: defaultTextAnswer(),
+          testo_2: defaultTextAnswer(),
+          preferenza: "",
+          nota: ""
+        };
+      }
+      return answersPayload.answers[pairId];
+    }
+
+    function isAnswered(pairId) {
+      const answer = answersPayload.answers[pairId];
+      return Boolean(answer && answer.preferenza);
+    }
+
+    function optionList(select, options, value) {
+      select.innerHTML = "";
+      options.forEach(([optionValue, label]) => {
+        const option = document.createElement("option");
+        option.value = optionValue;
+        option.textContent = label;
+        select.appendChild(option);
+      });
+      select.value = value || "";
+    }
+
+    function renderProgress() {
+      const total = pairs().length;
+      const done = pairs().filter((item) => isAnswered(item.pair_id)).length;
+      byId("progressText").textContent = `${done}/${total} valutate`;
+      byId("progressFill").style.width = total ? `${Math.round((done / total) * 100)}%` : "0%";
+    }
+
+    function renderTextColumn(pairItem, slotKey, label) {
+      const answer = ensureAnswer(pairItem.pair_id)[slotKey];
+
+      const wrap = document.createElement("div");
+
+      const title = document.createElement("div");
+      title.className = "column-title";
+      title.textContent = label;
+      wrap.appendChild(title);
+
+      const pre = document.createElement("pre");
+      pre.className = "prebox";
+      pre.textContent = pairItem[slotKey] || "(vuoto)";
+      wrap.appendChild(pre);
+
+      criteria.forEach(([key, criterionLabel]) => {
+        const row = document.createElement("div");
+        row.className = "field-row";
+        const criterionLabelEl = document.createElement("label");
+        criterionLabelEl.textContent = criterionLabel;
+        const select = document.createElement("select");
+        optionList(select, scoreOptions, answer[key]);
+        select.addEventListener("change", () => {
+          ensureAnswer(pairItem.pair_id)[slotKey][key] = select.value === "" ? "" : Number(select.value);
+          markDirty();
+        });
+        row.append(criterionLabelEl, select);
+        wrap.appendChild(row);
+      });
+
+      const fattiRow = document.createElement("div");
+      fattiRow.className = "fatti-row";
+      const fattiLabel = document.createElement("label");
+      fattiLabel.textContent = "Fatti o elementi aggiunti/persi?";
+      const fattiSelect = document.createElement("select");
+      optionList(fattiSelect, fattiOptions, answer.fatti_aggiunti_persi === true ? "si" : answer.fatti_aggiunti_persi === false ? "no" : "");
+      fattiSelect.addEventListener("change", () => {
+        const value = fattiSelect.value;
+        ensureAnswer(pairItem.pair_id)[slotKey].fatti_aggiunti_persi = value === "" ? "" : value === "si";
+        markDirty();
+      });
+      fattiRow.append(fattiLabel, fattiSelect);
+      wrap.appendChild(fattiRow);
+
+      const fattiNota = document.createElement("textarea");
+      fattiNota.className = "fatti-nota";
+      fattiNota.placeholder = "Se hai risposto si', spiega brevemente cosa e' stato aggiunto o perso.";
+      fattiNota.value = answer.fatti_nota || "";
+      fattiNota.addEventListener("input", () => {
+        ensureAnswer(pairItem.pair_id)[slotKey].fatti_nota = fattiNota.value;
+        markDirty();
+      });
+      wrap.appendChild(fattiNota);
+
+      return wrap;
+    }
+
+    function renderPreferenza(pairItem) {
+      const answer = ensureAnswer(pairItem.pair_id);
+      const container = byId("preferenzaOptions");
+      container.innerHTML = "";
+      const options = [
+        ["testo_1", "Testo 1"],
+        ["testo_2", "Testo 2"],
+        ["equivalenti", "Equivalenti"]
+      ];
+      options.forEach(([value, label]) => {
+        const optionLabel = document.createElement("label");
+        const radio = document.createElement("input");
+        radio.type = "radio";
+        radio.name = "preferenza";
+        radio.value = value;
+        radio.checked = answer.preferenza === value;
+        radio.addEventListener("change", () => {
+          ensureAnswer(pairItem.pair_id).preferenza = value;
+          markDirty();
+          renderProgress();
+        });
+        optionLabel.append(radio, document.createTextNode(label));
+        container.appendChild(optionLabel);
+      });
+
+      const nota = byId("notaLibera");
+      nota.value = answer.nota || "";
+      nota.oninput = () => {
+        ensureAnswer(pairItem.pair_id).nota = nota.value;
+        markDirty();
+      };
+    }
+
+    function renderPair() {
+      const total = pairs().length;
+      if (total === 0) {
+        byId("appRoot").innerHTML = '<div class="empty">Nessuna coppia in questa sessione.</div>';
+        return;
+      }
+      const item = currentPair();
+      window.location.hash = item.pair_id;
+
+      byId("pairTitle").textContent = `Coppia ${item.pair_id} (${currentIndex + 1}/${total})`;
+      const meta = byId("caseMeta");
+      meta.innerHTML = "";
+      const context = item.context || {};
+      Object.entries(context).forEach(([key, value]) => {
+        const span = document.createElement("span");
+        span.textContent = `${key}: ${value}`;
+        meta.appendChild(span);
+      });
+
+      byId("inputText").textContent = item.input_text || "";
+
+      const columns = byId("textColumns");
+      columns.innerHTML = "";
+      columns.appendChild(renderTextColumn(item, "testo_1", "Testo 1"));
+      columns.appendChild(renderTextColumn(item, "testo_2", "Testo 2"));
+
+      renderPreferenza(item);
+
+      byId("prevButton").disabled = currentIndex === 0;
+      byId("nextButton").disabled = currentIndex === total - 1;
+      renderProgress();
+    }
+
+    function markDirty() {
+      byId("saveState").textContent = "Da salvare";
+      if (saveTimer) window.clearTimeout(saveTimer);
+      saveTimer = window.setTimeout(saveAnswers, 900);
+    }
+
+    async function saveAnswers() {
+      byId("saveState").textContent = "Salvataggio...";
+      const response = await fetch("/api/risposte", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ answers: answersPayload.answers })
+      });
+      if (!response.ok) {
+        const payload = await response.json().catch(() => ({ error: "Errore sconosciuto" }));
+        byId("saveState").textContent = payload.error || "Errore";
+        return;
+      }
+      answersPayload = await response.json();
+      byId("saveState").textContent = "Salvato";
+      renderProgress();
+    }
+
+    async function loadApp() {
+      const [pairsResponse, answersResponse] = await Promise.all([
+        fetch("/api/pairs"),
+        fetch("/api/risposte")
+      ]);
+      pairsPayload = await pairsResponse.json();
+      answersPayload = await answersResponse.json();
+
+      const hash = decodeURIComponent(window.location.hash.replace(/^#/, ""));
+      const hashIndex = pairs().findIndex((item) => item.pair_id === hash);
+      currentIndex = hashIndex >= 0 ? hashIndex : 0;
+      renderPair();
+    }
+
+    byId("prevButton").addEventListener("click", () => {
+      if (currentIndex > 0) {
+        currentIndex -= 1;
+        renderPair();
+      }
+    });
+
+    byId("nextButton").addEventListener("click", () => {
+      if (currentIndex < pairs().length - 1) {
+        currentIndex += 1;
+        renderPair();
+      }
+    });
+
+    byId("saveButton").addEventListener("click", saveAnswers);
+
+    loadApp().catch((error) => {
+      byId("pairTitle").textContent = "Errore di caricamento";
+      byId("caseMeta").textContent = error.message;
+    });
+  </script>
+</body>
+</html>
