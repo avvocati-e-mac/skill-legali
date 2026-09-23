@@ -1,60 +1,58 @@
 # Artt. 1362-1371 c.c. come checklist preventiva di drafting
 
-Apri questo file quando il punto 10 della checklist in `SKILL.md` segnala
-un dubbio di ambiguità in una clausola contrattuale, o quando serve
-giustificare una riscrittura con un riferimento normativo/giurisprudenziale.
+Apri questo file quando una clausola contrattuale si presta a più letture,
+o quando serve giustificare una riscrittura con un riferimento normativo o
+giurisprudenziale.
 
-*Verificato al 2026-07-07 (vedi
-`research/interpretazione-civilistica-ricerca.md` per il dettaglio
-completo con citazioni). Per un caso concreto, verificare che non siano
+*Verificato al 2026-07-07; il dettaglio con citazioni è nella cartella `research/` del repository GitHub avvocati-e-mac/skill-legali (fuori dal pacchetto installabile). Per un caso concreto, verificare che non siano
 intervenute pronunce più recenti (web o MCP BuddaLaw) prima di citare
 questi precedenti in un atto o parere.*
 
 ## Principio di fondo
 
 Gli artt. 1362-1371 c.c. sono scritti per il giudice che interpreta un
-contratto già firmato — ma usati a ritroso, in fase di redazione,
+contratto già firmato, ma usati a ritroso, in fase di redazione,
 diventano una checklist preventiva: se una clausola letta con questi
 criteri si presta a più letture, va riscritta prima della firma, non
 lasciata alla futura interpretazione giudiziale.
 
 ## I criteri, in ordine di applicazione
 
-- **Art. 1362 c.c. — Intenzione comune delle parti.** Va ricercata oltre
+- **Art. 1362 c.c.: Intenzione comune delle parti.** Va ricercata oltre
   il senso letterale delle parole. Scrivere clausole che riflettono
   chiaramente la volontà reale delle parti, evitando formule standard se
   non aderenti al caso concreto.
-- **Art. 1363 c.c. — Interpretazione complessiva.** Le clausole si
+- **Art. 1363 c.c.: Interpretazione complessiva.** Le clausole si
   interpretano le une per mezzo delle altre: nessuna clausola dovrebbe
   essere letta in modo diverso se isolata o nel contesto dell'intero
   contratto. In fase di drafting, controllare sempre cross-reference,
   rinvii e definizioni per assicurare coerenza interna.
-- **Artt. 1364-1365 c.c. — Espressioni generali ed esempi.** Definire
+- **Artt. 1364-1365 c.c.: Espressioni generali ed esempi.** Definire
   l'ambito delle clausole generali; se si inseriscono esempi, chiarire se
   sono meramente esemplificativi o limitativi (una fonte comune di
   contenzioso: "inclusi, a titolo esemplificativo, ma non limitato a...").
-- **Art. 1366 c.c. — Buona fede.** In caso di dubbio, la clausola sarà
+- **Art. 1366 c.c.: Buona fede.** In caso di dubbio, la clausola sarà
   letta secondo buona fede e tutela dell'affidamento: evitare clausole
   costruite per creare "trabocchetti" interpretativi.
-- **Art. 1367 c.c. — Conservazione del contratto.** Preferire un drafting
+- **Art. 1367 c.c.: Conservazione del contratto.** Preferire un drafting
   che consenta al contratto di funzionare anche se una singola clausola è
   dubbia, evitando formulazioni che rischiano di travolgere l'intero
   contratto.
-- **Art. 1368 c.c. — Usi.** Usare terminologia coerente con la prassi del
+- **Art. 1368 c.c.: Usi.** Usare terminologia coerente con la prassi del
   settore (assicurazioni, appalti, IT...): il giudice la interpreterà alla
   luce di quegli usi.
-- **Art. 1369 c.c. — Parole polisenso.** Evitare termini tecnici non
+- **Art. 1369 c.c.: Parole polisenso.** Evitare termini tecnici non
   definiti o parole con più significati (es. "corrispettivo", "indennità",
   "penale") se non chiariti espressamente.
-- **Art. 1370 c.c. — Contra proferentem.** Le clausole inserite in
+- **Art. 1370 c.c.: Contra proferentem.** Le clausole inserite in
   condizioni generali, moduli o formulari predisposti da una delle parti
   si interpretano, nel dubbio, a favore dell'altra. Criterio **sussidiario**:
   si applica solo se, dopo aver usato i criteri 1362-1369, il significato
   resta ambivalente.
-- **Art. 1371 c.c. — Regole finali.** Se il contratto resta oscuro dopo
+- **Art. 1371 c.c.: Regole finali.** Se il contratto resta oscuro dopo
   tutti i criteri precedenti, si interpreta nel senso meno gravoso per il
   debitore (contratto gratuito) o con equo contemperamento degli interessi
-  (contratto oneroso) — spesso a svantaggio del contraente più forte che
+  (contratto oneroso): spesso a svantaggio del contraente più forte che
   ha predisposto il testo.
 
 ## Gerarchia dei criteri: cosa dice la giurisprudenza recente
@@ -76,7 +74,7 @@ concreto: eliminare l'ambiguità letterale a monte è sempre meglio che
 sperare in un'interpretazione favorevole a valle.
 
 Filone consolidato sull'art. 1370 c.c. in materia assicurativa: **Cass.
-866/2008**, **Cass. 668/2016**, **Cass. 18324/2019 (Sez. III)** — tutte
+866/2008**, **Cass. 668/2016**, **Cass. 18324/2019 (Sez. III)**: tutte
 relative a clausole che delimitano il rischio assicurato in polizze su
 moduli predisposti dall'assicuratore, interpretate nel dubbio in senso
 sfavorevole all'assicuratore (contraente predisponente) e favorevole
@@ -89,19 +87,25 @@ Clausola del contratto di noleggio esaminato:
 perfettamente funzionante."
 
 Applicando l'art. 1369 c.c. (parole polisenso): "perfettamente
-funzionante" non è un parametro verificabile — cosa significa esattamente
+funzionante" non è un parametro verificabile, cosa significa esattamente
 in caso di contestazione? Applicando l'art. 1370 c.c.: se il Noleggiatore
 ha predisposto il modulo contrattuale (tipico nel noleggio commerciale) e
 la clausola resta ambigua, in caso di dubbio verrà interpretata contro di
-lui, cioè nel senso più favorevole al Conduttore — ampliando la garanzia
+lui, cioè nel senso più favorevole al Conduttore, ampliando la garanzia
 oltre quanto probabilmente il Noleggiatore intendeva.
 
-Riscrittura preventiva, prima della firma: "L'impianto refrigerante
-funziona correttamente e mantiene le temperature dichiarate nella
-certificazione ATP." Il parametro verificabile (temperature certificate)
-elimina l'ambiguità a monte, così che né l'art. 1369 né l'art. 1370 c.c.
-abbiano margine di applicazione: non serve affidarsi a un'interpretazione
-giudiziale perché la clausola è già chiara.
+Riscrittura preventiva, prima della firma: "Il Noleggiatore garantisce che
+l'impianto refrigerante funziona secondo [da decidere: parametro verificabile,
+per esempio le temperature indicate nella certificazione ATP]." La garanzia
+resta garanzia; il parametro lo sceglie l'avvocato con il cliente. Una volta
+scelto, né l'art. 1369 né l'art. 1370 c.c. hanno margine di applicazione: la
+clausola è già chiara.
+
+Elenchi esemplificativi (art. 1365 c.c.): la norma non estende un elenco in
+automatico. Secondo la Cassazione l'interpretazione estensiva è ammessa solo
+se il testo risulta inadeguato per difetto rispetto alla volontà delle parti,
+con criterio di ragionevolezza, e le eccezioni si leggono in modo restrittivo.
+Per questo la natura dell'elenco (aperto o chiuso) va detta nel testo.
 
 ## Checklist preventiva sintetica
 
@@ -122,7 +126,7 @@ giudiziale perché la clausola è già chiara.
    funzionante")? (art. 1369)
 8. È in un modulo/formulario standard predisposto da una sola parte? Se
    sì, ogni ambiguità residua verrà letta contro chi l'ha predisposto.
-   (art. 1370) — motivo in più per eliminarla ora.
+   (art. 1370): motivo in più per eliminarla ora.
 9. Se tutto il resto fallisse, l'esito residuale (art. 1371) sarebbe
    accettabile per il cliente che rappresenti, o è un rischio da evitare
    scrivendo meglio la clausola?

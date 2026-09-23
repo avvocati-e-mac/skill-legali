@@ -19,6 +19,27 @@ CASES_JSON = TEST_DIR / "cases.json"
 RUBRIC_MD = TEST_DIR / "rubric.md"
 RED_TEAM_MD = TEST_DIR / "red_team.md"
 ARCHIVE = SKILL_ROOT / "migliora-chiarezza-testi-legali.skill"
+HOLDOUT_JSON = TEST_DIR / "holdout.json"
+
+
+def distributed_files() -> list[Path]:
+    return sorted(
+        path for path in INNER_SKILL.rglob("*")
+        if path.is_file() and path.name != ".DS_Store" and "__pycache__" not in path.parts
+    )
+
+
+def six_grams(text: str) -> set[tuple[str, ...]]:
+    words = re.findall(r"[a-zà-ÿ0-9]+", text.lower())
+    return {tuple(words[i:i + 6]) for i in range(len(words) - 5)}
+
+
+def load_module(name: str, path: Path):
+    spec = importlib.util.spec_from_file_location(name, path)
+    module = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(module)
+    return module
 
 
 def load_clarity_eval():
@@ -89,23 +110,69 @@ class SkillStaticTests(unittest.TestCase):
         self.assertIn("MANDATORY TRIGGERS", meta["description"])
 
     def test_skill_keeps_required_output_contract(self) -> None:
-        for marker in ("PRIMA/DOPO", "Motivo"):
+        for marker in ("PRIMA:", "DOPO:", "Motivo:", "TESTO RISCRITTO:", "Sommario:", "PROPOSTA:"):
             self.assertIn(marker, self.skill_text)
-        self.assertRegex(self.skill_text, r"sommario\s+sintetico")
         for reference in (
-            "references/principi-garner.md",
-            "references/esempi-atti-giudiziari.md",
+            "references/atti-e-pareri.md",
+            "references/contratti.md",
             "references/interpretazione-civilistica.md",
         ):
             self.assertIn(reference, self.skill_text)
+
+    def test_skill_body_is_short_enough_for_small_models(self) -> None:
+        body = self.skill_text.split("---", 2)[2]
+        words = re.findall(r"[A-Za-zÀ-ÿ0-9]+(?:'[A-Za-zÀ-ÿ0-9]+)*", body)
+        self.assertLessEqual(len(words), 1000)
+
+    def test_step_markers_allow_ablation(self) -> None:
+        self.assertEqual(self.skill_text.count("<!-- step:inizio -->"), self.skill_text.count("<!-- step:fine -->"))
+        self.assertGreaterEqual(self.skill_text.count("<!-- step:inizio -->"), 1)
+
+    def test_distributed_files_have_no_em_dash_and_no_research(self) -> None:
+        self.assertFalse((INNER_SKILL / "research").exists())
+        for path in distributed_files():
+            text = path.read_text(encoding="utf-8")
+            with self.subTest(file=path.name):
+                self.assertNotIn("\u2014", text)
+                self.assertIsNone(re.search(r"research/[\w-]+\.md", text))
+
+    def test_references_cited_in_skill_exist(self) -> None:
+        for reference in set(re.findall(r"references/[\w-]+\.md", self.skill_text)):
+            with self.subTest(reference=reference):
+                self.assertTrue((INNER_SKILL / reference).exists())
+
+    def test_no_six_word_overlap_between_cases_and_skill(self) -> None:
+        skill_grams: set[tuple[str, ...]] = set()
+        for path in distributed_files():
+            skill_grams |= six_grams(path.read_text(encoding="utf-8"))
+        for case in self.eval.load_cases(CASES_JSON):
+            overlap = six_grams(case["input_text"]) & skill_grams
+            with self.subTest(case=case["id"]):
+                self.assertFalse(overlap, f"{case['id']} ricalca la skill: {sorted(overlap)[:2]}")
+        # Holdout: scritto da un altro modello senza vedere la skill. Una o due
+        # sequenze comuni sono formule forensi condivise, non copia; tre o piu'
+        # indicano un passo ricalcato. Il contenuto del holdout non si stampa.
+        if HOLDOUT_JSON.exists():
+            for case in self.eval.load_cases(HOLDOUT_JSON):
+                overlap = six_grams(case["input_text"]) & skill_grams
+                with self.subTest(case=case["id"]):
+                    self.assertLess(len(overlap), 3, f"{case['id']}: {len(overlap)} sequenze in comune con la skill")
+
+    def test_invariant_script_flags_added_exemption(self) -> None:
+        script = load_module("controlla_invarianti", INNER_SKILL / "scripts" / "controlla_invarianti.py")
+        warnings = script.controlla(
+            "Il Conduttore risponde di ogni danno.",
+            "Il Conduttore risponde di ogni danno, salvo caso fortuito o forza maggiore.",
+        )
+        self.assertTrue(any("esimente" in warning for warning in warnings))
+        self.assertEqual(script.controlla("Il Venditore garantisce la conformità.", "Il Venditore garantisce la conformità."), [])
 
     def test_cases_schema_is_valid(self) -> None:
         errors = self.eval.validate_cases(self.cases, repo_root=SKILL_ROOT)
         self.assertEqual(errors, [])
 
-    def test_initial_dataset_size(self) -> None:
-        self.assertGreaterEqual(len(self.cases), 10)
-        self.assertLessEqual(len(self.cases), 12)
+    def test_dataset_size(self) -> None:
+        self.assertGreaterEqual(len(self.cases), 12)
 
     def test_no_codex_only_gold_cases(self) -> None:
         for case in self.cases:
@@ -145,9 +212,9 @@ class SkillStaticTests(unittest.TestCase):
                 self.assertIn("human", case["annotations"])
                 self.assertIn("opus", case["annotations"])
 
-    def test_required_references_exist(self) -> None:
+    def test_expected_v2_references_exist(self) -> None:
         for case in self.cases:
-            for reference in case["required_reference"]:
+            for reference in case["expected_references_v2"]:
                 with self.subTest(case=case["id"], reference=reference):
                     self.assertTrue((INNER_SKILL / reference).exists())
 
@@ -254,18 +321,16 @@ class SkillStaticTests(unittest.TestCase):
         self.assertEqual(saved["reviews"], loaded["reviews"])
         self.assertEqual(loaded["reviews"]["C002"]["final_status"], "ambiguous")
 
-    def test_skill_archive_contains_installable_skill_files(self) -> None:
+    def test_skill_archive_matches_source(self) -> None:
         self.assertTrue(ARCHIVE.exists())
         with zipfile.ZipFile(ARCHIVE) as archive:
-            names = set(archive.namelist())
-        required = {
-            "migliora-chiarezza-testi-legali/SKILL.md",
-            "migliora-chiarezza-testi-legali/agents/openai.yaml",
-            "migliora-chiarezza-testi-legali/references/principi-garner.md",
-            "migliora-chiarezza-testi-legali/references/esempi-atti-giudiziari.md",
-            "migliora-chiarezza-testi-legali/references/interpretazione-civilistica.md",
-        }
-        self.assertTrue(required <= names)
+            names = {name for name in archive.namelist() if not name.endswith("/")}
+            for path in distributed_files():
+                name = "migliora-chiarezza-testi-legali/" + path.relative_to(INNER_SKILL).as_posix()
+                with self.subTest(file=name):
+                    self.assertIn(name, names)
+                    self.assertEqual(archive.read(name), path.read_bytes())
+        self.assertFalse(any("/research/" in name for name in names))
 
 
 if __name__ == "__main__":

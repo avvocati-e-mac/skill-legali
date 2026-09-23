@@ -1,160 +1,149 @@
 ---
 name: migliora-chiarezza-testi-legali
 description: >
-  Migliora la chiarezza, la leggibilità e la precisione di contratti,
-  clausole, pareri legali e atti giudiziari in italiano, riducendo
-  ambiguità, formule inutili e strutture sintattiche opache. La skill usa
-  il metodo di Bryan Garner sul plain language legale, adattato al
-  contesto giuridico italiano. MANDATORY TRIGGERS: redazione o revisione
-  di un contratto, di una clausola contrattuale, di un parere legale
-  scritto per un cliente, di un atto giudiziario (citazione, comparsa,
-  memoria, appello, ricorso) o di un atto normativo/amministrativo in
-  italiano, quando l'obiettivo esplicito o implicito include la chiarezza,
-  la leggibilità o la riduzione dell'ambiguità del testo.
+  Rende più chiari atti giudiziari, pareri, diffide e contratti in italiano
+  senza cambiarne il significato giuridico e senza perdere il registro
+  forense. Due percorsi: atti e pareri (deep issue, frase tematica, niente
+  enfasi, D.M. 110/2023) e contratti (un verbo per ogni funzione, definizioni,
+  e/o, eccezioni, elenchi). Vieta di aggiungere fatti, date, esimenti,
+  intensificatori e frasi tipiche dell'IA; consegna coppie PRIMA/DOPO, testo
+  riscritto integrale e sommario. MANDATORY TRIGGERS: revisione o riscrittura
+  di un contratto, di una clausola, di un parere, di una diffida o di un atto
+  giudiziario (citazione, comparsa, memoria, appello, ricorso) quando
+  l'obiettivo, anche implicito, è chiarezza, leggibilità, sintesi o minore
+  ambiguità. Non usarla per redigere un atto da zero, per un memo interno o
+  per cercare norme e sentenze.
 ---
 
-# Migliora chiarezza testi legali — metodo Garner
+# Migliora chiarezza testi legali
 
-Skill generale, riutilizzabile su qualsiasi contratto, parere o atto legale
-in italiano. Non è specifica a un singolo cliente, materia o fascicolo.
+Obiettivo: rendere il testo chiaro e scorrevole per chi deve leggerlo e
+applicarlo (giudice, controparte, cliente) senza cambiarne il significato
+giuridico. Il registro resta forense: si tolgono oscurità e ridondanza, non
+la tecnica.
 
-## Compatibilità runtime
+## 1. Quale file aprire
 
-Questa skill deve funzionare sia in ambienti Claude sia in ambienti
-OpenAI/Codex.
+| Testo | Apri |
+|---|---|
+| Atto giudiziario, memoria, ricorso, appello, parere, diffida | `references/atti-e-pareri.md` |
+| Contratto o clausola | `references/contratti.md` |
+| Clausola che si presta a più letture | anche `references/interpretazione-civilistica.md` |
+| Richiesta esplicita di fonti, di Manzoni o dell'elenco dei tic da IA | `references/bibliografia.md`, `references/lezione-manzoni.md`, `references/frasi-da-ia.md` |
 
-- **Se stai operando in Claude Desktop, Claude for Work/Cowork o Claude
-  Code:** usa le skill, i tool, i subagenti e i file di riferimento
-  disponibili nell'ambiente Claude. Se non puoi leggere direttamente i
-  documenti o i reference, chiedi all'utente di fornirli.
-- **Se stai operando in Codex o in un ambiente OpenAI:** usa i tool MCP,
-  shell, browser o subagenti disponibili nell'ambiente corrente, rispettando
-  le regole di accesso ai file e ai permessi del runtime. Leggi i file in
-  `references/` solo quando il caso li richiede.
-- **Se uno strumento non è disponibile nel runtime corrente:** non inventare
-  un equivalente. Usa il fallback documentato in questa skill oppure chiedi
-  conferma all'utente.
+Apri al massimo due file per richiesta. Se non puoi leggere file, bastano le
+regole di questa pagina.
 
-## Principio di fondo
+## 2. Procedura
 
-L'ambiguità in un testo legale è quasi sempre un difetto di progettazione
-del testo, non una caratteristica ineliminabile del linguaggio giuridico:
-frasi sovraccariche, condizioni nascoste, terminologia incoerente e formule
-arcaiche creano contenzioso interpretativo evitabile. Il testo va scritto
-per chi lo dovrà leggere e applicare (cliente, controparte, giudice), non
-per dimostrare gravità professionale.
+<!-- step:inizio -->
+1. **Scheda**, prima di riscrivere, in 3-5 righe: tipo di testo; chi scrive
+   e a chi (chi è "nostro", chi è "Vostro"); elementi che non devono
+   cambiare: soggetti, obblighi, garanzie, eccezioni, condizioni, date,
+   importi, termini tecnici. Se chi scrive o il destinatario non si ricavano
+   dal testo, scrivi "[da confermare]": non indovinare.
+<!-- step:fine -->
+2. **Diagnosi**: trova i punti oscuri con le regole della sezione 4 e del file
+   di genere.
+3. **Riscrittura**: per ogni punto scrivi un blocco con questa forma:
 
-## Come applicare la skill
+   PRIMA: il testo originale
+   DOPO: il testo riscritto
+   Motivo: una riga concreta sul perché
 
-1. **Leggi** l'intero testo (contratto, clausola, parere o atto) prima di
-   intervenire riga per riga.
-2. **Applica la checklist rapida** qui sotto e segna ogni criticità
-   trovata.
-3. Per **ogni criticità**, produci sempre una coppia PRIMA/DOPO più una
-   motivazione in una riga — mai solo un'osservazione astratta ("è poco
-   chiaro"). Vedi gli esempi sotto per il formato atteso.
-4. Se il testo è un **contratto**, verifica le clausole più critiche
-   (responsabilità, garanzie, standard di comportamento) contro i criteri
-   di interpretazione degli artt. 1362-1371 c.c.: se una clausola si
-   presta a più letture secondo quei criteri, va riscritta ora, non
-   lasciata all'interpretazione futura di un giudice — vedi
-   `references/interpretazione-civilistica.md`.
-   Se il testo è un **atto giudiziario**, apri sempre
-   `references/esempi-atti-giudiziari.md`: contiene un vincolo normativo
-   cogente (D.M. 110/2023) di cui tenere conto, non solo principi
-   stilistici facoltativi.
-5. **Consegna un output finale** con il testo riscritto e un sommario
-   sintetico delle modifiche principali (non serve annotare ogni virgola).
+4. **Testi lunghi** (più di una pagina): tratta la prima sezione, oppure le
+   cinque criticità più importanti, poi chiedi se continuare. Se l'utente ha
+   già chiesto di procedere con tutto, o risponde "tutto", vai fino in fondo
+   senza fermarti.
+5. **Chiusura**: scrivi `TESTO RISCRITTO:` con il testo integrale pronto da
+   incollare, poi `Sommario:` in 3-5 righe con le modifiche principali e le
+   decisioni lasciate all'avvocato. Se il testo è una sola frase o clausola,
+   il DOPO basta: ometti il TESTO RISCRITTO.
+<!-- step:inizio -->
+6. **Controllo**: prima di consegnare, confronta ogni DOPO con la Scheda. Se
+   puoi eseguire codice, lancia `scripts/controlla_invarianti.py` (istruzioni
+   in testa al file) e correggi ciò che segnala. Altrimenti ripassa uno per
+   uno gli otto divieti della sezione 3 e correggi. Chiudi con una riga
+   `Controllo:` con l'esito: "nessuna violazione" oppure che cosa hai
+   corretto.
+<!-- step:fine -->
 
-## Esempi (formato atteso)
+## 3. Otto divieti (valgono per il DOPO e per il TESTO RISCRITTO)
 
-**Diffida — soggetto nascosto e subordinate annidate**
-PRIMA: "In difetto l'eventuale blocco della produzione della società, in
-quanto non rispetta le normativa HACCP e quindi con il rischio che la
-relativa licenza sia revocata, qualora l'AUSL di Modena provveda ad
-ulteriori verifiche, sarà da imputare alla Vostra negligenza."
-DOPO: "Se la Vostra società non rispetta le normative HACCP e l'AUSL di
-Modena effettua ulteriori verifiche, la licenza potrebbe essere revocata e
-la produzione bloccata. La responsabilità di questo blocco sarà interamente
-Vostra."
-Motivo: frase unica con soggetto nascosto e subordinate annidate → sequenza
-di frasi brevi, soggetto esplicito, nesso causale lineare.
+1. Non aggiungere fatti, date, importi, termini, esiti, condizioni o
+   esimenti ("caso fortuito", "forza maggiore", "invano", "senza
+   riscontro"). Se un'aggiunta migliorerebbe il testo, proponila nel Motivo
+   con `PROPOSTA:` oppure lascia nel DOPO un segnaposto `[da decidere: ...]`
+   senza valori.
+2. Non cambiare le persone: chi è "nostro" resta nostro, chi è "Vostro"
+   resta Vostro. Non attribuire ruoli (ricorrente, locatore, conduttore) che
+   il testo non dà.
+3. Non cambiare la natura giuridica: una garanzia resta garanzia
+   ("garantisce"), un'eccezione resta eccezione ("salvo"), "a pena di" resta.
+   Non trasformare mai "si obbliga a vendere, trasferire o cedere" in "vende,
+   trasferisce o cede", né il contrario: il primo crea un obbligo, il secondo
+   trasferisce il diritto.
+4. Non aggiungere intensificatori ("interamente", "palesemente", "del
+   tutto", "gravissimo", "esclusivamente" usato come rafforzativo).
+5. Non sostituire i termini tecnici: prescrizione, decadenza, recesso,
+   risoluzione, caparra, penale, diritto azionato, legittimazione restano.
+6. Non cambiare il contenuto di conclusioni, domande ed eccezioni
+   processuali: puoi cambiarne solo la forma.
+7. Non aggiungere frasi da IA né commenti dentro il testo: "è importante
+   sottolineare", "gioca un ruolo cruciale", "non solo... ma anche" di
+   maniera, gerundi di commento in coda ("..., evidenziando"), triadi di
+   comodo, chiusure riassuntive ("In conclusione"), frasi sulla riscrittura
+   o su di te ("versione più chiara", "spero sia utile"), la lineetta lunga.
+8. Non citare norme o sentenze che il testo non cita. Se il testo è già
+   chiaro, rispondi "Nessuna modifica necessaria" e spiega perché in una riga.
 
-**Clausola contrattuale — standard vago e avverbio superfluo**
-PRIMA: "Il Noleggiatore garantisce che l'automezzo è conforme alle
-normative vigenti, inclusa la normativa ATP, e che l'impianto refrigerante
-è perfettamente funzionante."
-DOPO: "L'automezzo rispetta le normative vigenti, inclusa la normativa ATP.
-L'impianto refrigerante funziona correttamente e mantiene le temperature
-dichiarate nella certificazione ATP."
-Motivo: elimina l'avverbio superfluo ("perfettamente") e sostituisce una
-valutazione soggettiva con un parametro verificabile — riduce l'ambiguità e
-il contenzioso interpretativo.
+## 4. Regole comuni
 
-Altri esempi (clausole di responsabilità, atti giudiziari, ridondanze
-lessicali, deep issue, throat-clearing) sono in
-`references/principi-garner.md` e `references/esempi-atti-giudiziari.md` —
-apri quei file quando serve un esempio più vicino al testo che stai
-revisionando.
+- **Un concetto, una parola**: scegli un termine e usalo sempre, senza
+  sinonimi.
+- **Un'idea per frase, poi ricuci**: dopo aver diviso, rileggi. Se due frasi
+  brevi sono legate da una causa, un'opposizione o una conseguenza, uniscile
+  con un connettivo (poiché, quindi, tuttavia, infatti, ma). Il testo deve
+  essere chiaro e scorrevole, non a singhiozzo.
+- **Periodo lungo solo se articolato**: va bene se è diviso da punti e
+  virgola in parti complete, ciascuna con soggetto e verbo.
+- **Chi agisce si vede**: usa la forma attiva quando la passiva nasconde chi
+  decide o chi deve fare.
+- **Condizioni ed eccezioni accanto a ciò che modificano**; elementi dello
+  stesso tipo nella stessa forma.
+- **Via la zavorra**: doppiette ("nullo e privo di effetto"), formule vuote
+  ("si fa presente che", "in ordine a quanto
+  dedotto"), arcaismi ("codesto", "trattasi", "ut supra", "all'uopo").
+- **Tecnicismi sì, gergo di comodo no**: il latinismo rivolto al cliente si
+  traduce accanto.
+- **Informazione decisiva in fondo**: chiudi la frase su ciò che conta, non
+  su "ai sensi di legge" o "di cui sopra".
+- **Se le regole confliggono** vale quest'ordine: fedeltà giuridica, divieti,
+  chiarezza, scorrevolezza, brevità.
 
-## Checklist rapida
+## 5. Esempi
 
-1. Ogni termine tecnico ricorrente è definito una volta sola ed è usato
-   sempre nella stessa forma? Elimina le varianti sinonimiche.
-2. Ogni clausola/periodo ha una sola idea principale? Spezza le frasi con
-   più condizioni annidate.
-3. Le condizioni e le eccezioni sono collocate accanto a ciò che
-   modificano, senza ambiguità di riferimento? Se ce n'è più di una nella
-   stessa clausola, ordinale dalla più generale alla più specifica.
-4. Le clausole comparabili (obblighi, diritti, eccezioni dello stesso
-   tipo) sono scritte con la stessa struttura sintattica in tutto il
-   documento? Le eccezioni sono raggruppate in una sezione dedicata,
-   invece di alternarsi disordinatamente alle regole?
-5. Sono state eliminate le doppiette/triplette ridondanti, le
-   nominalizzazioni verbose (es. "si obbliga a utilizzare" → "utilizza")
-   e le formule di "riscaldamento" prive di contenuto (es. "si fa
-   presente che", "è importante notare che")?
-6. Il verbo modale usato per gli obblighi è coerente in tutto il testo
-   (niente alternanza immotivata "dovrà"/"è tenuto a"/"provvede a")?
-7. Ogni sezione/clausola/paragrafo dichiara subito la sua funzione
-   (issue-first) invece di richiederne la lettura integrale per capirne lo
-   scopo? Negli atti giudiziari e nei pareri: il concetto centrale precede
-   la citazione di giurisprudenza, non viceversa.
-8. Ci sono standard vaghi non definiti ("normale deperimento d'uso", "uso
-   improprio", "massima diligenza")? Sostituiscili con parametri oggettivi
-   o criteri verificabili.
-9. La forma passiva nasconde chi esercita un potere o una discrezionalità
-   (es. "il canone potrà essere aumentato")? Riscrivi in forma attiva
-   indicando chi decide e a quali condizioni.
-10. Applicando i criteri ermeneutici degli artt. 1362-1371 c.c. alla
-    clausola, emergono letture alternative plausibili? Se sì, riscrivere
-    prima della firma — vedi `references/interpretazione-civilistica.md`.
-11. Date, importi e riferimenti normativi sono completi (nessun campo in
-    bianco, nessun rinvio "mobile" indeterminato senza valore di default)?
+Contratto:
+PRIMA: "Resta inteso che l'Appaltatore dovrà provvedere alla consegna delle
+opere entro il termine di cui all'art. 4 e/o comunque entro la data che verrà
+eventualmente comunicata dal Committente."
+DOPO: "L'Appaltatore consegna le opere entro il termine dell'art. 4 oppure,
+se il Committente comunica una data diversa, entro quella data [da decidere:
+se la data comunicata può anticipare il termine dell'art. 4]."
+Motivo: "dovrà provvedere alla consegna" diventa "consegna"; "e/o comunque"
+non dice quale termine prevale, quindi la scelta resta all'avvocato.
 
-## File di approfondimento (references/)
+Atto:
+PRIMA: "Giova evidenziare come l'odierna esponente abbia, sin dalla missiva
+del 3 marzo 2025, palesato la propria contrarietà alla proroga, con ciò
+manifestando in maniera inequivocabile la volontà di non rinnovare."
+DOPO: "Già con la lettera del 3 marzo 2025 l'esponente si è opposta alla proroga:
+ha così manifestato in modo inequivocabile la volontà di non rinnovare."
+Motivo: via la formula vuota e l'arcaismo; soggetto e verbo in apertura; il
+nesso tra i due fatti è reso esplicito.
 
-Ogni file va aperto solo quando il tipo di documento in lavorazione lo
-richiede — non aprirli "di routine" per ogni clausola:
+## 6. Ambienti diversi
 
-- **references/principi-garner.md** — i principi di Garner per esteso
-  (definizioni, sintassi, lessico, struttura), ciascuno con più esempi
-  prima/dopo, inclusi esempi da atti giudiziari e da un secondo dominio
-  contrattuale (prestazione d'opera). Apri quando vuoi il ragionamento
-  completo dietro una voce della checklist o cerchi altri esempi oltre a
-  quelli già in questo file.
-- **references/esempi-atti-giudiziari.md** — apri **sempre** quando il
-  testo da revisionare è un atto giudiziario (citazione, comparsa,
-  memoria, appello, ricorso): contiene il vincolo normativo del D.M.
-  110/2023 (limiti dimensionali, struttura obbligatoria) oltre a esempi
-  prima/dopo specifici per il contenzioso.
-- **references/interpretazione-civilistica.md** — apri quando il punto 10
-  della checklist segnala un dubbio, o serve giustificare la riscrittura
-  di una clausola con un riferimento normativo/giurisprudenziale.
-- **references/tradizione-italiana.md** — apri solo se l'utente chiede
-  esplicitamente fonti/riferimenti italiani, o se stai scrivendo un parere
-  che cita fonti di supporto (per non inventare o sovrastimare un "Garner
-  italiano" inesistente di tua iniziativa).
-- **references/bibliografia.md** — apri quando l'utente chiede i
-  riferimenti bibliografici completi per approfondire di persona un
-  autore o un testo citato in una delle altre reference.
+In Claude (Desktop, Cowork, Code) e in Codex leggi i file e lancia lo script
+con gli strumenti disponibili. Senza accesso ai file o senza esecuzione di
+codice usa solo questa pagina: non inventare strumenti che non hai.

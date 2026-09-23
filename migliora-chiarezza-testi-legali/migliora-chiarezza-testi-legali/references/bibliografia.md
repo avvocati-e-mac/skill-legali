@@ -13,21 +13,46 @@ online e pagine terze, non i testi integrali (che sono libri a
 stampa/e-book non liberamente accessibili). Chi vuole approfondire oltre
 quanto sintetizzato nelle reference deve procurarsi il testo originale.
 
-## Bryan A. Garner (fonte primaria dei principi in `principi-garner.md`)
+## Bryan A. Garner e la redazione in inglese (fonte dei file `atti-e-pareri.md` e `contratti.md`)
 
-- *Legal Writing in Plain English* (2nd ed., University of Chicago Press)
-  — il testo principale su cui si basano i principi sintattici, lessicali
-  e strutturali di questa skill.
-- *The Redbook: A Manual on Legal Style* (4th/5th ed., Thomson West) —
-  manuale di stile più tecnico e normativo, fonte complementare per
-  punteggiatura e convenzioni redazionali.
-- *Garner's Dictionary of Legal Usage* (3rd ed., Oxford University Press)
-  — riferimento lessicale per legalese e arcaismi da evitare.
+- *Legal Writing in Plain English* (3rd ed., University of Chicago Press,
+  2023): principi comuni, scrittura analitica e persuasiva, redazione
+  normativa e contrattuale.
+- *The Winning Brief* (3rd ed., Oxford University Press): consigli per gli
+  atti persuasivi.
+- Antonin Scalia e Bryan A. Garner, *Making Your Case: The Art of Persuading
+  Judges* (Thomson West, 2008).
+- Bryan A. Garner, "The Deep Issue: A New Approach to Framing Legal
+  Questions", *Scribes Journal of Legal Writing*, vol. 5.
+- *Garner's Guidelines for Drafting and Editing Contracts* (West Academic,
+  2019).
+- Bryan A. Garner e Joseph Kimble, *Essentials for Drafting Clear Legal
+  Rules* (Judicial Conference of the United States, 2024), disponibile su
+  uscourts.gov.
+- *The Redbook: A Manual on Legal Style* e *Garner's Dictionary of Legal
+  Usage*: manuali di stile e di lessico.
+- Kenneth A. Adams, *A Manual of Style for Contract Drafting* (ABA): le
+  categorie del linguaggio contrattuale usate per la regola "un verbo per
+  ogni funzione".
+
+## Manzoni e la scrittura italiana (fonte di `lezione-manzoni.md`)
+
+- Alessandro Manzoni, *I promessi sposi*, edizione 1840-42, Project Gutenberg
+  n. 45334 (gutenberg.org/ebooks/45334).
+
+## Frasi tipiche dell'IA (fonte di `frasi-da-ia.md`)
+
+- D. Kobak e altri, "Delving into LLM-assisted writing in biomedical
+  publications through excess vocabulary", *Science Advances*, 2025.
+- W. Liang e altri, "Monitoring AI-Modified Content at Scale", ICML 2024.
+- Wikipedia, "Signs of AI writing" (guida redazionale).
+- Treccani, speciale sull'italiano dei testi generati; Accademia della
+  Crusca, schede su "impattare" e "a livello di".
 
 ## Tecnica contrattuale italiana
 
 - Gianluca Sicchiero, *Fondamenti di tecnica contrattuale* (Wolters
-  Kluwer/CEDAM, 2018) — riferimento italiano più vicino alla tecnica di
+  Kluwer/CEDAM, 2018): riferimento italiano più vicino alla tecnica di
   redazione contrattuale privata (non plain language in senso stretto,
   vedi `tradizione-italiana.md`).
 
@@ -53,11 +78,11 @@ quanto sintetizzato nelle reference deve procurarsi il testo originale.
 ## Scrittura di atti giudiziari (vedi anche `esempi-atti-giudiziari.md`)
 
 - Federigo Bambi, contributi su scrittura giuridica per AIAF (rivista
-  AIAF) — sintassi, tecnicismi e costruzione della frase negli atti
+  AIAF): sintassi, tecnicismi e costruzione della frase negli atti
   giudiziari.
 - "Vademecum per la redazione degli atti giudiziari", Ordine degli
-  Avvocati di Firenze — con esempi di atti civili strutturati.
-- "Breviario per una buona scrittura processuale", Federnotizie — linee
+  Avvocati di Firenze, con esempi di atti civili strutturati.
+- "Breviario per una buona scrittura processuale", Federnotizie, linee
   guida di plain legal language per notai e operatori giuridici.
 - Protocollo sulla sinteticità e chiarezza degli atti processuali di
   parte e dei provvedimenti del giudice, Tribunale di Roma, 12.12.2017.
@@ -77,5 +102,4 @@ quanto sintetizzato nelle reference deve procurarsi il testo originale.
   c.c. contra proferentem).
 
 Per il dettaglio completo delle fonti web usate per compilare questa
-bibliografia (URL, estratti, data di verifica), vedi i file in
-`research/`.
+bibliografia (URL, estratti, data di verifica), vedi la cartella `research/` del repository GitHub avvocati-e-mac/skill-legali (fuori dal pacchetto installabile).
