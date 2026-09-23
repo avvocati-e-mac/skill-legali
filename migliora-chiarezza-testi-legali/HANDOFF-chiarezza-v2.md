@@ -34,10 +34,16 @@ Piano approvato: `~/.claude/plans/esamina-la-il-repository-noble-twilight.md`
 4. **Casi 12 corretti** (commit su branch): gold ripuliti, campi `genre`,
    `context`, `persona`, `expected_references_v2`, `must_preserve_in_dopo`.
    Nessun gold passa più con la semplice copia del PRIMA.
-5. **Bozza v2 NON committata** nel working tree:
-   `migliora-chiarezza-testi-legali/SKILL.md` (routing a tabella, procedura,
-   8 divieti, regole comuni con cadenza, marcatori `<!-- step:inizio/fine -->`
-   per l'ablazione) e `scripts/controlla_invarianti.py`.
+5. **Holdout congelato e committato** (20 casi GPT, SHA-256 in
+   `tests/holdout.sha256`). Non leggerlo.
+6. **Prima versione v2 committata** (`f1430e8`): SKILL.md, reference
+   `atti-e-pareri.md`, `contratti.md`, `frasi-da-ia.md`, `lezione-manzoni.md`,
+   script `controlla_invarianti.py`, `research/` fuori dal pacchetto, test
+   statici v2 (24 verdi), `.skill` rigenerato.
+7. **Run avviati** (output in `tests/runs/2026-09-23/dev/`, non committati):
+   baseline v1 sui 12 casi; v2 `completa` e `senza-step` sui 12 casi.
+   Il runner salta gli output esistenti: rilanciare lo stesso comando
+   completa i run interrotti e aggiunge i casi nuovi.
 
 ## In corso al momento dell'handoff (verificare l'esito)
 
