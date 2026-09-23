@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import difflib
 import json
 import re
 import sys
@@ -29,6 +30,8 @@ REQUIRED_FIELDS = (
     "human_notes",
     "adjudication_status",
     "validation_rationale",
+    "genre",
+    "expected_references_v2",
 )
 
 VALID_STATUSES = {
@@ -39,6 +42,8 @@ VALID_STATUSES = {
     "ambiguous",
     "expert_review_only",
 }
+
+VALID_GENRES = {"contratto", "atto", "parere", "diffida"}
 
 REQUIRED_GOLD_ANNOTATORS = {"opus", "human"}
 LEGAL_REFERENCE_PATTERNS = (
@@ -55,7 +60,7 @@ LEGAL_REFERENCE_PATTERNS = (
 LEGAL_REF_NUMBER_RE = re.compile(r"\d+")
 SECTION_HEADER_RE = re.compile(
     r"^[ \t]*(?:#{1,6}[ \t]*)?(?:\*\*)?"
-    r"(PRIMA|DOPO|Motivo)"
+    r"(PRIMA|DOPO|Motivo|TESTO RISCRITTO|Sommario|Scheda|Controllo|PROPOSTA)"
     r"(?:\s*\([^:\n]*\))?"
     r"(?:(:)(?:\*\*)?|(?:\*\*)|[ \t]*$)[ \t]*",
     re.IGNORECASE | re.MULTILINE,
@@ -68,6 +73,7 @@ class EvalResult:
     fatal_failures: list[str] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
     notes: list[str] = field(default_factory=list)
+    metrics: dict[str, Any] = field(default_factory=dict)
 
     @property
     def passed(self) -> bool:
@@ -80,6 +86,7 @@ class EvalResult:
             "fatal_failures": self.fatal_failures,
             "warnings": self.warnings,
             "notes": self.notes,
+            "metrics": self.metrics,
         }
 
 
@@ -130,10 +137,22 @@ def validate_cases(cases: list[dict[str, Any]], repo_root: Path | None = None) -
             if not isinstance(rewrite, dict) or not rewrite.get("label") or not rewrite.get("text"):
                 errors.append(f"{case_id}: ogni acceptable_rewrite richiede label e text.")
 
-        for reference in case.get("required_reference", []):
-            reference_path = root / "migliora-chiarezza-testi-legali" / reference
-            if not reference_path.exists():
-                errors.append(f"{case_id}: reference inesistente: {reference}.")
+        # I reference dipendono dalla versione della skill: required_reference vale per
+        # la v1 (tag chiarezza-v1.0), expected_references_v2 per la v2. L'esistenza dei
+        # file si controlla nei test statici, versione per versione.
+        if case.get("genre") not in VALID_GENRES:
+            errors.append(f"{case_id}: genre non ammesso: {case.get('genre')!r}.")
+        if not isinstance(case.get("expect_no_change", False), bool):
+            errors.append(f"{case_id}: expect_no_change deve essere true o false.")
+        persona = case.get("persona", {})
+        if not isinstance(persona, dict):
+            errors.append(f"{case_id}: persona deve essere un oggetto.")
+        else:
+            for pattern in persona.get("forbidden", []) + persona.get("required_one_of", []):
+                try:
+                    re.compile(pattern)
+                except re.error as error:
+                    errors.append(f"{case_id}: regex persona non valida {pattern!r}: {error}.")
 
         annotations = case.get("annotations", {})
         if not isinstance(annotations, dict):
@@ -169,26 +188,67 @@ def find_case(cases: list[dict[str, Any]], case_id: str) -> dict[str, Any]:
     raise KeyError(f"Caso non trovato: {case_id}")
 
 
-def extract_do_text(output: str) -> str:
+def extract_section_text(output: str, name: str) -> str:
     sections = list(SECTION_HEADER_RE.finditer(output))
-    if sections:
-        blocks: list[str] = []
-        for index, section in enumerate(sections):
-            if section.group(1).lower() != "dopo":
-                continue
-            start = section.end()
-            end = sections[index + 1].start() if index + 1 < len(sections) else len(output)
-            blocks.append(output[start:end].strip())
-        if blocks:
-            return "\n".join(blocks)
+    blocks: list[str] = []
+    for index, section in enumerate(sections):
+        if section.group(1).lower() != name.lower():
+            continue
+        start = section.end()
+        end = sections[index + 1].start() if index + 1 < len(sections) else len(output)
+        blocks.append(output[start:end].strip())
+    return "\n".join(block for block in blocks if block)
 
+
+def extract_do_text(output: str) -> str:
+    text = extract_section_text(output, "DOPO")
+    if text:
+        return text
     matches = re.findall(r"DOPO:\s*(.*?)(?=\n\s*(?:PRIMA:|Motivo:)|\Z)", output, flags=re.DOTALL | re.IGNORECASE)
     return "\n".join(match.strip() for match in matches)
 
 
+def extract_rewritten_text(output: str) -> str:
+    return extract_section_text(output, "TESTO RISCRITTO")
+
+
+def produced_text(output: str) -> str:
+    """Testo che l'avvocato incollera' nell'atto: blocchi DOPO piu' TESTO RISCRITTO."""
+    parts = [extract_do_text(output), extract_rewritten_text(output)]
+    return "\n".join(part for part in parts if part)
+
+
+# Abbreviazioni giuridiche che non chiudono la frase: senza questa lista
+# "art. 1365 c.c." verrebbe spezzato in piu' frasi e le metriche di cadenza
+# segnalerebbero un falso "singhiozzo".
+LEGAL_ABBREVIATIONS = (
+    "art", "artt", "c.c", "c.p.c", "c.p", "c.p.p", "cost", "disp", "att", "n", "nn",
+    "cass", "civ", "pen", "sez", "ss", "ord", "sent", "d.lgs", "d.l", "d.m", "d.p.r",
+    "l", "r.d", "reg", "lett", "co", "comma", "cfr", "cod", "cons", "doc", "docc",
+    "all", "pag", "pagg", "p", "pp", "s.p.a", "s.r.l", "s.n.c", "s.a.s", "spa", "srl",
+    "ill.mo", "ill.ma", "ecc.mo", "ecc.ma", "on", "avv", "dott", "dr", "prof", "sig",
+    "sigg", "sig.ra", "trib", "app", "tar", "cds", "ecc", "es", "rv", "cit", "vol",
+    "gg", "u.s", "c.d", "cd", "ca", "min", "max", "tab", "rif", "prot",
+)
+_ABBR_RE = re.compile(
+    r"\b(?:" + "|".join(re.escape(a) for a in sorted(LEGAL_ABBREVIATIONS, key=len, reverse=True)) + r")\.",
+    re.IGNORECASE,
+)
+_PLACEHOLDER_DOT = "․"  # one dot leader, invisibile ai divisori
+
+
+def split_sentences(text: str) -> list[str]:
+    protected = _ABBR_RE.sub(lambda m: m.group(0)[:-1] + _PLACEHOLDER_DOT, text)
+    # numeri con punti (1.000, 15.01.2018, 4.2) e iniziali puntate non chiudono la frase
+    protected = re.sub(r"(?<=\d)\.(?=\d)", _PLACEHOLDER_DOT, protected)
+    protected = re.sub(r"\b([A-Z])\.(?=\s*[A-Z])", r"\1" + _PLACEHOLDER_DOT, protected)
+    pieces = re.split(r"(?<=[.!?])\s+|\n{2,}|\n(?=\s*(?:[-*•]|\(?[a-z0-9]{1,2}[.)])\s)", protected)
+    return [piece.replace(_PLACEHOLDER_DOT, ".").strip() for piece in pieces if piece and piece.strip()]
+
+
 def sentence_word_counts(text: str) -> list[int]:
     counts: list[int] = []
-    for sentence in re.split(r"[.!?]\s+", text):
+    for sentence in split_sentences(text):
         words = re.findall(r"\b\w+\b", sentence)
         if words:
             counts.append(len(words))
@@ -228,10 +288,195 @@ def is_known_reference(candidate: str, known_refs: set[str]) -> bool:
     return any(same_reference(candidate, known) for known in known_refs)
 
 
+# --- Cancelli "delta": il testo prodotto non puo' contenere piu' occorrenze del PRIMA ---
+
+# Intensificatori e fatti di comodo che i modelli aggiungono spesso (red team 2026-09).
+INTENSIFIER_PATTERNS = {
+    "interamente": r"\binteramente\b",
+    "esclusivamente (come rafforzativo)": r"\besclusivamente\b",
+    "totalmente": r"\btotalmente\b",
+    "assolutamente": r"\bassolutamente\b",
+    "palesemente": r"\bpalese(?:mente)?\b",
+    "evidentemente": r"\bevidente(?:mente)?\b",
+    "chiaramente": r"\bchiaramente\b",
+    "macroscopico": r"\bmacroscopic\w*",
+    "gravissimo": r"\bgravissim\w*",
+    "del tutto": r"\bdel tutto\b",
+    "pienamente": r"\bpienamente\b",
+    "pacificamente": r"\bpacificamente\b",
+    "indubbiamente": r"\bindubbiamente\b",
+    "radicalmente": r"\bradicalmente\b",
+    "invano": r"\binvano\b",
+    "senza riscontro": r"\b(?:priv[ao]|senza|rimast[ao] senza) (?:di )?(?:alcun )?riscontro\b",
+    "ingiustificato": r"\bingiustificat\w*",
+}
+
+# Esimenti e clausole di rischio: aggiungerle sposta l'allocazione del rischio.
+EXEMPTION_PATTERNS = {
+    "caso fortuito": r"\bcaso fortuito\b",
+    "forza maggiore": r"\bforza maggiore\b",
+    "non imputabile": r"\bnon (?:a lui |a lei |loro )?imputabil\w*",
+    "salvo dolo o colpa grave": r"\bdolo o colpa grave\b",
+}
+
+# Tic da IA ad alta precisione (catalogo in references/frasi-da-ia.md della v2).
+AI_TIC_HIGH = {
+    "e' importante sottolineare": r"\b(?:è|e'|risulta) (?:importante|fondamentale|cruciale|essenziale) (?:sottolineare|notare|evidenziare|ricordare|precisare)\b",
+    "vale la pena notare": r"\bvale la pena (?:di )?(?:notare|sottolineare|ricordare|evidenziare)\b",
+    "analizziamo ora": r"\b(?:analizziamo|scomponiamo|entriamo nel merito|ed è qui che|ecco il punto)\b",
+    "chiusura da chat": r"(?:certamente!|\bspero (?:che )?(?:questo|questa|sia|ti)\b|\bnon esit(?:are|ate) a\b)",
+    "consulta un professionista": r"\bsi (?:consiglia|raccomanda) di (?:consultare|rivolgersi a) (?:un|una) (?:professionista|avvocato|legale|esperto)",
+    "non costituisce consulenza": r"\bnon costituisce (?:consulenza|parere) legale\b",
+    "commento sulla riscrittura": r"\b(?:versione (?:riscritta|migliorata|più chiara|piu' chiara)|testo riformulato)\b",
+    "in un mondo in cui": r"\bin (?:un mondo|un['’]epoca|un['’]era) in cui\b|\bal giorno d['’]oggi\b",
+    "navigare la complessita'": r"\bnavigar(?:e|ne) (?:la|le|tra le) (?:complessità|sfide|sfumature)\b",
+    "hedging a cascata": r"\bpotrebber?o? (?:eventualmente|potenzialmente|forse)\b",
+    "lineetta lunga": "—",
+}
+
+# Tic a media precisione: solo avvisi (colpiscono anche prosa legittima).
+AI_TIC_MEDIUM = {
+    "enfasi": r"\b(?:crucial[ei]|fondamentalmente|pivotal[ei]|imprescindibil[ei])\b",
+    "calchi": r"\b(?:gioca(?:no|re|to)? un ruolo|fa(?:re|nno)? la differenza|impatta(?:re|no|to|ndo)?)\b",
+    "lessico gonfiato": r"\b(?:panorama|sfaccettat[oaie]|multiform[ei]|robust[oaie]|approfondi(?:re|remo))\b",
+    "gerundio finale": r",\s+(?:evidenziando|sottolineando|testimoniando|riflettendo)\b",
+    "chiusura riassuntiva": r"(?:^|\n)\s*(?:in (?:conclusione|sintesi|definitiva)|riassumendo|per riassumere)\b",
+    "contrasto costruito": r"\bnon (?:si tratta|è) (?:solo |soltanto |semplicemente )?(?:di )?[^.;]{1,60}?,\s*(?:ma|bensì)\b",
+}
+
+# Verbi dispositivi: "si obbliga a vendere" (effetto obbligatorio) non equivale a "vende" (effetto reale).
+DISPOSITIVE_STEMS = ("vend", "trasfer", "ced", "costitu", "don", "permut", "assegn")
+_OBLIGATION_RE = re.compile(
+    r"\b(?:si obblig\w*|si impegn\w*|promett\w*) a (" + "|".join(DISPOSITIVE_STEMS) + r")\w*",
+    re.IGNORECASE,
+)
+
+# Operatori giuridici che non possono sparire nel DOPO (se presenti nel PRIMA).
+PRESERVED_OPERATORS = {
+    "garanzia ('garantisce')": r"\bgarantisc\w*|\bgarant\w+ che\b",
+    "eccezione (salvo/tranne/eccetto)": r"\b(?:salvo|salva|tranne|eccetto|ad eccezione)\b",
+    "solidarieta'": r"\bsolidal\w*",
+    "a pena di": r"\ba pena di\b",
+    "elenco chiuso ('esclusivamente')": r"\besclusivamente\b",
+    "elenco aperto ('esemplificativo')": r"\besemplificativ\w*|\bad esempio\b|\bdi esempio\b",
+}
+
+NO_CHANGE_RE = re.compile(r"\bnessuna modifica (?:è )?necessaria\b", re.IGNORECASE)
+
+# Numeri "significativi": date, importi, termini, numeri di almeno due cifre.
+_SIGNIFICANT_NUMBER_RE = re.compile(
+    r"\b\d{1,2}[./-]\d{1,2}[./-]\d{2,4}\b"  # date
+    r"|\b\d{1,3}(?:\.\d{3})+(?:,\d+)?\b"  # importi con separatore
+    r"|\b\d+(?:,\d+)?\s*(?:%|euro|€|giorni|gg|mesi|anni|ore|settimane)\b"
+    r"|\b\d{2,}\b",
+    re.IGNORECASE,
+)
+
+
+def count_pattern(pattern: str, text: str) -> int:
+    return len(re.findall(pattern, text, flags=re.IGNORECASE | re.MULTILINE))
+
+
+def strip_quotations(text: str) -> str:
+    """Esclude i passi citati tra virgolette dai controlli sui tic."""
+    return re.sub(r"[\"“«][^\"”»]{0,400}[\"”»]", " ", text)
+
+
+def significant_numbers(text: str) -> set[str]:
+    found: set[str] = set()
+    for match in _SIGNIFICANT_NUMBER_RE.finditer(text):
+        found.add(re.sub(r"\s+", " ", match.group(0).lower()))
+    return found
+
+
+def delta_additions(patterns: dict[str, str], before: str, after: str) -> list[str]:
+    added: list[str] = []
+    for label, pattern in patterns.items():
+        if count_pattern(pattern, after) > count_pattern(pattern, before):
+            added.append(label)
+    return added
+
+
+def gulpease(text: str) -> float | None:
+    words = re.findall(r"\b\w+\b", text)
+    sentences = split_sentences(text)
+    if len(words) < 20 or not sentences:
+        return None
+    letters = sum(len(word) for word in words)
+    return round(89 + (300 * len(sentences) - 10 * letters) / len(words), 1)
+
+
+LOGICAL_CONNECTIVES = (
+    "ma", "però", "pero'", "poiché", "poiche'", "perché", "perche'", "quindi", "dunque",
+    "infatti", "tuttavia", "cioè", "cioe'", "invece", "bensì", "bensi'", "pertanto",
+    "inoltre", "anzi", "mentre", "sicché", "sicche'", "perciò", "percio'", "ne consegue",
+)
+
+
+def cadence_metrics(text: str) -> dict[str, Any]:
+    counts = sentence_word_counts(text)
+    total_words = sum(counts)
+    metrics: dict[str, Any] = {"words": total_words, "sentences": len(counts)}
+    if not counts:
+        return metrics
+    mean = total_words / len(counts)
+    metrics["mean_sentence_words"] = round(mean, 1)
+    metrics["gulpease"] = gulpease(text)
+    if total_words < 150 or len(counts) < 5:
+        metrics["cadence"] = "non calcolata (testo sotto 150 parole o meno di 5 frasi)"
+        return metrics
+    variance = sum((count - mean) ** 2 for count in counts) / len(counts)
+    runs_of_short = 0
+    streak = 0
+    for count in counts:
+        streak = streak + 1 if count < 10 else 0
+        if streak == 3:
+            runs_of_short += 1
+    starts = [sentence.lstrip("*-• (").lower() for sentence in split_sentences(text)]
+    connective_starts = sum(
+        1 for start in starts if any(re.match(rf"{re.escape(word)}\b", start) for word in LOGICAL_CONNECTIVES)
+    )
+    bands = [0 if count < 10 else 1 if count <= 25 else 2 for count in counts]
+    same_band = sum(1 for a, b in zip(bands, bands[1:]) if a == b)
+    metrics.update(
+        {
+            "cv_sentence_length": round((variance ** 0.5) / mean, 2) if mean else None,
+            "short_runs_3plus": runs_of_short,
+            "share_under_10": round(sum(1 for c in counts if c < 10) / len(counts), 2),
+            "share_over_40": round(sum(1 for c in counts if c > 40) / len(counts), 2),
+            "connective_start_share": round(connective_starts / len(counts), 2),
+            "same_band_share": round(same_band / max(1, len(counts) - 1), 2),
+        }
+    )
+    return metrics
+
+
+def word_edit_ratio(before: str, after: str) -> float:
+    a = re.findall(r"\b\w+\b", before.lower())
+    b = re.findall(r"\b\w+\b", after.lower())
+    if not a and not b:
+        return 0.0
+    return round(1 - difflib.SequenceMatcher(a=a, b=b, autojunk=False).ratio(), 2)
+
+
 def evaluate_output(case: dict[str, Any], output: str) -> EvalResult:
     result = EvalResult(case_id=case["id"])
     automation = case.get("automation", {})
     markers = automation.get("required_output_markers", ["PRIMA:", "DOPO:", "Motivo:"])
+    input_text = case.get("input_text", "")
+    expect_no_change = bool(case.get("expect_no_change"))
+    says_no_change = bool(NO_CHANGE_RE.search(output))
+
+    if expect_no_change:
+        if not says_no_change:
+            result.fatal_failures.append(
+                "Sovra-modifica: il testo era gia' chiaro e andava lasciato invariato ('Nessuna modifica necessaria')."
+            )
+        result.metrics["no_change_declared"] = says_no_change
+        return result
+    if says_no_change and not extract_do_text(output):
+        result.fatal_failures.append("Sotto-modifica: dichiarata 'nessuna modifica' su un testo che andava migliorato.")
+        return result
 
     for marker in markers:
         if marker not in output:
@@ -241,13 +486,22 @@ def evaluate_output(case: dict[str, Any], output: str) -> EvalResult:
     if not do_text:
         result.fatal_failures.append("Blocco DOPO non trovato o vuoto.")
         do_text = output
+    scope = produced_text(output) or do_text
+    scope_no_quotes = strip_quotations(scope)
+    input_no_quotes = strip_quotations(input_text)
 
+    # Vecchio controllo (v1): letterali sull'intero output. Tenuto per compatibilita'.
     for literal in automation.get("must_preserve_literals", []):
         if literal.lower() not in output.lower():
             result.fatal_failures.append(f"Elemento da preservare assente: {literal}")
 
+    # Nuovo controllo: i letterali devono stare nel testo prodotto, non basta ricopiarli nel PRIMA.
+    for literal in automation.get("must_preserve_in_dopo", []):
+        if literal.lower() not in scope.lower():
+            result.fatal_failures.append(f"Elemento da preservare assente dal DOPO: {literal}")
+
     for forbidden in automation.get("fatal_forbidden_after", []):
-        if forbidden.lower() in do_text.lower():
+        if forbidden.lower() in scope.lower():
             result.fatal_failures.append(f"Espressione vietata nel DOPO: {forbidden}")
 
     for group in automation.get("must_include_one_of", []):
@@ -258,19 +512,93 @@ def evaluate_output(case: dict[str, Any], output: str) -> EvalResult:
                 f"Manca almeno uno dei termini richiesti per {label}: {', '.join(terms)}"
             )
 
+    persona = case.get("persona", {})
+    for forbidden in persona.get("forbidden", []):
+        if re.search(forbidden, scope, flags=re.IGNORECASE):
+            result.fatal_failures.append(f"Persona invertita nel DOPO: {forbidden}")
+    required_persona = persona.get("required_one_of", [])
+    if required_persona and not any(re.search(p, scope, flags=re.IGNORECASE) for p in required_persona):
+        result.fatal_failures.append("Persona attesa assente dal DOPO: " + " / ".join(required_persona))
+
+    allowed_new = {item.lower() for item in automation.get("allowed_new_literals", [])}
+    input_digits = set(re.findall(r"\d+", input_text)) | {re.sub(r"\D", "", n) for n in significant_numbers(input_text)}
+    new_numbers = sorted(
+        number
+        for number in significant_numbers(scope) - significant_numbers(input_text)
+        if number not in allowed_new and re.sub(r"\D", "", number) not in input_digits
+    )
+    if new_numbers:
+        result.fatal_failures.append("Numeri, date o termini nuovi nel DOPO: " + ", ".join(new_numbers))
+
+    added_intensifiers = [
+        label for label in delta_additions(INTENSIFIER_PATTERNS, input_no_quotes, scope_no_quotes)
+        if label not in allowed_new
+    ]
+    if added_intensifiers:
+        result.fatal_failures.append("Intensificatori o fatti di comodo aggiunti: " + ", ".join(added_intensifiers))
+
+    added_exemptions = [
+        label for label in delta_additions(EXEMPTION_PATTERNS, input_no_quotes, scope_no_quotes)
+        if label not in allowed_new
+    ]
+    if added_exemptions:
+        result.fatal_failures.append(
+            "Esimenti aggiunte nel DOPO (vanno proposte come PROPOSTA:): " + ", ".join(added_exemptions)
+        )
+
+    lost_operators = [
+        label
+        for label, pattern in PRESERVED_OPERATORS.items()
+        if count_pattern(pattern, input_no_quotes) and not count_pattern(pattern, scope_no_quotes)
+    ]
+    if lost_operators:
+        result.fatal_failures.append("Operatore giuridico eliminato nel DOPO: " + ", ".join(lost_operators))
+
+    input_obligations = {m.group(1).lower() for m in _OBLIGATION_RE.finditer(input_text)}
+    output_obligations = {m.group(1).lower() for m in _OBLIGATION_RE.finditer(scope)}
+    if input_obligations - output_obligations:
+        result.fatal_failures.append(
+            "Verbo dispositivo cambiato: 'si obbliga a' eliminato per " + ", ".join(sorted(input_obligations - output_obligations))
+        )
+    if output_obligations - input_obligations:
+        result.fatal_failures.append(
+            "Verbo dispositivo cambiato: 'si obbliga a' introdotto per " + ", ".join(sorted(output_obligations - input_obligations))
+        )
+
+    added_ai = delta_additions(AI_TIC_HIGH, input_no_quotes, scope_no_quotes)
+    if added_ai:
+        result.fatal_failures.append("Tic da IA aggiunti nel DOPO: " + ", ".join(added_ai))
+    added_ai_medium = delta_additions(AI_TIC_MEDIUM, input_no_quotes, scope_no_quotes)
+    if added_ai_medium:
+        result.warnings.append("Possibili tic da IA (da verificare): " + ", ".join(added_ai_medium))
+
     allowed_refs = {ref.lower() for ref in automation.get("allowed_legal_references", [])}
-    input_refs = extract_legal_references(case.get("input_text", ""))
+    input_refs = extract_legal_references(input_text)
     known_refs = input_refs | allowed_refs
-    output_refs = extract_legal_references(do_text)
+    output_refs = extract_legal_references(scope)
     unknown_refs = sorted(ref for ref in output_refs if not is_known_reference(ref, known_refs))
     if unknown_refs:
-        result.warnings.append(
-            "Possibili fonti nuove da verificare: " + "; ".join(unknown_refs)
-        )
+        message = "Fonti nuove non presenti nel testo: " + "; ".join(unknown_refs)
+        if automation.get("new_sources_warning_only"):
+            result.warnings.append(message)
+        else:
+            result.fatal_failures.append(message)
 
     long_sentences = [count for count in sentence_word_counts(do_text) if count > 45]
     if long_sentences:
         result.warnings.append(f"Frasi ancora lunghe nel DOPO: {long_sentences}")
+
+    before_words = len(re.findall(r"\b\w+\b", input_text))
+    after_words = len(re.findall(r"\b\w+\b", extract_rewritten_text(output) or do_text))
+    result.metrics.update(
+        {
+            "length_ratio": round(after_words / before_words, 2) if before_words else None,
+            "edit_ratio": word_edit_ratio(input_text, extract_rewritten_text(output) or do_text),
+            "before": cadence_metrics(input_text),
+            "after": cadence_metrics(extract_rewritten_text(output) or do_text),
+            "has_full_text": bool(extract_rewritten_text(output)),
+        }
+    )
 
     if case.get("adjudication_status") in {"ambiguous", "expert_review_only"}:
         result.notes.append(
