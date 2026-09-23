@@ -1,0 +1,2132 @@
+[
+  {
+    "title": "Garanzia nell'appalto di impianto",
+    "document_type": "contratto",
+    "genre": "contratto",
+    "input_text": "L'Appaltatore, fermo restando quanto ut supra e considerato che è importante sottolineare la centralità della prestazione, garantisce alla Committente che l'impianto sarà conforme al progetto allegato; salvo che il difetto derivi da modifiche richieste dalla Committente dopo la consegna, ogni contestazione dovrà essere comunicata per iscritto a pena di decadenza, come sopra.",
+    "context": {
+      "documento": "contratto di appalto",
+      "mittente": "Committente e Appaltatore",
+      "destinatario": "parti contrattuali"
+    },
+    "persona": {},
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "periodo_sovraccarico",
+        "severity": "media",
+        "description": "La clausola concentra garanzia, eccezione e decadenza in un unico periodo."
+      },
+      {
+        "code": "rinvio_vago",
+        "severity": "media",
+        "description": "L'espressione \"come sopra\" non individua con precisione il contenuto richiamato."
+      },
+      {
+        "code": "formula_arcaica_o_ia",
+        "severity": "bassa",
+        "description": "\"ut supra\" e la formula enfatica sull'importanza della prestazione appesantiscono il testo."
+      },
+      {
+        "code": "garanzia_da_preservare",
+        "severity": "alta",
+        "description": "Il verbo \"garantisce\" non deve essere degradato a una mera dichiarazione."
+      }
+    ],
+    "legal_invariants": [
+      "L'Appaltatore presta una garanzia di conformità dell'impianto al progetto allegato.",
+      "L'eccezione riguarda soltanto i difetti derivanti da modifiche richieste dalla Committente dopo la consegna.",
+      "La contestazione deve essere scritta ed è soggetta a decadenza."
+    ],
+    "forbidden_changes": [
+      "Sostituire \"garantisce\" con \"dichiara\" o \"attesta\".",
+      "Eliminare o ampliare l'eccezione introdotta da \"salvo che\".",
+      "Trasformare la decadenza in prescrizione o aggiungere un termine numerico."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "clausola_semplificata",
+        "text": "L'Appaltatore garantisce alla Committente la conformità dell'impianto al progetto allegato. Salvo che il difetto derivi da modifiche richieste dalla Committente dopo la consegna, la Committente deve comunicare per iscritto ogni contestazione, a pena di decadenza."
+      }
+    ],
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "garantisce",
+        "Salvo che",
+        "a pena di decadenza"
+      ],
+      "fatal_forbidden_after": [
+        "ut supra",
+        "è importante sottolineare",
+        "come sopra"
+      ],
+      "allowed_legal_references": [],
+      "allowed_new_literals": []
+    },
+    "validation_rationale": "Misura la capacità di rendere leggibile una clausola di garanzia senza alterare eccezione, decadenza o contenuto garantito.",
+    "id": "H001",
+    "required_reference": [
+      "(v1) routing non valutato sul holdout"
+    ],
+    "expected_references_v2": [
+      "references/contratti.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "annotations": {
+      "author": {
+        "status": "drafted",
+        "model": "openai/gpt-5.6-terra"
+      },
+      "codex": {
+        "status": "not_run"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    }
+  },
+  {
+    "title": "Licenza software già chiara",
+    "document_type": "contratto",
+    "genre": "contratto",
+    "input_text": "Il Licenziatario può utilizzare il Software esclusivamente per le proprie attività interne. È vietata la sublicenza. Il Fornitore può risolvere il contratto in caso di violazione di tale divieto, fermo restando il risarcimento del danno.",
+    "context": {
+      "documento": "contratto di licenza software",
+      "mittente": "Fornitore e Licenziatario",
+      "destinatario": "parti contrattuali"
+    },
+    "persona": {},
+    "expect_no_change": true,
+    "expected_issues": [
+      {
+        "code": "testo_gia_chiaro",
+        "severity": "alta",
+        "description": "Il testo è già sintetico, corretto e giuridicamente preciso; non richiede riscrittura."
+      }
+    ],
+    "legal_invariants": [
+      "L'uso del Software è limitato alle attività interne del Licenziatario.",
+      "La sublicenza è vietata.",
+      "Il Fornitore conserva la facoltà di risolvere il contratto e di chiedere il risarcimento del danno."
+    ],
+    "forbidden_changes": [
+      "Sostituire la risoluzione con il recesso.",
+      "Eliminare l'avverbio \"esclusivamente\".",
+      "Aggiungere condizioni, termini o rimedi non previsti."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "invariato",
+        "text": "Il Licenziatario può utilizzare il Software esclusivamente per le proprie attività interne. È vietata la sublicenza. Il Fornitore può risolvere il contratto in caso di violazione di tale divieto, fermo restando il risarcimento del danno."
+      }
+    ],
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [],
+      "fatal_forbidden_after": [],
+      "allowed_legal_references": [],
+      "allowed_new_literals": []
+    },
+    "validation_rationale": "Verifica che l'assistente riconosca un testo già chiaro e non introduca modifiche stilistiche o concettuali superflue.",
+    "id": "H002",
+    "required_reference": [
+      "(v1) routing non valutato sul holdout"
+    ],
+    "expected_references_v2": [
+      "references/contratti.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "annotations": {
+      "author": {
+        "status": "drafted",
+        "model": "openai/gpt-5.6-terra"
+      },
+      "codex": {
+        "status": "not_run"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    }
+  },
+  {
+    "title": "Preliminare di cessione in franchising",
+    "document_type": "contratto",
+    "genre": "contratto",
+    "input_text": "Il Cedente si obbliga a cedere al Cessionario, purché questi ottenga il gradimento del Franchisor, il contratto di franchising e/o i rapporti indicati nell'Allegato; la somma già versata resta caparra confirmatoria e sarà imputata esclusivamente al corrispettivo, salvo che il mancato gradimento dipenda dal Cessionario, nel qual caso si applicherà la penale prevista, come sopra.",
+    "context": {
+      "documento": "preliminare di cessione di contratto di franchising",
+      "mittente": "Cedente e Cessionario",
+      "destinatario": "parti contrattuali"
+    },
+    "persona": {},
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "impegno_traslativo_da_preservare",
+        "severity": "alta",
+        "description": "L'obbligo futuro di cedere non può diventare una cessione già perfezionata."
+      },
+      {
+        "code": "rinvio_vago",
+        "severity": "media",
+        "description": "Il rinvio \"come sopra\" non consente di individuare la penale."
+      },
+      {
+        "code": "connettivi_ambigui",
+        "severity": "media",
+        "description": "La struttura con \"e/o\", condizione, caparra, eccezione e penale è poco leggibile."
+      },
+      {
+        "code": "termini_tecnici_da_preservare",
+        "severity": "alta",
+        "description": "Caparra confirmatoria e penale non devono essere sostituite da espressioni generiche."
+      }
+    ],
+    "legal_invariants": [
+      "Il Cedente si obbliga a cedere, ma non dichiara di cedere immediatamente.",
+      "La cessione è subordinata al gradimento del Franchisor.",
+      "La somma versata conserva natura di caparra confirmatoria.",
+      "La somma è imputabile esclusivamente al corrispettivo.",
+      "Se il mancato gradimento dipende dal Cessionario, si applica la penale prevista."
+    ],
+    "forbidden_changes": [
+      "Trasformare \"si obbliga a cedere\" in \"cede\".",
+      "Sostituire la caparra confirmatoria con un acconto o con una penale.",
+      "Eliminare \"purché\", \"salvo che\" o \"esclusivamente\".",
+      "Specificare o quantificare la penale non indicata."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "clausola_ordinata",
+        "text": "Il Cedente si obbliga a cedere al Cessionario il contratto di franchising e/o i rapporti indicati nell'Allegato, purché il Cessionario ottenga il gradimento del Franchisor. La somma già versata resta caparra confirmatoria ed è imputata esclusivamente al corrispettivo. Salvo che il mancato gradimento dipenda dal Cessionario, non si applica la penale prevista."
+      }
+    ],
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "si obbliga a cedere",
+        "purché",
+        "e/o",
+        "caparra confirmatoria",
+        "esclusivamente",
+        "Salvo che",
+        "penale prevista"
+      ],
+      "fatal_forbidden_after": [
+        "come sopra"
+      ],
+      "allowed_legal_references": [],
+      "allowed_new_literals": []
+    },
+    "validation_rationale": "Verifica la conservazione dell'effetto obbligatorio, della condizione di gradimento e della qualificazione tecnica delle somme.",
+    "id": "H003",
+    "required_reference": [
+      "(v1) routing non valutato sul holdout"
+    ],
+    "expected_references_v2": [
+      "references/contratti.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "annotations": {
+      "author": {
+        "status": "drafted",
+        "model": "openai/gpt-5.6-terra"
+      },
+      "codex": {
+        "status": "not_run"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    }
+  },
+  {
+    "title": "Conclusioni per morosità del conduttore",
+    "document_type": "atto_giudiziario",
+    "genre": "atto",
+    "input_text": "Per tutto quanto ut supra esposto, e in conclusione, la ricorrente chiede che il Tribunale voglia accertare e dichiarare risolto, ai sensi dell'art. 1456 c.c., il contratto di locazione commerciale per il mancato pagamento dei canoni indicati, condannando la resistente al rilascio dell'immobile e al pagamento dei canoni scaduti oltre interessi, nonché alle spese, come sopra e con ogni consequenziale statuizione.",
+    "context": {
+      "documento": "ricorso in materia di locazione commerciale",
+      "mittente": "conduttrice ricorrente",
+      "destinatario": "Tribunale e resistente"
+    },
+    "persona": {
+      "forbidden": [
+        "\\bconduttrice resistente\\b",
+        "\\blocatrice ricorrente\\b"
+      ],
+      "required_one_of": [
+        "\\bricorrente\\b",
+        "\\bresistente\\b"
+      ]
+    },
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "domande_giudiziali_concatenate",
+        "severity": "alta",
+        "description": "Le domande di risoluzione, rilascio, pagamento, interessi e spese sono raccolte in un periodo eccessivamente lungo."
+      },
+      {
+        "code": "rinvio_vago",
+        "severity": "media",
+        "description": "\"come sopra\" è indeterminato nelle conclusioni."
+      },
+      {
+        "code": "formula_arcaica_o_pleonastica",
+        "severity": "bassa",
+        "description": "\"ut supra\" e \"in conclusione\" sono formule eliminabili."
+      },
+      {
+        "code": "conclusioni_da_preservare",
+        "severity": "alta",
+        "description": "Le singole domande giudiziali non possono essere omesse o mutate."
+      }
+    ],
+    "legal_invariants": [
+      "La domanda riguarda la risoluzione del contratto di locazione commerciale ai sensi dell'art. 1456 c.c.",
+      "Il presupposto dedotto è il mancato pagamento dei canoni indicati.",
+      "Sono richiesti rilascio dell'immobile, canoni scaduti, interessi e spese.",
+      "La resistente resta il soggetto passivo delle domande."
+    ],
+    "forbidden_changes": [
+      "Sostituire la risoluzione con il recesso.",
+      "Omettere la domanda di rilascio o quella di pagamento.",
+      "Aggiungere importi, periodi di morosità o una domanda di sfratto.",
+      "Invertire ricorrente e resistente."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "conclusioni_per_punti",
+        "text": "Per quanto esposto, la ricorrente chiede che il Tribunale voglia:\n- accertare e dichiarare risolto, ai sensi dell'art. 1456 c.c., il contratto di locazione commerciale per il mancato pagamento dei canoni indicati;\n- condannare la resistente al rilascio dell'immobile;\n- condannare la resistente al pagamento dei canoni scaduti, oltre interessi;\n- condannare la resistente alle spese, con ogni consequenziale statuizione."
+      }
+    ],
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "ricorrente",
+        "risolto",
+        "art. 1456 c.c.",
+        "locazione commerciale",
+        "resistente",
+        "rilascio dell'immobile",
+        "canoni scaduti",
+        "interessi",
+        "spese"
+      ],
+      "fatal_forbidden_after": [
+        "ut supra",
+        "in conclusione",
+        "come sopra"
+      ],
+      "allowed_legal_references": [
+        "art. 1456 c.c."
+      ],
+      "allowed_new_literals": []
+    },
+    "validation_rationale": "Misura se l'assistente sa scomporre conclusioni processuali senza modificare petitum, causa petendi o ruoli processuali.",
+    "id": "H004",
+    "required_reference": [
+      "(v1) routing non valutato sul holdout"
+    ],
+    "expected_references_v2": [
+      "references/atti-e-pareri.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "annotations": {
+      "author": {
+        "status": "drafted",
+        "model": "openai/gpt-5.6-terra"
+      },
+      "codex": {
+        "status": "not_run"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    }
+  },
+  {
+    "title": "Ricorso lavoristico e decadenza",
+    "document_type": "atto_giudiziario",
+    "genre": "atto",
+    "input_text": "La ricorrente ha impugnato il recesso nei termini e pertanto non è incorsa in decadenza; è importante sottolineare che il recesso, comunicato senza le ragioni che la resistente ora deduce, deve essere dichiarato inefficace, salvo che codesta resistente provi i fatti allegati, con conseguente condanna alla reintegrazione e/o al risarcimento, oltre accessori e spese.",
+    "context": {
+      "documento": "ricorso del lavoratore",
+      "mittente": "lavoratrice ricorrente",
+      "destinatario": "Tribunale e datrice di lavoro resistente"
+    },
+    "persona": {
+      "forbidden": [
+        "\\bricorrente resistente\\b",
+        "\\bresistente ricorrente\\b",
+        "\\bcodesta ricorrente\\b"
+      ],
+      "required_one_of": [
+        "\\bla ricorrente\\b",
+        "\\bla resistente\\b"
+      ]
+    },
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "frase_spezzata_da_riordinare",
+        "severity": "media",
+        "description": "La frase unisce tempestività, decadenza, inefficacia, eccezione probatoria e domande conseguenziali."
+      },
+      {
+        "code": "termini_tecnici_da_preservare",
+        "severity": "alta",
+        "description": "Decadenza, recesso e inefficacia devono restare distinti da prescrizione, licenziamento o risoluzione."
+      },
+      {
+        "code": "domande_alternative_da_preservare",
+        "severity": "alta",
+        "description": "La reintegrazione e/o il risarcimento devono rimanere formulati come nell'atto."
+      },
+      {
+        "code": "registro_inappropriato",
+        "severity": "bassa",
+        "description": "La formula \"è importante sottolineare\" è ridondante e \"codesta\" è arcaico."
+      }
+    ],
+    "legal_invariants": [
+      "La ricorrente afferma di avere impugnato il recesso nei termini e di non essere incorsa in decadenza.",
+      "Si chiede la declaratoria di inefficacia del recesso.",
+      "L'eccezione resta subordinata alla prova, da parte della resistente, dei fatti allegati.",
+      "Le domande conseguenti sono reintegrazione e/o risarcimento, oltre accessori e spese."
+    ],
+    "forbidden_changes": [
+      "Sostituire decadenza con prescrizione.",
+      "Sostituire recesso con licenziamento o risoluzione.",
+      "Eliminare \"salvo che\" o l'onere probatorio della resistente.",
+      "Cambiare \"e/o\" in una scelta esclusiva o aggiungere una quantificazione del risarcimento."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "motivo_riorganizzato",
+        "text": "La ricorrente ha impugnato il recesso nei termini e non è incorsa in decadenza. Il recesso, comunicato senza le ragioni ora dedotte dalla resistente, deve essere dichiarato inefficace, salvo che la resistente provi i fatti allegati. Ne conseguono la condanna alla reintegrazione e/o al risarcimento, oltre accessori e spese."
+      }
+    ],
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "ricorrente",
+        "recesso",
+        "decadenza",
+        "inefficace",
+        "salvo che",
+        "resistente",
+        "reintegrazione e/o al risarcimento",
+        "accessori e spese"
+      ],
+      "fatal_forbidden_after": [
+        "è importante sottolineare",
+        "codesta"
+      ],
+      "allowed_legal_references": [],
+      "allowed_new_literals": []
+    },
+    "validation_rationale": "Verifica la preservazione delle qualificazioni lavoristiche e dell'alternatività delle domande nel riordino di un motivo di ricorso.",
+    "id": "H005",
+    "required_reference": [
+      "(v1) routing non valutato sul holdout"
+    ],
+    "expected_references_v2": [
+      "references/atti-e-pareri.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "annotations": {
+      "author": {
+        "status": "drafted",
+        "model": "openai/gpt-5.6-terra"
+      },
+      "codex": {
+        "status": "not_run"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    }
+  },
+  {
+    "title": "Diffida per provvigioni di agenzia",
+    "document_type": "diffida",
+    "genre": "diffida",
+    "input_text": "La nostra assistita, Alfa Agente S.r.l., Vi diffida a corrispondere le provvigioni maturate sulle forniture da Voi concluse con i clienti segnalati dalla stessa, giacché il relativo pagamento gioca un ruolo cruciale; entro [termine], salvo che contestiate per iscritto e specificamente le singole forniture, dovrete versare quanto dovuto, con riserva di agire per il recupero e per gli ulteriori danni.",
+    "context": {
+      "documento": "diffida stragiudiziale",
+      "mittente": "Alfa Agente S.r.l., assistita da un legale",
+      "destinatario": "preponente"
+    },
+    "persona": {
+      "forbidden": [
+        "\\bVostra assistita\\b",
+        "\\bnostra società\\b"
+      ],
+      "required_one_of": [
+        "\\bnostra assistita\\b",
+        "\\bVoi\\b"
+      ]
+    },
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "persona_da_preservare",
+        "severity": "alta",
+        "description": "La prospettiva della diffida deve restare quella della nostra assistita verso il destinatario indicato come Voi."
+      },
+      {
+        "code": "periodo_sovraccarico",
+        "severity": "media",
+        "description": "Presupposto delle provvigioni, termine, eccezione, intimazione e riserva di azione sono compressi in un solo periodo."
+      },
+      {
+        "code": "tic_ia",
+        "severity": "bassa",
+        "description": "L'espressione \"gioca un ruolo cruciale\" è enfatica e priva di funzione giuridica."
+      },
+      {
+        "code": "eccezione_da_preservare",
+        "severity": "alta",
+        "description": "La facoltà di contestazione scritta e specifica non può essere eliminata o ampliata."
+      }
+    ],
+    "legal_invariants": [
+      "La diffida è inviata per conto di Alfa Agente S.r.l.",
+      "Le provvigioni riguardano forniture concluse dal destinatario con clienti segnalati dall'agente.",
+      "Il pagamento è richiesto entro il termine indicato tra parentesi quadre.",
+      "Resta salva la contestazione scritta e specifica delle singole forniture.",
+      "La mittente si riserva azioni per recupero e ulteriori danni."
+    ],
+    "forbidden_changes": [
+      "Invertire \"nostra assistita\" e \"Voi\".",
+      "Aggiungere importi, date, interessi, penali o titoli esecutivi.",
+      "Eliminare la condizione \"salvo che\".",
+      "Trasformare la riserva di agire in una rinuncia o in un'azione già proposta."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "diffida_ordinata",
+        "text": "La nostra assistita, Alfa Agente S.r.l., Vi diffida a corrispondere, entro [termine], le provvigioni maturate sulle forniture da Voi concluse con i clienti da essa segnalati. Salvo che contestiate per iscritto e specificamente le singole forniture, dovrete versare quanto dovuto. La nostra assistita si riserva di agire per il recupero e per gli ulteriori danni."
+      }
+    ],
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "nostra assistita",
+        "Alfa Agente S.r.l.",
+        "Vi diffida",
+        "provvigioni",
+        "forniture",
+        "Voi concluse",
+        "[termine]",
+        "Salvo che",
+        "per iscritto e specificamente",
+        "recupero",
+        "ulteriori danni"
+      ],
+      "fatal_forbidden_after": [
+        "gioca un ruolo cruciale"
+      ],
+      "allowed_legal_references": [],
+      "allowed_new_literals": []
+    },
+    "validation_rationale": "Misura la capacità di chiarire una diffida conservando persona, termine non quantificato, condizione di contestazione e riserva di tutela.",
+    "id": "H006",
+    "required_reference": [
+      "(v1) routing non valutato sul holdout"
+    ],
+    "expected_references_v2": [
+      "references/atti-e-pareri.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "annotations": {
+      "author": {
+        "status": "drafted",
+        "model": "openai/gpt-5.6-terra"
+      },
+      "codex": {
+        "status": "not_run"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    }
+  },
+  {
+    "title": "Garanzia nel contratto software",
+    "document_type": "contratto",
+    "genre": "contratto",
+    "input_text": "Il Fornitore garantisce che il Software, alla Data di Avvio e per i dodici mesi successivi, sarà conforme alle Specifiche e idoneo all’uso descritto nell’Allegato A, salvo i malfunzionamenti derivanti da modifiche effettuate dal Cliente o da terzi non autorizzati. È importante sottolineare che il Fornitore gioca un ruolo cruciale anche nell’assistenza, che sarà prestata secondo quanto sopra e/o come necessario.",
+    "context": {
+      "documento": "contratto di licenza e manutenzione software",
+      "mittente": "Fornitore",
+      "destinatario": "Cliente"
+    },
+    "persona": {},
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "garanzia_da_preservare",
+        "severity": "alta",
+        "description": "La garanzia di conformità e idoneità non deve essere attenuata a mera dichiarazione o impegno di assistenza."
+      },
+      {
+        "code": "rinvio_vago",
+        "severity": "media",
+        "description": "L’espressione “secondo quanto sopra” è ambigua e va resa riferibile alle previsioni contrattuali applicabili."
+      },
+      {
+        "code": "tic_ia",
+        "severity": "bassa",
+        "description": "Le formule enfatiche sull’importanza e sul ruolo cruciale sono ridondanti."
+      },
+      {
+        "code": "e_o",
+        "severity": "media",
+        "description": "La congiunzione “e/o” richiede una formulazione chiara che non restringa le prestazioni dovute."
+      }
+    ],
+    "legal_invariants": [
+      "Il Fornitore garantisce conformità alle Specifiche e idoneità all’uso indicato nell’Allegato A.",
+      "La durata della garanzia decorre dalla Data di Avvio e dura dodici mesi.",
+      "Restano esclusi soltanto i malfunzionamenti derivanti da modifiche del Cliente o di terzi non autorizzati.",
+      "L’assistenza non può essere trasformata in un’obbligazione diversa o più ampia rispetto al testo originario."
+    ],
+    "forbidden_changes": [
+      "Sostituire “garantisce” con “dichiara” o “ritiene”.",
+      "Eliminare o ampliare l’eccezione relativa alle modifiche non autorizzate.",
+      "Aggiungere livelli di servizio, tempi di intervento, penali o cause di esonero.",
+      "Sostituire “e/o” con una congiunzione che renda alternativi obblighi cumulativi."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "chiarezza_conservativa",
+        "text": "Il Fornitore garantisce che il Software, alla Data di Avvio e nei dodici mesi successivi, è conforme alle Specifiche ed è idoneo all’uso descritto nell’Allegato A, salvo i malfunzionamenti derivanti da modifiche effettuate dal Cliente o da terzi non autorizzati. Il Fornitore presta inoltre l’assistenza prevista dal presente contratto e quella necessaria ai sensi delle relative disposizioni."
+      }
+    ],
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "Il Fornitore garantisce",
+        "Data di Avvio",
+        "dodici mesi",
+        "Specifiche",
+        "Allegato A",
+        "salvo",
+        "Cliente",
+        "terzi non autorizzati"
+      ],
+      "fatal_forbidden_after": [
+        "È importante sottolineare",
+        "gioca un ruolo cruciale",
+        "secondo quanto sopra"
+      ],
+      "allowed_legal_references": [],
+      "allowed_new_literals": []
+    },
+    "validation_rationale": "Misura la capacità di eliminare ridondanze e rinvii vaghi senza degradare una garanzia contrattuale né alterarne durata ed eccezioni.",
+    "id": "H007",
+    "required_reference": [
+      "(v1) routing non valutato sul holdout"
+    ],
+    "expected_references_v2": [
+      "references/contratti.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "annotations": {
+      "author": {
+        "status": "drafted",
+        "model": "openai/gpt-5.6-terra"
+      },
+      "codex": {
+        "status": "not_run"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    }
+  },
+  {
+    "title": "Cessione di quota nel franchising",
+    "document_type": "contratto",
+    "genre": "contratto",
+    "input_text": "Il Franchisee, fermo restando quanto previsto ut supra, si obbliga a cedere al Franchisor, il quale potrà indicare un terzo acquirente, la quota di partecipazione nella società che gestisce il punto vendita, purché il Franchisor comunichi la propria richiesta entro il termine di cui all’articolo precedente, a pena di decadenza. La cessione avverrà al prezzo determinato come sopra; il Franchisee non potrà opporre eccezioni, salvo quelle inderogabili per legge.",
+    "context": {
+      "documento": "accordo di franchising con patto di trasferimento partecipativo",
+      "mittente": "Franchisor e Franchisee",
+      "destinatario": "parti contraenti"
+    },
+    "persona": {},
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "rinvii_vaghi_e_arcaici",
+        "severity": "media",
+        "description": "“Ut supra”, “articolo precedente” e “come sopra” rendono incerti i riferimenti contrattuali."
+      },
+      {
+        "code": "obbligo_cessione",
+        "severity": "alta",
+        "description": "L’obbligo di cedere non deve essere riscritto come cessione già perfezionata."
+      },
+      {
+        "code": "decadenza_da_preservare",
+        "severity": "alta",
+        "description": "La conseguenza della mancata comunicazione nel termine è una decadenza, non prescrizione o semplice scadenza."
+      },
+      {
+        "code": "condizione_e_salva_eccezione",
+        "severity": "alta",
+        "description": "Devono restare la condizione “purché” e la riserva delle eccezioni inderogabili."
+      }
+    ],
+    "legal_invariants": [
+      "Il Franchisee si obbliga a cedere, ma non cede immediatamente, la quota di partecipazione.",
+      "Il Franchisor può indicare un terzo acquirente.",
+      "La richiesta del Franchisor deve essere comunicata entro il termine richiamato, a pena di decadenza.",
+      "Il prezzo resta quello già determinato dal contratto.",
+      "Sono opponibili esclusivamente le eccezioni inderogabili per legge."
+    ],
+    "forbidden_changes": [
+      "Trasformare “si obbliga a cedere” in “cede”.",
+      "Sostituire la decadenza con prescrizione, risoluzione o una penale.",
+      "Eliminare la facoltà del Franchisor di indicare il terzo acquirente.",
+      "Eliminare “purché” o la riserva “salvo quelle inderogabili per legge”."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "rinvii_resi_espliciti",
+        "text": "Fermo restando quanto previsto nelle disposizioni richiamate, il Franchisee si obbliga a cedere al Franchisor, o al terzo acquirente da questo indicato, la quota di partecipazione nella società che gestisce il punto vendita. L’obbligo opera purché il Franchisor comunichi la richiesta entro il termine previsto dall’articolo richiamato, a pena di decadenza. La cessione avverrà al prezzo già determinato dal contratto. Il Franchisee non potrà opporre eccezioni, salvo quelle inderogabili per legge."
+      }
+    ],
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "si obbliga a cedere",
+        "Franchisor",
+        "terzo acquirente",
+        "purché",
+        "a pena di decadenza",
+        "salvo quelle inderogabili per legge"
+      ],
+      "fatal_forbidden_after": [
+        "ut supra",
+        "come sopra",
+        "articolo precedente"
+      ],
+      "allowed_legal_references": [],
+      "allowed_new_literals": []
+    },
+    "validation_rationale": "Misura se la riscrittura chiarisce rinvii e sintassi senza anticipare il trasferimento della quota né alterare decadenza, condizione ed eccezioni.",
+    "id": "H008",
+    "required_reference": [
+      "(v1) routing non valutato sul holdout"
+    ],
+    "expected_references_v2": [
+      "references/contratti.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "annotations": {
+      "author": {
+        "status": "drafted",
+        "model": "openai/gpt-5.6-terra"
+      },
+      "codex": {
+        "status": "not_run"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    }
+  },
+  {
+    "title": "Intimazione di sfratto commerciale",
+    "document_type": "atto_giudiziario",
+    "genre": "atto",
+    "input_text": "La ricorrente espone che la resistente, conduttrice dell’immobile commerciale sito in [indirizzo], non ha corrisposto i canoni scaduti, nonostante i solleciti. Per tali ragioni, e per ogni altra ragione meglio deducibile, la ricorrente chiede che l’Ill.mo Tribunale voglia convalidare lo sfratto per morosità e fissare, ove occorra, l’udienza per la convalida, con condanna della resistente al rilascio dell’immobile e alle spese, competenze e onorari del giudizio.",
+    "context": {
+      "documento": "atto di intimazione di sfratto per morosità in locazione commerciale",
+      "mittente": "locatrice ricorrente",
+      "destinatario": "Tribunale e conduttrice resistente"
+    },
+    "persona": {
+      "forbidden": [
+        "\\bnostra assistita\\b",
+        "\\bVostra assistita\\b"
+      ],
+      "required_one_of": [
+        "\\bricorrente\\b",
+        "\\bresistente\\b"
+      ]
+    },
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "domande_giudiziali_ambigue",
+        "severity": "alta",
+        "description": "La richiesta di convalida e quella di fissazione dell’udienza sono espresse in modo potenzialmente incoerente."
+      },
+      {
+        "code": "formula_generica",
+        "severity": "media",
+        "description": "La clausola “per ogni altra ragione meglio deducibile” è generica e superflua."
+      },
+      {
+        "code": "conclusioni_da_preservare",
+        "severity": "alta",
+        "description": "Non devono essere aggiunte domande di pagamento, risoluzione, indennità o provvedimenti non formulati."
+      }
+    ],
+    "legal_invariants": [
+      "La resistente è la conduttrice e la ricorrente è la locatrice.",
+      "L’inadempimento dedotto riguarda canoni scaduti non corrisposti.",
+      "Le domande sono convalida dello sfratto per morosità, rilascio e spese, competenze e onorari.",
+      "La fissazione dell’udienza è richiesta solo ove necessaria."
+    ],
+    "forbidden_changes": [
+      "Invertire ricorrente e resistente.",
+      "Aggiungere una domanda di ingiunzione per canoni, risoluzione del contratto o risarcimento.",
+      "Eliminare la domanda di condanna al rilascio.",
+      "Trasformare la condanna alle spese in una quantificazione di importi non presenti."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "conclusioni_coordinate",
+        "text": "La ricorrente espone che la resistente, conduttrice dell’immobile commerciale sito in [indirizzo], non ha corrisposto i canoni scaduti nonostante i solleciti. Pertanto, la ricorrente chiede che l’Ill.mo Tribunale voglia convalidare lo sfratto per morosità; ove occorra, fissare l’udienza per la convalida; condannare la resistente al rilascio dell’immobile e alle spese, competenze e onorari del giudizio."
+      }
+    ],
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "ricorrente",
+        "resistente",
+        "conduttrice",
+        "canoni scaduti",
+        "convalidare lo sfratto per morosità",
+        "ove occorra",
+        "rilascio dell’immobile",
+        "spese, competenze e onorari"
+      ],
+      "fatal_forbidden_after": [
+        "per ogni altra ragione meglio deducibile"
+      ],
+      "allowed_legal_references": [],
+      "allowed_new_literals": []
+    },
+    "validation_rationale": "Misura la fedeltà alle conclusioni giudiziali e ai ruoli processuali durante la semplificazione di una formula di rito.",
+    "id": "H009",
+    "required_reference": [
+      "(v1) routing non valutato sul holdout"
+    ],
+    "expected_references_v2": [
+      "references/atti-e-pareri.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "annotations": {
+      "author": {
+        "status": "drafted",
+        "model": "openai/gpt-5.6-terra"
+      },
+      "codex": {
+        "status": "not_run"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    }
+  },
+  {
+    "title": "Ricorso del lavoratore per differenze retributive",
+    "document_type": "atto_giudiziario",
+    "genre": "atto",
+    "input_text": "Il ricorrente deduce di avere svolto mansioni superiori rispetto a quelle formalmente assegnate. In conclusione, è importante sottolineare che tali mansioni comprendevano, in via esemplificativa e non tassativa, il coordinamento del personale, la predisposizione dei turni e i rapporti con i fornitori. Chiede pertanto accertarsi il diritto al trattamento corrispondente alle mansioni svolte e condannarsi la convenuta al pagamento delle conseguenti differenze retributive, oltre accessori come per legge.",
+    "context": {
+      "documento": "ricorso del lavoratore in materia di mansioni superiori",
+      "mittente": "lavoratore ricorrente",
+      "destinatario": "Tribunale del lavoro e datrice di lavoro convenuta"
+    },
+    "persona": {
+      "forbidden": [
+        "\\bconvenuto\\b",
+        "\\bdatore di lavoro ricorrente\\b"
+      ],
+      "required_one_of": [
+        "\\bil ricorrente\\b",
+        "\\bla convenuta\\b"
+      ]
+    },
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "tic_ia",
+        "severity": "bassa",
+        "description": "Le formule “In conclusione” e “è importante sottolineare” non aggiungono contenuto giuridico."
+      },
+      {
+        "code": "elenco_esemplificativo",
+        "severity": "alta",
+        "description": "L’elenco delle mansioni è espressamente esemplificativo e non tassativo e tale natura deve restare invariata."
+      },
+      {
+        "code": "domanda_giudiziale",
+        "severity": "alta",
+        "description": "La domanda di accertamento e condanna non deve essere mutata in domanda di inquadramento, reintegrazione o risarcimento."
+      }
+    ],
+    "legal_invariants": [
+      "Il ricorrente allega lo svolgimento di mansioni superiori a quelle formalmente assegnate.",
+      "Le attività indicate sono solo esemplificative e non tassative.",
+      "La convenuta è la datrice di lavoro destinataria della condanna.",
+      "La domanda concerne il trattamento corrispondente e le conseguenti differenze retributive, oltre accessori come per legge."
+    ],
+    "forbidden_changes": [
+      "Omettere “in via esemplificativa e non tassativa”.",
+      "Aggiungere un livello, una qualifica, un periodo di lavoro o un importo.",
+      "Sostituire la domanda di trattamento e differenze retributive con una domanda di reintegrazione o risarcimento.",
+      "Invertire le posizioni di ricorrente e convenuta."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "esposizione_lineare",
+        "text": "Il ricorrente deduce di avere svolto mansioni superiori a quelle formalmente assegnate. Tali mansioni comprendevano, in via esemplificativa e non tassativa, il coordinamento del personale, la predisposizione dei turni e i rapporti con i fornitori. Chiede pertanto di accertare il diritto al trattamento corrispondente alle mansioni svolte e di condannare la convenuta al pagamento delle conseguenti differenze retributive, oltre accessori come per legge."
+      }
+    ],
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "Il ricorrente",
+        "mansioni superiori",
+        "in via esemplificativa e non tassativa",
+        "coordinamento del personale",
+        "predisposizione dei turni",
+        "rapporti con i fornitori",
+        "la convenuta",
+        "differenze retributive",
+        "oltre accessori come per legge"
+      ],
+      "fatal_forbidden_after": [
+        "In conclusione",
+        "è importante sottolineare"
+      ],
+      "allowed_legal_references": [],
+      "allowed_new_literals": []
+    },
+    "validation_rationale": "Misura se l’assistente rimuove riempitivi senza tassativizzare l’elenco né modificare petitum e parti processuali.",
+    "id": "H010",
+    "required_reference": [
+      "(v1) routing non valutato sul holdout"
+    ],
+    "expected_references_v2": [
+      "references/atti-e-pareri.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "annotations": {
+      "author": {
+        "status": "drafted",
+        "model": "openai/gpt-5.6-terra"
+      },
+      "codex": {
+        "status": "not_run"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    }
+  },
+  {
+    "title": "Parere sulla prescrizione sanitaria",
+    "document_type": "parere",
+    "genre": "parere",
+    "input_text": "A parere di chi scrive, la richiesta della struttura sanitaria privata di rinunciare preventivamente a ogni pretesa appare problematica: la rinuncia è formulata anche con riferimento a danni non ancora conosciuti e non distingue tra attività sanitaria e servizi alberghieri. Fermo restando quanto sopra, occorre verificare se la clausola incida sulla prescrizione o introduca una decadenza; non è corretto qualificare senz’altro la rinuncia come liberatoria valida. Codesto profilo va esaminato alla luce del testo effettivamente sottoscritto.",
+    "context": {
+      "documento": "parere pro veritate su clausola di rinuncia in contratto sanitario privato",
+      "mittente": "legale incaricato",
+      "destinatario": "paziente assistito"
+    },
+    "persona": {
+      "forbidden": [
+        "\\bVostro\\b",
+        "\\bVostra\\b"
+      ],
+      "required_one_of": [
+        "\\bpaziente\\b",
+        "\\bassistito\\b"
+      ]
+    },
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "termini_tecnici",
+        "severity": "alta",
+        "description": "Prescrizione e decadenza sono concetti distinti e non possono essere sostituiti con termini generici."
+      },
+      {
+        "code": "rinvio_vago_arcaico",
+        "severity": "media",
+        "description": "“Fermo restando quanto sopra” e “codesto” appesantiscono il testo senza precisare il riferimento."
+      },
+      {
+        "code": "conclusione_cauta",
+        "severity": "alta",
+        "description": "Il parere esprime una valutazione condizionata e non può diventare un’affermazione definitiva di invalidità."
+      }
+    ],
+    "legal_invariants": [
+      "La clausola riguarda una rinuncia preventiva a pretese.",
+      "La rinuncia riguarda anche danni non ancora conosciuti.",
+      "Il testo non distingue tra attività sanitaria e servizi alberghieri.",
+      "Occorre verificare se la clausola incida su prescrizione o introduca una decadenza.",
+      "Non è possibile affermare senz’altro che la rinuncia sia una liberatoria valida."
+    ],
+    "forbidden_changes": [
+      "Concludere che la clausola è certamente nulla, valida o inefficace.",
+      "Confondere prescrizione e decadenza.",
+      "Aggiungere norme, sentenze, fatti clinici o termini temporali.",
+      "Eliminare il riferimento ai danni non ancora conosciuti o ai servizi alberghieri."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "parere_cauto",
+        "text": "La richiesta della struttura sanitaria privata di rinunciare preventivamente a ogni pretesa appare problematica, poiché la rinuncia riguarda anche danni non ancora conosciuti e non distingue tra attività sanitaria e servizi alberghieri. Occorre verificare se la clausola incida sulla prescrizione o introduca una decadenza. Non è possibile qualificare senz’altro la rinuncia come liberatoria valida: il relativo contenuto deve essere esaminato alla luce del testo effettivamente sottoscritto dal paziente assistito."
+      }
+    ],
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "struttura sanitaria privata",
+        "rinunciare preventivamente",
+        "danni non ancora conosciuti",
+        "attività sanitaria",
+        "servizi alberghieri",
+        "prescrizione",
+        "decadenza",
+        "liberatoria valida",
+        "testo effettivamente sottoscritto"
+      ],
+      "fatal_forbidden_after": [
+        "Fermo restando quanto sopra",
+        "Codesto profilo"
+      ],
+      "allowed_legal_references": [],
+      "allowed_new_literals": []
+    },
+    "validation_rationale": "Misura la capacità di rendere leggibile un parere prudenziale preservando le distinzioni tecniche e l’assenza di una conclusione definitiva.",
+    "id": "H011",
+    "required_reference": [
+      "(v1) routing non valutato sul holdout"
+    ],
+    "expected_references_v2": [
+      "references/atti-e-pareri.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "annotations": {
+      "author": {
+        "status": "drafted",
+        "model": "openai/gpt-5.6-terra"
+      },
+      "codex": {
+        "status": "not_run"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    }
+  },
+  {
+    "title": "Diffida per avaria della merce trasportata",
+    "document_type": "diffida",
+    "genre": "diffida",
+    "input_text": "Con la presente, la nostra assistita Alfa S.r.l. Vi diffida a prendere in consegna la contestazione relativa alla merce trasportata e a fornire riscontro entro [termine], fermo restando ogni diritto della nostra assistita. La merce è stata consegnata con imballaggi danneggiati; la presente vale quale riserva, senza che ciò costituisca accettazione della merce o rinuncia ad azioni. Si richiede inoltre di non procedere allo smaltimento della merce sino a istruzioni della nostra assistita.",
+    "context": {
+      "documento": "diffida e riserva relativa a trasporto di merci",
+      "mittente": "legale di Alfa S.r.l.",
+      "destinatario": "vettore"
+    },
+    "persona": {
+      "forbidden": [
+        "\\bVostra assistita\\b",
+        "\\bvostra assistita\\b"
+      ],
+      "required_one_of": [
+        "\\bnostra assistita\\b",
+        "\\bAlfa S\\.r\\.l\\.\\b"
+      ]
+    },
+    "expect_no_change": true,
+    "expected_issues": [
+      {
+        "code": "testo_gia_chiaro",
+        "severity": "alta",
+        "description": "Il testo è già lineare e contiene riserva, termine non determinato e istruzione conservativa che non richiedono modifiche."
+      }
+    ],
+    "legal_invariants": [
+      "La mittente è Alfa S.r.l., indicata come nostra assistita.",
+      "La diffida riguarda la contestazione sulla merce trasportata.",
+      "Il termine resta indicato come [termine].",
+      "La comunicazione vale quale riserva e non costituisce accettazione della merce né rinuncia ad azioni.",
+      "La merce non deve essere smaltita fino a istruzioni della nostra assistita."
+    ],
+    "forbidden_changes": [
+      "Sostituire “nostra assistita” con “Vostra assistita” o invertire i ruoli.",
+      "Inserire una data, un importo, una causa del danno o una richiesta risarcitoria.",
+      "Eliminare la riserva o trasformarla in accettazione della merce.",
+      "Aggiungere esimenti quali caso fortuito o forza maggiore."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "invariato",
+        "text": "Con la presente, la nostra assistita Alfa S.r.l. Vi diffida a prendere in consegna la contestazione relativa alla merce trasportata e a fornire riscontro entro [termine], fermo restando ogni diritto della nostra assistita. La merce è stata consegnata con imballaggi danneggiati; la presente vale quale riserva, senza che ciò costituisca accettazione della merce o rinuncia ad azioni. Si richiede inoltre di non procedere allo smaltimento della merce sino a istruzioni della nostra assistita."
+      }
+    ],
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [],
+      "fatal_forbidden_after": [],
+      "allowed_legal_references": [],
+      "allowed_new_literals": []
+    },
+    "validation_rationale": "Misura se l’assistente riconosce un testo già chiaro e si astiene da modifiche che possano alterare riserva, persona o contenuto della diffida.",
+    "id": "H012",
+    "required_reference": [
+      "(v1) routing non valutato sul holdout"
+    ],
+    "expected_references_v2": [
+      "references/atti-e-pareri.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "annotations": {
+      "author": {
+        "status": "drafted",
+        "model": "openai/gpt-5.6-terra"
+      },
+      "codex": {
+        "status": "not_run"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    }
+  },
+  {
+    "title": "Licenza software con deposito del codice sorgente",
+    "document_type": "contratto",
+    "genre": "contratto",
+    "input_text": "Il Fornitore garantisce al Cliente che il Software, come sopra meglio individuato, è originale e che esso non viola diritti di terzi, salvo che la violazione dipenda da modifiche apportate dal Cliente e/o da soggetti dal medesimo incaricati senza il preventivo consenso scritto del Fornitore. Fermo restando quanto ut supra, il Fornitore si obbliga a cedere al Cliente il codice sorgente esclusivamente qualora il servizio di manutenzione non sia più prestato dal Fornitore per cessazione della relativa attività; tale cessione avverrà alle condizioni che saranno all'uopo concordate tra le Parti.",
+    "context": {
+      "documento": "contratto di licenza software",
+      "mittente": "Fornitore del software",
+      "destinatario": "Cliente licenziatario"
+    },
+    "persona": {
+      "forbidden": [
+        "\\bnostr[oaie]\\b",
+        "\\bVostr[oaie]\\b"
+      ],
+      "required_one_of": [
+        "\\bFornitore\\b",
+        "\\bCliente\\b"
+      ]
+    },
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "periodo_lungo",
+        "severity": "media",
+        "description": "Il primo periodo cumula garanzia, oggetto della garanzia ed eccezione relativa alle modifiche."
+      },
+      {
+        "code": "rinvio_vago",
+        "severity": "media",
+        "description": "L'espressione \"come sopra meglio individuato\" non identifica il riferimento contrattuale."
+      },
+      {
+        "code": "formula_arcaica",
+        "severity": "bassa",
+        "description": "Le formule \"ut supra\" e \"all'uopo\" appesantiscono il registro senza aggiungere precisione."
+      },
+      {
+        "code": "garanzia_da_preservare",
+        "severity": "alta",
+        "description": "Il verbo \"garantisce\" non può essere degradato a una mera dichiarazione."
+      },
+      {
+        "code": "obbligo_di_cessione_condizionato",
+        "severity": "alta",
+        "description": "L'impegno a cedere il codice sorgente è subordinato a una condizione e non equivale a una cessione immediata."
+      }
+    ],
+    "legal_invariants": [
+      "Il Fornitore garantisce originalità del Software e assenza di violazioni di diritti di terzi.",
+      "L'eccezione opera solo se la violazione deriva da modifiche effettuate dal Cliente o da soggetti da esso incaricati senza preventivo consenso scritto del Fornitore.",
+      "Il Fornitore si obbliga a cedere il codice sorgente, ma esclusivamente in caso di cessazione della propria attività di manutenzione.",
+      "Le condizioni della cessione restano da concordare tra le Parti."
+    ],
+    "forbidden_changes": [
+      "Sostituire \"garantisce\" con \"dichiara\" o \"attesta\".",
+      "Trasformare \"si obbliga a cedere\" in \"cede\".",
+      "Eliminare \"esclusivamente\" o la condizione relativa alla cessazione dell'attività di manutenzione.",
+      "Aggiungere termini, corrispettivi, depositi fiduciari o cause di forza maggiore."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "riscrittura_lineare",
+        "text": "Il Fornitore garantisce al Cliente che il Software è originale e non viola diritti di terzi, salvo che la violazione dipenda da modifiche apportate al Software dal Cliente o da soggetti da esso incaricati senza il preventivo consenso scritto del Fornitore.\n\nFermo restando quanto previsto nel presente contratto, il Fornitore si obbliga a cedere al Cliente il codice sorgente esclusivamente qualora cessi di prestare il servizio di manutenzione per cessazione della relativa attività. Le condizioni della cessione saranno concordate tra le Parti."
+      }
+    ],
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "Il Fornitore garantisce",
+        "salvo che",
+        "si obbliga a cedere",
+        "esclusivamente"
+      ],
+      "fatal_forbidden_after": [
+        "ut supra",
+        "all'uopo",
+        "come sopra meglio individuato"
+      ],
+      "allowed_legal_references": [],
+      "allowed_new_literals": []
+    },
+    "validation_rationale": "Il caso verifica che la semplificazione preservi una garanzia contrattuale e un obbligo di cessione futuro, condizionato e non immediatamente traslativo.",
+    "id": "H013",
+    "required_reference": [
+      "(v1) routing non valutato sul holdout"
+    ],
+    "expected_references_v2": [
+      "references/contratti.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "annotations": {
+      "author": {
+        "status": "drafted",
+        "model": "openai/gpt-5.6-terra"
+      },
+      "codex": {
+        "status": "not_run"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    }
+  },
+  {
+    "title": "Opposizione a sfratto per morosità commerciale",
+    "document_type": "atto_giudiziario",
+    "genre": "atto",
+    "input_text": "L'opponente deduce che la morosità prospettata dalla controparte non sussiste, poiché i canoni indicati nell'intimazione risultano compensati, nei limiti di quanto dovuto, con il credito dell'opponente per lavori eseguiti nei locali, come sopra esposto, e poiché la locatrice ha rifiutato di ricevere le chiavi offerte dall'opponente. Pertanto, si chiede che l'Ill.mo Tribunale, respinta ogni diversa istanza, accerti e dichiari l'inesistenza della morosità e, per l'effetto, revochi l'ordinanza di convalida; in via subordinata, ove ritenga dovuti importi residui, conceda il termine di grazia richiesto dall'opponente.",
+    "context": {
+      "documento": "atto di opposizione a convalida di sfratto",
+      "mittente": "Conduttore opponente",
+      "destinatario": "Tribunale competente e locatrice opposta"
+    },
+    "persona": {},
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "periodo_lungo",
+        "severity": "media",
+        "description": "Fatti, eccezioni e conclusioni sono concentrati in un unico periodo di difficile lettura."
+      },
+      {
+        "code": "rinvio_vago",
+        "severity": "media",
+        "description": "Il rinvio \"come sopra esposto\" è generico e va sostituito con un riferimento più chiaro, senza inventare allegazioni."
+      },
+      {
+        "code": "conclusioni_giudiziali",
+        "severity": "alta",
+        "description": "Le domande principali e subordinate non possono essere invertite, ampliate o trasformate."
+      },
+      {
+        "code": "compensazione_da_preservare",
+        "severity": "alta",
+        "description": "La compensazione è limitata \"nei limiti di quanto dovuto\" e non può essere resa totale o certa."
+      }
+    ],
+    "legal_invariants": [
+      "L'opponente nega la sussistenza della morosità.",
+      "La compensazione è dedotta nei limiti di quanto dovuto e in relazione al credito per lavori eseguiti nei locali.",
+      "È dedotto il rifiuto della locatrice di ricevere le chiavi offerte dall'opponente.",
+      "La domanda principale è di accertamento dell'inesistenza della morosità e di revoca dell'ordinanza di convalida.",
+      "La domanda subordinata riguarda la concessione del termine di grazia solo se residuino importi dovuti."
+    ],
+    "forbidden_changes": [
+      "Affermare che i canoni sono stati integralmente pagati o integralmente compensati.",
+      "Sostituire la revoca dell'ordinanza di convalida con una domanda di risoluzione del contratto.",
+      "Eliminare la subordinazione della richiesta di termine di grazia.",
+      "Aggiungere date, importi, ricevute, documenti o fatti relativi alla consegna delle chiavi."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "conclusioni_distinte",
+        "text": "L'opponente deduce che la morosità prospettata dalla controparte non sussiste. I canoni indicati nell'intimazione risultano compensati, nei limiti di quanto dovuto, con il credito dell'opponente per i lavori eseguiti nei locali. L'opponente deduce inoltre che la locatrice ha rifiutato di ricevere le chiavi da lui offerte.\n\nPertanto, l'opponente chiede che l'Ill.mo Tribunale, respinta ogni diversa istanza, accerti e dichiari l'inesistenza della morosità e, per l'effetto, revochi l'ordinanza di convalida. In via subordinata, qualora ritenga dovuti importi residui, chiede la concessione del termine di grazia."
+      }
+    ],
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "nei limiti di quanto dovuto",
+        "accerti e dichiari l'inesistenza della morosità",
+        "revochi l'ordinanza di convalida",
+        "in via subordinata",
+        "termine di grazia"
+      ],
+      "fatal_forbidden_after": [
+        "come sopra esposto"
+      ],
+      "allowed_legal_references": [],
+      "allowed_new_literals": []
+    },
+    "validation_rationale": "Il caso misura la capacità di rendere leggibili allegazioni e conclusioni senza alterare la struttura principale e subordinata delle domande giudiziali.",
+    "id": "H014",
+    "required_reference": [
+      "(v1) routing non valutato sul holdout"
+    ],
+    "expected_references_v2": [
+      "references/atti-e-pareri.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "annotations": {
+      "author": {
+        "status": "drafted",
+        "model": "openai/gpt-5.6-terra"
+      },
+      "codex": {
+        "status": "not_run"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    }
+  },
+  {
+    "title": "Parere su recesso dell'agente e indennità",
+    "document_type": "parere",
+    "genre": "parere",
+    "input_text": "È importante sottolineare che la comunicazione inviata dalla preponente, per come formulata, appare idonea a integrare un recesso dal rapporto di agenzia e non una risoluzione per inadempimento dell'agente, purché non emergano ulteriori contestazioni già comunicate. Il tema dell'indennità di cessazione del rapporto gioca un ruolo cruciale: la relativa domanda deve essere comunicata dall'agente entro il termine di decadenza previsto dalla disciplina applicabile, che non va confuso con il termine di prescrizione. In conclusione, salvo una verifica della documentazione, non è possibile affermare che l'indennità sia dovuta o esclusa.",
+    "context": {
+      "documento": "parere legale",
+      "mittente": "Legale incaricato",
+      "destinatario": "Società preponente"
+    },
+    "persona": {
+      "forbidden": [
+        "\\bVostr[oaie]\\b",
+        "\\bnostr[oaie]\\b"
+      ],
+      "required_one_of": [
+        "\\bpreponente\\b",
+        "\\bagente\\b"
+      ]
+    },
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "tic_ia",
+        "severity": "bassa",
+        "description": "Le formule \"È importante sottolineare\", \"gioca un ruolo cruciale\" e \"In conclusione\" sono riempitivi e appesantiscono il parere."
+      },
+      {
+        "code": "recesso_risoluzione",
+        "severity": "alta",
+        "description": "Recesso e risoluzione per inadempimento sono qualificazioni diverse e non possono essere assimilate."
+      },
+      {
+        "code": "decadenza_prescrizione",
+        "severity": "alta",
+        "description": "Il termine di decadenza non può essere sostituito dal termine di prescrizione."
+      },
+      {
+        "code": "eccezione_condizionale",
+        "severity": "alta",
+        "description": "La conclusione è subordinata sia all'assenza di ulteriori contestazioni sia alla verifica documentale."
+      }
+    ],
+    "legal_invariants": [
+      "La comunicazione appare idonea a integrare un recesso e non una risoluzione per inadempimento dell'agente.",
+      "Tale valutazione vale purché non emergano ulteriori contestazioni già comunicate.",
+      "La domanda di indennità deve essere comunicata dall'agente entro il termine di decadenza previsto dalla disciplina applicabile.",
+      "Il parere non afferma né che l'indennità sia dovuta né che sia esclusa."
+    ],
+    "forbidden_changes": [
+      "Sostituire \"recesso\" con \"risoluzione\" o viceversa.",
+      "Sostituire \"decadenza\" con \"prescrizione\".",
+      "Affermare che l'indennità è dovuta, non dovuta o certamente esclusa.",
+      "Aggiungere un termine numerico, una fonte normativa o una causa di esclusione dell'indennità."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "parere_sintetico",
+        "text": "La comunicazione inviata dalla preponente, per come formulata, appare idonea a integrare un recesso dal rapporto di agenzia e non una risoluzione per inadempimento dell'agente, purché non emergano ulteriori contestazioni già comunicate.\n\nLa domanda di indennità di cessazione del rapporto deve essere comunicata dall'agente entro il termine di decadenza previsto dalla disciplina applicabile. Tale termine non va confuso con il termine di prescrizione.\n\nSalvo verifica della documentazione, non è possibile affermare che l'indennità sia dovuta o esclusa."
+      }
+    ],
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "recesso",
+        "non una risoluzione per inadempimento dell'agente",
+        "purché",
+        "termine di decadenza",
+        "termine di prescrizione",
+        "Salvo"
+      ],
+      "fatal_forbidden_after": [
+        "È importante sottolineare",
+        "gioca un ruolo cruciale",
+        "In conclusione"
+      ],
+      "allowed_legal_references": [],
+      "allowed_new_literals": []
+    },
+    "validation_rationale": "Il caso verifica il mantenimento delle qualificazioni tecniche e delle cautele proprie di un parere, eliminando al contempo formule stereotipate.",
+    "id": "H015",
+    "required_reference": [
+      "(v1) routing non valutato sul holdout"
+    ],
+    "expected_references_v2": [
+      "references/atti-e-pareri.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "annotations": {
+      "author": {
+        "status": "drafted",
+        "model": "openai/gpt-5.6-terra"
+      },
+      "codex": {
+        "status": "not_run"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    }
+  },
+  {
+    "title": "Diffida al vettore per mancata consegna",
+    "document_type": "diffida",
+    "genre": "diffida",
+    "input_text": "Scriviamo nell'interesse della nostra assistita, mittente della spedizione, per diffidarVi formalmente, stante quanto già rappresentato con i precedenti solleciti, a provvedere alla consegna e/o restituzione della merce affidata alla Vostra Società, la quale non risulta consegnata né restituita. Codesta Società garantisce, secondo quanto comunicato alla nostra assistita, la tracciabilità della spedizione; ciò nondimeno, non sono stati forniti chiarimenti idonei circa l'attuale ubicazione della merce. Vi invitiamo pertanto ad adempiere entro il termine già indicato nel sollecito, a pena di ogni tutela e azione per il risarcimento dei danni, fermo restando ogni ulteriore diritto della nostra assistita.",
+    "context": {
+      "documento": "diffida per inadempimento nel trasporto",
+      "mittente": "Legale della mittente della spedizione",
+      "destinatario": "Società vettoriale"
+    },
+    "persona": {
+      "forbidden": [
+        "\\bnostr[oaie]\\s+Societ",
+        "\\bVostr[oaie]\\s+assistita\\b",
+        "\\bVostro\\s+legale\\b"
+      ],
+      "required_one_of": [
+        "\\bnostra assistita\\b",
+        "\\bVostra Società\\b",
+        "\\bVi\\b"
+      ]
+    },
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "persona_da_preservare",
+        "severity": "alta",
+        "description": "La mittente è \"nostra assistita\", mentre la società vettoriale è \"Vostra Società\"; l'inversione modifica i ruoli."
+      },
+      {
+        "code": "e_o_ambiguo",
+        "severity": "media",
+        "description": "La formula \"consegna e/o restituzione\" è ambigua e può essere resa più comprensibile senza eliminare le alternative richieste."
+      },
+      {
+        "code": "formula_arcaica",
+        "severity": "bassa",
+        "description": "\"Codesta Società\" e \"ciò nondimeno\" possono essere modernizzati mantenendo il registro forense."
+      },
+      {
+        "code": "garanzia_da_preservare",
+        "severity": "alta",
+        "description": "La garanzia di tracciabilità non può essere trasformata in una semplice dichiarazione commerciale."
+      },
+      {
+        "code": "termine_non_inventare",
+        "severity": "alta",
+        "description": "Il termine è richiamato per relationem e non può essere sostituito con una data o un numero inventato."
+      }
+    ],
+    "legal_invariants": [
+      "La diffida è inviata nell'interesse della nostra assistita, che è la mittente della spedizione.",
+      "La merce affidata alla Vostra Società non risulta né consegnata né restituita.",
+      "La Vostra Società garantisce la tracciabilità della spedizione secondo quanto comunicato alla nostra assistita.",
+      "È richiesta la consegna o la restituzione della merce entro il termine già indicato nel sollecito.",
+      "Restano ferme le azioni risarcitorie e gli ulteriori diritti della nostra assistita."
+    ],
+    "forbidden_changes": [
+      "Invertire \"nostra assistita\" e \"Vostra Società\".",
+      "Sostituire \"garantisce\" con \"dichiara\" o \"riferisce\".",
+      "Inserire un termine, una data, un importo o una localizzazione della merce non presenti nel testo.",
+      "Eliminare la richiesta alternativa di consegna o restituzione.",
+      "Aggiungere forza maggiore, caso fortuito, limitazioni di responsabilità o altri esimenti."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "diffida_chiara",
+        "text": "Scriviamo nell'interesse della nostra assistita, mittente della spedizione, per diffidarVi formalmente a consegnare la merce affidata alla Vostra Società oppure a restituirla. La merce non risulta infatti né consegnata né restituita, nonostante i precedenti solleciti.\n\nLa Vostra Società garantisce, secondo quanto comunicato alla nostra assistita, la tracciabilità della spedizione. Tuttavia, non ha fornito chiarimenti idonei sull'attuale ubicazione della merce.\n\nVi invitiamo pertanto ad adempiere entro il termine già indicato nel sollecito, a pena di ogni tutela e azione per il risarcimento dei danni, fermo restando ogni ulteriore diritto della nostra assistita."
+      }
+    ],
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "nostra assistita",
+        "Vostra Società",
+        "garantisce",
+        "entro il termine già indicato nel sollecito",
+        "a pena di",
+        "fermo restando"
+      ],
+      "fatal_forbidden_after": [
+        "Codesta Società",
+        "ciò nondimeno",
+        "stante quanto già rappresentato"
+      ],
+      "allowed_legal_references": [],
+      "allowed_new_literals": []
+    },
+    "validation_rationale": "Il caso misura la gestione della persona processuale, delle alternative espresse con e/o, di una garanzia e di un termine richiamato senza dati che possano essere inventati.",
+    "id": "H016",
+    "required_reference": [
+      "(v1) routing non valutato sul holdout"
+    ],
+    "expected_references_v2": [
+      "references/atti-e-pareri.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "annotations": {
+      "author": {
+        "status": "drafted",
+        "model": "openai/gpt-5.6-terra"
+      },
+      "codex": {
+        "status": "not_run"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    }
+  },
+  {
+    "title": "Locazione commerciale con garanzia e recesso",
+    "document_type": "contratto",
+    "genre": "contratto",
+    "input_text": "CONTRATTO DI LOCAZIONE AD USO DIVERSO DALL'ABITAZIONE\n\nTra Alfa Immobiliare S.r.l., di seguito anche «Locatrice», e Beta Design S.r.l., di seguito anche «Conduttrice», si conviene e stipula quanto segue.\n\nArt. 1 – Immobile e destinazione\nLa Locatrice concede in locazione alla Conduttrice, che accetta, l'unità immobiliare sita in Milano, via delle Arti n. 14, piano terreno e primo, con annessi servizi e pertinenze, come sopra meglio individuata nelle planimetrie che le Parti dichiarano di conoscere e che, ove sottoscritte, formeranno parte integrante del presente contratto. L'immobile dovrà essere adibito esclusivamente a showroom, vendita al dettaglio di arredamento e attività accessorie e/o connesse, con esclusione di ogni diversa attività, salvo il previo consenso scritto della Locatrice.\n\nArt. 2 – Durata e recesso\nLa locazione avrà durata di anni sei, con decorrenza dal 1° settembre 2025 e scadenza il 31 agosto 2031, fermo restando il rinnovo previsto dalla legge. La Conduttrice potrà recedere per gravi motivi, mediante comunicazione inviata alla Locatrice a mezzo raccomandata A/R o PEC, con preavviso non inferiore a sei mesi. Resta inteso che il recesso non libera la Conduttrice dalle obbligazioni maturate prima della data di efficacia del medesimo.\n\nArt. 3 – Canone, aggiornamento e oneri\nIl canone annuo è convenuto in euro 72.000,00, oltre IVA se dovuta, da pagarsi in dodici rate mensili anticipate di euro 6.000,00 ciascuna entro il giorno 5 di ogni mese, mediante bonifico sul conto che la Locatrice comunicherà all'uopo. Il canone sarà aggiornato annualmente, a decorrere dal secondo anno, nella misura del 75% della variazione ISTAT dell'indice dei prezzi al consumo per le famiglie di operai e impiegati, purché la Locatrice ne faccia richiesta scritta. Sono a carico della Conduttrice gli oneri accessori, le utenze, la tassa rifiuti e le spese condominiali ordinarie; restano a carico della Locatrice le spese straordinarie, salvo quelle rese necessarie da danni imputabili alla Conduttrice.\n\nArt. 4 – Deposito e fideiussione\nAlla sottoscrizione la Conduttrice versa euro 18.000,00 a titolo di deposito cauzionale infruttifero, che non potrà essere imputato in conto canoni né utilizzato dalla Conduttrice durante il rapporto. La Conduttrice consegna inoltre fideiussione bancaria a prima richiesta, irrevocabile e senza beneficio della preventiva escussione del debitore principale, di importo pari a euro 18.000,00, valida fino a sei mesi successivi alla riconsegna dell'immobile. La fideiussione garantisce l'esatto e puntuale adempimento di tutte le obbligazioni della Conduttrice derivanti dal presente contratto, comprese, in via esemplificativa, quelle relative a canoni, oneri accessori, indennità per ritardata riconsegna, danni e spese di ripristino. La Locatrice potrà richiedere il pagamento al garante senza che la Conduttrice possa opporre eccezioni, salvo quelle inderogabili di legge.\n\nArt. 5 – Manutenzione, opere e riconsegna\nLa Conduttrice provvederà alla manutenzione ordinaria dell'immobile e degli impianti posti al suo esclusivo servizio. Non potrà eseguire opere, modifiche o installazioni senza consenso scritto della Locatrice, salvo gli interventi urgenti diretti a evitare un danno imminente, dei quali dovrà dare immediata notizia. Le migliorie e le addizioni autorizzate resteranno acquisite all'immobile senza indennità, salvo diverso accordo scritto. Alla cessazione, per qualunque causa, la Conduttrice dovrà riconsegnare i locali liberi da persone e cose, nello stato risultante dal verbale di consegna, salvo il normale deterioramento d'uso.\n\nArt. 6 – Clausola risolutiva e comunicazioni\nIl mancato pagamento, anche parziale, di due rate del canone, ovvero il mancato reintegro della fideiussione entro quindici giorni dalla richiesta della Locatrice, costituirà inadempimento rilevante ai sensi dell'art. 1456 c.c.; la Locatrice potrà dichiarare risolto il contratto mediante comunicazione scritta. Ogni comunicazione relativa al presente contratto dovrà essere inviata agli indirizzi indicati in epigrafe, salvo successiva comunicazione scritta di variazione.\n\nArt. 7 – Rinvio\nPer quanto non espressamente previsto si applicano la legge n. 392/1978, il codice civile e le altre disposizioni applicabili.",
+    "context": {
+      "documento": "contratto di locazione commerciale",
+      "mittente": "Alfa Immobiliare S.r.l. e Beta Design S.r.l.",
+      "destinatario": "le parti contraenti"
+    },
+    "persona": {},
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "periodo_lungo",
+        "severity": "media",
+        "description": "Alcune clausole concentrano più regole, eccezioni e conseguenze nello stesso periodo."
+      },
+      {
+        "code": "rinvio_vago",
+        "severity": "media",
+        "description": "L'espressione «come sopra meglio individuata» non individua con precisione il documento richiamato."
+      },
+      {
+        "code": "formula_arcaica",
+        "severity": "bassa",
+        "description": "L'espressione «all'uopo» può essere sostituita con una formula forense contemporanea."
+      },
+      {
+        "code": "garanzia",
+        "severity": "alta",
+        "description": "La fideiussione deve restare una garanzia a prima richiesta e non essere ridotta a dichiarazione della Conduttrice."
+      },
+      {
+        "code": "eccezioni_e_limitazioni",
+        "severity": "alta",
+        "description": "Devono essere conservati «esclusivamente», «salvo», «purché», l'elenco esemplificativo e la clausola risolutiva."
+      }
+    ],
+    "legal_invariants": [
+      "La destinazione dell'immobile è esclusivamente showroom, vendita al dettaglio di arredamento e attività accessorie e/o connesse.",
+      "La durata decorre dal 1° settembre 2025 e scade il 31 agosto 2031.",
+      "Il recesso della Conduttrice richiede gravi motivi e un preavviso non inferiore a sei mesi.",
+      "Il canone, il deposito cauzionale e la fideiussione mantengono rispettivamente gli importi di euro 72.000,00 annui, euro 18.000,00 ed euro 18.000,00.",
+      "La fideiussione resta bancaria, a prima richiesta, irrevocabile e senza beneficio della preventiva escussione.",
+      "L'elenco delle obbligazioni garantite è esemplificativo, non tassativo.",
+      "La risoluzione ex art. 1456 c.c. riguarda anche il mancato reintegro della fideiussione entro quindici giorni dalla richiesta."
+    ],
+    "forbidden_changes": [
+      "Non trasformare la fideiussione in una semplice attestazione o impegno della Conduttrice.",
+      "Non sostituire il recesso con la risoluzione, né eliminare i gravi motivi.",
+      "Non eliminare o ampliare il consenso scritto della Locatrice richiesto per opere e diversa attività.",
+      "Non rendere tassativo l'elenco introdotto da «in via esemplificativa».",
+      "Non aggiungere esimenti, penali, termini o fonti non presenti."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "riscrittura_integrale",
+        "text": "CONTRATTO DI LOCAZIONE AD USO DIVERSO DALL'ABITAZIONE\n\nTra Alfa Immobiliare S.r.l. (la «Locatrice») e Beta Design S.r.l. (la «Conduttrice») si conviene quanto segue.\n\nArt. 1 – Immobile e destinazione\nLa Locatrice concede in locazione alla Conduttrice, che accetta, l'unità immobiliare sita in Milano, via delle Arti n. 14, piano terreno e primo, con i relativi servizi e pertinenze. L'immobile è individuato nelle planimetrie conosciute dalle Parti; se sottoscritte, tali planimetrie costituiscono parte integrante del contratto.\nLa Conduttrice dovrà adibire l'immobile esclusivamente a showroom, vendita al dettaglio di arredamento e attività accessorie e/o connesse. È esclusa ogni diversa attività, salvo previo consenso scritto della Locatrice.\n\nArt. 2 – Durata e recesso\nLa locazione dura sei anni, dal 1° settembre 2025 al 31 agosto 2031, fermo restando il rinnovo previsto dalla legge.\nLa Conduttrice potrà recedere per gravi motivi, comunicandolo alla Locatrice mediante raccomandata A/R o PEC con preavviso non inferiore a sei mesi. Il recesso non libera la Conduttrice dalle obbligazioni maturate prima della sua efficacia.\n\nArt. 3 – Canone, aggiornamento e oneri\nIl canone annuo è di euro 72.000,00, oltre IVA se dovuta. Il pagamento avverrà in dodici rate mensili anticipate di euro 6.000,00 ciascuna, entro il giorno 5 di ogni mese, mediante bonifico sul conto che la Locatrice comunicherà a tale fine.\nDal secondo anno, il canone sarà aggiornato annualmente in misura pari al 75% della variazione ISTAT dell'indice dei prezzi al consumo per le famiglie di operai e impiegati, purché la Locatrice ne faccia richiesta scritta.\nSono a carico della Conduttrice gli oneri accessori, le utenze, la tassa rifiuti e le spese condominiali ordinarie. Restano a carico della Locatrice le spese straordinarie, salvo quelle necessarie per danni imputabili alla Conduttrice.\n\nArt. 4 – Deposito e fideiussione\nAlla sottoscrizione, la Conduttrice versa euro 18.000,00 a titolo di deposito cauzionale infruttifero. Il deposito non potrà essere imputato in conto canoni né utilizzato dalla Conduttrice durante il rapporto.\nLa Conduttrice consegna inoltre una fideiussione bancaria a prima richiesta, irrevocabile e senza beneficio della preventiva escussione del debitore principale, per euro 18.000,00 e valida fino a sei mesi successivi alla riconsegna dell'immobile.\nLa fideiussione garantisce l'esatto e puntuale adempimento di tutte le obbligazioni della Conduttrice derivanti dal contratto, comprese, in via esemplificativa, quelle relative a canoni, oneri accessori, indennità per ritardata riconsegna, danni e spese di ripristino. La Locatrice potrà chiedere il pagamento al garante senza che la Conduttrice possa opporre eccezioni, salvo quelle inderogabili di legge.\n\nArt. 5 – Manutenzione, opere e riconsegna\nLa Conduttrice provvederà alla manutenzione ordinaria dell'immobile e degli impianti posti al suo esclusivo servizio. Non potrà eseguire opere, modifiche o installazioni senza il consenso scritto della Locatrice, salvo gli interventi urgenti necessari a evitare un danno imminente; di tali interventi dovrà dare immediata notizia.\nLe migliorie e le addizioni autorizzate resteranno acquisite all'immobile senza indennità, salvo diverso accordo scritto. Alla cessazione del contratto, per qualunque causa, la Conduttrice dovrà riconsegnare i locali liberi da persone e cose, nello stato risultante dal verbale di consegna, salvo il normale deterioramento d'uso.\n\nArt. 6 – Clausola risolutiva e comunicazioni\nIl mancato pagamento, anche parziale, di due rate del canone oppure il mancato reintegro della fideiussione entro quindici giorni dalla richiesta della Locatrice costituiscono inadempimento rilevante ai sensi dell'art. 1456 c.c. In tali casi, la Locatrice potrà dichiarare risolto il contratto mediante comunicazione scritta.\nOgni comunicazione relativa al contratto dovrà essere inviata agli indirizzi indicati in epigrafe, salvo successiva comunicazione scritta di variazione.\n\nArt. 7 – Rinvio\nPer quanto non espressamente previsto si applicano la legge n. 392/1978, il codice civile e le altre disposizioni applicabili."
+      }
+    ],
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "esclusivamente",
+        "attività accessorie e/o connesse",
+        "fermo restando",
+        "purché",
+        "fideiussione bancaria a prima richiesta",
+        "senza beneficio della preventiva escussione",
+        "in via esemplificativa",
+        "salvo quelle inderogabili di legge",
+        "art. 1456 c.c."
+      ],
+      "fatal_forbidden_after": [
+        "come sopra meglio individuata",
+        "all'uopo"
+      ],
+      "allowed_legal_references": [
+        "art. 1456 c.c.",
+        "legge n. 392/1978",
+        "codice civile"
+      ],
+      "allowed_new_literals": []
+    },
+    "validation_rationale": "Il caso verifica la semplificazione di un contratto articolato senza alterare garanzie, eccezioni, importi, termini e rimedi contrattuali.",
+    "id": "H017",
+    "required_reference": [
+      "(v1) routing non valutato sul holdout"
+    ],
+    "expected_references_v2": [
+      "references/contratti.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "annotations": {
+      "author": {
+        "status": "drafted",
+        "model": "openai/gpt-5.6-terra"
+      },
+      "codex": {
+        "status": "not_run"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    }
+  },
+  {
+    "title": "Opposizione a decreto ingiuntivo per software",
+    "document_type": "atto_giudiziario",
+    "genre": "atto",
+    "input_text": "TRIBUNALE DI TORINO\nATTO DI CITAZIONE IN OPPOSIZIONE A DECRETO INGIUNTIVO\n\nPer Gamma Logistica S.p.A., in persona del legale rappresentante pro tempore, rappresentata e difesa dall'avv. [difensore], come da procura in atti,\n\ncontro\n\nDelta Cloud S.r.l., in persona del legale rappresentante pro tempore.\n\nFATTO\nCon decreto ingiuntivo n. [numero], emesso il 12 marzo 2025 e notificato il 20 marzo 2025, codesto Tribunale ha ingiunto a Gamma Logistica S.p.A. di pagare a Delta Cloud S.r.l. euro 48.800,00, oltre interessi e spese, quale corrispettivo asseritamente dovuto in forza del contratto di licenza e manutenzione della piattaforma «Orione» sottoscritto tra le parti.\n\nL'opponente propone tempestiva opposizione, poiché la pretesa monitoria, pur fondata sulle fatture nn. 41 e 58, non considera che il pagamento della seconda quota annuale era contrattualmente subordinato alla messa in esercizio dei moduli di gestione magazzino e tracciabilità, nonché alla consegna della documentazione tecnica necessaria all'uso autonomo della piattaforma. È importante sottolineare che tale condizione non si è verificata: il modulo di tracciabilità, come risulta dalle comunicazioni prodotte, non consentiva l'esportazione dei dati relativi ai lotti e alle scadenze, mentre il modulo magazzino generava duplicazioni delle giacenze in caso di trasferimento interno.\n\nGamma Logistica S.p.A. segnalava le predette anomalie con PEC del 18 novembre 2024 e del 9 dicembre 2024, chiedendo a Delta Cloud S.r.l. di intervenire. Delta Cloud S.r.l., con comunicazione del 17 dicembre 2024, dichiarava che gli interventi sarebbero stati eseguiti nella successiva versione del software, senza tuttavia indicare una data di rilascio. Nonostante ciò, la creditrice emetteva le fatture poste a base del ricorso, pretendendone l'immediato pagamento.\n\nIn data 10 gennaio 2025, Gamma Logistica S.p.A. comunicava di sospendere il pagamento della quota controversa fino alla completa eliminazione delle anomalie e alla consegna della documentazione tecnica. La società opponente non ha mai dichiarato di voler risolvere il contratto né ha esercitato il recesso; ha invece eccepito l'inadempimento della controparte, nei limiti e per gli effetti di cui all'art. 1460 c.c.\n\nMOTIVI\n1. Insussistenza del credito azionato.\nIl contratto prevedeva che la seconda quota annuale fosse esigibile soltanto dopo la messa in esercizio dei moduli sopra indicati e la consegna della documentazione tecnica. Delta Cloud S.r.l. non ha dimostrato né l'avvenuta messa in esercizio conforme, né l'avvenuta consegna della documentazione. La domanda monitoria è quindi priva di prova del fatto costitutivo del credito.\n\n2. Eccezione di inadempimento.\nAnche qualora si ritenesse maturato il corrispettivo, Gamma Logistica S.p.A. era legittimata a sospenderne il pagamento ai sensi dell'art. 1460 c.c., atteso che i malfunzionamenti descritti incidevano sulle funzioni per le quali la piattaforma era stata acquisita. La sospensione ha riguardato esclusivamente la quota controversa e non costituisce rinuncia al contratto, né domanda di risoluzione.\n\n3. Infondatezza della richiesta di interessi.\nNon essendo esigibile il corrispettivo, non sono dovuti gli interessi richiesti nel procedimento monitorio. In conclusione, appare cruciale rilevare che l'opposta non può ottenere il pagamento di una prestazione non dimostrata come eseguita secondo contratto.\n\nTutto ciò premesso, Gamma Logistica S.p.A., come sopra rappresentata e difesa,\n\nCITA\n\nDelta Cloud S.r.l. a comparire innanzi al Tribunale di Torino, all'udienza del [udienza], con invito a costituirsi nei termini di legge, con gli avvertimenti di rito, per sentir accogliere le seguenti conclusioni:\n\n- in via principale, revocare il decreto ingiuntivo n. [numero] emesso il 12 marzo 2025;\n- accertare e dichiarare che Gamma Logistica S.p.A. non è tenuta al pagamento della quota oggetto delle fatture nn. 41 e 58 fino alla messa in esercizio dei moduli di gestione magazzino e tracciabilità e alla consegna della documentazione tecnica;\n- rigettare ogni contraria domanda o eccezione;\n- con vittoria di spese e compensi di causa.\n\nSi producono: 1) contratto; 2) fatture nn. 41 e 58; 3) PEC del 18 novembre 2024; 4) PEC del 9 dicembre 2024; 5) comunicazione del 17 dicembre 2024; 6) PEC del 10 gennaio 2025.",
+    "context": {
+      "documento": "atto di citazione in opposizione a decreto ingiuntivo",
+      "mittente": "Gamma Logistica S.p.A., opponente",
+      "destinatario": "Tribunale di Torino e Delta Cloud S.r.l., opposta"
+    },
+    "persona": {
+      "forbidden": [
+        "\\bnostra società\\b",
+        "\\bVostra società\\b",
+        "\\bVostro credito\\b"
+      ],
+      "required_one_of": [
+        "\\bGamma Logistica S\\.p\\.A\\.\\b",
+        "\\bopponente\\b"
+      ]
+    },
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "tic_ia",
+        "severity": "bassa",
+        "description": "Le formule «È importante sottolineare» e «appare cruciale» appesantiscono l'esposizione senza aggiungere contenuto."
+      },
+      {
+        "code": "conclusioni",
+        "severity": "alta",
+        "description": "Le conclusioni devono restare identiche nella portata: revoca, inesigibilità fino alle condizioni indicate, rigetto e spese."
+      },
+      {
+        "code": "recesso_risoluzione",
+        "severity": "alta",
+        "description": "Il testo distingue espressamente l'eccezione di inadempimento da recesso e risoluzione."
+      },
+      {
+        "code": "date_e_fatti",
+        "severity": "alta",
+        "description": "Date delle comunicazioni, importo ingiunto, fatture e malfunzionamenti non possono essere modificati o integrati."
+      },
+      {
+        "code": "periodo_lungo",
+        "severity": "media",
+        "description": "Il primo motivo può essere reso più lineare separando presupposto di esigibilità e difetto di prova."
+      }
+    ],
+    "legal_invariants": [
+      "L'opposizione è proposta contro il decreto ingiuntivo n. [numero], emesso il 12 marzo 2025 e notificato il 20 marzo 2025.",
+      "L'importo ingiunto è euro 48.800,00, oltre interessi e spese.",
+      "La seconda quota annuale è subordinata sia alla messa in esercizio dei due moduli sia alla consegna della documentazione tecnica.",
+      "Gamma ha sospeso esclusivamente la quota controversa.",
+      "Gamma non ha dichiarato la risoluzione e non ha esercitato il recesso.",
+      "L'eccezione è formulata ai sensi dell'art. 1460 c.c.",
+      "La domanda chiede l'inesigibilità fino all'avveramento delle condizioni, non l'annullamento o la risoluzione del contratto."
+    ],
+    "forbidden_changes": [
+      "Non sostituire la sospensione del pagamento con rifiuto definitivo di pagare.",
+      "Non qualificare l'atto come domanda di risoluzione o di recesso.",
+      "Non aggiungere una domanda risarcitoria, una domanda riconvenzionale o una richiesta di riduzione del prezzo.",
+      "Non modificare le date delle PEC, il contenuto dei malfunzionamenti o le fatture indicate.",
+      "Non attenuare il nesso cumulativo tra messa in esercizio e consegna della documentazione tecnica."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "riscrittura_integrale",
+        "text": "TRIBUNALE DI TORINO\nATTO DI CITAZIONE IN OPPOSIZIONE A DECRETO INGIUNTIVO\n\nPer Gamma Logistica S.p.A., in persona del legale rappresentante pro tempore, rappresentata e difesa dall'avv. [difensore], come da procura in atti,\n\ncontro\n\nDelta Cloud S.r.l., in persona del legale rappresentante pro tempore.\n\nFATTO\nCon decreto ingiuntivo n. [numero], emesso il 12 marzo 2025 e notificato il 20 marzo 2025, il Tribunale ha ingiunto a Gamma Logistica S.p.A. di pagare a Delta Cloud S.r.l. euro 48.800,00, oltre interessi e spese. La somma è richiesta quale corrispettivo dovuto in forza del contratto di licenza e manutenzione della piattaforma «Orione» sottoscritto dalle parti.\n\nGamma Logistica S.p.A. propone tempestiva opposizione. La pretesa monitoria, fondata sulle fatture nn. 41 e 58, non considera che il pagamento della seconda quota annuale era subordinato alla messa in esercizio dei moduli di gestione magazzino e tracciabilità, nonché alla consegna della documentazione tecnica necessaria all'uso autonomo della piattaforma.\n\nTale condizione non si è verificata. Dalle comunicazioni prodotte risulta che il modulo di tracciabilità non consentiva l'esportazione dei dati relativi ai lotti e alle scadenze. Il modulo magazzino generava invece duplicazioni delle giacenze in caso di trasferimento interno.\n\nGamma Logistica S.p.A. segnalava tali anomalie con PEC del 18 novembre 2024 e del 9 dicembre 2024, chiedendo a Delta Cloud S.r.l. di intervenire. Con comunicazione del 17 dicembre 2024, Delta Cloud S.r.l. dichiarava che gli interventi sarebbero stati eseguiti nella successiva versione del software, senza indicare una data di rilascio. Ciononostante, la creditrice emetteva le fatture poste a base del ricorso e ne pretendeva l'immediato pagamento.\n\nCon PEC del 10 gennaio 2025, Gamma Logistica S.p.A. comunicava la sospensione del pagamento della quota controversa fino alla completa eliminazione delle anomalie e alla consegna della documentazione tecnica. L'opponente non ha mai dichiarato di voler risolvere il contratto né ha esercitato il recesso. Ha invece eccepito l'inadempimento della controparte, nei limiti e per gli effetti di cui all'art. 1460 c.c.\n\nMOTIVI\n1. Insussistenza del credito azionato\nIl contratto subordinava l'esigibilità della seconda quota annuale alla messa in esercizio dei moduli indicati e alla consegna della documentazione tecnica. Delta Cloud S.r.l. non ha dimostrato né l'avvenuta messa in esercizio conforme né l'avvenuta consegna della documentazione. Manca pertanto la prova del fatto costitutivo del credito azionato in via monitoria.\n\n2. Eccezione di inadempimento\nAnche qualora il corrispettivo fosse ritenuto maturato, Gamma Logistica S.p.A. era legittimata a sospenderne il pagamento ai sensi dell'art. 1460 c.c. I malfunzionamenti descritti incidevano sulle funzioni per le quali la piattaforma era stata acquisita. La sospensione ha riguardato esclusivamente la quota controversa e non costituisce rinuncia al contratto né domanda di risoluzione.\n\n3. Infondatezza della richiesta di interessi\nPoiché il corrispettivo non era esigibile, non sono dovuti gli interessi richiesti nel procedimento monitorio.\n\nTutto ciò premesso, Gamma Logistica S.p.A., come sopra rappresentata e difesa,\n\nCITA\n\nDelta Cloud S.r.l. a comparire innanzi al Tribunale di Torino, all'udienza del [udienza], con invito a costituirsi nei termini di legge, con gli avvertimenti di rito, per sentir accogliere le seguenti conclusioni:\n\n- in via principale, revocare il decreto ingiuntivo n. [numero] emesso il 12 marzo 2025;\n- accertare e dichiarare che Gamma Logistica S.p.A. non è tenuta al pagamento della quota oggetto delle fatture nn. 41 e 58 fino alla messa in esercizio dei moduli di gestione magazzino e tracciabilità e alla consegna della documentazione tecnica;\n- rigettare ogni contraria domanda o eccezione;\n- con vittoria di spese e compensi di causa.\n\nSi producono: 1) contratto; 2) fatture nn. 41 e 58; 3) PEC del 18 novembre 2024; 4) PEC del 9 dicembre 2024; 5) comunicazione del 17 dicembre 2024; 6) PEC del 10 gennaio 2025."
+      }
+    ],
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "euro 48.800,00",
+        "fatture nn. 41 e 58",
+        "PEC del 18 novembre 2024",
+        "PEC del 9 dicembre 2024",
+        "17 dicembre 2024",
+        "PEC del 10 gennaio 2025",
+        "art. 1460 c.c.",
+        "non ha mai dichiarato di voler risolvere il contratto né ha esercitato il recesso",
+        "fino alla messa in esercizio"
+      ],
+      "fatal_forbidden_after": [
+        "codesto Tribunale",
+        "È importante sottolineare",
+        "appare cruciale"
+      ],
+      "allowed_legal_references": [
+        "art. 1460 c.c."
+      ],
+      "allowed_new_literals": []
+    },
+    "validation_rationale": "Il caso misura la capacità di rendere più leggibile un atto giudiziario senza alterare fatti, qualificazione dell'eccezione e petitum.",
+    "id": "H018",
+    "required_reference": [
+      "(v1) routing non valutato sul holdout"
+    ],
+    "expected_references_v2": [
+      "references/atti-e-pareri.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "annotations": {
+      "author": {
+        "status": "drafted",
+        "model": "openai/gpt-5.6-terra"
+      },
+      "codex": {
+        "status": "not_run"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    }
+  },
+  {
+    "title": "Parere sulla rinuncia all'eredità e legato",
+    "document_type": "parere",
+    "genre": "parere",
+    "input_text": "PARERE\n\nCi è stato chiesto di esaminare la posizione di Elena R., chiamata all'eredità del padre Carlo R., deceduto senza testamento, e beneficiaria di un legato disposto dalla zia Marta R. in un testamento pubblicato dopo la morte di quest'ultima. Il quesito riguarda, da un lato, la possibilità per Elena R. di rinunciare all'eredità del padre e, dall'altro, gli effetti di tale rinuncia sul legato della zia, avente ad oggetto una somma di denaro depositata presso un istituto di credito.\n\nIn via preliminare, occorre tenere distinti i due fenomeni successori. L'eredità del padre e il legato della zia derivano da successioni differenti e producono effetti sulla base di titoli differenti. La rinuncia all'eredità paterna non equivale, dunque, alla rinuncia al legato disposto dalla zia, né può essere trattata come se Elena R. avesse rinunciato a ogni attribuzione proveniente dalla famiglia. È importante sottolineare che la rinuncia ereditaria deve essere effettuata con le forme previste dalla legge e non mediante una semplice dichiarazione inviata agli altri chiamati o alla banca.\n\nAi sensi dell'art. 519 c.c., la rinuncia all'eredità deve risultare da dichiarazione ricevuta dal notaio o dal cancelliere del tribunale del circondario in cui si è aperta la successione e deve essere inserita nel registro delle successioni. Una comunicazione privata, anche se chiara nella volontà di rinunciare, non produce gli effetti della rinuncia disciplinata dalla norma. Per quanto riguarda il termine, la rinuncia non è soggetta a un termine breve identico per tutti i chiamati: la posizione del chiamato va valutata anche alla luce del possesso o meno dei beni ereditari e delle regole applicabili all'accettazione e alla decadenza dal diritto di rinunciare.\n\nQui gioca un ruolo cruciale verificare se Elena R. abbia posto in essere atti che presuppongono necessariamente la volontà di accettare l'eredità paterna. Ad esempio, la vendita di un bene ereditario o la disposizione di somme appartenenti al defunto possono assumere rilievo, mentre attività meramente conservative, di vigilanza o di amministrazione temporanea possono non avere il medesimo significato. Non è tuttavia possibile affermare in astratto che ogni pagamento o ogni accesso ai conti del defunto integri accettazione tacita: occorre esaminare l'atto concreto, il potere esercitato e la sua compatibilità con la qualità di semplice chiamata.\n\nLa situazione richiede particolare prudenza se Elena R. era nel possesso di beni ereditari. In tale ipotesi operano gli artt. 485 e 487 c.c., che collegano al possesso specifici oneri e conseguenze, inclusa la possibile decadenza dal beneficio d'inventario nei casi previsti. Tali disposizioni non autorizzano però a concludere automaticamente che Elena R. sia già erede, né consentono di sostituire la verifica delle condotte effettivamente tenute con una presunzione generica. Occorre inoltre distinguere la decadenza dal beneficio d'inventario dalla prescrizione del diritto di accettare o rinunciare: sono istituti diversi e non vanno denominati in modo intercambiabile.\n\nQuanto al legato della zia Marta R., esso si acquista, salva rinuncia, senza bisogno di accettazione, ai sensi dell'art. 649 c.c. La rinuncia al legato resta possibile, ma è un atto distinto dalla rinuncia all'eredità del padre. La banca depositaria non deve quindi presumere che una rinuncia all'eredità paterna comporti anche rinuncia al legato. Parimenti, la richiesta alla banca di informazioni sul deposito oggetto del legato, se limitata alla ricognizione del rapporto e alla conservazione della posizione, non è di per sé una rinuncia né un'accettazione di eredità diversa da quella cui il legato accede.\n\nIn conclusione, Elena R. potrà rinunciare all'eredità del padre soltanto mediante la dichiarazione formale prevista dall'art. 519 c.c., sempre che non abbia già accettato, espressamente o tacitamente, e fermo restando quanto eventualmente derivante dal possesso di beni ereditari. Tale rinuncia non incide, di per sé, sul legato disposto dalla zia Marta R., che si acquista salva rinuncia ai sensi dell'art. 649 c.c. Prima di compiere atti dispositivi o dichiarazioni alla banca, sarà necessario ricostruire i beni eventualmente detenuti da Elena R. e gli atti da lei già compiuti.",
+    "context": {
+      "documento": "parere successorio",
+      "mittente": "studio legale incaricato",
+      "destinatario": "Elena R."
+    },
+    "persona": {
+      "forbidden": [
+        "\\bnostro assistito\\b",
+        "\\bVostra rinuncia\\b",
+        "\\bVostri beni\\b"
+      ],
+      "required_one_of": [
+        "\\bElena R\\."
+      ]
+    },
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "tic_ia",
+        "severity": "bassa",
+        "description": "Le formule «È importante sottolineare» e «gioca un ruolo cruciale» sono ridondanti."
+      },
+      {
+        "code": "decadenza_prescrizione",
+        "severity": "alta",
+        "description": "Il parere distingue decadenza dal beneficio d'inventario e prescrizione: la distinzione deve essere conservata."
+      },
+      {
+        "code": "rinuncia_accettazione",
+        "severity": "alta",
+        "description": "Non può essere trasformata la rinuncia all'eredità in rinuncia al legato, né l'acquisto del legato in accettazione necessaria."
+      },
+      {
+        "code": "cautele",
+        "severity": "media",
+        "description": "Le cautele sul possesso di beni e sugli atti tacitamente accettativi non devono diventare certezze fattuali."
+      },
+      {
+        "code": "periodo_lungo",
+        "severity": "media",
+        "description": "I passaggi sui due titoli successori e sulle conseguenze del possesso possono essere organizzati in paragrafi più chiari."
+      }
+    ],
+    "legal_invariants": [
+      "Le successioni di Carlo R. e Marta R. sono distinte.",
+      "La rinuncia all'eredità paterna non equivale alla rinuncia al legato della zia.",
+      "La rinuncia ereditaria richiede la forma prevista dall'art. 519 c.c.",
+      "Non si afferma che Elena R. abbia accettato tacitamente o sia nel possesso di beni: sono verifiche da svolgere.",
+      "Gli artt. 485 e 487 c.c. riguardano conseguenze connesse al possesso e al beneficio d'inventario.",
+      "Decadenza dal beneficio d'inventario e prescrizione del diritto di accettare o rinunciare restano istituti distinti.",
+      "Il legato si acquista salva rinuncia ai sensi dell'art. 649 c.c."
+    ],
+    "forbidden_changes": [
+      "Non dichiarare che Elena R. è già erede o che ha già accettato tacitamente.",
+      "Non affermare che la rinuncia all'eredità del padre comporta rinuncia al legato della zia.",
+      "Non indicare termini numerici o scadenze non contenuti nel testo.",
+      "Non sostituire la decadenza dal beneficio d'inventario con la prescrizione, o viceversa.",
+      "Non aggiungere indicazioni notarili, fiscali o bancarie non presenti."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "riscrittura_integrale",
+        "text": "PARERE\n\nÈ stata richiesta una valutazione sulla posizione di Elena R., chiamata all'eredità del padre Carlo R., deceduto senza testamento, e beneficiaria di un legato disposto dalla zia Marta R. in un testamento pubblicato dopo la morte di quest'ultima. Il quesito riguarda la possibilità di rinunciare all'eredità del padre e gli effetti di tale rinuncia sul legato della zia, avente ad oggetto una somma depositata presso un istituto di credito.\n\nOccorre distinguere le due successioni. L'eredità del padre e il legato della zia derivano da titoli successori diversi. La rinuncia all'eredità paterna non equivale quindi a rinuncia al legato disposto dalla zia e non può essere considerata rinuncia a ogni attribuzione proveniente dalla famiglia.\n\nLa rinuncia all'eredità deve essere compiuta nelle forme previste dalla legge. Non è sufficiente una dichiarazione inviata agli altri chiamati o alla banca. Ai sensi dell'art. 519 c.c., la rinuncia deve risultare da dichiarazione ricevuta dal notaio o dal cancelliere del tribunale del circondario in cui si è aperta la successione e deve essere inserita nel registro delle successioni. Una comunicazione privata, pur se esprime la volontà di rinunciare, non produce gli effetti della rinuncia disciplinata dalla norma.\n\nQuanto ai tempi, la rinuncia non è soggetta a un termine breve identico per tutti i chiamati. La posizione di Elena R. deve essere valutata anche in relazione al possesso o meno di beni ereditari e alle regole applicabili all'accettazione e alla decadenza dal diritto di rinunciare.\n\nÈ inoltre necessario verificare se Elena R. abbia compiuto atti che presuppongono necessariamente la volontà di accettare l'eredità paterna. Ad esempio, la vendita di un bene ereditario o la disposizione di somme appartenenti al defunto possono assumere rilievo. Attività meramente conservative, di vigilanza o di amministrazione temporanea possono invece avere un diverso significato. Non può tuttavia affermarsi in astratto che ogni pagamento o ogni accesso ai conti del defunto integri accettazione tacita: occorre esaminare l'atto concreto, il potere esercitato e la sua compatibilità con la qualità di semplice chiamata.\n\nLa situazione richiede particolare cautela qualora Elena R. fosse nel possesso di beni ereditari. In tale ipotesi trovano applicazione gli artt. 485 e 487 c.c., che collegano al possesso specifici oneri e conseguenze, inclusa la possibile decadenza dal beneficio d'inventario nei casi previsti. Ciò non consente di concludere automaticamente che Elena R. sia già erede, né di sostituire la verifica delle condotte effettivamente tenute con una presunzione generica.\n\nVa inoltre mantenuta distinta la decadenza dal beneficio d'inventario dalla prescrizione del diritto di accettare o rinunciare: si tratta di istituti diversi.\n\nIl legato disposto dalla zia Marta R. si acquista, salva rinuncia, senza bisogno di accettazione, ai sensi dell'art. 649 c.c. La rinuncia al legato è possibile, ma costituisce un atto distinto dalla rinuncia all'eredità del padre. La banca depositaria non deve pertanto presumere che la rinuncia all'eredità paterna comporti anche rinuncia al legato. Analogamente, la richiesta alla banca di informazioni sul deposito oggetto del legato, se limitata alla ricognizione del rapporto e alla conservazione della posizione, non costituisce di per sé rinuncia né accettazione di eredità diversa da quella cui il legato accede.\n\nIn conclusione, Elena R. potrà rinunciare all'eredità del padre mediante la dichiarazione formale prevista dall'art. 519 c.c., sempre che non abbia già accettato, espressamente o tacitamente, e fermo restando quanto eventualmente derivante dal possesso di beni ereditari. Tale rinuncia non incide, di per sé, sul legato disposto dalla zia Marta R., che si acquista salva rinuncia ai sensi dell'art. 649 c.c. Prima di compiere atti dispositivi o dichiarazioni alla banca, sarà necessario ricostruire i beni eventualmente detenuti da Elena R. e gli atti da lei già compiuti."
+      }
+    ],
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "art. 519 c.c.",
+        "artt. 485 e 487 c.c.",
+        "decadenza dal beneficio d'inventario",
+        "prescrizione del diritto di accettare o rinunciare",
+        "si acquista, salva rinuncia, senza bisogno di accettazione",
+        "art. 649 c.c.",
+        "fermo restando",
+        "Ad esempio,"
+      ],
+      "fatal_forbidden_after": [
+        "È importante sottolineare",
+        "gioca un ruolo cruciale",
+        "chiaramente"
+      ],
+      "allowed_legal_references": [
+        "art. 519 c.c.",
+        "artt. 485 e 487 c.c.",
+        "art. 649 c.c."
+      ],
+      "allowed_new_literals": []
+    },
+    "validation_rationale": "Il caso verifica che la riscrittura mantenga le distinzioni tecniche tra rinuncia, accettazione, legato, decadenza e prescrizione senza presentare cautele come fatti accertati.",
+    "id": "H019",
+    "required_reference": [
+      "(v1) routing non valutato sul holdout"
+    ],
+    "expected_references_v2": [
+      "references/atti-e-pareri.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "annotations": {
+      "author": {
+        "status": "drafted",
+        "model": "openai/gpt-5.6-terra"
+      },
+      "codex": {
+        "status": "not_run"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    }
+  },
+  {
+    "title": "Comparsa di risposta in materia di agenzia",
+    "document_type": "atto_giudiziario",
+    "genre": "atto",
+    "input_text": "TRIBUNALE DI BOLOGNA\nCOMPARSA DI RISPOSTA\n\nPer Epsilon Alimentari S.r.l., in persona del legale rappresentante pro tempore, rappresentata e difesa dall'avv. [difensore],\n\nconvenuta\n\ncontro\n\nSig. Luca M., rappresentato e difeso dall'avv. [difensore],\n\nattore.\n\nFATTO\nL'attore deduce di avere svolto attività di agente per la convenuta e chiede il pagamento di provvigioni che assume maturate su forniture effettuate da Epsilon Alimentari S.r.l. a clienti della zona assegnatagli. La domanda non considera, tuttavia, che il contratto di agenzia prevedeva il diritto alla provvigione esclusivamente per gli affari conclusi per effetto dell'intervento dell'agente ovvero direttamente dalla preponente con clienti della zona, purché gli ordini fossero acquisiti durante la vigenza del contratto.\n\nLe forniture indicate dall'attore nelle fatture prodotte derivano da ordini ricevuti dopo la cessazione del rapporto. Taluni di tali ordini erano inoltre riferiti a clienti già gestiti dalla rete interna della convenuta, come risulta dai prospetti commerciali che si producono. L'attore richiama, ut supra, una comunicazione di recesso della società, ma omette di considerare che il recesso è stato esercitato con il preavviso contrattualmente previsto e che la comunicazione non contiene alcuna rinuncia alle eccezioni relative alla maturazione delle provvigioni.\n\nÈ importante sottolineare che la cessazione del contratto non determina automaticamente l'inesistenza di ogni provvigione successiva, ma neppure consente di riconoscere provvigioni per qualunque ordine successivo. Occorre verificare se l'affare sia principalmente dovuto all'attività dell'agente e se l'ordine sia pervenuto entro un termine ragionevole dalla cessazione, secondo quanto previsto dall'art. 1748 c.c. Nel presente giudizio l'attore non ha allegato fatti specifici idonei a dimostrare tale collegamento per ciascun ordine contestato.\n\nMOTIVI\n1. Infondatezza della domanda di provvigioni.\nLa domanda è generica, poiché non distingue gli ordini acquisiti durante il rapporto da quelli successivi, né indica per quali operazioni l'attività dell'attore sarebbe stata determinante. Non basta, in conclusione, la mera indicazione del cliente o della fattura per provare la maturazione della provvigione.\n\n2. Insussistenza di rinuncia alle eccezioni.\nLa comunicazione di recesso non contiene rinuncia della convenuta a contestare la debenza delle provvigioni. Una diversa lettura trasformerebbe una dichiarazione di recesso in un riconoscimento di debito, che non risulta dal suo contenuto.\n\nTutto ciò premesso, Epsilon Alimentari S.r.l., come sopra rappresentata e difesa, conclude chiedendo che il Tribunale voglia:\n\n- rigettare le domande dell'attore perché infondate in fatto e in diritto;\n- in via subordinata, accertare che sono dovute, se del caso, soltanto le provvigioni relative agli affari per i quali ricorrano i presupposti previsti dal contratto e dall'art. 1748 c.c.;\n- con vittoria di spese e compensi.",
+    "context": {
+      "documento": "comparsa di risposta",
+      "mittente": "Epsilon Alimentari S.r.l., convenuta",
+      "destinatario": "Tribunale di Bologna e Sig. Luca M., attore"
+    },
+    "persona": {
+      "forbidden": [
+        "\\bnostra società\\b",
+        "\\bVostre domande\\b",
+        "\\bVostro assistito\\b"
+      ],
+      "required_one_of": [
+        "\\bEpsilon Alimentari S\\.r\\.l\\.\\b",
+        "\\bconvenuta\\b"
+      ]
+    },
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "formula_arcaica",
+        "severity": "bassa",
+        "description": "Il rinvio «ut supra» è poco chiaro e può essere sostituito con un riferimento esplicito."
+      },
+      {
+        "code": "tic_ia",
+        "severity": "bassa",
+        "description": "Le formule enfatiche e conclusive non aggiungono contenuto giuridico."
+      },
+      {
+        "code": "recesso_risoluzione",
+        "severity": "alta",
+        "description": "Il recesso con preavviso non deve essere trasformato in risoluzione o in riconoscimento di debito."
+      },
+      {
+        "code": "conclusioni",
+        "severity": "alta",
+        "description": "La subordinata conserva la formula «se del caso» e non autorizza a quantificare o riconoscere provvigioni."
+      },
+      {
+        "code": "esclusivamente_purche",
+        "severity": "alta",
+        "description": "I limiti contrattuali al diritto alla provvigione devono rimanere invariati."
+      }
+    ],
+    "legal_invariants": [
+      "Il contratto attribuisce provvigioni esclusivamente per gli affari indicati e purché gli ordini siano acquisiti durante la vigenza del contratto.",
+      "Gli ordini contestati sono descritti come ricevuti dopo la cessazione del rapporto.",
+      "Il recesso è stato esercitato con il preavviso contrattualmente previsto.",
+      "Il recesso non contiene rinuncia alle eccezioni sulla maturazione delle provvigioni.",
+      "L'art. 1748 c.c. è richiamato per la verifica degli affari successivi.",
+      "Le conclusioni principali chiedono il rigetto; quelle subordinate non riconoscono provvigioni determinate."
+    ],
+    "forbidden_changes": [
+      "Non affermare che nessuna provvigione può mai maturare dopo la cessazione.",
+      "Non sostituire il recesso con risoluzione o licenziamento.",
+      "Non trasformare la comunicazione di recesso in riconoscimento di debito.",
+      "Non eliminare «esclusivamente», «purché» o «se del caso».",
+      "Non aggiungere importi, date, clienti o una domanda riconvenzionale."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "riscrittura_integrale",
+        "text": "TRIBUNALE DI BOLOGNA\nCOMPARSA DI RISPOSTA\n\nPer Epsilon Alimentari S.r.l., in persona del legale rappresentante pro tempore, rappresentata e difesa dall'avv. [difensore],\n\nconvenuta\n\ncontro\n\nSig. Luca M., rappresentato e difeso dall'avv. [difensore],\n\nattore.\n\nFATTO\nL'attore afferma di avere svolto attività di agente per la convenuta e chiede il pagamento di provvigioni che ritiene maturate su forniture effettuate da Epsilon Alimentari S.r.l. a clienti della zona assegnatagli.\n\nLa domanda non considera che il contratto di agenzia riconosce il diritto alla provvigione esclusivamente per gli affari conclusi per effetto dell'intervento dell'agente oppure direttamente dalla preponente con clienti della zona, purché gli ordini siano acquisiti durante la vigenza del contratto.\n\nLe forniture indicate dall'attore nelle fatture prodotte derivano da ordini ricevuti dopo la cessazione del rapporto. Alcuni ordini riguardavano inoltre clienti già gestiti dalla rete interna della convenuta, come risulta dai prospetti commerciali prodotti.\n\nL'attore richiama una comunicazione di recesso della società. Tuttavia, il recesso è stato esercitato con il preavviso contrattualmente previsto e la relativa comunicazione non contiene alcuna rinuncia alle eccezioni relative alla maturazione delle provvigioni.\n\nLa cessazione del contratto non esclude automaticamente ogni provvigione successiva, ma non consente neppure il riconoscimento di provvigioni per qualunque ordine successivo. Occorre verificare se l'affare sia principalmente dovuto all'attività dell'agente e se l'ordine sia pervenuto entro un termine ragionevole dalla cessazione, secondo quanto previsto dall'art. 1748 c.c. Nel presente giudizio, l'attore non ha allegato fatti specifici idonei a dimostrare tale collegamento per ciascun ordine contestato.\n\nMOTIVI\n1. Infondatezza della domanda di provvigioni\nLa domanda è generica. Non distingue gli ordini acquisiti durante il rapporto da quelli successivi e non indica per quali operazioni l'attività dell'attore sarebbe stata determinante. La sola indicazione del cliente o della fattura non prova la maturazione della provvigione.\n\n2. Insussistenza di rinuncia alle eccezioni\nLa comunicazione di recesso non contiene alcuna rinuncia della convenuta a contestare la debenza delle provvigioni. Una diversa interpretazione trasformerebbe una dichiarazione di recesso in un riconoscimento di debito, circostanza che non risulta dal suo contenuto.\n\nTutto ciò premesso, Epsilon Alimentari S.r.l., come sopra rappresentata e difesa, conclude chiedendo che il Tribunale voglia:\n\n- rigettare le domande dell'attore perché infondate in fatto e in diritto;\n- in via subordinata, accertare che sono dovute, se del caso, soltanto le provvigioni relative agli affari per i quali ricorrano i presupposti previsti dal contratto e dall'art. 1748 c.c.;\n- con vittoria di spese e compensi."
+      }
+    ],
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "esclusivamente",
+        "purché",
+        "recesso",
+        "preavviso contrattualmente previsto",
+        "art. 1748 c.c.",
+        "se del caso",
+        "in via subordinata"
+      ],
+      "fatal_forbidden_after": [
+        "ut supra",
+        "È importante sottolineare",
+        "in conclusione"
+      ],
+      "allowed_legal_references": [
+        "art. 1748 c.c."
+      ],
+      "allowed_new_literals": []
+    },
+    "validation_rationale": "Il caso testa la conservazione dei presupposti della provvigione e delle conclusioni subordinate, evitando di confondere recesso, rinuncia alle eccezioni e riconoscimento di debito.",
+    "id": "H020",
+    "required_reference": [
+      "(v1) routing non valutato sul holdout"
+    ],
+    "expected_references_v2": [
+      "references/atti-e-pareri.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "annotations": {
+      "author": {
+        "status": "drafted",
+        "model": "openai/gpt-5.6-terra"
+      },
+      "codex": {
+        "status": "not_run"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    }
+  }
+]
