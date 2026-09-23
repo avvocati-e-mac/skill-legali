@@ -29,8 +29,8 @@
     ],
     "acceptable_rewrites": [
       {
-        "label": "parametro-oggettivo-con-esimenti",
-        "text": "Il Conduttore utilizza l'automezzo secondo le regole del codice della strada e lo custodisce con diligenza. Risponde di ogni danno, furto o deterioramento, anche se causato dai propri dipendenti o ausiliari, salvo caso fortuito o forza maggiore non a lui imputabile."
+        "label": "standard-da-decidere",
+        "text": "Il Conduttore utilizza l'automezzo [da decidere: standard di diligenza verificabile] e lo custodisce. Risponde di ogni danno, furto o deterioramento, anche se causato dai propri dipendenti o ausiliari."
       }
     ],
     "forbidden_changes": [
@@ -80,6 +80,10 @@
           "format": "ok"
         },
         "human_notes": ""
+      },
+      "revisione_2026_09": {
+        "status": "corrected",
+        "notes": "Tolta l'esimente 'caso fortuito o forza maggiore' dal DOPO: sposta il rischio e va proposta come PROPOSTA nel Motivo, decisa dall'avvocato."
       }
     },
     "automation": {
@@ -88,7 +92,11 @@
         "DOPO:",
         "Motivo:"
       ],
-      "must_preserve_literals": [
+      "fatal_forbidden_after": [
+        "si obbliga a utilizzare"
+      ],
+      "allowed_legal_references": [],
+      "must_preserve_in_dopo": [
         "Conduttore",
         "automezzo",
         "danno",
@@ -97,11 +105,28 @@
         "dipendenti",
         "ausiliari"
       ],
-      "fatal_forbidden_after": [
-        "massima diligenza",
-        "qualsiasi danno"
-      ],
-      "allowed_legal_references": []
+      "allowed_new_literals": [],
+      "must_include_one_of": [
+        {
+          "label": "standard vago segnalato",
+          "terms": [
+            "[da decidere",
+            "PROPOSTA",
+            "verificabil",
+            "massima diligenza"
+          ]
+        }
+      ]
+    },
+    "genre": "contratto",
+    "expected_references_v2": [
+      "references/contratti.md"
+    ],
+    "expect_no_change": false,
+    "persona": {},
+    "context": {
+      "documento": "bozza di contratto di noleggio di un automezzo",
+      "chi_scrive": "avvocato che rivede la bozza"
     }
   },
   {
@@ -128,8 +153,8 @@
     ],
     "acceptable_rewrites": [
       {
-        "label": "temperatura-atp",
-        "text": "L'automezzo rispetta le normative vigenti, inclusa la normativa ATP. L'impianto refrigerante funziona correttamente e mantiene le temperature dichiarate nella certificazione ATP."
+        "label": "garanzia-conservata",
+        "text": "Il Noleggiatore garantisce che l'automezzo è conforme alle normative vigenti, inclusa la normativa ATP, e che l'impianto refrigerante funziona secondo [da decidere: parametro verificabile, per esempio le temperature della certificazione ATP]."
       }
     ],
     "forbidden_changes": [
@@ -180,6 +205,10 @@
           "format": "ok"
         },
         "human_notes": ""
+      },
+      "revisione_2026_09": {
+        "status": "corrected",
+        "notes": "Il gold di luglio eliminava 'garantisce' (garanzia trasformata in dichiarazione) e inventava un obbligo sulle temperature."
       }
     },
     "automation": {
@@ -188,18 +217,29 @@
         "DOPO:",
         "Motivo:"
       ],
-      "must_preserve_literals": [
-        "automezzo",
-        "normative vigenti",
-        "ATP",
-        "impianto refrigerante"
-      ],
       "fatal_forbidden_after": [
         "perfettamente funzionante"
       ],
       "allowed_legal_references": [
         "ATP"
-      ]
+      ],
+      "must_preserve_in_dopo": [
+        "garantisce",
+        "normative vigenti",
+        "ATP",
+        "impianto refrigerante"
+      ],
+      "allowed_new_literals": []
+    },
+    "genre": "contratto",
+    "expected_references_v2": [
+      "references/contratti.md"
+    ],
+    "expect_no_change": false,
+    "persona": {},
+    "context": {
+      "documento": "bozza di contratto di noleggio di un automezzo refrigerato",
+      "chi_scrive": "avvocato che rivede la bozza"
     }
   },
   {
@@ -226,12 +266,8 @@
     ],
     "acceptable_rewrites": [
       {
-        "label": "soggetto-e-preavviso",
-        "text": "Il locatore puo' aumentare il canone una volta all'anno, con preavviso scritto di 30 giorni al conduttore."
-      },
-      {
-        "label": "con-segnaposto-criterio",
-        "text": "Il locatore puo' aumentare il canone una volta all'anno solo secondo il criterio indicato nel contratto, comunicandolo per iscritto al conduttore prima della scadenza prevista."
+        "label": "soggetto-e-criterio-da-decidere",
+        "text": "[da decidere: chi può aumentare il canone, per esempio il Locatore] può aumentare il canone una volta all'anno secondo [da decidere: criterio dell'aumento]."
       }
     ],
     "forbidden_changes": [
@@ -282,6 +318,10 @@
           "format": "ok"
         },
         "human_notes": ""
+      },
+      "revisione_2026_09": {
+        "status": "corrected",
+        "notes": "Tolto il 'preavviso scritto di 30 giorni' inventato."
       }
     },
     "automation": {
@@ -290,15 +330,26 @@
         "DOPO:",
         "Motivo:"
       ],
-      "must_preserve_literals": [
-        "canone",
-        "ann"
-      ],
       "fatal_forbidden_after": [
         "potra' essere aumentato",
         "potrà essere aumentato"
       ],
-      "allowed_legal_references": []
+      "allowed_legal_references": [],
+      "must_preserve_in_dopo": [
+        "canone",
+        "ann"
+      ],
+      "allowed_new_literals": []
+    },
+    "genre": "contratto",
+    "expected_references_v2": [
+      "references/contratti.md"
+    ],
+    "expect_no_change": false,
+    "persona": {},
+    "context": {
+      "documento": "bozza di contratto di locazione",
+      "chi_scrive": "avvocato che rivede la bozza"
     }
   },
   {
@@ -331,11 +382,11 @@
     "acceptable_rewrites": [
       {
         "label": "risultato",
-        "text": "Se le parti intendono un'obbligazione di risultato: Il prestatore consegna il sistema funzionante entro il termine indicato nel contratto. Il sistema si considera funzionante quando supera i test di accettazione previsti nell'allegato tecnico."
+        "text": "Se le parti intendono un'obbligazione di risultato: il prestatore consegna il sistema funzionante entro i tempi concordati; il sistema si considera funzionante quando [da decidere: criterio di accettazione]."
       },
       {
         "label": "mezzi",
-        "text": "Se le parti intendono un'obbligazione di mezzi: Il prestatore impiega personale qualificato e le risorse concordate per completare i lavori entro il termine indicato nel contratto, salvo cause a lui non imputabili."
+        "text": "Se le parti intendono un'obbligazione di mezzi: il prestatore impiega [da decidere: standard di diligenza e risorse] per rendere funzionante il sistema entro i tempi concordati."
       }
     ],
     "forbidden_changes": [
@@ -385,6 +436,10 @@
           "format": "ok"
         },
         "human_notes": ""
+      },
+      "revisione_2026_09": {
+        "status": "corrected",
+        "notes": "Tolti i 'test di accettazione previsti nell'allegato tecnico', il 'personale qualificato' e 'salvo cause a lui non imputabili', tutti inventati."
       }
     },
     "automation": {
@@ -392,11 +447,6 @@
         "PRIMA:",
         "DOPO:",
         "Motivo:"
-      ],
-      "must_preserve_literals": [
-        "prestatore",
-        "sistema",
-        "funzion"
       ],
       "fatal_forbidden_after": [
         "si adoperera' al meglio",
@@ -415,7 +465,23 @@
           ]
         }
       ],
-      "allowed_legal_references": []
+      "allowed_legal_references": [],
+      "must_preserve_in_dopo": [
+        "prestatore",
+        "sistema",
+        "funzion"
+      ],
+      "allowed_new_literals": []
+    },
+    "genre": "contratto",
+    "expected_references_v2": [
+      "references/contratti.md"
+    ],
+    "expect_no_change": false,
+    "persona": {},
+    "context": {
+      "documento": "bozza di contratto di sviluppo software",
+      "chi_scrive": "avvocato che rivede la bozza"
     }
   },
   {
@@ -447,8 +513,8 @@
     ],
     "acceptable_rewrites": [
       {
-        "label": "sequenza-causale",
-        "text": "Se la Vostra societa' non rispetta le normative HACCP e l'AUSL di Modena effettua ulteriori verifiche, la licenza potrebbe essere revocata e la produzione bloccata. La responsabilita' di questo blocco sara' interamente Vostra."
+        "label": "persona-corretta",
+        "text": "In mancanza, se l'AUSL di Modena effettuerà ulteriori verifiche, la licenza della nostra assistita, che non rispetta la normativa HACCP, potrebbe essere revocata e la sua produzione bloccata. L'eventuale blocco sarà imputabile alla Vostra negligenza."
       }
     ],
     "forbidden_changes": [
@@ -498,6 +564,10 @@
           "format": "ok"
         },
         "human_notes": "sbaglia il soggetto è nostra non vostra"
+      },
+      "revisione_2026_09": {
+        "status": "corrected",
+        "notes": "Corretto secondo la revisione umana: la società è la nostra assistita, la negligenza è Vostra. Tolto 'interamente'."
       }
     },
     "automation": {
@@ -506,17 +576,40 @@
         "DOPO:",
         "Motivo:"
       ],
-      "must_preserve_literals": [
+      "fatal_forbidden_after": [
+        "provveda ad ulteriori verifiche"
+      ],
+      "allowed_legal_references": [],
+      "must_preserve_in_dopo": [
         "HACCP",
         "AUSL di Modena",
         "licenza",
         "produzione",
         "Vostra"
       ],
-      "fatal_forbidden_after": [
-        "provveda ad ulteriori verifiche"
+      "allowed_new_literals": []
+    },
+    "genre": "diffida",
+    "expected_references_v2": [
+      "references/atti-e-pareri.md"
+    ],
+    "expect_no_change": false,
+    "persona": {
+      "forbidden": [
+        "\\bVostra societ",
+        "societ\\S* Vostra",
+        "\\bVostra (?:licenza|produzione)"
       ],
-      "allowed_legal_references": []
+      "required_one_of": [
+        "\\bnostr[ao]\\b",
+        "\\bassistita\\b",
+        "\\bmandante\\b"
+      ]
+    },
+    "context": {
+      "documento": "diffida",
+      "mittente": "avvocato della società la cui produzione rischia il blocco (nostra assistita)",
+      "destinatario": "controparte a cui si imputa la negligenza"
     }
   },
   {
@@ -605,17 +698,28 @@
         "DOPO:",
         "Motivo:"
       ],
-      "must_preserve_literals": [
+      "fatal_forbidden_after": [
+        "viene eccepita",
+        "essendo decorso"
+      ],
+      "allowed_legal_references": [],
+      "must_preserve_in_dopo": [
         "controparte",
         "prescrizione",
         "diritto azionato",
         "decennale"
       ],
-      "fatal_forbidden_after": [
-        "viene eccepita",
-        "essendo decorso"
-      ],
-      "allowed_legal_references": []
+      "allowed_new_literals": []
+    },
+    "genre": "atto",
+    "expected_references_v2": [
+      "references/atti-e-pareri.md"
+    ],
+    "expect_no_change": false,
+    "persona": {},
+    "context": {
+      "documento": "memoria difensiva",
+      "chi_scrive": "difensore della parte contro cui è eccepita la prescrizione"
     }
   },
   {
@@ -707,7 +811,12 @@
         "DOPO:",
         "Motivo:"
       ],
-      "must_preserve_literals": [
+      "fatal_forbidden_after": [
+        "come sopra rappresentato e difeso",
+        "con il presente atto intende"
+      ],
+      "allowed_legal_references": [],
+      "must_preserve_in_dopo": [
         "123/2023",
         "Tribunale di Roma",
         "10.07.2023",
@@ -716,11 +825,17 @@
         "risultanze istruttorie",
         "travisamento"
       ],
-      "fatal_forbidden_after": [
-        "come sopra rappresentato e difeso",
-        "con il presente atto intende"
-      ],
-      "allowed_legal_references": []
+      "allowed_new_literals": []
+    },
+    "genre": "atto",
+    "expected_references_v2": [
+      "references/atti-e-pareri.md"
+    ],
+    "expect_no_change": false,
+    "persona": {},
+    "context": {
+      "documento": "atto di appello",
+      "chi_scrive": "difensore dell'appellante"
     }
   },
   {
@@ -747,8 +862,8 @@
     ],
     "acceptable_rewrites": [
       {
-        "label": "topic-sentence-senza-date-inventate",
-        "text": "Il punto da chiarire e' quando decorre la prescrizione dell'azione di risarcimento da fatto illecito. Secondo la Cassazione n. 12345 del 2022, il termine decorre dal giorno in cui il fatto si e' verificato. Questa regola va poi applicata alle date del caso concreto."
+        "label": "topic-sentence",
+        "text": "Il termine di prescrizione dell'azione di risarcimento del danno da fatto illecito decorre dal giorno in cui il fatto si è verificato, come ha stabilito la Cassazione con la sentenza n. 12345 del 2022."
       }
     ],
     "forbidden_changes": [
@@ -798,6 +913,10 @@
           "format": "ok"
         },
         "human_notes": ""
+      },
+      "revisione_2026_09": {
+        "status": "corrected",
+        "notes": "Tolto il meta-commento 'Il punto da chiarire è' e la frase aggiunta sul caso concreto."
       }
     },
     "automation": {
@@ -806,20 +925,31 @@
         "DOPO:",
         "Motivo:"
       ],
-      "must_preserve_literals": [
+      "fatal_forbidden_after": [
+        "ha avuto modo di stabilire",
+        "nota sentenza"
+      ],
+      "allowed_legal_references": [
+        "Cassazione n. 12345 del 2022"
+      ],
+      "must_preserve_in_dopo": [
         "Cassazione",
         "12345",
         "2022",
         "prescrizione",
         "fatto illecito"
       ],
-      "fatal_forbidden_after": [
-        "15.01.2018",
-        "20.02.2023"
-      ],
-      "allowed_legal_references": [
-        "Cassazione n. 12345 del 2022"
-      ]
+      "allowed_new_literals": []
+    },
+    "genre": "atto",
+    "expected_references_v2": [
+      "references/atti-e-pareri.md"
+    ],
+    "expect_no_change": false,
+    "persona": {},
+    "context": {
+      "documento": "comparsa conclusionale",
+      "chi_scrive": "difensore di parte"
     }
   },
   {
@@ -847,8 +977,8 @@
     ],
     "acceptable_rewrites": [
       {
-        "label": "domanda-operativa",
-        "text": "Il conduttore ha pagato in ritardo piu' volte dopo la stipula del contratto di locazione del 1/3/2024: questi ritardi consentono al locatore di chiedere la risoluzione del contratto o giustificano solo un sollecito formale?"
+        "label": "domanda-operativa-senza-ruoli",
+        "text": "Negli ultimi mesi i pagamenti previsti dal contratto di locazione del 1/3/2024 sono arrivati più volte in ritardo: questi ritardi possono mettere in discussione la prosecuzione del rapporto, e con quali conseguenze?"
       }
     ],
     "forbidden_changes": [
@@ -898,6 +1028,10 @@
           "format": "ok"
         },
         "human_notes": ""
+      },
+      "revisione_2026_09": {
+        "status": "corrected",
+        "notes": "Il gold di luglio attribuiva al cliente un ruolo (locatore) e al debitore un altro (conduttore) non ricavabili dal testo."
       }
     },
     "automation": {
@@ -906,17 +1040,28 @@
         "DOPO:",
         "Motivo:"
       ],
-      "must_preserve_literals": [
+      "fatal_forbidden_after": [
+        "ci ha incaricato di esaminare",
+        "con particolare riferimento"
+      ],
+      "allowed_legal_references": [],
+      "must_preserve_in_dopo": [
         "locazione",
         "1/3/2024",
         "ritardi",
         "pagamenti"
       ],
-      "fatal_forbidden_after": [
-        "ci ha incaricato di esaminare",
-        "con particolare riferimento"
-      ],
-      "allowed_legal_references": []
+      "allowed_new_literals": []
+    },
+    "genre": "parere",
+    "expected_references_v2": [
+      "references/atti-e-pareri.md"
+    ],
+    "expect_no_change": false,
+    "persona": {},
+    "context": {
+      "documento": "parere scritto per il cliente",
+      "cliente": "parte del contratto di locazione (ruolo non indicato: non presumerlo)"
     }
   },
   {
@@ -1002,16 +1147,27 @@
         "DOPO:",
         "Motivo:"
       ],
-      "must_preserve_literals": [
-        "conclusioni"
-      ],
       "fatal_forbidden_after": [
         "integralmente richiamato",
         "trascritto all'uopo",
         "gia' rassegnate",
         "già rassegnate"
       ],
-      "allowed_legal_references": []
+      "allowed_legal_references": [],
+      "must_preserve_in_dopo": [
+        "conclusioni"
+      ],
+      "allowed_new_literals": []
+    },
+    "genre": "atto",
+    "expected_references_v2": [
+      "references/atti-e-pareri.md"
+    ],
+    "expect_no_change": false,
+    "persona": {},
+    "context": {
+      "documento": "comparsa conclusionale",
+      "chi_scrive": "difensore di parte"
     }
   },
   {
@@ -1039,8 +1195,8 @@
     ],
     "acceptable_rewrites": [
       {
-        "label": "definizioni-con-esempi",
-        "text": "Il Conduttore paga le spese di manutenzione ordinaria del veicolo, come controlli periodici, rabbocchi e sostituzione dei materiali di consumo. Il Noleggiatore paga le spese di manutenzione straordinaria, come riparazioni strutturali o sostituzioni non dipendenti dall'uso ordinario. Le parti possono modificare questa ripartizione solo con accordo scritto."
+        "label": "ripartizione-chiara",
+        "text": "Il Conduttore paga le spese di manutenzione ordinaria del veicolo; il Noleggiatore paga quelle di manutenzione straordinaria, salvo che le parti concordino una diversa ripartizione."
       }
     ],
     "forbidden_changes": [
@@ -1091,6 +1247,10 @@
           "format": "ok"
         },
         "human_notes": "manca la parte per iscritto delle diverse pattuizioni"
+      },
+      "revisione_2026_09": {
+        "status": "corrected",
+        "notes": "Il gold di luglio inventava esempi di manutenzione e un patto di forma scritta. La forma scritta (preferita dal revisore) va proposta come PROPOSTA nel Motivo."
       }
     },
     "automation": {
@@ -1099,17 +1259,40 @@
         "DOPO:",
         "Motivo:"
       ],
-      "must_preserve_literals": [
+      "fatal_forbidden_after": [
+        "tutte le spese",
+        "restano a carico"
+      ],
+      "allowed_legal_references": [],
+      "must_preserve_in_dopo": [
         "Conduttore",
         "Noleggiatore",
         "manutenzione ordinaria",
         "manutenzione straordinaria",
         "veicolo"
       ],
-      "fatal_forbidden_after": [
-        "salvo diverso accordo"
-      ],
-      "allowed_legal_references": []
+      "allowed_new_literals": [],
+      "must_include_one_of": [
+        {
+          "label": "categorie o forma dell accordo segnalate",
+          "terms": [
+            "[da decidere",
+            "PROPOSTA",
+            "per iscritto",
+            "scritt"
+          ]
+        }
+      ]
+    },
+    "genre": "contratto",
+    "expected_references_v2": [
+      "references/contratti.md"
+    ],
+    "expect_no_change": false,
+    "persona": {},
+    "context": {
+      "documento": "bozza di contratto di noleggio di un veicolo",
+      "chi_scrive": "avvocato che rivede la bozza"
     }
   },
   {
@@ -1196,7 +1379,14 @@
         "DOPO:",
         "Motivo:"
       ],
-      "must_preserve_literals": [
+      "fatal_forbidden_after": [
+        "Invero"
+      ],
+      "allowed_legal_references": [
+        "D.M. 110/2023",
+        "art. 121 c.p.c."
+      ],
+      "must_preserve_in_dopo": [
         "123/2023",
         "15.06.2023",
         "01.02.2022",
@@ -1206,13 +1396,17 @@
         "dicembre 2022",
         "opposizione"
       ],
-      "fatal_forbidden_after": [
-        "Invero"
-      ],
-      "allowed_legal_references": [
-        "D.M. 110/2023",
-        "art. 121 c.p.c."
-      ]
+      "allowed_new_literals": []
+    },
+    "genre": "atto",
+    "expected_references_v2": [
+      "references/atti-e-pareri.md"
+    ],
+    "expect_no_change": false,
+    "persona": {},
+    "context": {
+      "documento": "comparsa di costituzione nell'opposizione a decreto ingiuntivo",
+      "chi_scrive": "difensore della parte creditrice opposta"
     }
   }
 ]
