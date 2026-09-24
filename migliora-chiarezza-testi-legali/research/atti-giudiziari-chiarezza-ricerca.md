@@ -1,3 +1,5 @@
+> **Correzione 2026-09-24:** la citazione di Cass. sez. III, ord. 15 febbraio 2018, n. 3704 come leading case sulla sinteticità è errata: su ItalgiureWeb quel numero riguarda la responsabilità medica (vedi `tests/verifica-fonti-2026-09.md`). Il resto di questo file è la ricerca originale di luglio, non corretta.
+
 # Ricerca: plain legal language negli atti giudiziari civili italiani
 
 *Ricerca svolta il 2026-07-07 via perplexity-web-mcp (pwm ask --intent standard).*

@@ -93,13 +93,26 @@ quanto sintetizzato nelle reference deve procurarsi il testo originale.
 
 - D.M. Giustizia 7 agosto 2023, n. 110 (criteri redazionali e limiti
   dimensionali degli atti giudiziari civili).
-- Art. 121 c.p.c., come novellato dalla riforma Cartabia.
-- Cass. Sez. III, ord. 15 febbraio 2018, n. 3704 (canone di ragionevole
-  sinteticità).
-- Artt. 1362-1371 c.c. (interpretazione del contratto).
-- Cass. 866/2008, 668/2016, 18324/2019 (Sez. III); Cass. Sez. III, ord.
-  3013/2025 e 6444/2025 (gerarchia dei criteri interpretativi e art. 1370
-  c.c. contra proferentem).
+- Art. 121 c.p.c., come novellato dalla riforma Cartabia, e art. 46 disp.
+  att. c.p.c. (il mancato rispetto dei criteri non invalida l'atto ma rileva
+  sulle spese). Verificati su Normattiva il 2026-09-24.
+- Trib. Savona n. 16/2026 e Trib. Patti n. 124/2026: il mancato rispetto dei
+  criteri di chiarezza e sinteticità pesa sulla regolazione delle spese.
+  Verificati su BuddaLaw il 2026-09-24.
+- Artt. 1341, 1342, 1351, 1353, 1365, 1370, 1376 c.c. e art. 35 Codice del
+  consumo: testo vigente verificato su Normattiva il 2026-09-24.
+- Art. 1365 c.c. ed elenchi esemplificativi: Cass. 9560/2017, 14064/2019,
+  19585/2021, 15679/2026. Verificate su ItalgiureWeb e BuddaLaw.
+- Cass. SU 8950/2022 (autosufficienza del ricorso): verificata su
+  ItalgiureWeb.
+- Cass. 866/2008, 668/2016, 18324/2019; Cass. ord. 3013/2025 e 6444/2025
+  (criteri interpretativi e art. 1370 c.c.): raccolte nel 2026-07 da fonti
+  secondarie, da verificare su ItalgiureWeb prima di citarle in un atto.
+
+Correzione del 2026-09-24: la v1 citava Cass. sez. III, ord. 15 febbraio 2018,
+n. 3704 come precedente sulla "ragionevole sinteticità". Su ItalgiureWeb il
+provvedimento con quel numero riguarda la responsabilità medica: la citazione
+è stata tolta.
 
 Per il dettaglio completo delle fonti web usate per compilare questa
 bibliografia (URL, estratti, data di verifica), vedi la cartella `research/` del repository GitHub avvocati-e-mac/skill-legali (fuori dal pacchetto installabile).
