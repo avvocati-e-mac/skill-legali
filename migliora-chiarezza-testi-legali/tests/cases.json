@@ -2525,5 +2525,1005 @@
       "allowed_legal_references": [],
       "allowed_new_literals": []
     }
+  },
+  {
+    "id": "C027",
+    "title": "Periodo arcaico con principio e sentenza citata",
+    "document_type": "atto_giudiziario",
+    "genre": "atto",
+    "input_text": "Invero, giova rammentare che codesta Ecc.ma Corte ebbe già a statuire, in un caso del tutto analogo alla presente controversia, che il depositario il quale riceve la cosa a titolo gratuito risponde della custodia secondo la diligenza che ordinariamente usa per le cose proprie, ma resta comunque tenuto al risarcimento quando la perdita o il deterioramento derivino da colpa grave, come chiarito da Cass. civ., sez. III, n. 6247 del 2016, pronuncia che ha escluso qualsiasi automatica esenzione di responsabilità per il solo fatto della gratuità dell'incarico.",
+    "context": {
+      "mittente": "avvocato della parte attrice",
+      "destinatario": "Tribunale",
+      "ruolo": "memoria su responsabilità del depositario a titolo gratuito"
+    },
+    "persona": {},
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "periodo-arcaico",
+        "severity": "media",
+        "description": "'Giova rammentare', 'codesta' ed 'ebbe già a statuire' sono formule arcaiche di apertura."
+      },
+      {
+        "code": "principio-dopo-sentenza",
+        "severity": "bassa",
+        "description": "Il principio arriva dopo un lungo richiamo alla Corte invece di aprire il paragrafo."
+      }
+    ],
+    "legal_invariants": [
+      "Resta il principio: il depositario a titolo gratuito risponde secondo la diligenza usata per le cose proprie, ma è responsabile per colpa grave.",
+      "Resta la citazione di Cass. civ., sez. III, n. 6247 del 2016.",
+      "Il registro resta forense, non colloquiale."
+    ],
+    "forbidden_changes": [
+      "Eliminare o cambiare gli estremi della sentenza citata.",
+      "Eliminare 'colpa grave' o l'eccezione alla regola generale della diligenza ordinaria.",
+      "Riformulare il principio in modo colloquiale, perdendo il registro forense."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "principio-poi-sentenza",
+        "text": "Il depositario che riceve la cosa a titolo gratuito risponde della custodia secondo la diligenza che usa ordinariamente per le cose proprie; resta comunque tenuto al risarcimento se la perdita o il deterioramento derivano da colpa grave. Lo ha chiarito Cass. civ., sez. III, n. 6247 del 2016, escludendo qualsiasi esenzione automatica di responsabilità per la sola gratuità dell'incarico."
+      }
+    ],
+    "required_reference": [
+      "references/esempi-atti-giudiziari.md"
+    ],
+    "expected_references_v2": [
+      "references/atti-e-pareri.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "validation_rationale": "Verifica che il principio giuridico e la sentenza citata restino intatti e che l'apertura arcaica sparisca senza intaccare il registro forense.",
+    "annotations": {
+      "codex": {
+        "status": "drafted",
+        "notes": "scritto da subagente Sonnet"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    },
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "depositario",
+        "colpa grave",
+        "Cass. civ., sez. III, n. 6247 del 2016",
+        "a titolo gratuito"
+      ],
+      "fatal_forbidden_after": [
+        "giova rammentare",
+        "codesta",
+        "ebbe già a statuire"
+      ],
+      "allowed_legal_references": [
+        "Cass. civ., sez. III, n. 6247 del 2016"
+      ],
+      "allowed_new_literals": []
+    }
+  },
+  {
+    "id": "C028",
+    "title": "Obbligo di comunicazione immediata senza termine in giorni",
+    "document_type": "contratto",
+    "genre": "contratto",
+    "input_text": "Il Cliente si obbliga a comunicare immediatamente al Fornitore ogni variazione dei propri dati anagrafici, fiscali o di contatto, restando fin da subito inteso che l'inadempimento di tale obbligo informativo determina l'inopponibilità delle successive comunicazioni inviate al recapito non aggiornato.",
+    "context": {
+      "mittente": "avvocato del Fornitore",
+      "destinatario": "Cliente",
+      "ruolo": "clausola informativa in un contratto di somministrazione"
+    },
+    "persona": {},
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "ridondanza",
+        "severity": "bassa",
+        "description": "'Restando fin da subito inteso che' è una premessa superflua prima della conseguenza."
+      }
+    ],
+    "legal_invariants": [
+      "Resta l'obbligo di comunicare 'immediatamente' (non va sostituito con un termine in giorni non presente nel testo).",
+      "Resta il soggetto obbligato: il Cliente.",
+      "Resta la conseguenza: l'inopponibilità delle comunicazioni inviate al recapito non aggiornato."
+    ],
+    "forbidden_changes": [
+      "Sostituire 'immediatamente' con un termine espresso in giorni.",
+      "Spostare l'obbligo di comunicazione al Fornitore.",
+      "Eliminare la conseguenza dell'inopponibilità."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "diretto-senza-termine-inventato",
+        "text": "Il Cliente si obbliga a comunicare immediatamente al Fornitore ogni variazione dei propri dati anagrafici, fiscali o di contatto. Se non lo fa, le comunicazioni successive inviate al recapito non aggiornato restano inopponibili al Cliente."
+      }
+    ],
+    "required_reference": [
+      "references/principi-garner.md"
+    ],
+    "expected_references_v2": [
+      "references/contratti.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "validation_rationale": "Controlla che la riscrittura mantenga 'immediatamente' e non introduca un termine in giorni che il testo non prevede: il controllo sui numeri nuovi deve intercettarlo.",
+    "annotations": {
+      "codex": {
+        "status": "drafted",
+        "notes": "scritto da subagente Sonnet"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    },
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "si obbliga a comunicare",
+        "immediatamente",
+        "inopponibil"
+      ],
+      "fatal_forbidden_after": [
+        "restando fin da subito inteso che"
+      ],
+      "allowed_legal_references": [],
+      "allowed_new_literals": []
+    }
+  },
+  {
+    "id": "C029",
+    "title": "Eccezione già chiara di difetto di legittimazione passiva",
+    "document_type": "atto_giudiziario",
+    "genre": "atto",
+    "input_text": "Si eccepisce il difetto di legittimazione passiva della convenuta.",
+    "context": {
+      "mittente": "avvocato della convenuta",
+      "destinatario": "Tribunale",
+      "ruolo": "comparsa di risposta in una causa di risarcimento danni"
+    },
+    "persona": {},
+    "expect_no_change": true,
+    "expected_issues": [
+      {
+        "code": "testo_gia_chiaro",
+        "severity": "alta",
+        "description": "L'eccezione è già enunciata in forma diretta, con soggetto ed eccezione ben visibili: non richiede riscrittura."
+      }
+    ],
+    "legal_invariants": [
+      "L'eccezione resta di legittimazione passiva (non attiva).",
+      "L'eccezione resta riferita alla convenuta."
+    ],
+    "forbidden_changes": [
+      "Cambiare l'eccezione in difetto di legittimazione attiva.",
+      "Attribuire l'eccezione all'attore invece che alla convenuta.",
+      "Aggiungere motivazioni o riferimenti normativi non presenti nel testo."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "invariato",
+        "text": "Si eccepisce il difetto di legittimazione passiva della convenuta."
+      }
+    ],
+    "required_reference": [
+      "references/esempi-atti-giudiziari.md"
+    ],
+    "expected_references_v2": [
+      "references/atti-e-pareri.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "validation_rationale": "Verifica che l'assistente riconosca che una frase già diretta e tecnica non va riscritta.",
+    "annotations": {
+      "codex": {
+        "status": "drafted",
+        "notes": "scritto da subagente Sonnet"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    },
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [],
+      "fatal_forbidden_after": [],
+      "allowed_legal_references": [],
+      "allowed_new_literals": []
+    }
+  },
+  {
+    "id": "C030",
+    "title": "Preliminare di compravendita in un periodo contorto",
+    "document_type": "contratto",
+    "genre": "contratto",
+    "input_text": "Si precisa sin d'ora, ad ogni buon conto, che tra le parti si conviene e si stabilisce quanto segue: la parte promittente venditrice si obbliga a vendere alla parte promissaria acquirente, che dal canto proprio si obbliga ad acquistare, l'unità immobiliare sita in Milano, via Verdi n. 12, al prezzo di euro 180.000, restando inteso che il presente atto costituisce mero preliminare e non produce effetti traslativi della proprietà.",
+    "context": {
+      "mittente": "avvocato della parte promittente venditrice",
+      "destinatario": "verifica interna prima della firma",
+      "ruolo": "bozza di contratto preliminare di compravendita immobiliare"
+    },
+    "persona": {},
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "periodo-sovraccarico",
+        "severity": "media",
+        "description": "Un unico periodo apre con due formule ridondanti prima di arrivare agli obblighi delle parti."
+      }
+    ],
+    "legal_invariants": [
+      "Resta 'si obbliga a vendere' per la parte promittente venditrice (non diventa 'vende').",
+      "Resta 'si obbliga ad acquistare' per la parte promissaria acquirente.",
+      "Resta l'immobile: unità in Milano, via Verdi n. 12.",
+      "Resta il prezzo di euro 180.000.",
+      "Resta la qualificazione di preliminare senza effetti traslativi immediati."
+    ],
+    "forbidden_changes": [
+      "Trasformare 'si obbliga a vendere' in 'vende' o il contrario, cambiando l'effetto da obbligatorio a reale.",
+      "Cambiare l'indirizzo o il prezzo dell'immobile.",
+      "Eliminare la qualificazione di preliminare senza effetti traslativi."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "obblighi-in-apertura",
+        "text": "La parte promittente venditrice si obbliga a vendere alla parte promissaria acquirente, che si obbliga ad acquistare, l'unità immobiliare sita in Milano, via Verdi n. 12, al prezzo di euro 180.000. Il presente atto è un preliminare e non produce effetti traslativi della proprietà."
+      }
+    ],
+    "required_reference": [
+      "references/principi-garner.md"
+    ],
+    "expected_references_v2": [
+      "references/contratti.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "validation_rationale": "Controlla che 'si obbliga a vendere' e 'si obbliga ad acquistare' restino entrambi, che l'immobile e il prezzo non cambino e che la riscrittura non trasformi l'obbligo in effetto reale.",
+    "annotations": {
+      "codex": {
+        "status": "drafted",
+        "notes": "scritto da subagente Sonnet"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    },
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "si obbliga a vendere",
+        "si obbliga ad acquistare",
+        "euro 180.000",
+        "via Verdi n. 12"
+      ],
+      "fatal_forbidden_after": [
+        "si precisa sin d'ora",
+        "ad ogni buon conto"
+      ],
+      "allowed_legal_references": [],
+      "allowed_new_literals": []
+    }
+  },
+  {
+    "id": "C031",
+    "title": "Definizione del Corrispettivo con obbligo e sanzione nascosti",
+    "document_type": "contratto",
+    "genre": "contratto",
+    "input_text": "Resta stabilito che, ai fini del presente contratto, per «Corrispettivo» si intende l'importo di euro 12.000, IVA esclusa, che il Committente corrisponde all'Appaltatore in unica soluzione entro 30 giorni dalla consegna dell'opera, a pena di risoluzione del contratto.",
+    "context": {
+      "mittente": "avvocato del Committente",
+      "destinatario": "Appaltatore",
+      "ruolo": "articolo definizioni in un contratto di appalto"
+    },
+    "persona": {},
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "definizione-con-regola-nascosta",
+        "severity": "alta",
+        "description": "La definizione di 'Corrispettivo' contiene anche l'obbligo di pagamento, il termine e la sanzione, che dovrebbero stare nell'articolo sul pagamento."
+      }
+    ],
+    "legal_invariants": [
+      "Il termine definito resta «Corrispettivo», pari a euro 12.000, IVA esclusa.",
+      "Resta il termine di pagamento: 30 giorni dalla consegna dell'opera.",
+      "Resta la sanzione 'a pena di risoluzione del contratto'.",
+      "Il Committente resta il soggetto che paga; l'Appaltatore resta chi riceve il pagamento."
+    ],
+    "forbidden_changes": [
+      "Cambiare l'importo di euro 12.000.",
+      "Cambiare il termine di 30 giorni dalla consegna.",
+      "Eliminare 'a pena di risoluzione del contratto'.",
+      "Invertire chi paga e chi riceve il pagamento."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "definizione-asciutta-piu-articolo",
+        "text": "«Corrispettivo»: l'importo di euro 12.000, IVA esclusa.\nArt. [●] Pagamento. Il Committente paga il Corrispettivo all'Appaltatore in unica soluzione, entro 30 giorni dalla consegna dell'opera, a pena di risoluzione del contratto."
+      }
+    ],
+    "required_reference": [
+      "references/principi-garner.md"
+    ],
+    "expected_references_v2": [
+      "references/contratti.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "validation_rationale": "Verifica che l'importo, il termine e la sanzione restino tutti presenti anche dopo aver tolto la premessa ridondante e aver separato la definizione dall'obbligo.",
+    "annotations": {
+      "codex": {
+        "status": "drafted",
+        "notes": "scritto da subagente Sonnet"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    },
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "euro 12.000",
+        "30 giorni dalla consegna",
+        "a pena di"
+      ],
+      "fatal_forbidden_after": [
+        "resta stabilito che"
+      ],
+      "allowed_legal_references": [],
+      "allowed_new_literals": []
+    }
+  },
+  {
+    "id": "C032",
+    "title": "Diffida con intimazione a triplice intensificatore",
+    "document_type": "diffida",
+    "genre": "diffida",
+    "input_text": "Con la presente Vi intimiamo formalmente, perentoriamente e definitivamente di provvedere, entro e non oltre il termine di 10 giorni dalla ricezione della presente, al pagamento della somma di euro 3.500 a saldo delle fatture insolute, con espresso avvertimento che, decorso inutilmente detto termine, adiremo le competenti autorità giudiziarie a tutela delle nostre ragioni di credito.",
+    "context": {
+      "mittente": "avvocato del creditore",
+      "destinatario": "debitore moroso",
+      "ruolo": "diffida per il pagamento di fatture insolute"
+    },
+    "persona": {},
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "intensificatori",
+        "severity": "media",
+        "description": "'Formalmente, perentoriamente e definitivamente' e 'entro e non oltre' raddoppiano concetti già chiari senza aggiungere contenuto."
+      }
+    ],
+    "legal_invariants": [
+      "Resta l'intimazione a pagare (intimiamo).",
+      "Resta il termine di 10 giorni dalla ricezione.",
+      "Resta la somma di euro 3.500 a saldo delle fatture insolute.",
+      "Resta l'avviso di azione giudiziaria in caso di mancato pagamento."
+    ],
+    "forbidden_changes": [
+      "Eliminare il termine di 10 giorni o la somma di euro 3.500.",
+      "Eliminare l'intimazione o l'avviso di azione giudiziaria.",
+      "Aggiungere nuovi importi, termini o intensificatori non presenti nel testo."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "tono-fermo-senza-triplette",
+        "text": "Con la presente Vi intimiamo di pagare, entro il termine di 10 giorni dalla ricezione della presente, la somma di euro 3.500 a saldo delle fatture insolute. Decorso inutilmente il termine, adiremo le autorità giudiziarie competenti a tutela delle nostre ragioni di credito."
+      }
+    ],
+    "required_reference": [
+      "references/esempi-atti-giudiziari.md"
+    ],
+    "expected_references_v2": [
+      "references/atti-e-pareri.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "validation_rationale": "Verifica che il termine di 10 giorni e la somma di euro 3.500 restino intatti dopo aver tolto la tripletta di intensificatori e la doppia formula 'entro e non oltre'.",
+    "annotations": {
+      "codex": {
+        "status": "drafted",
+        "notes": "scritto da subagente Sonnet"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    },
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "intimiamo",
+        "10 giorni",
+        "euro 3.500"
+      ],
+      "fatal_forbidden_after": [
+        "formalmente, perentoriamente e definitivamente",
+        "entro e non oltre"
+      ],
+      "allowed_legal_references": [],
+      "allowed_new_literals": []
+    }
+  },
+  {
+    "id": "C033",
+    "title": "Parere per cliente non giurista con latinismi cautelari",
+    "document_type": "parere",
+    "genre": "parere",
+    "input_text": "Si osserva sin d'ora che, nel caso di specie, difetta il fumus boni iuris, poiché la pretesa del richiedente non appare sorretta da elementi probatori sufficienti; difetta altresì il periculum in mora, non risultando allegato alcun pregiudizio imminente e irreparabile che giustifichi la misura cautelare richiesta.",
+    "context": {
+      "mittente": "avvocato",
+      "destinatario": "cliente non giurista",
+      "ruolo": "parere sulla possibilità di ottenere una misura cautelare"
+    },
+    "persona": {},
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "latinismi-non-tradotti",
+        "severity": "alta",
+        "description": "'Fumus boni iuris' e 'periculum in mora' non sono tradotti per un cliente non giurista."
+      },
+      {
+        "code": "annuncio-superfluo",
+        "severity": "bassa",
+        "description": "'Si osserva sin d'ora che' è un annuncio che rinvia il contenuto senza aggiungerlo."
+      }
+    ],
+    "legal_invariants": [
+      "Restano entrambi i presupposti cautelari negati, in latino o tradotti.",
+      "Resta il motivo del difetto di fumus: mancanza di elementi probatori sufficienti a sostegno della pretesa.",
+      "Resta il motivo del difetto di periculum: assenza di un pregiudizio imminente e irreparabile allegato."
+    ],
+    "forbidden_changes": [
+      "Affermare che i presupposti sussistono invece che difettano.",
+      "Eliminare uno dei due presupposti cautelari.",
+      "Tradurre i latinismi con un significato diverso da quello tecnico."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "latinismi-tradotti-accanto",
+        "text": "Manca il fumus boni iuris, cioè la probabile fondatezza della domanda: la pretesa del richiedente non è sorretta da elementi probatori sufficienti. Manca anche il periculum in mora, cioè il pericolo nel ritardo: non risulta allegato alcun pregiudizio imminente e irreparabile che giustifichi la misura cautelare richiesta."
+      }
+    ],
+    "required_reference": [
+      "references/principi-garner.md"
+    ],
+    "expected_references_v2": [
+      "references/atti-e-pareri.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "validation_rationale": "Controlla che i due presupposti cautelari, negati nel testo, restino entrambi presenti, in latino o tradotti accanto, e che il motivo di ciascun difetto non cambi.",
+    "annotations": {
+      "codex": {
+        "status": "drafted",
+        "notes": "scritto da subagente Sonnet"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    },
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "pregiudizio imminente e irreparabile",
+        "misura cautelare"
+      ],
+      "fatal_forbidden_after": [
+        "si osserva sin d'ora"
+      ],
+      "allowed_legal_references": [],
+      "allowed_new_literals": [],
+      "must_include_one_of": [
+        {
+          "label": "latinismi o traduzione",
+          "terms": [
+            "fumus boni iuris",
+            "periculum in mora",
+            "probabile fondatezza",
+            "pericolo nel ritardo"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "C034",
+    "title": "Parere sulla morosità del conduttore appesantito da tic da IA",
+    "document_type": "parere",
+    "genre": "parere",
+    "input_text": "È importante sottolineare che la morosità del conduttore, che non versa il canone da tre mensilità, gioca un ruolo cruciale nella valutazione della gravità dell'inadempimento ai fini della risoluzione del contratto di locazione. Non solo il mancato pagamento incide sul sinallagma contrattuale, ma anche compromette l'affidamento del locatore nella prosecuzione del rapporto. In conclusione, si ritiene sussistente un inadempimento di non scarsa importanza ai sensi dell'art. 1455 c.c., tale da giustificare la domanda di risoluzione.",
+    "context": {
+      "mittente": "avvocato del locatore",
+      "destinatario": "locatore",
+      "ruolo": "parere sulla gravità della morosità del conduttore"
+    },
+    "persona": {},
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "tic-ia",
+        "severity": "media",
+        "description": "'È importante sottolineare che', 'gioca un ruolo cruciale' e 'In conclusione,' sono annunci e chiusure tipiche di un testo generato, non contenuto giuridico."
+      },
+      {
+        "code": "deep-issue-mancante",
+        "severity": "media",
+        "description": "La conclusione operativa arriva solo in fondo invece che in apertura."
+      }
+    ],
+    "legal_invariants": [
+      "Resta la morosità: mancato pagamento del canone per tre mensilità.",
+      "Resta il riferimento all'art. 1455 c.c.",
+      "Resta la conclusione: inadempimento di non scarsa importanza che giustifica la risoluzione."
+    ],
+    "forbidden_changes": [
+      "Cambiare il numero di mensilità non pagate.",
+      "Cambiare l'art. 1455 c.c. con un'altra norma.",
+      "Concludere che l'inadempimento non giustifica la risoluzione."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "conclusione-in-apertura-senza-tic",
+        "text": "Il mancato pagamento del canone per tre mensilità è un inadempimento di non scarsa importanza ai sensi dell'art. 1455 c.c., tale da giustificare la domanda di risoluzione del contratto di locazione: la morosità del conduttore incide sul sinallagma contrattuale e compromette l'affidamento del locatore nella prosecuzione del rapporto."
+      }
+    ],
+    "required_reference": [
+      "references/principi-garner.md"
+    ],
+    "expected_references_v2": [
+      "references/atti-e-pareri.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "validation_rationale": "Verifica che i tic da IA spariscano e che mensilità, art. 1455 c.c. e conclusione restino identici, solo spostati in apertura.",
+    "annotations": {
+      "codex": {
+        "status": "drafted",
+        "notes": "scritto da subagente Sonnet"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    },
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "tre mensilità",
+        "art. 1455 c.c.",
+        "risoluzione"
+      ],
+      "fatal_forbidden_after": [
+        "è importante sottolineare",
+        "gioca un ruolo cruciale",
+        "in conclusione,"
+      ],
+      "allowed_legal_references": [],
+      "allowed_new_literals": []
+    }
+  },
+  {
+    "id": "C035",
+    "title": "Servizio 'robusto' senza livelli verificabili",
+    "document_type": "contratto",
+    "genre": "contratto",
+    "input_text": "Si rappresenta, a mero titolo di premessa, che il Fornitore si impegna a garantire un servizio robusto, efficiente e affidabile, implementando le migliori pratiche del settore per assicurare la continuità operativa della piattaforma messa a disposizione del Cliente.",
+    "context": {
+      "mittente": "avvocato del Fornitore",
+      "destinatario": "Cliente",
+      "ruolo": "clausola di livello di servizio in un contratto SaaS"
+    },
+    "persona": {},
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "standard-vago",
+        "severity": "alta",
+        "description": "'Servizio robusto, efficiente e affidabile' e 'migliori pratiche del settore' non sono parametri verificabili."
+      }
+    ],
+    "legal_invariants": [
+      "Resta l'obbligo del Fornitore relativo alla continuità operativa della piattaforma.",
+      "Il servizio resta a beneficio del Cliente.",
+      "Non si inventano livelli di servizio numerici non presenti nel testo."
+    ],
+    "forbidden_changes": [
+      "Inventare percentuali di uptime, tempi di risposta o altri parametri numerici non presenti.",
+      "Eliminare il riferimento alla piattaforma o al Cliente.",
+      "Sostituire uno standard vago con un altro standard vago, invece che con un parametro verificabile o un segnaposto."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "segnaposto-verificabile",
+        "text": "Il Fornitore garantisce [da decidere: livelli di servizio verificabili, ad esempio percentuale di uptime e tempi di intervento] per la continuità operativa della piattaforma messa a disposizione del Cliente."
+      }
+    ],
+    "required_reference": [
+      "references/principi-garner.md"
+    ],
+    "expected_references_v2": [
+      "references/contratti.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "validation_rationale": "Verifica che la riscrittura non inventi cifre di livello di servizio e lasci un segnaposto o un rinvio a un parametro verificabile.",
+    "annotations": {
+      "codex": {
+        "status": "drafted",
+        "notes": "scritto da subagente Sonnet"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    },
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [],
+      "fatal_forbidden_after": [
+        "a mero titolo di premessa"
+      ],
+      "allowed_legal_references": [],
+      "allowed_new_literals": [],
+      "must_include_one_of": [
+        {
+          "label": "standard verificabile",
+          "terms": [
+            "[da decidere",
+            "livelli di servizio",
+            "verificabil"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "C036",
+    "title": "Esposizione dei fatti prolissa in un atto di citazione",
+    "document_type": "atto_giudiziario",
+    "genre": "atto",
+    "input_text": "Si deve premettere, siccome emerge inequivocabilmente dagli atti e documenti tutti versati in causa, che in data 12 gennaio 2022 l'odierna attrice, Alfa Arredi S.r.l., stipulava con la società convenuta, Beta Uffici S.p.A., un contratto di fornitura avente ad oggetto la realizzazione e la consegna di arredi per ufficio destinati alla nuova sede della convenuta, come risulta dal contratto prodotto sub doc. 1. Il contratto prevedeva, tra l'altro, la fornitura di scrivanie, sedute operative e armadi per archivio, secondo le specifiche tecniche concordate tra le parti e allegate al contratto medesimo, oltre all'obbligo per l'attrice di curare il montaggio degli arredi presso i locali della convenuta. Giova precisare che, in esecuzione di detto contratto, l'attrice provvedeva alla consegna della merce in data 3 marzo 2022, consegna della quale viene fatta piena prova dalla bolla sottoscritta per ricevuta dal legale rappresentante della convenuta, che si produce sub doc. 2. Successivamente alla consegna, e per l'esattezza in data 10 marzo 2022, l'attrice emetteva la fattura n. 145/2022, dell'importo di euro 42.300, comprensivo di IVA, corrispondente al prezzo pattuito per la fornitura, fattura che si produce sub doc. 3 e che qui espressamente si richiama. Ebbene, a fronte di tale fattura, la convenuta versava un primo e parziale pagamento di euro 20.000 in data 5 aprile 2022, come risulta dalla contabile bancaria prodotta sub doc. 4, senza tuttavia provvedere, nonostante il tempo trascorso, al versamento del residuo importo di euro 22.300, che pertanto risulta a tutt'oggi non corrisposto. Orbene, stante l'inadempimento parziale della convenuta, l'attrice, in data 15 giugno 2022, inviava a mezzo posta elettronica certificata un primo sollecito di pagamento, con il quale intimava alla convenuta di provvedere al saldo del residuo importo, sollecito che si produce sub doc. 5, e che tuttavia rimaneva privo di qualsivoglia riscontro da parte della convenuta medesima. Non paga di ciò, e nella perdurante inerzia della controparte, l'attrice inviava un secondo ed ulteriore sollecito in data 20 settembre 2022, anch'esso rimasto senza risposta alcuna, come si evince dal doc. 6 che si produce in atti. Tutto ciò premesso e considerato, appare di tutta evidenza che la convenuta si è resa inadempiente all'obbligazione di pagamento del residuo prezzo pattuito, obbligazione della quale la stessa non ha mai contestato l'esistenza né l'ammontare, essendosi limitata a non riscontrare i solleciti ricevuti, cosicché l'attrice, esperiti infruttuosamente i tentativi di composizione bonaria della vicenda, non ha potuto far altro che adire l'intestato Tribunale per ottenere quanto le è dovuto, oltre agli interessi legali e al risarcimento del maggior danno subito per effetto del ritardato pagamento. Va peraltro soggiunto, ad abundantiam, che la convenuta non ha mai revocato in dubbio, né in sede di consegna né successivamente, la qualità della fornitura o la regolarità del montaggio eseguito dall'attrice presso i propri locali.",
+    "context": {
+      "mittente": "avvocato della parte attrice",
+      "destinatario": "Tribunale",
+      "ruolo": "esposizione dei fatti in un atto di citazione per pagamento di una fornitura"
+    },
+    "persona": {},
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "periodo-sovraccarico",
+        "severity": "alta",
+        "description": "Ogni fatto è annegato in formule di apertura e chiusura ridondanti invece di stare in un paragrafo proprio con il documento richiamato."
+      },
+      {
+        "code": "formule-vuote",
+        "severity": "media",
+        "description": "'Si deve premettere', 'giova precisare', 'orbene' e 'appare di tutta evidenza' non aggiungono contenuto."
+      }
+    ],
+    "legal_invariants": [
+      "Resta la data del contratto: 12 gennaio 2022 (doc. 1).",
+      "Resta la data di consegna: 3 marzo 2022 (doc. 2).",
+      "Resta la fattura n. 145/2022 di euro 42.300 (doc. 3).",
+      "Resta il pagamento parziale di euro 20.000 del 5 aprile 2022 (doc. 4).",
+      "Resta il residuo di euro 22.300 non versato.",
+      "Restano i due solleciti del 15 giugno 2022 (doc. 5) e del 20 settembre 2022 (doc. 6), entrambi senza riscontro."
+    ],
+    "forbidden_changes": [
+      "Aggiungere date, importi o numeri di doc. non presenti nel testo.",
+      "Affermare che la convenuta ha contestato l'esistenza o l'ammontare del debito.",
+      "Cambiare l'ordine cronologico dei fatti o invertire attrice e convenuta."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "un-fatto-per-paragrafo",
+        "text": "In data 12 gennaio 2022 l'attrice, Alfa Arredi S.r.l., ha stipulato con la convenuta, Beta Uffici S.p.A., un contratto di fornitura di arredi per ufficio per la nuova sede della convenuta (doc. 1). Il contratto prevedeva la fornitura di scrivanie, sedute operative e armadi per archivio, secondo le specifiche tecniche allegate, e l'obbligo per l'attrice di curare il montaggio presso i locali della convenuta.\n\nL'attrice ha consegnato la merce il 3 marzo 2022; la convenuta ha sottoscritto per ricevuta la bolla di consegna (doc. 2).\n\nIl 10 marzo 2022 l'attrice ha emesso la fattura n. 145/2022, di euro 42.300 IVA compresa, per il prezzo pattuito (doc. 3).\n\nIl 5 aprile 2022 la convenuta ha versato un primo pagamento parziale di euro 20.000 (doc. 4). Il residuo di euro 22.300 non è stato versato.\n\nIl 15 giugno 2022 l'attrice ha inviato un primo sollecito di pagamento via PEC (doc. 5). Il 20 settembre 2022 ha inviato un secondo sollecito (doc. 6). Nessuno dei due solleciti ha avuto riscontro.\n\nLa convenuta non ha mai contestato l'esistenza né l'ammontare del residuo dovuto, né la qualità della fornitura o la regolarità del montaggio eseguito dall'attrice. L'attrice agisce quindi per ottenere il pagamento di euro 22.300, oltre agli interessi legali e al risarcimento del maggior danno per il ritardo."
+      }
+    ],
+    "required_reference": [
+      "references/esempi-atti-giudiziari.md"
+    ],
+    "expected_references_v2": [
+      "references/atti-e-pareri.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "validation_rationale": "Controlla che tutte le date, gli importi e i doc. 1-6 restino presenti e testuali dopo aver tolto le formule vuote e diviso i fatti per paragrafo.",
+    "annotations": {
+      "codex": {
+        "status": "drafted",
+        "notes": "scritto da subagente Sonnet"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    },
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "12 gennaio 2022",
+        "euro 42.300",
+        "euro 22.300",
+        "doc. 1",
+        "3 marzo 2022",
+        "20 settembre 2022"
+      ],
+      "fatal_forbidden_after": [
+        "si deve premettere",
+        "giova precisare",
+        "orbene",
+        "appare di tutta evidenza"
+      ],
+      "allowed_legal_references": [],
+      "allowed_new_literals": []
+    }
+  },
+  {
+    "id": "C037",
+    "title": "Contratto di fornitura con difetti misti in più articoli",
+    "document_type": "contratto",
+    "genre": "contratto",
+    "input_text": "Art. 1 – Oggetto. Il Fornitore, Alfa Componenti S.r.l., si obbliga a fornire al Cliente, Beta Assemblaggi S.p.A., i componenti meccanici indicati negli ordini di acquisto emessi di volta in volta dal Cliente, componenti che dovranno essere consegnati presso lo stabilimento e/o il deposito indicato dal Cliente, secondo le modalità di volta in volta concordate tra le parti e comunque nel rispetto degli standard qualitativi allegati al presente contratto.\n\nArt. 2 – Prezzo e pagamento. Il prezzo unitario dei componenti è stabilito in euro 18,50 cadauno, salvo diversa pattuizione scritta tra le parti per singoli ordini di importo rilevante. Il Cliente è tenuto a corrispondere il pagamento entro 60 giorni dalla data di ricevimento della fattura, mediante bonifico bancario sul conto corrente indicato dal Fornitore. Resta fermo quanto stabilito come sopra in ordine alle modalità di consegna. In caso di ritardato pagamento, decorrono gli interessi moratori nella misura di legge, fatta salva ogni ulteriore pretesa del Fornitore.\n\nArt. 3 – Garanzia. Il Fornitore garantisce la conformità dei componenti alle specifiche tecniche concordate per un periodo di 24 mesi dalla consegna. Sono coperti dalla garanzia, a titolo puramente esemplificativo e non tassativo, i difetti di materiale, i difetti di lavorazione e le non conformità dimensionali rispetto al disegno tecnico approvato. Restano esclusi dalla garanzia i difetti derivanti da un utilizzo improprio dei componenti da parte del Cliente.\n\nArt. 4 – Modifiche agli ordini. Le quantità e le date di consegna indicate negli ordini potranno essere modificate, con un preavviso minimo di 5 giorni lavorativi, dandone comunicazione scritta alla controparte. In caso di modifica, il Fornitore dovrà confermare la nuova data di consegna entro 3 giorni dal ricevimento della comunicazione, mentre il Cliente è tenuto a confermare le eventuali variazioni di quantità nello stesso termine. Le condizioni economiche potranno inoltre essere riviste, come previsto all'art. 2. Ciò può avvenire in caso di aumento dei costi delle materie prime superiore al 10% su base annua.\n\nArt. 5 – Riservatezza. Le parti si obbligano a mantenere riservate le informazioni tecniche e commerciali scambiate in esecuzione del presente contratto e a non divulgarle a terzi, salvo consenso scritto della parte interessata, per un periodo di 3 anni dalla cessazione del rapporto.\n\nArt. 6 – Risoluzione. In caso di ritardo nella consegna superiore a 15 giorni rispetto al termine pattuito, il Cliente ha diritto di risolvere il contratto ai sensi dell'art. 1456 c.c., fermo restando il diritto al risarcimento del danno ulteriore.\n\nArt. 7 – Comunicazioni. Le comunicazioni tra le parti relative al presente contratto dovranno essere effettuate per iscritto, a mezzo posta elettronica certificata, agli indirizzi indicati in epigrafe, ed il Fornitore è tenuto a dare riscontro entro un termine ragionevole, salvo diversa indicazione comunicata per iscritto dalla parte interessata.",
+    "context": {
+      "mittente": "avvocato di Alfa Componenti S.r.l.",
+      "destinatario": "verifica interna prima della firma",
+      "ruolo": "bozza di contratto di fornitura di componenti meccanici"
+    },
+    "persona": {},
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "e-o-ambiguo",
+        "severity": "alta",
+        "description": "'Stabilimento e/o il deposito' (art. 1) non dice se le due destinazioni sono alternative o cumulabili."
+      },
+      {
+        "code": "modali-alternati",
+        "severity": "media",
+        "description": "'Dovranno', 'è tenuto a' e 'dovrà' si alternano per obblighi dello stesso tipo negli artt. 1, 2 e 4."
+      },
+      {
+        "code": "rinvio-generico",
+        "severity": "bassa",
+        "description": "'Come sopra' (art. 2) non indica a quale articolo rinvia."
+      },
+      {
+        "code": "elenco-non-marcato",
+        "severity": "bassa",
+        "description": "'A titolo puramente esemplificativo e non tassativo' (art. 3) raddoppia un concetto che basta dire una volta."
+      },
+      {
+        "code": "passivo-opaco",
+        "severity": "alta",
+        "description": "'Potranno essere modificate' e 'potranno inoltre essere riviste' (art. 4) non dicono quale parte decide."
+      }
+    ],
+    "legal_invariants": [
+      "Restano i nomi delle parti: Alfa Componenti S.r.l. (Fornitore) e Beta Assemblaggi S.p.A. (Cliente).",
+      "Resta il prezzo unitario di euro 18,50.",
+      "Resta il termine di pagamento di 60 giorni.",
+      "Resta la garanzia di 24 mesi e la sua natura esemplificativa (parola 'esemplificativ').",
+      "Resta il termine di risoluzione di 15 giorni e il rinvio all'art. 1456 c.c."
+    ],
+    "forbidden_changes": [
+      "Cambiare i nomi delle parti, gli importi o i termini.",
+      "Eliminare del tutto la parola 'esemplificativo' invece di accorciare la formula.",
+      "Inventare quale parte può modificare gli ordini o rivedere i prezzi, se il testo non lo dice."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "articoli-corretti",
+        "text": "Art. 1 – Oggetto. Il Fornitore, Alfa Componenti S.r.l., fornisce al Cliente, Beta Assemblaggi S.p.A., i componenti meccanici indicati negli ordini di acquisto emessi dal Cliente. Il Fornitore consegna i componenti presso lo stabilimento o il deposito indicato dal Cliente, o entrambi [da decidere: se le due destinazioni sono cumulabili nello stesso ordine], secondo le modalità di volta in volta concordate e nel rispetto degli standard qualitativi allegati al presente contratto.\n\nArt. 2 – Prezzo e pagamento. Il prezzo unitario dei componenti è euro 18,50 cadauno, salvo diversa pattuizione scritta tra le parti per singoli ordini di importo rilevante. Il Cliente paga entro 60 giorni dalla data di ricevimento della fattura, mediante bonifico bancario sul conto corrente indicato dal Fornitore. Le modalità di consegna restano quelle dell'art. 1. In caso di ritardato pagamento, decorrono gli interessi moratori nella misura di legge, fatta salva ogni ulteriore pretesa del Fornitore.\n\nArt. 3 – Garanzia. Il Fornitore garantisce la conformità dei componenti alle specifiche tecniche concordate per 24 mesi dalla consegna. Sono coperti dalla garanzia, a titolo esemplificativo, i difetti di materiale, i difetti di lavorazione e le non conformità dimensionali rispetto al disegno tecnico approvato. Restano esclusi i difetti derivanti da un utilizzo improprio dei componenti da parte del Cliente.\n\nArt. 4 – Modifiche agli ordini. [da decidere: quale parte] può modificare le quantità e le date di consegna indicate negli ordini, con un preavviso minimo di 5 giorni lavorativi e comunicazione scritta alla controparte. In caso di modifica, il Fornitore conferma la nuova data di consegna entro 3 giorni dal ricevimento della comunicazione; il Cliente conferma le eventuali variazioni di quantità nello stesso termine. [da decidere: quale parte] può inoltre rivedere le condizioni economiche, come previsto all'art. 2. Ciò può avvenire se i costi delle materie prime aumentano di oltre il 10% su base annua.\n\nArt. 5 – Riservatezza. Le parti mantengono riservate le informazioni tecniche e commerciali scambiate in esecuzione del presente contratto e non le divulgano a terzi, salvo consenso scritto della parte interessata, per 3 anni dalla cessazione del rapporto.\n\nArt. 6 – Risoluzione. Se il ritardo nella consegna supera 15 giorni rispetto al termine pattuito, il Cliente ha diritto di risolvere il contratto ai sensi dell'art. 1456 c.c., fermo restando il diritto al risarcimento del danno ulteriore.\n\nArt. 7 – Comunicazioni. Le parti effettuano le comunicazioni relative al presente contratto per iscritto, a mezzo posta elettronica certificata, agli indirizzi indicati in epigrafe. Il Fornitore dà riscontro entro un termine ragionevole, salvo diversa indicazione comunicata per iscritto dalla parte interessata."
+      }
+    ],
+    "required_reference": [
+      "references/principi-garner.md"
+    ],
+    "expected_references_v2": [
+      "references/contratti.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "validation_rationale": "Verifica che nomi delle parti, importi e termini restino letterali, che 'esemplificativ' sopravviva in forma accorciata e che il potere di modifica non venga attribuito a una parte che il testo non nomina.",
+    "annotations": {
+      "codex": {
+        "status": "drafted",
+        "notes": "scritto da subagente Sonnet"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    },
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "Alfa Componenti S.r.l.",
+        "Beta Assemblaggi S.p.A.",
+        "euro 18,50",
+        "60 giorni",
+        "esemplificativ",
+        "art. 1456 c.c."
+      ],
+      "fatal_forbidden_after": [
+        "come sopra",
+        "a titolo puramente esemplificativo e non tassativo"
+      ],
+      "allowed_legal_references": [],
+      "allowed_new_literals": []
+    }
+  },
+  {
+    "id": "C038",
+    "title": "Parere su reclamo per macchina da caffè difettosa",
+    "document_type": "parere",
+    "genre": "parere",
+    "input_text": "Il presente parere trae origine da un incontro svoltosi lo scorso mese presso il nostro studio con il legale rappresentante della società Caffè Design S.r.l., la quale opera nel settore della vendita online di macchine da caffè professionali e domestiche attraverso il proprio sito di e-commerce, e che ci ha rappresentato una vicenda relativa a un cliente rimasto insoddisfatto di un acquisto effettuato alcuni mesi orsono. Nel corso della riunione sono stati esaminati i documenti relativi alla vendita, tra cui la conferma d'ordine e lo scambio di corrispondenza intercorso tra le parti, al fine di ricostruire compiutamente i fatti di causa e di valutare le possibili conseguenze per la nostra assistita. Sono state altresì esaminate le fotografie allegate dal cliente alla email di reclamo e la scheda tecnica del prodotto, per verificare la compatibilità dei difetti lamentati con le caratteristiche dichiarate dal produttore. Prima di entrare nel merito della questione, è importante sottolineare che il quadro normativo di riferimento è quello della garanzia legale di conformità prevista dal Codice del consumo, la cui corretta applicazione gioca un ruolo cruciale per individuare la responsabilità della venditrice.\n\nRicostruendo i fatti: il cliente ha acquistato, in data 3 febbraio 2025, una macchina da caffè al prezzo di euro 890, tramite il sito di e-commerce della nostra assistita. Il prodotto è stato consegnato regolarmente. Il cliente lo ha utilizzato per alcuni mesi. Non risultano contestazioni nel periodo immediatamente successivo alla consegna. Poi, in data 12 ottobre 2025, il cliente ha inviato una email alla nostra assistita. Nella email lamentava due difetti. Il primo: la macchina non si accende più. Il secondo: una perdita d'acqua dal serbatoio. Il cliente ha chiesto, nella stessa email, la restituzione integrale del prezzo di euro 890. Ha chiesto inoltre il pagamento di euro 300 a titolo di danni morali per il disagio subito. Il cliente ha effettuato l'acquisto quale persona fisica, per uso estraneo alla propria eventuale attività professionale, circostanza che qualifica l'operazione come vendita di un bene di consumo ai sensi dell'art. 3 del Codice del consumo.\n\nOccorre quindi chiarire se la nostra assistita sia tenuta a corrispondere quanto richiesto, e in quali termini debba eventualmente rispondere del difetto lamentato. Non solo la distanza temporale tra l'acquisto e la segnalazione rileva ai fini della disciplina applicabile, ma anche la natura dei rimedi che il Codice del consumo mette a disposizione del consumatore incide sulla risposta da fornire.\n\nIl rapporto è soggetto alla garanzia legale di conformità di cui agli articoli 128 e seguenti del Codice del consumo, che si applica per 24 mesi dalla consegna del bene. Nei primi 12 mesi dalla consegna, il difetto si presume esistente già al momento della consegna, salvo che tale presunzione sia incompatibile con la natura del bene o del difetto; spetta pertanto alla venditrice, e non al consumatore, dimostrare che il difetto non era presente alla consegna. Poiché la segnalazione è pervenuta a 8 mesi dalla consegna, la nostra assistita si trova ancora nel periodo di presunzione a proprio sfavore.\n\nQuanto ai rimedi, l'art. 130 del Codice del consumo stabilisce un ordine preciso: il consumatore ha diritto, in primo luogo, al ripristino della conformità del bene mediante riparazione o sostituzione, a scelta del consumatore, purché il rimedio prescelto non sia impossibile o eccessivamente oneroso per il venditore rispetto all'altro. Solo se la riparazione e la sostituzione sono impossibili, o non sono state effettuate entro un termine congruo, o hanno arrecato notevoli inconvenienti al consumatore, quest'ultimo può chiedere una riduzione del prezzo o la risoluzione del contratto, con restituzione del bene e rimborso del prezzo pagato. La richiesta di restituzione integrale del prezzo formulata direttamente dal cliente, senza avere prima chiesto né la riparazione né la sostituzione, non corrisponde quindi all'ordine dei rimedi previsto dalla norma.\n\nVa inoltre osservato che, trattandosi di vendita di un bene di consumo a un consumatore, trova applicazione esclusiva la disciplina del Codice del consumo, che assorbe la garanzia per i vizi della cosa venduta di cui agli articoli 1490 e seguenti del Codice civile; il cliente non può quindi invocare cumulativamente entrambe le discipline per ottenere un trattamento più favorevole.\n\nQuanto alla richiesta di euro 300 a titolo di danni morali, essa non trova fondamento nella disciplina della garanzia di conformità, che riguarda il bene difettoso e i rimedi appena descritti, e non il risarcimento di un pregiudizio ulteriore; un simile risarcimento richiederebbe la prova di un danno autonomo, distinto dal semplice disagio per il malfunzionamento, che dagli elementi finora acquisiti non risulta allegato né documentato.\n\nIn conclusione, si ritiene che la nostra assistita non sia tenuta, allo stato, a restituire integralmente il prezzo di euro 890 né a corrispondere l'importo di euro 300 richiesto a titolo di danni morali. Si consiglia di rispondere al cliente offrendo, in alternativa tra loro, la riparazione o la sostituzione della macchina da caffè, entro un termine congruo, riservando ogni valutazione sui rimedi ulteriori all'esito di tale intervento, e di formalizzare la proposta con una comunicazione scritta che indichi un termine per l'esecuzione dell'intervento e le modalità di riconsegna del bene una volta riparato o sostituito.",
+    "context": {
+      "mittente": "avvocato dello studio",
+      "destinatario": "Caffè Design S.r.l.",
+      "ruolo": "parere sulla richiesta di rimborso e danni morali per un prodotto difettoso"
+    },
+    "persona": {},
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "preambolo-lungo",
+        "severity": "alta",
+        "description": "Il primo paragrafo racconta l'incontro in studio invece di aprire con la questione e la risposta."
+      },
+      {
+        "code": "deep-issue-mancante",
+        "severity": "alta",
+        "description": "La conclusione operativa arriva solo nell'ultimo paragrafo invece che in apertura."
+      },
+      {
+        "code": "tic-ia",
+        "severity": "media",
+        "description": "'È importante sottolineare che', 'gioca un ruolo cruciale' e 'In conclusione,' sono annunci e chiusure tipiche di un testo generato."
+      },
+      {
+        "code": "cadenza-a-singhiozzo",
+        "severity": "media",
+        "description": "La sequenza di fatti nel secondo paragrafo è spezzata in frasi brevissime senza connettivi."
+      }
+    ],
+    "legal_invariants": [
+      "Resta la data di acquisto: 3 febbraio 2025, al prezzo di euro 890.",
+      "Resta la data della segnalazione: 12 ottobre 2025.",
+      "Restano i due difetti lamentati: la macchina non si accende e perde acqua dal serbatoio.",
+      "Resta la richiesta del cliente: euro 890 di rimborso ed euro 300 di danni morali.",
+      "Resta la conclusione: nessun obbligo di rimborso integrale né di danni morali, con offerta di riparazione o sostituzione."
+    ],
+    "forbidden_changes": [
+      "Cambiare le date, gli importi o i difetti lamentati.",
+      "Concludere che Caffè Design S.r.l. deve rimborsare il prezzo o pagare i danni morali.",
+      "Eliminare il riferimento alla presunzione di preesistenza del difetto nei primi 12 mesi."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "conclusione-in-apertura-fatti-e-diritto",
+        "text": "Non risulta, allo stato, un obbligo per Caffè Design S.r.l. di restituire integralmente il prezzo di euro 890 né di versare l'importo di euro 300 richiesto a titolo di danni morali: la richiesta del cliente non rispetta l'ordine dei rimedi previsto dal Codice del consumo. Si consiglia di offrire la riparazione o la sostituzione della macchina da caffè entro un termine congruo, riservando ogni valutazione sui rimedi ulteriori all'esito di tale intervento, e di formalizzare la proposta con una comunicazione scritta che indichi un termine per l'esecuzione dell'intervento e le modalità di riconsegna del bene una volta riparato o sostituito.\n\nFatti. Il cliente ha acquistato, il 3 febbraio 2025, una macchina da caffè al prezzo di euro 890 sul sito di e-commerce di Caffè Design S.r.l., quale persona fisica e per uso estraneo alla propria eventuale attività professionale. Il prodotto è stato consegnato regolarmente e il cliente lo ha usato per alcuni mesi senza contestazioni. Il 12 ottobre 2025 il cliente ha segnalato via email due difetti, la macchina non si accende più e perde acqua dal serbatoio, allegando fotografie e la scheda tecnica del prodotto e chiedendo la restituzione integrale del prezzo di euro 890 e il pagamento di euro 300 a titolo di danni morali.\n\nDiritto. Il rapporto è soggetto alla garanzia legale di conformità degli articoli 128 e seguenti del Codice del consumo, che si applica per 24 mesi dalla consegna. Nei primi 12 mesi dalla consegna il difetto si presume esistente già alla consegna, salvo che la presunzione sia incompatibile con la natura del bene o del difetto: spetta quindi alla venditrice, non al consumatore, dimostrare che il difetto non era presente alla consegna. Poiché la segnalazione è arrivata a 8 mesi dalla consegna, Caffè Design S.r.l. si trova ancora nel periodo di presunzione a proprio sfavore.\n\nL'art. 130 del Codice del consumo stabilisce un ordine preciso: il consumatore ha prima diritto al ripristino della conformità tramite riparazione o sostituzione, a sua scelta, purché il rimedio scelto non sia impossibile o eccessivamente oneroso rispetto all'altro. Solo se la riparazione e la sostituzione sono impossibili, non sono effettuate entro un termine congruo, o hanno causato notevoli inconvenienti al consumatore, questi può chiedere la riduzione del prezzo o la risoluzione del contratto, con restituzione del bene e rimborso del prezzo. La richiesta di restituzione integrale del prezzo, senza avere prima chiesto la riparazione o la sostituzione, non segue quindi l'ordine dei rimedi previsto dalla norma.\n\nTrattandosi di vendita di un bene di consumo a un consumatore, trova applicazione esclusiva la disciplina del Codice del consumo, che assorbe la garanzia per i vizi della cosa venduta degli articoli 1490 e seguenti del Codice civile: il cliente non può invocare cumulativamente entrambe le discipline.\n\nLa richiesta di euro 300 a titolo di danni morali non trova fondamento nella disciplina della garanzia di conformità, che riguarda il bene difettoso e i rimedi appena descritti, non il risarcimento di un pregiudizio ulteriore. Un simile risarcimento richiederebbe la prova di un danno autonomo, distinto dal disagio per il malfunzionamento, che dagli elementi finora acquisiti non risulta allegato né documentato."
+      }
+    ],
+    "required_reference": [
+      "references/principi-garner.md"
+    ],
+    "expected_references_v2": [
+      "references/atti-e-pareri.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "validation_rationale": "Verifica che date, importi, difetti e conclusione restino identici dopo aver tolto il preambolo narrativo, i tic da IA e la cadenza a singhiozzo, e dopo aver spostato la conclusione in apertura.",
+    "annotations": {
+      "codex": {
+        "status": "drafted",
+        "notes": "scritto da subagente Sonnet"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    },
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "euro 890",
+        "euro 300",
+        "3 febbraio 2025",
+        "12 ottobre 2025",
+        "riparazione o la sostituzione"
+      ],
+      "fatal_forbidden_after": [
+        "è importante sottolineare",
+        "gioca un ruolo cruciale",
+        "in conclusione,"
+      ],
+      "allowed_legal_references": [],
+      "allowed_new_literals": []
+    }
   }
 ]
