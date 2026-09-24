@@ -57,15 +57,23 @@ Run in `tests/runs/2026-09-23/dev` (v1) e `tests/runs/2026-09-24/dev`
 (v2.1 = `8e8097f`); rilanciare lo stesso comando completa i casi mancanti.
 Dopo ogni modifica del harness: `python3 tests/reevaluate_runs.py tests/runs`.
 
+## Stato al 2026-09-24
+
+- DEV completo (38 casi × 2 flash × 3 campioni): v1 3-7%, v2.2 (`bd4cdfb`)
+  90% DeepSeek e 82% Qwen. Scheda e Controllo tolti in v2.2 (non aiutavano).
+- **Holdout lanciato una sola volta** con run-id `holdout-2026-09-24`
+  (v1 e `bd4cdfb`, 2 flash × 3, Opus 5.5 via OpenRouter × 1). Log in
+  scratchpad `run_holdout.log`; se interrotto, rilanciare gli stessi comandi
+  (il runner salta ciò che esiste). Non modificare la skill prima del report.
+
 ## Ancora da fare
 
 | Lavoro | Comando |
 |---|---|
-| v1 e v2.1 sui casi C027-C038 | `run_live.py --version chiarezza-v1.0 ...` e `--version 8e8097f ...` (salta ciò che esiste) |
-| Analisi DEV | `analyze_runs.py --run-dir tests/runs/2026-09-23/dev --run-dir tests/runs/2026-09-24/dev --compare chiarezza-v1.0__completa 8e8097f__completa` |
-| Holdout finale (una volta) | v1 e v2 finale, 2 flash × 3 campioni, Opus via OpenRouter × 1 |
-| Giudice e revisione cieca | `judge_runs.py`, `blind_review.py serve ...` |
-| Report e README | `tests/REPORT-2026-09-XX.md`, riga del README e cronologia |
+| Analisi holdout | `analyze_runs.py --run-dir tests/runs/holdout-2026-09-24/holdout --compare chiarezza-v1.0__completa bd4cdfb__completa` |
+| Giudice (esplorativo) | `judge_runs.py --run-dir tests/runs/holdout-2026-09-24/holdout --arms chiarezza-v1.0__completa bd4cdfb__completa` |
+| Revisione cieca di Filippo | `blind_review.py serve --session holdout --run-dir tests/runs/holdout-2026-09-24/holdout --arm-a chiarezza-v1.0__completa --arm-b bd4cdfb__completa --pairs 15` |
+| Report e README | `tests/REPORT-2026-09-24.md`, riga del README e cronologia; poi merge su `main` |
 
 **Regola anti-contaminazione:** chi scrive la v2 NON deve leggere
 `holdout.json` fino alla valutazione finale. Verifica integrità:
