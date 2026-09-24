@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import socketserver
 import random
 import re
 from datetime import datetime, timezone
@@ -535,8 +536,22 @@ class BlindReviewHandler(BaseHTTPRequestHandler):
             self.send_error_json(str(exc), HTTPStatus.BAD_REQUEST)
 
 
+class LocalServer(ThreadingHTTPServer):
+    """Server locale che non cerca il nome di rete del computer.
+
+    HTTPServer.server_bind chiama socket.getfqdn(), che su alcuni Mac resta
+    appeso per decine di secondi: per un server su 127.0.0.1 non serve.
+    """
+
+    def server_bind(self) -> None:
+        socketserver.TCPServer.server_bind(self)
+        host, port = self.server_address[:2]
+        self.server_name = str(host)
+        self.server_port = port
+
+
 def run_server(host: str, port: int, session_dir: Path) -> ThreadingHTTPServer:
-    server = ThreadingHTTPServer((host, port), BlindReviewHandler)
+    server = LocalServer((host, port), BlindReviewHandler)
     server.session_dir = session_dir  # type: ignore[attr-defined]
     return server
 

@@ -69,7 +69,8 @@ Dopo ogni modifica del harness: `python3 tests/reevaluate_runs.py tests/runs`.
 ## Ancora da fare (decisioni di Filippo)
 
 1. **Revisione cieca** (endpoint secondario), circa 15 coppie:
-   `cd migliora-chiarezza-testi-legali/tests && python3 blind_review.py serve --session holdout --run-dir runs/holdout-2026-09-24/holdout --arm-a chiarezza-v1.0__completa --arm-b bd4cdfb__completa --pairs 15`
+   `cd migliora-chiarezza-testi-legali/tests && python3 blind_review.py serve --session holdout --host localhost --port 8766`
+   (la sessione `holdout` con 15 coppie esiste già in `tests/blind/holdout`, solo in locale; per ricrearla: `--run-dir runs/holdout-2026-09-24/holdout --arm-a chiarezza-v1.0__completa --arm-b bd4cdfb__completa --pairs 15 --cases holdout.json`)
    poi `python3 blind_review.py unblind --session holdout`.
 2. **Giudice LLM** (esplorativo) dopo la ricarica del credito OpenRouter:
    `python3 judge_runs.py --run-dir runs/holdout-2026-09-24/holdout --arms chiarezza-v1.0__completa bd4cdfb__completa`.

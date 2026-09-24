@@ -27,6 +27,18 @@ MODELS = (
 PRIORITY_CASES = {"C002", "C007", "C009", "C010", "C011", "C012"}
 
 
+class _LocalServer(ThreadingHTTPServer):
+    """Come in blind_review.py: niente getfqdn(), che su alcuni Mac si blocca."""
+
+    def server_bind(self) -> None:
+        import socketserver
+
+        socketserver.TCPServer.server_bind(self)
+        host, port = self.server_address[:2]
+        self.server_name = str(host)
+        self.server_port = port
+
+
 def utc_now() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
 
@@ -250,7 +262,7 @@ class ReviewHandler(BaseHTTPRequestHandler):
 
 
 def run_server(host: str, port: int, raw_dir: Path, review_path: Path) -> ThreadingHTTPServer:
-    server = ThreadingHTTPServer((host, port), ReviewHandler)
+    server = _LocalServer((host, port), ReviewHandler)
     server.raw_dir = raw_dir  # type: ignore[attr-defined]
     server.review_path = review_path  # type: ignore[attr-defined]
     return server
