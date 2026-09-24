@@ -124,9 +124,14 @@ class SkillStaticTests(unittest.TestCase):
         words = re.findall(r"[A-Za-zÀ-ÿ0-9]+(?:'[A-Za-zÀ-ÿ0-9]+)*", body)
         self.assertLessEqual(len(words), 1000)
 
-    def test_step_markers_allow_ablation(self) -> None:
-        self.assertEqual(self.skill_text.count("<!-- step:inizio -->"), self.skill_text.count("<!-- step:fine -->"))
-        self.assertGreaterEqual(self.skill_text.count("<!-- step:inizio -->"), 1)
+    def test_procedure_starts_by_asking_whether_changes_are_needed(self) -> None:
+        # v2.2: Scheda e Controllo scritti dal modello sono stati tolti perche' sul set
+        # DEV non miglioravano la fedelta' (vedi REPORT). Resta il primo passo contro
+        # la sovra-modifica e la verifica con lo script, che e' un controllo esterno.
+        procedure = self.skill_text.split("## 2. Procedura", 1)[1].split("## 3.", 1)[0]
+        self.assertIn("Nessuna modifica necessaria", procedure)
+        self.assertIn("scripts/controlla_invarianti.py", procedure)
+        self.assertNotIn("Scheda", procedure)
 
     def test_distributed_files_have_no_em_dash_and_no_research(self) -> None:
         self.assertFalse((INNER_SKILL / "research").exists())

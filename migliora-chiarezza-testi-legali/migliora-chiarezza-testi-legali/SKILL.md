@@ -34,17 +34,13 @@ Apri al massimo due file. Senza file bastano le regole di questa pagina.
 
 ## 2. Procedura
 
-<!-- step:inizio -->
-1. **Scheda**, prima di riscrivere, in non più di tre righe: tipo di testo;
-   chi scrive e a chi (chi è "nostro", chi è "Vostro"); elementi che non
-   devono cambiare (soggetti, obblighi, garanzie, eccezioni, date, importi,
-   termini tecnici). Se chi scrive o il destinatario non si ricavano dal
-   testo, scrivi "[da confermare]": non indovinare.
-<!-- step:fine -->
-2. **Diagnosi**: trova i punti oscuri con le regole della sezione 4 e del file
-   di genere. Non scrivere una sezione di diagnosi a parte: ogni problema si
-   spiega in una riga nel Motivo del suo blocco.
-3. **Riscrittura**: per ogni punto scrivi un blocco con questa forma:
+1. **Serve davvero?** Una frase breve, tecnica e già chiara non si tocca:
+   rispondi "Nessuna modifica necessaria" e spiega perché in una riga.
+2. **Chi scrive a chi**: ricavalo dal testo o dal contesto (chi è "nostro",
+   chi è "Vostro"). Se non si ricava, scrivi "[da confermare]": non
+   indovinare.
+3. **Riscrittura**: per ogni punto oscuro (regole della sezione 4 e del file
+   di genere) scrivi un blocco con questa forma, senza una diagnosi a parte:
 
    PRIMA: il testo originale
    DOPO: il testo riscritto
@@ -57,18 +53,15 @@ Apri al massimo due file. Senza file bastano le regole di questa pagina.
    incollare, poi `Sommario:` in 3-5 righe con le modifiche principali e le
    decisioni lasciate all'avvocato. Se il testo è una sola frase o clausola,
    il DOPO basta: ometti il TESTO RISCRITTO.
-<!-- step:inizio -->
-6. **Controllo**: confronta ogni DOPO con la Scheda. Se puoi eseguire codice,
-   lancia `scripts/controlla_invarianti.py` e correggi ciò che segnala;
-   altrimenti ripassa gli otto divieti della sezione 3. Chiudi con una riga
-   `Controllo:` con l'esito o con ciò che hai corretto.
-<!-- step:fine -->
+6. **Verifica**: se puoi eseguire codice, lancia
+   `scripts/controlla_invarianti.py` e correggi ciò che segnala. Altrimenti
+   rileggi ogni DOPO contro gli otto divieti prima di consegnare.
 
 ## 3. Otto divieti (valgono per il DOPO e per il TESTO RISCRITTO)
 
 1. Non aggiungere fatti, date, importi, termini, esiti, condizioni o
    esimenti ("caso fortuito", "forza maggiore", "invano", "senza
-   riscontro"). Se un'aggiunta migliorerebbe il testo, proponila nel Motivo
+   riscontro", "con il consenso scritto"). Se un'aggiunta migliorerebbe il testo, proponila nel Motivo
    con `PROPOSTA:` oppure lascia nel DOPO un segnaposto `[da decidere: ...]`
    senza valori.
 2. Non cambiare le persone: chi è "nostro" resta nostro, chi è "Vostro"
@@ -92,8 +85,8 @@ Apri al massimo due file. Senza file bastano le regole di questa pagina.
    maniera, gerundi di commento in coda ("..., evidenziando"), triadi di
    comodo, chiusure riassuntive ("In conclusione"), frasi sulla riscrittura
    o su di te ("versione più chiara", "spero sia utile"), la lineetta lunga.
-8. Non citare norme o sentenze che il testo non cita. Se il testo è già
-   chiaro, rispondi "Nessuna modifica necessaria" e spiega perché in una riga.
+8. Non citare norme o sentenze che il testo non cita, né completarne gli
+   estremi. Se il testo è già chiaro, non riscriverlo (passo 1).
 
 ## 4. Regole comuni
 
