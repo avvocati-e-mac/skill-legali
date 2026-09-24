@@ -130,11 +130,13 @@ Le conclusioni si possono rendere più leggibili (una domanda per punto;
 principali distinte dalle subordinate), ma non si aggiungono, tolgono o
 modificano domande, spese comprese.
 
-PRIMA: "Voglia l'Ill.mo Tribunale adito, ogni contraria istanza, eccezione e
-deduzione disattesa e reietta, accogliere le domande tutte come formulate in
-atti, con vittoria di spese e compensi di lite."
-DOPO: "Voglia l'Ill.mo Tribunale, respinta ogni contraria istanza, accogliere
-le domande formulate in atti, con vittoria di spese e compensi di lite."
+PRIMA: "Piaccia all'Ecc.ma Corte d'Appello, ogni contraria istanza, eccezione e
+deduzione disattesa e reietta, riformare integralmente la sentenza impugnata
+come da conclusioni rassegnate, con vittoria di spese e compensi di entrambi i
+gradi."
+DOPO: "Piaccia all'Ecc.ma Corte d'Appello, respinta ogni contraria istanza,
+riformare integralmente la sentenza impugnata come da conclusioni rassegnate,
+con vittoria di spese e compensi di entrambi i gradi."
 Motivo: via la tripletta "istanza, eccezione e deduzione" e la doppietta
 "disattesa e reietta"; le domande e le spese restano identiche.
 
