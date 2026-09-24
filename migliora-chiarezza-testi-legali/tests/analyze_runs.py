@@ -53,6 +53,28 @@ def kind_of(failure: str) -> str:
     return "altro"
 
 
+# Cancelli che non dipendono da chi ha scritto il caso: valgono allo stesso modo
+# per ogni testo. I letterali da conservare, le formule vietate e la persona attesa
+# sono invece specifici del caso e riflettono le scelte del suo autore.
+GENERIC_KINDS = {
+    "formato", "numeri/date inventati", "esimenti aggiunte", "intensificatori", "fonti nuove",
+    "tic IA", "operatore eliminato", "verbo dispositivo",
+}
+
+
+def generic_passed(record: dict[str, Any]) -> bool:
+    return not any(kind_of(f) in GENERIC_KINDS for f in record["evaluation"]["fatal_failures"])
+
+
+def with_generic_outcome(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    converted = []
+    for record in records:
+        copy = dict(record)
+        copy["evaluation"] = dict(record["evaluation"], passed=generic_passed(record))
+        converted.append(copy)
+    return converted
+
+
 def load_records(run_dir: Path) -> list[dict[str, Any]]:
     records = []
     for path in sorted(run_dir.rglob("*.json")):
@@ -131,7 +153,7 @@ def control_claims_ok(output: str) -> bool | None:
 
 
 def summarize(records: list[dict[str, Any]]) -> str:
-    lines = ["| Braccio | Modello | Output | Superati | Tasso | Tasso senza errori di formato | Token medi | Costo | Rapporto lunghezza (mediana) | Gulpease dopo (mediana) |", "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|"]
+    lines = ["| Braccio | Modello | Output | Superati | Tasso | Tasso senza errori di formato | Tasso cancelli generici | Token medi | Costo | Rapporto lunghezza (mediana) | Gulpease dopo (mediana) |", "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|"]
     groups: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
     for record in records:
         groups[(record["arm"], record["model"])].append(record)
@@ -146,7 +168,7 @@ def summarize(records: list[dict[str, Any]]) -> str:
         gulp = [r["evaluation"]["metrics"].get("after", {}).get("gulpease") for r in rows]
         gulp = [g for g in gulp if g is not None]
         lines.append(
-            f"| {arm} | {model.split('/')[-1]} | {len(rows)} | {passed} | {passed / len(rows):.0%} | {substance / len(rows):.0%} | {tokens:,.0f} | ${cost:.3f} | "
+            f"| {arm} | {model.split('/')[-1]} | {len(rows)} | {passed} | {passed / len(rows):.0%} | {substance / len(rows):.0%} | {sum(generic_passed(r) for r in rows) / len(rows):.0%} | {tokens:,.0f} | ${cost:.3f} | "
             f"{median(ratios):.2f} | {round(median(gulp), 1) if gulp else '-'} |"
         )
     return "\n".join(lines)
@@ -228,6 +250,8 @@ def main(argv: list[str] | None = None) -> int:
             subset = [(a, b) for a, b in overall if a["model"] == model]
             print(f"- {model}: {json.dumps(compare(subset), ensure_ascii=False)}")
         print(f"- aggregato: {json.dumps(compare(overall), ensure_ascii=False)}")
+        generic_pairs = paired(with_generic_outcome(by_arm.get(arm_a, [])), with_generic_outcome(by_arm.get(arm_b, [])))
+        print(f"- aggregato, solo cancelli generici: {json.dumps(compare(generic_pairs), ensure_ascii=False)}")
     return 0
 
 
