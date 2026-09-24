@@ -1399,5 +1399,1131 @@
       "documento": "comparsa di costituzione nell'opposizione a decreto ingiuntivo",
       "chi_scrive": "difensore della parte creditrice opposta"
     }
+  },
+  {
+    "id": "C013",
+    "title": "Modali alternati per obblighi dello stesso tipo",
+    "document_type": "contratto",
+    "genre": "contratto",
+    "input_text": "L'Appaltatore dovrà consegnare i lavori entro la data pattuita. Il Committente è tenuto al pagamento del saldo alla consegna. Il Committente provvede al ritiro delle chiavi del cantiere presso la Direzione Lavori.",
+    "context": {
+      "mittente": "avvocato dell'Appaltatore",
+      "destinatario": "verifica interna prima della firma",
+      "ruolo": "bozza di contratto di appalto per ristrutturazione"
+    },
+    "persona": {},
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "modali-alternati",
+        "severity": "media",
+        "description": "Gli obblighi delle parti usano tre forme verbali diverse (dovrà/è tenuto a/provvede a) per la stessa funzione, senza motivo."
+      }
+    ],
+    "legal_invariants": [
+      "L'Appaltatore resta il soggetto che consegna i lavori.",
+      "Il Committente resta il soggetto che paga il saldo e ritira le chiavi.",
+      "Il ritiro delle chiavi avviene presso la Direzione Lavori."
+    ],
+    "forbidden_changes": [
+      "Invertire i soggetti degli obblighi.",
+      "Cambiare 'saldo' in 'acconto' o altro termine.",
+      "Eliminare il riferimento alla Direzione Lavori."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "verbo-unificato",
+        "text": "L'Appaltatore consegna i lavori entro la data pattuita. Il Committente paga il saldo alla consegna e ritira le chiavi del cantiere presso la Direzione Lavori."
+      }
+    ],
+    "required_reference": [
+      "references/principi-garner.md"
+    ],
+    "expected_references_v2": [
+      "references/contratti.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "validation_rationale": "Misura se la riscrittura unifica la forma verbale degli obblighi senza spostare soggetti o termini.",
+    "annotations": {
+      "codex": {
+        "status": "drafted",
+        "notes": "scritto da subagente Sonnet"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    },
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "Appaltatore",
+        "Committente",
+        "saldo",
+        "Direzione Lavori"
+      ],
+      "fatal_forbidden_after": [
+        "dovrà consegnare",
+        "è tenuto al pagamento",
+        "provvede al ritiro"
+      ],
+      "allowed_legal_references": [],
+      "allowed_new_literals": []
+    }
+  },
+  {
+    "id": "C014",
+    "title": "Garanzia sull'immobile con standard vago aggiunto",
+    "document_type": "contratto",
+    "genre": "contratto",
+    "input_text": "Il Venditore garantisce che l'immobile è libero da ipoteche e trascrizioni pregiudizievoli e che risulta in regola sotto ogni profilo urbanistico.",
+    "context": {
+      "mittente": "avvocato del Venditore",
+      "destinatario": "Compratore dell'immobile",
+      "ruolo": "clausola di garanzia in un contratto preliminare di compravendita"
+    },
+    "persona": {},
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "standard-vago",
+        "severity": "alta",
+        "description": "'Sotto ogni profilo urbanistico' non indica un requisito verificabile."
+      }
+    ],
+    "legal_invariants": [
+      "Il Venditore resta il soggetto che garantisce.",
+      "L'immobile deve restare libero da ipoteche e trascrizioni pregiudizievoli.",
+      "La garanzia (il verbo 'garantisce') non deve sparire dal testo riscritto."
+    ],
+    "forbidden_changes": [
+      "Eliminare la parola 'garantisce'.",
+      "Invertire il soggetto della garanzia (Compratore al posto di Venditore).",
+      "Aggiungere certificati o visure specifiche non menzionate nel testo."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "standard-con-segnaposto",
+        "text": "Il Venditore garantisce che l'immobile è libero da ipoteche e trascrizioni pregiudizievoli e rispetta [da decidere: quali requisiti urbanistici verificare in visura]."
+      }
+    ],
+    "required_reference": [
+      "references/principi-garner.md"
+    ],
+    "expected_references_v2": [
+      "references/contratti.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "validation_rationale": "Verifica che la garanzia resti esplicita e che lo standard vago diventi un segnaposto invece di una specifica inventata.",
+    "annotations": {
+      "codex": {
+        "status": "drafted",
+        "notes": "scritto da subagente Sonnet"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    },
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "garantisce",
+        "libero da ipoteche",
+        "trascrizioni pregiudizievoli"
+      ],
+      "fatal_forbidden_after": [
+        "sotto ogni profilo"
+      ],
+      "allowed_legal_references": [],
+      "allowed_new_literals": []
+    }
+  },
+  {
+    "id": "C015",
+    "title": "Periodo prolisso su solleciti di pagamento non riscontrati",
+    "document_type": "atto_giudiziario",
+    "genre": "atto",
+    "input_text": "Si deve rilevare che, come risulta dagli atti di causa, la parte attrice, titolare dell'impresa di trasporti, ha più volte sollecitato il pagamento delle fatture emesse per i servizi di trasporto merci resi alla convenuta, la quale non ha mai provveduto a saldare quanto dovuto, situazione che ha determinato un rilevante pregiudizio economico per l'attrice, costretta a sostenere i costi di gestione della flotta senza le necessarie entrate.",
+    "context": {
+      "mittente": "avvocato della parte attrice",
+      "destinatario": "Tribunale",
+      "ruolo": "esposizione dei fatti in una citazione per pagamento di fatture di trasporto"
+    },
+    "persona": {},
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "periodo-sovraccarico",
+        "severity": "alta",
+        "description": "Un unico periodo contiene sollecito, mancato pagamento e pregiudizio economico."
+      },
+      {
+        "code": "ridondanza",
+        "severity": "bassa",
+        "description": "'Si deve rilevare che, come risulta dagli atti di causa' è un'introduzione superflua."
+      }
+    ],
+    "legal_invariants": [
+      "La parte attrice resta titolare dell'impresa di trasporti.",
+      "L'attrice ha sollecitato più volte il pagamento delle fatture di trasporto merci.",
+      "La convenuta non ha saldato quanto dovuto.",
+      "Il pregiudizio riguarda i costi di gestione della flotta."
+    ],
+    "forbidden_changes": [
+      "Aggiungere 'invano' o 'senza riscontro' ai solleciti.",
+      "Aggiungere date o riferimenti PEC non presenti nel testo.",
+      "Affermare che la convenuta ha riconosciuto il debito."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "fatti-in-sequenza",
+        "text": "La parte attrice, titolare dell'impresa di trasporti, ha più volte sollecitato il pagamento delle fatture emesse per i servizi di trasporto merci resi alla convenuta. La convenuta non ha saldato quanto dovuto. Questa situazione ha causato un pregiudizio economico all'attrice, che sostiene i costi di gestione della flotta senza le entrate corrispondenti."
+      }
+    ],
+    "required_reference": [
+      "references/esempi-atti-giudiziari.md"
+    ],
+    "expected_references_v2": [
+      "references/atti-e-pareri.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "validation_rationale": "Controlla che spezzare il periodo non introduca esiti o qualificazioni (invano, senza riscontro, PEC, date) assenti dal testo originale.",
+    "annotations": {
+      "codex": {
+        "status": "drafted",
+        "notes": "scritto da subagente Sonnet"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    },
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "parte attrice",
+        "impresa di trasporti",
+        "sollecitato il pagamento",
+        "fatture",
+        "convenuta",
+        "pregiudizio economico",
+        "flotta"
+      ],
+      "fatal_forbidden_after": [
+        "invano",
+        "senza riscontro",
+        "PEC",
+        "Si deve rilevare che"
+      ],
+      "allowed_legal_references": [],
+      "allowed_new_literals": []
+    }
+  },
+  {
+    "id": "C016",
+    "title": "Diffida con intensificatori sul ritardo di consegna",
+    "document_type": "diffida",
+    "genre": "diffida",
+    "input_text": "Con la presente contestiamo formalmente il ritardo assolutamente ingiustificato nella consegna della merce pattuita: Vi diffidiamo pertanto ad adempiere immediatamente, con avviso che, in difetto, saremo costretti ad agire per la tutela dei nostri diritti in ogni sede.",
+    "context": {
+      "mittente": "avvocato del distributore di prodotti freschi",
+      "destinatario": "fornitore in ritardo con le consegne",
+      "ruolo": "diffida per ritardo nella consegna"
+    },
+    "persona": {},
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "intensificatori",
+        "severity": "media",
+        "description": "'Assolutamente ingiustificato' rafforza il tono senza aggiungere contenuto verificabile."
+      }
+    ],
+    "legal_invariants": [
+      "La diffida contesta il ritardo nella consegna della merce pattuita.",
+      "Resta l'intimazione ad adempiere immediatamente.",
+      "Resta l'avviso di azione legale in caso di inadempimento persistente."
+    ],
+    "forbidden_changes": [
+      "Eliminare l'intimazione ad adempiere.",
+      "Eliminare l'avviso di azione legale.",
+      "Aggiungere termini, importi o intensificatori nuovi non presenti."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "tono-fermo-senza-intensificatori",
+        "text": "Con la presente contestiamo il ritardo nella consegna della merce pattuita. Vi diffidiamo ad adempiere immediatamente. In difetto, agiremo per la tutela dei nostri diritti in ogni sede."
+      }
+    ],
+    "required_reference": [
+      "references/esempi-atti-giudiziari.md"
+    ],
+    "expected_references_v2": [
+      "references/atti-e-pareri.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "validation_rationale": "Verifica che il tono fermo della diffida non richieda intensificatori e che la riscrittura non ne aggiunga di nuovi.",
+    "annotations": {
+      "codex": {
+        "status": "drafted",
+        "notes": "scritto da subagente Sonnet"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    },
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "diffidiamo",
+        "adempiere",
+        "merce pattuita",
+        "tutela dei nostri diritti"
+      ],
+      "fatal_forbidden_after": [
+        "assolutamente",
+        "ingiustificato",
+        "gravissimo",
+        "palesemente"
+      ],
+      "allowed_legal_references": [],
+      "allowed_new_literals": []
+    }
+  },
+  {
+    "id": "C017",
+    "title": "Diffida per fermo linea con persona nostra/Vostra",
+    "document_type": "diffida",
+    "genre": "diffida",
+    "input_text": "Con la presente contestiamo il ritardo nella consegna della nostra merce, ferma presso il Vostro magazzino, che ha causato il fermo della nostra linea di montaggio per tre giorni, con conseguente danno alla nostra produzione.",
+    "context": {
+      "mittente": "avvocato del produttore di componenti",
+      "destinatario": "cliente presso cui la merce è ferma in magazzino",
+      "ruolo": "diffida per fermo della linea di montaggio"
+    },
+    "persona": {
+      "forbidden": [
+        "\\bVostra linea",
+        "\\bnostro magazzino"
+      ],
+      "required_one_of": [
+        "\\bnostra linea"
+      ]
+    },
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "periodo-sovraccarico",
+        "severity": "media",
+        "description": "Un unico periodo contiene consegna, fermo magazzino, fermo linea e danno."
+      }
+    ],
+    "legal_invariants": [
+      "La merce resta 'nostra' (del mittente) e il magazzino resta 'Vostro' (del destinatario).",
+      "La linea di montaggio fermata resta 'nostra' (del mittente).",
+      "Il fermo dura tre giorni."
+    ],
+    "forbidden_changes": [
+      "Invertire la persona: scrivere 'Vostra linea' o 'nostro magazzino'.",
+      "Eliminare 'tre giorni'.",
+      "Cambiare la merce in un servizio."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "sequenza-con-persona-corretta",
+        "text": "Con la presente contestiamo il ritardo nella consegna della nostra merce, ancora ferma presso il Vostro magazzino. Questo ritardo ha fermato la nostra linea di montaggio per tre giorni, con danno alla nostra produzione."
+      }
+    ],
+    "required_reference": [
+      "references/esempi-atti-giudiziari.md"
+    ],
+    "expected_references_v2": [
+      "references/atti-e-pareri.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "validation_rationale": "Controlla che la riscrittura non inverta chi è 'nostro' e chi è 'Vostro' tra mittente e destinatario della diffida.",
+    "annotations": {
+      "codex": {
+        "status": "drafted",
+        "notes": "scritto da subagente Sonnet"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    },
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "nostra merce",
+        "Vostro magazzino",
+        "nostra linea",
+        "tre giorni"
+      ],
+      "fatal_forbidden_after": [],
+      "allowed_legal_references": [],
+      "allowed_new_literals": []
+    }
+  },
+  {
+    "id": "C018",
+    "title": "Eccezione di decadenza dalla garanzia in periodo arcaico",
+    "document_type": "atto_giudiziario",
+    "genre": "atto",
+    "input_text": "Ed invero, la convenuta, costituendosi in giudizio, non può non eccepire sin d'ora, in via preliminare e comunque nel primo atto difensivo utile, l'intervenuta decadenza dell'attrice dalla garanzia per i vizi dell'impianto di confezionamento ai sensi dell'art. 1495 c.c., non avendo la medesima denunciato i vizi lamentati nel termine di otto giorni dalla scoperta.",
+    "context": {
+      "mittente": "avvocato della convenuta",
+      "destinatario": "Tribunale",
+      "ruolo": "comparsa di risposta in causa per vizi di un impianto di confezionamento"
+    },
+    "persona": {},
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "periodo-arcaico",
+        "severity": "media",
+        "description": "'Non può non eccepire sin d'ora' e 'nel primo atto difensivo utile' sono formule ridondanti."
+      },
+      {
+        "code": "specificita",
+        "severity": "alta",
+        "description": "L'eccezione va enunciata in forma diretta, con il riferimento normativo e il termine ben visibili."
+      }
+    ],
+    "legal_invariants": [
+      "Resta l'eccezione di decadenza (non di prescrizione).",
+      "Resta il riferimento all'art. 1495 c.c.",
+      "Resta l'oggetto: i vizi dell'impianto di confezionamento.",
+      "Resta il termine di otto giorni dalla scoperta."
+    ],
+    "forbidden_changes": [
+      "Sostituire 'decadenza' con 'prescrizione'.",
+      "Cambiare l'art. 1495 c.c. con un'altra norma.",
+      "Cambiare il termine di otto giorni.",
+      "Attribuire l'eccezione all'attrice invece che alla convenuta."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "eccezione-diretta",
+        "text": "La convenuta eccepisce, in via preliminare, la decadenza dell'attrice dalla garanzia per i vizi dell'impianto di confezionamento, ai sensi dell'art. 1495 c.c. L'attrice non ha denunciato i vizi entro il termine di otto giorni dalla scoperta."
+      }
+    ],
+    "required_reference": [
+      "references/esempi-atti-giudiziari.md"
+    ],
+    "expected_references_v2": [
+      "references/atti-e-pareri.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "validation_rationale": "Verifica che 'decadenza' e l'art. 1495 c.c. restino intatti e che il registro forense non scivoli verso 'prescrizione'.",
+    "annotations": {
+      "codex": {
+        "status": "drafted",
+        "notes": "scritto da subagente Sonnet"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    },
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "decadenza",
+        "art. 1495 c.c.",
+        "impianto di confezionamento",
+        "otto giorni"
+      ],
+      "fatal_forbidden_after": [
+        "prescrizione",
+        "Ed invero",
+        "non può non eccepire"
+      ],
+      "allowed_legal_references": [
+        "art. 1495 c.c."
+      ],
+      "allowed_new_literals": []
+    }
+  },
+  {
+    "id": "C019",
+    "title": "Ruolo processuale non ricavabile dal testo",
+    "document_type": "atto_giudiziario",
+    "genre": "atto",
+    "input_text": "L'odierno deducente, ut supra rappresentato e difeso, impugna l'avverso provvedimento con cui l'Amministrazione ha irrogato la sanzione pecuniaria, deducendo che l'istruttoria si è svolta senza la previa comunicazione di avvio del procedimento, in violazione dell'art. 7 della legge n. 241 del 1990, con conseguente pregiudizio del diritto di partecipazione dell'odierno deducente al procedimento sanzionatorio.",
+    "context": {
+      "mittente": "avvocato del soggetto sanzionato",
+      "destinatario": "giudice amministrativo",
+      "ruolo": "impugnazione di un provvedimento sanzionatorio"
+    },
+    "persona": {},
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "formalismi",
+        "severity": "media",
+        "description": "'Ut supra rappresentato e difeso' appesantisce l'incipit senza aggiungere contenuto."
+      },
+      {
+        "code": "ruolo-non-specificato",
+        "severity": "alta",
+        "description": "Il testo usa solo 'l'odierno deducente': il ruolo processuale (ricorrente, appellante...) non è ricavabile e non va inventato."
+      }
+    ],
+    "legal_invariants": [
+      "Il soggetto resta indicato come 'l'odierno deducente', senza etichette di ruolo non presenti nel testo.",
+      "Resta l'impugnazione del provvedimento sanzionatorio.",
+      "Resta il motivo: mancata comunicazione di avvio del procedimento, art. 7 della legge n. 241 del 1990."
+    ],
+    "forbidden_changes": [
+      "Sostituire 'l'odierno deducente' con 'il ricorrente' o 'l'appellante' se il testo non lo dice.",
+      "Eliminare il motivo dell'impugnazione.",
+      "Cambiare l'art. 7 della legge n. 241 del 1990."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "motivo-esplicito-senza-ruolo-inventato",
+        "text": "L'odierno deducente impugna il provvedimento con cui l'Amministrazione ha irrogato la sanzione pecuniaria, perché l'istruttoria si è svolta senza la previa comunicazione di avvio del procedimento, in violazione dell'art. 7 della legge n. 241 del 1990: questo ha pregiudicato il diritto di partecipazione dell'odierno deducente al procedimento sanzionatorio."
+      }
+    ],
+    "required_reference": [
+      "references/esempi-atti-giudiziari.md"
+    ],
+    "expected_references_v2": [
+      "references/atti-e-pareri.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "validation_rationale": "Controlla che la skill non inventi un ruolo processuale (ricorrente/appellante) quando il testo usa solo 'l'odierno deducente'.",
+    "annotations": {
+      "codex": {
+        "status": "drafted",
+        "notes": "scritto da subagente Sonnet"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    },
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "odierno deducente",
+        "comunicazione di avvio del procedimento",
+        "art. 7",
+        "legge n. 241 del 1990"
+      ],
+      "fatal_forbidden_after": [
+        "appellante",
+        "ut supra"
+      ],
+      "allowed_legal_references": [
+        "art. 7",
+        "legge n. 241 del 1990",
+        "art. 7 della legge n. 241 del 1990"
+      ],
+      "allowed_new_literals": []
+    }
+  },
+  {
+    "id": "C020",
+    "title": "Termine definito 'Prodotto' usato con sinonimi",
+    "document_type": "contratto",
+    "genre": "contratto",
+    "input_text": "Il Fornitore consegna il Prodotto secondo il calendario concordato. La merce viaggia a rischio del Fornitore fino alla consegna. Ogni articolo difettoso è sostituito senza spese per il Distributore. Il bene non conforme può essere reso entro il termine pattuito.",
+    "context": {
+      "mittente": "avvocato del Fornitore",
+      "destinatario": "Distributore",
+      "ruolo": "contratto di distribuzione di prodotti alimentari confezionati"
+    },
+    "persona": {},
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "sinonimi-termine-definito",
+        "severity": "alta",
+        "description": "Il termine definito 'Prodotto' viene sostituito da 'merce', 'articolo' e 'bene' senza motivo."
+      }
+    ],
+    "legal_invariants": [
+      "Il termine definito resta 'Prodotto'.",
+      "Il Fornitore resta il soggetto che consegna e sopporta il rischio fino alla consegna.",
+      "Il Distributore resta il soggetto che riceve la sostituzione e il reso."
+    ],
+    "forbidden_changes": [
+      "Introdurre un nuovo sinonimo per 'Prodotto'.",
+      "Cambiare chi sopporta il rischio di trasporto.",
+      "Eliminare la sostituzione senza spese per il Distributore."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "termine-unificato",
+        "text": "Il Fornitore consegna il Prodotto secondo il calendario concordato. Il Prodotto viaggia a rischio del Fornitore fino alla consegna. Ogni Prodotto difettoso è sostituito senza spese per il Distributore. Il Prodotto non conforme può essere reso entro il termine pattuito."
+      }
+    ],
+    "required_reference": [
+      "references/principi-garner.md"
+    ],
+    "expected_references_v2": [
+      "references/contratti.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "validation_rationale": "Verifica che la riscrittura elimini i sinonimi di un termine definito senza toccare rischio e obblighi di sostituzione.",
+    "annotations": {
+      "codex": {
+        "status": "drafted",
+        "notes": "scritto da subagente Sonnet"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    },
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "Prodotto",
+        "Fornitore",
+        "Distributore",
+        "senza spese"
+      ],
+      "fatal_forbidden_after": [
+        "la merce viaggia a rischio",
+        "ogni articolo difettoso",
+        "il bene non conforme"
+      ],
+      "allowed_legal_references": [],
+      "allowed_new_literals": []
+    }
+  },
+  {
+    "id": "C021",
+    "title": "'e/o' in una clausola di sublocazione",
+    "document_type": "contratto",
+    "genre": "contratto",
+    "input_text": "Il Conduttore potrà sublocare e/o cedere il contratto, previo consenso scritto del Locatore.",
+    "context": {
+      "mittente": "avvocato del Locatore",
+      "destinatario": "Conduttore",
+      "ruolo": "contratto di locazione commerciale"
+    },
+    "persona": {},
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "e-o-ambiguo",
+        "severity": "alta",
+        "description": "'E/o' non dice se sublocazione e cessione sono alternative o cumulabili."
+      }
+    ],
+    "legal_invariants": [
+      "Resta il consenso scritto del Locatore.",
+      "Restano entrambe le facoltà: sublocare e cedere il contratto.",
+      "La riscrittura non decide da sola se le due facoltà sono cumulabili."
+    ],
+    "forbidden_changes": [
+      "Eliminare il consenso scritto del Locatore.",
+      "Eliminare la sublocazione o la cessione.",
+      "Decidere autonomamente, senza istruzioni del cliente, se le facoltà sono cumulabili."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "scelta-esplicita-con-segnaposto",
+        "text": "Il Conduttore può sublocare o cedere il contratto, o entrambi [da decidere: se le due facoltà sono cumulabili], previo consenso scritto del Locatore."
+      }
+    ],
+    "required_reference": [
+      "references/principi-garner.md"
+    ],
+    "expected_references_v2": [
+      "references/contratti.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "validation_rationale": "Misura se la skill sostituisce 'e/o' con un'alternativa esplicita invece di decidere da sola la cumulabilità.",
+    "annotations": {
+      "codex": {
+        "status": "drafted",
+        "notes": "scritto da subagente Sonnet"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    },
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "Conduttore",
+        "Locatore",
+        "consenso scritto",
+        "sublocare",
+        "cedere"
+      ],
+      "fatal_forbidden_after": [],
+      "allowed_legal_references": [],
+      "allowed_new_literals": [],
+      "must_include_one_of": [
+        {
+          "label": "scelta cumulativa/alternativa",
+          "terms": [
+            "o entrambi",
+            "anche congiuntamente",
+            "alternativamente",
+            "[da decidere"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "C022",
+    "title": "Recesso con rinvio ed eccezione da conservare",
+    "document_type": "contratto",
+    "genre": "contratto",
+    "input_text": "Fermo restando quanto previsto all'art. 5, il Cliente può recedere dal contratto di abbonamento al software, salvo che non abbia già ricevuto il servizio per il periodo in corso.",
+    "context": {
+      "mittente": "avvocato del Fornitore del software",
+      "destinatario": "Cliente abbonato",
+      "ruolo": "contratto di abbonamento SaaS"
+    },
+    "persona": {},
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "rinvio-generico",
+        "severity": "bassa",
+        "description": "'Fermo restando' può essere reso più scorrevole mantenendo il rinvio preciso all'art. 5."
+      }
+    ],
+    "legal_invariants": [
+      "Resta il diritto di recesso del Cliente.",
+      "Resta il rinvio all'art. 5.",
+      "Resta l'eccezione: il recesso non vale se il Cliente ha già ricevuto il servizio per il periodo in corso."
+    ],
+    "forbidden_changes": [
+      "Eliminare l'eccezione legata al servizio già ricevuto.",
+      "Eliminare il rinvio all'art. 5.",
+      "Spostare il diritto di recesso al Fornitore."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "attivo-con-eccezione-preservata",
+        "text": "Il Cliente può recedere dal contratto di abbonamento al software, secondo quanto previsto all'art. 5, salvo che abbia già ricevuto il servizio per il periodo in corso."
+      }
+    ],
+    "required_reference": [
+      "references/principi-garner.md"
+    ],
+    "expected_references_v2": [
+      "references/contratti.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "validation_rationale": "Controlla che recesso ed eccezione restino entrambi presenti dopo aver reso più diretto il rinvio.",
+    "annotations": {
+      "codex": {
+        "status": "drafted",
+        "notes": "scritto da subagente Sonnet"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    },
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "recedere",
+        "art. 5",
+        "salvo",
+        "servizio"
+      ],
+      "fatal_forbidden_after": [],
+      "allowed_legal_references": [
+        "art. 5"
+      ],
+      "allowed_new_literals": []
+    }
+  },
+  {
+    "id": "C023",
+    "title": "Rinvio al listino vigente senza indice inventato",
+    "document_type": "contratto",
+    "genre": "contratto",
+    "input_text": "Si applicano le tariffe di cui al listino vigente, comunicato dal Vettore al Cliente all'inizio di ciascun anno di validità del contratto di trasporto.",
+    "context": {
+      "mittente": "avvocato del Vettore",
+      "destinatario": "Cliente",
+      "ruolo": "contratto di trasporto merci su gomma"
+    },
+    "persona": {},
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "passivo-opaco",
+        "severity": "media",
+        "description": "'Si applicano' non dice subito chi comunica il listino."
+      }
+    ],
+    "legal_invariants": [
+      "Resta il rinvio al listino vigente.",
+      "Resta il Vettore come soggetto che comunica il listino.",
+      "Resta il Cliente come destinatario della comunicazione.",
+      "Resta la cadenza annuale della comunicazione."
+    ],
+    "forbidden_changes": [
+      "Introdurre un indice di aggiornamento (ISTAT o altro) non presente nel testo.",
+      "Inventare una data specifica del listino.",
+      "Cambiare chi comunica il listino."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "attivo-senza-indice-inventato",
+        "text": "Le tariffe applicate sono quelle del listino vigente. Il Vettore comunica il listino al Cliente all'inizio di ciascun anno di validità del contratto di trasporto."
+      }
+    ],
+    "required_reference": [
+      "references/principi-garner.md"
+    ],
+    "expected_references_v2": [
+      "references/contratti.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "validation_rationale": "Verifica che il rinvio al listino non venga 'completato' con un indice o una data che il testo non contiene.",
+    "annotations": {
+      "codex": {
+        "status": "drafted",
+        "notes": "scritto da subagente Sonnet"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    },
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "listino vigente",
+        "Vettore",
+        "Cliente",
+        "contratto di trasporto"
+      ],
+      "fatal_forbidden_after": [
+        "ISTAT"
+      ],
+      "allowed_legal_references": [],
+      "allowed_new_literals": []
+    }
+  },
+  {
+    "id": "C024",
+    "title": "Deep issue per un libero professionista non pagato",
+    "document_type": "parere",
+    "genre": "parere",
+    "input_text": "Il cliente ci ha incaricato di valutare la posizione di un libero professionista che ha completato la prestazione di consulenza grafica pattuita e non ha ricevuto il pagamento del compenso concordato nonostante due solleciti scritti. Ci si chiede se, alla luce di quanto emerso, sia possibile agire per ottenere il pagamento.",
+    "context": {
+      "mittente": "libero professionista cliente dello studio",
+      "destinatario": "studio legale",
+      "ruolo": "richiesta di parere per mancato pagamento del compenso"
+    },
+    "persona": {},
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "preambolo-lungo",
+        "severity": "media",
+        "description": "Il testo arriva tardi alla domanda giuridica."
+      },
+      {
+        "code": "deep-issue-mancante",
+        "severity": "alta",
+        "description": "Manca una domanda operativa immediata per il cliente."
+      }
+    ],
+    "legal_invariants": [
+      "Il libero professionista resta il soggetto che ha completato la prestazione.",
+      "Resta il mancato pagamento del compenso concordato.",
+      "Restano i due solleciti scritti."
+    ],
+    "forbidden_changes": [
+      "Rispondere nel merito se sia possibile agire, invece di riformulare la domanda.",
+      "Aggiungere importi, date o riferimenti normativi non presenti.",
+      "Trasformare i solleciti scritti in una messa in mora formale non descritta come tale nel testo."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "domanda-operativa",
+        "text": "Il libero professionista ha completato la prestazione di consulenza grafica pattuita e non ha ricevuto il compenso concordato, nonostante due solleciti scritti: può agire per ottenere il pagamento?"
+      }
+    ],
+    "required_reference": [
+      "references/principi-garner.md"
+    ],
+    "expected_references_v2": [
+      "references/atti-e-pareri.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "validation_rationale": "Misura se la skill formula subito la domanda operativa senza aggiungere fatti o rispondere nel merito.",
+    "annotations": {
+      "codex": {
+        "status": "drafted",
+        "notes": "scritto da subagente Sonnet"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    },
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "libero professionista",
+        "consulenza grafica",
+        "compenso concordato",
+        "due solleciti scritti"
+      ],
+      "fatal_forbidden_after": [
+        "messa in mora",
+        "alla luce di quanto emerso"
+      ],
+      "allowed_legal_references": [],
+      "allowed_new_literals": []
+    }
+  },
+  {
+    "id": "C025",
+    "title": "Conclusioni con formule rituali da alleggerire",
+    "document_type": "atto_giudiziario",
+    "genre": "atto",
+    "input_text": "Voglia l'Ill.mo Tribunale adito, contrariis reiectis, con ogni più ampia riserva, accogliere le domande come in atti formulate e per l'effetto condannare la convenuta al risarcimento del danno, con vittoria di spese e competenze di lite.",
+    "context": {
+      "mittente": "avvocato dell'attore",
+      "destinatario": "Tribunale",
+      "ruolo": "conclusioni di un atto di citazione per risarcimento danni"
+    },
+    "persona": {},
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "formula-vuota",
+        "severity": "media",
+        "description": "'Contrariis reiectis' e 'con ogni più ampia riserva' non aggiungono contenuto processuale."
+      }
+    ],
+    "legal_invariants": [
+      "Resta l'accoglimento delle domande come in atti formulate.",
+      "Resta la condanna al risarcimento del danno.",
+      "Resta la vittoria di spese e competenze di lite."
+    ],
+    "forbidden_changes": [
+      "Aggiungere domande nuove non presenti nelle conclusioni.",
+      "Eliminare la richiesta di spese e competenze di lite.",
+      "Cambiare 'accogliere' in 'rigettare'."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "conclusioni-brevi",
+        "text": "Voglia l'Ill.mo Tribunale adito accogliere le domande come in atti formulate e condannare la convenuta al risarcimento del danno, con vittoria di spese e competenze di lite."
+      }
+    ],
+    "required_reference": [
+      "references/esempi-atti-giudiziari.md"
+    ],
+    "expected_references_v2": [
+      "references/atti-e-pareri.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "validation_rationale": "Controlla che le formule rituali vuote spariscano senza che cambino domande e spese.",
+    "annotations": {
+      "codex": {
+        "status": "drafted",
+        "notes": "scritto da subagente Sonnet"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    },
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "accogliere le domande",
+        "risarcimento del danno",
+        "spese",
+        "competenze di lite"
+      ],
+      "fatal_forbidden_after": [
+        "contrariis reiectis",
+        "con ogni più ampia riserva"
+      ],
+      "allowed_legal_references": [],
+      "allowed_new_literals": []
+    }
+  },
+  {
+    "id": "C026",
+    "title": "Clausola penale estesa anche al ritardo",
+    "document_type": "contratto",
+    "genre": "contratto",
+    "input_text": "In caso di inadempimento, anche di semplice ritardo nella consegna, l'Appaltatore è tenuto al pagamento di una penale pari allo 0,5% del corrispettivo per ogni giorno di ritardo.",
+    "context": {
+      "mittente": "avvocato del Committente",
+      "destinatario": "Appaltatore",
+      "ruolo": "clausola penale in un contratto di appalto edile"
+    },
+    "persona": {},
+    "expect_no_change": false,
+    "expected_issues": [
+      {
+        "code": "nominalizzazione",
+        "severity": "bassa",
+        "description": "'È tenuto al pagamento di una penale' può essere reso con un verbo diretto."
+      }
+    ],
+    "legal_invariants": [
+      "Resta la penale (la parola 'penale').",
+      "Resta l'estensione 'anche' al semplice ritardo, non solo all'inadempimento grave.",
+      "Resta la percentuale dello 0,5% del corrispettivo per ogni giorno di ritardo."
+    ],
+    "forbidden_changes": [
+      "Eliminare la parola 'penale'.",
+      "Eliminare 'anche', restringendo la penale al solo inadempimento grave.",
+      "Cambiare la percentuale o la base di calcolo."
+    ],
+    "acceptable_rewrites": [
+      {
+        "label": "verbo-diretto",
+        "text": "In caso di inadempimento, anche di semplice ritardo nella consegna, l'Appaltatore paga una penale pari allo 0,5% del corrispettivo per ogni giorno di ritardo."
+      }
+    ],
+    "required_reference": [
+      "references/principi-garner.md"
+    ],
+    "expected_references_v2": [
+      "references/contratti.md"
+    ],
+    "human_notes": "",
+    "adjudication_status": "draft_codex",
+    "validation_rationale": "Verifica che semplificare il verbo non riduca l'estensione della penale al semplice ritardo.",
+    "annotations": {
+      "codex": {
+        "status": "drafted",
+        "notes": "scritto da subagente Sonnet"
+      },
+      "opus": {
+        "status": "not_run"
+      },
+      "human": {
+        "status": "pending"
+      }
+    },
+    "automation": {
+      "required_output_markers": [
+        "PRIMA:",
+        "DOPO:",
+        "Motivo:"
+      ],
+      "must_preserve_in_dopo": [
+        "penale",
+        "anche",
+        "0,5%",
+        "corrispettivo",
+        "ogni giorno di ritardo"
+      ],
+      "fatal_forbidden_after": [],
+      "allowed_legal_references": [],
+      "allowed_new_literals": []
+    }
   }
 ]
