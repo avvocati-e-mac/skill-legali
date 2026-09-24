@@ -61,7 +61,7 @@ def chat(
     *,
     tools: list[dict[str, Any]] | None = None,
     temperature: float = 0.3,
-    max_tokens: int = 6000,
+    max_tokens: int = 16000,
     provider: str | None = None,
     response_format: dict[str, Any] | None = None,
     retries: int = 4,

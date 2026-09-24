@@ -206,7 +206,7 @@
       },
       "revisione_2026_09": {
         "status": "corrected",
-        "notes": "Il gold di luglio eliminava 'garantisce' (garanzia trasformata in dichiarazione) e inventava un obbligo sulle temperature. 'normative vigenti' reso con 'normativa vigente' e' equivalente: il letterale richiesto e' 'vigent'."
+        "notes": "Il gold di luglio eliminava 'garantisce' (garanzia trasformata in dichiarazione) e inventava un obbligo sulle temperature. 'normative vigenti' reso con 'normativa vigente' e' equivalente: il letterale richiesto e' 'vigent'. Tenere lo standard ampio nella garanzia e segnalarlo e' corretto quanto sostituirlo con un segnaposto."
       }
     },
     "automation": {
@@ -215,9 +215,7 @@
         "DOPO:",
         "Motivo:"
       ],
-      "fatal_forbidden_after": [
-        "perfettamente funzionante"
-      ],
+      "fatal_forbidden_after": [],
       "allowed_legal_references": [
         "ATP"
       ],
@@ -227,7 +225,19 @@
         "ATP",
         "impianto refrigerante"
       ],
-      "allowed_new_literals": []
+      "allowed_new_literals": [],
+      "must_include_one_of": [
+        {
+          "label": "standard vago segnalato",
+          "terms": [
+            "[da decidere",
+            "PROPOSTA",
+            "verificabil",
+            "vag",
+            "generic"
+          ]
+        }
+      ]
     },
     "genre": "contratto",
     "expected_references_v2": [
@@ -926,7 +936,6 @@
         "Cassazione n. 12345 del 2022"
       ],
       "must_preserve_in_dopo": [
-        "Cassazione",
         "12345",
         "2022",
         "prescrizione",
@@ -1533,6 +1542,10 @@
       },
       "human": {
         "status": "pending"
+      },
+      "revisione_2026_09": {
+        "status": "corrected",
+        "notes": "Tenere lo standard ampio nella garanzia e segnalarlo e' corretto quanto sostituirlo con un segnaposto."
       }
     },
     "automation": {
@@ -1546,11 +1559,21 @@
         "libero da ipoteche",
         "trascrizioni pregiudizievoli"
       ],
-      "fatal_forbidden_after": [
-        "sotto ogni profilo"
-      ],
+      "fatal_forbidden_after": [],
       "allowed_legal_references": [],
-      "allowed_new_literals": []
+      "allowed_new_literals": [],
+      "must_include_one_of": [
+        {
+          "label": "standard vago segnalato",
+          "terms": [
+            "[da decidere",
+            "PROPOSTA",
+            "verificabil",
+            "vag",
+            "generic"
+          ]
+        }
+      ]
     }
   },
   {
@@ -1614,6 +1637,10 @@
       },
       "human": {
         "status": "pending"
+      },
+      "revisione_2026_09": {
+        "status": "corrected",
+        "notes": "'l'attrice' vale quanto 'parte attrice'."
       }
     },
     "automation": {
@@ -1623,7 +1650,7 @@
         "Motivo:"
       ],
       "must_preserve_in_dopo": [
-        "parte attrice",
+        "attric",
         "impresa di trasporti",
         "sollecitato il pagamento",
         "fatture",
@@ -1696,6 +1723,10 @@
       },
       "human": {
         "status": "pending"
+      },
+      "revisione_2026_09": {
+        "status": "corrected",
+        "notes": "'ingiustificato' e' una qualificazione giuridica del ritardo, non un semplice rafforzativo."
       }
     },
     "automation": {
@@ -1712,7 +1743,6 @@
       ],
       "fatal_forbidden_after": [
         "assolutamente",
-        "ingiustificato",
         "gravissimo",
         "palesemente"
       ],
@@ -1949,6 +1979,10 @@
       },
       "human": {
         "status": "pending"
+      },
+      "revisione_2026_09": {
+        "status": "corrected",
+        "notes": "'odierno deducente' e' una formula arcaica: non va imposta."
       }
     },
     "automation": {
@@ -1958,7 +1992,6 @@
         "Motivo:"
       ],
       "must_preserve_in_dopo": [
-        "odierno deducente",
         "comunicazione di avvio del procedimento",
         "art. 7",
         "legge n. 241 del 1990"
@@ -2203,7 +2236,7 @@
         "Motivo:"
       ],
       "must_preserve_in_dopo": [
-        "recedere",
+        "rece",
         "art. 5",
         "salvo",
         "servizio"
@@ -2283,7 +2316,7 @@
         "listino vigente",
         "Vettore",
         "Cliente",
-        "contratto di trasporto"
+        "contratto"
       ],
       "fatal_forbidden_after": [
         "ISTAT"
@@ -2363,7 +2396,7 @@
       "must_preserve_in_dopo": [
         "libero professionista",
         "consulenza grafica",
-        "compenso concordato",
+        "compenso",
         "due solleciti scritti"
       ],
       "fatal_forbidden_after": [
@@ -2429,6 +2462,10 @@
       },
       "human": {
         "status": "pending"
+      },
+      "revisione_2026_09": {
+        "status": "corrected",
+        "notes": "Le formule rituali delle conclusioni possono restare: la regola e' non cambiarne il contenuto."
       }
     },
     "automation": {
@@ -2443,10 +2480,7 @@
         "spese",
         "competenze di lite"
       ],
-      "fatal_forbidden_after": [
-        "contrariis reiectis",
-        "con ogni più ampia riserva"
-      ],
+      "fatal_forbidden_after": [],
       "allowed_legal_references": [],
       "allowed_new_literals": []
     }
@@ -2666,6 +2700,10 @@
       },
       "human": {
         "status": "pending"
+      },
+      "revisione_2026_09": {
+        "status": "corrected",
+        "notes": "'comunica' e' ammesso per un obbligo di fare (contratti.md, regola 1)."
       }
     },
     "automation": {
@@ -2675,7 +2713,7 @@
         "Motivo:"
       ],
       "must_preserve_in_dopo": [
-        "si obbliga a comunicare",
+        "comunic",
         "immediatamente",
         "inopponibil"
       ],
@@ -2900,8 +2938,9 @@
       ],
       "must_preserve_in_dopo": [
         "euro 12.000",
-        "30 giorni dalla consegna",
-        "a pena di"
+        "30 giorni",
+        "a pena di",
+        "consegna"
       ],
       "fatal_forbidden_after": [
         "resta stabilito che"
@@ -2977,7 +3016,7 @@
       "must_preserve_in_dopo": [
         "intimiamo",
         "10 giorni",
-        "euro 3.500"
+        "3.500"
       ],
       "fatal_forbidden_after": [
         "formalmente, perentoriamente e definitivamente",

@@ -520,8 +520,16 @@ def evaluate_output(case: dict[str, Any], output: str) -> EvalResult:
         result.fatal_failures.append("Blocco DOPO non trovato o vuoto.")
         do_text = output
     scope = produced_text(output) or do_text
-    scope_no_quotes = strip_quotations(scope)
-    input_no_quotes = strip_quotations(input_text)
+    # Per i conteggi "delta" il testo prodotto va confrontato con il suo originale
+    # corrispondente, senza doppioni: il TESTO RISCRITTO con l'input intero, oppure i
+    # blocchi DOPO con i blocchi PRIMA (che il modello cita con la stessa divisione).
+    rewritten = extract_rewritten_text(output)
+    if rewritten:
+        count_after, count_before = rewritten, input_text
+    else:
+        count_after, count_before = do_text, (extract_section_text(output, "PRIMA") or input_text)
+    scope_no_quotes = strip_quotations(count_after)
+    input_no_quotes = strip_quotations(count_before)
 
     # Vecchio controllo (v1): letterali sull'intero output. Tenuto per compatibilita'.
     for literal in automation.get("must_preserve_literals", []):
@@ -587,7 +595,7 @@ def evaluate_output(case: dict[str, Any], output: str) -> EvalResult:
     lost_operators = [
         label
         for label, pattern in PRESERVED_OPERATORS.items()
-        if count_pattern(pattern, input_no_quotes) and not count_pattern(pattern, scope_no_quotes)
+        if count_pattern(pattern, strip_quotations(input_text)) and not count_pattern(pattern, strip_quotations(scope))
     ]
     if lost_operators:
         result.fatal_failures.append("Operatore giuridico eliminato nel DOPO: " + ", ".join(lost_operators))
