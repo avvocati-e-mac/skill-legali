@@ -77,6 +77,15 @@ def with_generic_outcome(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 def load_records(run_dir: Path) -> list[dict[str, Any]]:
     records = []
+    if run_dir.suffix == ".gz":  # archivio compresso in runs-archivio/
+        import gzip
+
+        with gzip.open(run_dir, "rt", encoding="utf-8") as handle:
+            for line in handle:
+                data = json.loads(line)
+                data["arm"] = f"{data['version']}__{data['variant']}"
+                records.append(data)
+        return records
     for path in sorted(run_dir.rglob("*.json")):
         try:
             data = json.loads(path.read_text(encoding="utf-8"))

@@ -97,7 +97,7 @@ def chat(
                     detail = error.read().decode("utf-8")[:300]
                 except Exception:  # pragma: no cover - solo diagnostica
                     detail = ""
-                if error.code in {400, 401, 403, 404}:
+                if error.code in {400, 401, 402, 403, 404}:
                     raise RuntimeError(f"OpenRouter HTTP {error.code}: {detail}") from error
             time.sleep(2 ** attempt * 3)
     raise RuntimeError(f"OpenRouter non raggiungibile dopo {retries} tentativi: {last_error}")
