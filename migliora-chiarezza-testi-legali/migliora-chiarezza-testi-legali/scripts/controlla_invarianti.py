@@ -58,8 +58,16 @@ def sezione(testo: str, nome: str) -> str:
     for i, m in enumerate(trovate):
         if m.group(1).lower() == nome.lower():
             fine = trovate[i + 1].start() if i + 1 < len(trovate) else len(testo)
-            blocchi.append(testo[m.end():fine].strip())
+            blocchi.append(togli_virgolette_esterne(testo[m.end():fine].strip()))
     return "\n".join(blocchi)
+
+
+def togli_virgolette_esterne(blocco: str) -> str:
+    """Il DOPO scritto tutto tra virgolette non va trattato come una citazione."""
+    m = re.match(r'^\s*(?:\*\*)?["“«](.*)["”»](?:\*\*)?\s*$', blocco, re.DOTALL)
+    if m and not re.search(r'["“”«»]', m.group(1)):
+        return m.group(1).strip()
+    return blocco
 
 
 def senza_virgolettati(testo: str) -> str:
@@ -98,8 +106,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--dopo", type=Path)
     args = parser.parse_args(argv)
     if args.prima and args.dopo:
-        prima = args.prima.read_text(encoding="utf-8")
-        dopo = args.dopo.read_text(encoding="utf-8")
+        prima = togli_virgolette_esterne(args.prima.read_text(encoding="utf-8"))
+        dopo = togli_virgolette_esterne(args.dopo.read_text(encoding="utf-8"))
     elif args.risposta:
         testo = args.risposta.read_text(encoding="utf-8")
         prima = sezione(testo, "PRIMA")
