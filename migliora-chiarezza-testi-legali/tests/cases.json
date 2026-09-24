@@ -1545,7 +1545,7 @@
       },
       "revisione_2026_09": {
         "status": "corrected",
-        "notes": "Tenere lo standard ampio nella garanzia e segnalarlo e' corretto quanto sostituirlo con un segnaposto."
+        "notes": "Tenere lo standard ampio nella garanzia e segnalarlo e' corretto quanto sostituirlo con un segnaposto. Prova Codex: accettato anche 'da valutare' come segnalazione del dubbio."
       }
     },
     "automation": {
@@ -1570,7 +1570,8 @@
             "PROPOSTA",
             "verificabil",
             "vag",
-            "generic"
+            "generic",
+            "da valutare"
           ]
         }
       ]
@@ -2141,6 +2142,10 @@
       },
       "human": {
         "status": "pending"
+      },
+      "revisione_2026_09": {
+        "status": "corrected",
+        "notes": "Prova Codex: 'o entrambi' bocciava la stessa soluzione al femminile ('entrambe le operazioni'). Aggiunto 'entrambe'."
       }
     },
     "automation": {
@@ -2164,6 +2169,7 @@
           "label": "scelta cumulativa/alternativa",
           "terms": [
             "o entrambi",
+            "entrambe",
             "anche congiuntamente",
             "alternativamente",
             "[da decidere"

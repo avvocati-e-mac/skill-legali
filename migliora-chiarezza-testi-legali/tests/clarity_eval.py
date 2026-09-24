@@ -320,7 +320,11 @@ INTENSIFIER_PATTERNS = {
     "indubbiamente": r"\bindubbiamente\b",
     "radicalmente": r"\bradicalmente\b",
     "invano": r"\binvano\b",
-    "senza riscontro": r"\b(?:priv[ao]|senza|rimast[ao] senza) (?:di )?(?:alcun )?riscontro\b",
+    # "senza risposta alcuna" e "privo di qualsivoglia riscontro" sono lo stesso fatto.
+    "senza riscontro": (
+        r"\b(?:priv[ao]|senza|rimast[ao] senza) (?:di )?(?:alcun[ao]? |qualsiasi |qualsivoglia )?"
+        r"(?:riscontro|risposta)\b"
+    ),
     "ingiustificato": r"\bingiustificat\w*",
 }
 

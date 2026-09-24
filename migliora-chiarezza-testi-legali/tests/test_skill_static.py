@@ -280,6 +280,19 @@ class SkillStaticTests(unittest.TestCase):
         self.assertFalse(any("Formato obbligatorio mancante" in item for item in result.fatal_failures))
         self.assertFalse(any("Espressione vietata nel DOPO" in item for item in result.fatal_failures))
 
+    def test_eval_harness_treats_no_reply_synonyms_as_same_fact(self) -> None:
+        # Prova Codex 2026-09: "senza riscontro" al posto di "senza risposta alcuna"
+        # non e' un fatto inventato; "invano" su un testo che non lo diceva si'.
+        before = "Il secondo sollecito e' rimasto senza risposta alcuna."
+        self.assertEqual(
+            self.eval.delta_additions(self.eval.INTENSIFIER_PATTERNS, before, "Il secondo sollecito e' rimasto senza riscontro."),
+            [],
+        )
+        self.assertEqual(
+            self.eval.delta_additions(self.eval.INTENSIFIER_PATTERNS, "Ho inviato un sollecito.", "Ho inviato un sollecito, rimasto senza risposta."),
+            ["senza riscontro"],
+        )
+
     def test_eval_harness_catches_c004_result_obligation_regression(self) -> None:
         case = next(case for case in self.cases if case["id"] == "C004")
         output = (
