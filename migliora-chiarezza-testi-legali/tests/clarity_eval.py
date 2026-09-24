@@ -54,7 +54,8 @@ LEGAL_REFERENCE_PATTERNS = (
     re.compile(r"\bartt?\.\s*[^.;:\n]*", re.IGNORECASE),
     re.compile(r"\bD\.M\.\s*[^.;:\n]*", re.IGNORECASE),
     re.compile(r"\bD\.Lgs\.\s*[^.;:\n]*", re.IGNORECASE),
-    re.compile(r"\b(?:legge|l\.)\s+n\.?\s*[^.;:\n]*", re.IGNORECASE),
+    # "l." solo se non fa parte di una sigla (S.r.l.) e se seguito da un numero.
+    re.compile(r"(?<![.\w])(?:legge|l\.)\s+(?:n\.\s*)?\d+[^.;:\n]*", re.IGNORECASE),
     re.compile(r"\bCost\.\s*[^.;:\n]*", re.IGNORECASE),
 )
 LEGAL_REF_NUMBER_RE = re.compile(r"\d+")
@@ -291,9 +292,9 @@ def same_reference(candidate: str, known: str) -> bool:
     if candidate_numbers and not candidate_numbers <= known_numbers:
         return False
 
-    candidate_has_cass = "cass" in candidate_norm or "cassazione" in candidate_norm
-    known_has_cass = "cass" in known_norm or "cassazione" in known_norm
-    return candidate_has_cass and known_has_cass and bool(candidate_numbers & known_numbers)
+    # Stessi numeri (articolo, legge, sentenza e anno) = stesso riferimento, anche se
+    # le parole che seguono sono diverse ("art. 1495 c.c. perche'..." / "art. 1495 c.c., non...").
+    return bool(candidate_numbers) and candidate_numbers <= known_numbers
 
 
 def is_known_reference(candidate: str, known_refs: set[str]) -> bool:
