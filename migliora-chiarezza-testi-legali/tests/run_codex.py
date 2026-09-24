@@ -56,6 +56,8 @@ def run_case(case, files, model: str | None) -> dict:
         output = last.read_text(encoding="utf-8") if last.exists() else ""
         if not output:
             raise RuntimeError(f"codex non ha prodotto risposta: {completed.stderr[-400:]}")
+        # File nominati nel log di Codex, compresi gli elenchi della cartella: indica che cosa
+        # Codex ha visto, non che cosa ha aperto. Non usarlo come misura del routing.
         read = sorted({name for name in files if name != "SKILL.md" and name in completed.stdout + completed.stderr})
     return {
         "output": output,

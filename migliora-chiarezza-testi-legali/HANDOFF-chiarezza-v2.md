@@ -75,11 +75,11 @@ Dopo ogni modifica del harness: `python3 tests/reevaluate_runs.py tests/runs`.
 2. **Giudice LLM** (esplorativo) dopo la ricarica del credito OpenRouter:
    `python3 judge_runs.py --run-dir runs/holdout-2026-09-24/holdout --arms chiarezza-v1.0__completa bd4cdfb__completa`.
 3. **Merge di `feat/chiarezza-v2` su `main`** dopo la revisione cieca.
-3-bis. **Prova nel runtime reale di Codex** (`tests/run_codex.py`, account
-   ChatGPT, nessun costo OpenRouter): 5 casi DEV (C005, C014, C021, C029,
-   C036) per v1 e v2, output in `tests/runs/codex-2026-09-24/` (solo locale).
-   Analisi: `python3 analyze_runs.py --run-dir runs/codex-2026-09-24/dev --compare chiarezza-v1.0__completa bd4cdfb__completa`.
-   Da riportare nel REPORT come prova qualitativa (5 casi, un campione).
+3-bis. **Prova nel runtime reale di Codex: fatta.** v2 5 su 5, v1 3 su 5
+   (`gpt-5.6-sol`); esito nel REPORT, archivio in
+   `tests/runs-archivio/codex-2026-09-24__dev.jsonl.gz`. Ha fatto emergere tre
+   falsi esiti del controllo automatico (C014, C021, sinonimi di "senza
+   riscontro"), corretti e riapplicati a tutti i run: holdout invariato.
    La pagina di revisione cieca, se chiusa, si riapre con il comando al punto 1
    e si aggancia al browser integrato con `.claude/launch.json` (url
    http://localhost:8766, file locale non versionato).
