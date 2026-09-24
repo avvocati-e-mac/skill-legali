@@ -196,8 +196,20 @@ def extract_section_text(output: str, name: str) -> str:
             continue
         start = section.end()
         end = sections[index + 1].start() if index + 1 < len(sections) else len(output)
-        blocks.append(output[start:end].strip())
+        blocks.append(unwrap_quotes(output[start:end].strip()))
     return "\n".join(block for block in blocks if block)
+
+
+_WRAPPING_QUOTES_RE = re.compile(r'^\s*(?:\*\*)?["“«](.*)["”»](?:\*\*)?\s*$', re.DOTALL)
+
+
+def unwrap_quotes(block: str) -> str:
+    """I modelli spesso racchiudono l'intero DOPO tra virgolette: le si toglie,
+    altrimenti il filtro sulle citazioni cancellerebbe tutto il testo prodotto."""
+    match = _WRAPPING_QUOTES_RE.match(block)
+    if match and not re.search(r'["“”«»]', match.group(1)):
+        return match.group(1).strip()
+    return block
 
 
 def extract_do_text(output: str) -> str:
@@ -373,6 +385,25 @@ _SIGNIFICANT_NUMBER_RE = re.compile(
 )
 
 
+MONTHS = {
+    "gennaio": 1, "febbraio": 2, "marzo": 3, "aprile": 4, "maggio": 5, "giugno": 6, "luglio": 7,
+    "agosto": 8, "settembre": 9, "ottobre": 10, "novembre": 11, "dicembre": 12,
+}
+_NUMERIC_DATE_RE = re.compile(r"\b(\d{1,2})[./-](\d{1,2})[./-](\d{2,4})\b")
+_TEXT_DATE_RE = re.compile(r"\b(\d{1,2})(?:°|º)?\s+(" + "|".join(MONTHS) + r")\s+(\d{4})\b", re.IGNORECASE)
+
+
+def dates_in(text: str) -> set[tuple[int, int, int]]:
+    """Date del testo normalizzate (giorno, mese, anno), in forma numerica o per esteso."""
+    found: set[tuple[int, int, int]] = set()
+    for day, month, year in _NUMERIC_DATE_RE.findall(text):
+        full_year = int(year) + (2000 if len(year) == 2 else 0)
+        found.add((int(day), int(month), full_year))
+    for day, month, year in _TEXT_DATE_RE.findall(text):
+        found.add((int(day), MONTHS[month.lower()], int(year)))
+    return found
+
+
 def count_pattern(pattern: str, text: str) -> int:
     return len(re.findall(pattern, text, flags=re.IGNORECASE | re.MULTILINE))
 
@@ -478,8 +509,9 @@ def evaluate_output(case: dict[str, Any], output: str) -> EvalResult:
         result.fatal_failures.append("Sotto-modifica: dichiarata 'nessuna modifica' su un testo che andava migliorato.")
         return result
 
+    headers = {match.group(1).lower() for match in SECTION_HEADER_RE.finditer(output)}
     for marker in markers:
-        if marker not in output:
+        if marker not in output and marker.rstrip(":").lower() not in headers:
             result.fatal_failures.append(f"Formato obbligatorio mancante: {marker}")
 
     do_text = extract_do_text(output)
@@ -496,9 +528,14 @@ def evaluate_output(case: dict[str, Any], output: str) -> EvalResult:
             result.fatal_failures.append(f"Elemento da preservare assente: {literal}")
 
     # Nuovo controllo: i letterali devono stare nel testo prodotto, non basta ricopiarli nel PRIMA.
+    scope_dates = dates_in(scope)
     for literal in automation.get("must_preserve_in_dopo", []):
-        if literal.lower() not in scope.lower():
-            result.fatal_failures.append(f"Elemento da preservare assente dal DOPO: {literal}")
+        if literal.lower() in scope.lower():
+            continue
+        literal_dates = dates_in(literal)
+        if literal_dates and literal_dates <= scope_dates:
+            continue  # stessa data scritta in altra forma: "1/3/2024" = "1° marzo 2024"
+        result.fatal_failures.append(f"Elemento da preservare assente dal DOPO: {literal}")
 
     for forbidden in automation.get("fatal_forbidden_after", []):
         if forbidden.lower() in scope.lower():
@@ -575,7 +612,8 @@ def evaluate_output(case: dict[str, Any], output: str) -> EvalResult:
     allowed_refs = {ref.lower() for ref in automation.get("allowed_legal_references", [])}
     input_refs = extract_legal_references(input_text)
     known_refs = input_refs | allowed_refs
-    output_refs = extract_legal_references(scope)
+    # I rinvii con segnaposto ("art. [●]", "art. [da decidere]") non sono fonti nuove.
+    output_refs = {ref for ref in extract_legal_references(scope) if re.search(r"\d", ref)}
     unknown_refs = sorted(ref for ref in output_refs if not is_known_reference(ref, known_refs))
     if unknown_refs:
         message = "Fonti nuove non presenti nel testo: " + "; ".join(unknown_refs)

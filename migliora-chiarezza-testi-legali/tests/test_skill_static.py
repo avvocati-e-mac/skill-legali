@@ -260,7 +260,10 @@ class SkillStaticTests(unittest.TestCase):
         result = self.eval.evaluate_output(case, output)
         self.assertTrue(result.passed, result.as_dict())
 
-    def test_eval_harness_keeps_format_fail_separate_from_do_content(self) -> None:
+    def test_eval_harness_accepts_markdown_headings_without_colon(self) -> None:
+        # Da settembre 2026 il formato conta come intestazione riconosciuta, non come
+        # stringa esatta: "**PRIMA**" su una riga vale quanto "PRIMA:". Le formule
+        # citate nel Motivo non contano come formule rimaste nel DOPO.
         case = self.cases[0]
         output = (
             f"**PRIMA**\n{case['input_text']}\n\n"
@@ -269,8 +272,7 @@ class SkillStaticTests(unittest.TestCase):
             "Elimina le formule massima diligenza e qualsiasi danno."
         )
         result = self.eval.evaluate_output(case, output)
-        self.assertFalse(result.passed)
-        self.assertTrue(any("Formato obbligatorio mancante" in item for item in result.fatal_failures))
+        self.assertFalse(any("Formato obbligatorio mancante" in item for item in result.fatal_failures))
         self.assertFalse(any("Espressione vietata nel DOPO" in item for item in result.fatal_failures))
 
     def test_eval_harness_catches_c004_result_obligation_regression(self) -> None:

@@ -131,20 +131,23 @@ def control_claims_ok(output: str) -> bool | None:
 
 
 def summarize(records: list[dict[str, Any]]) -> str:
-    lines = ["| Braccio | Modello | Output | Superati | Tasso | Token medi | Costo | Rapporto lunghezza (mediana) | Gulpease dopo (mediana) |", "|---|---|---:|---:|---:|---:|---:|---:|---:|"]
+    lines = ["| Braccio | Modello | Output | Superati | Tasso | Tasso senza errori di formato | Token medi | Costo | Rapporto lunghezza (mediana) | Gulpease dopo (mediana) |", "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|"]
     groups: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
     for record in records:
         groups[(record["arm"], record["model"])].append(record)
     for (arm, model), rows in sorted(groups.items()):
         passed = sum(r["evaluation"]["passed"] for r in rows)
+        substance = sum(
+            all(kind_of(f) == "formato" for f in r["evaluation"]["fatal_failures"]) for r in rows
+        )
         tokens = mean(r["usage"]["prompt_tokens"] + r["usage"]["completion_tokens"] for r in rows)
         cost = sum(r["usage"]["cost"] for r in rows)
         ratios = [r["evaluation"]["metrics"].get("length_ratio") for r in rows if r["evaluation"]["metrics"].get("length_ratio")]
         gulp = [r["evaluation"]["metrics"].get("after", {}).get("gulpease") for r in rows]
         gulp = [g for g in gulp if g is not None]
         lines.append(
-            f"| {arm} | {model.split('/')[-1]} | {len(rows)} | {passed} | {passed / len(rows):.0%} | {tokens:,.0f} | ${cost:.3f} | "
-            f"{median(ratios):.2f} | {median(gulp) if gulp else '-'} |"
+            f"| {arm} | {model.split('/')[-1]} | {len(rows)} | {passed} | {passed / len(rows):.0%} | {substance / len(rows):.0%} | {tokens:,.0f} | ${cost:.3f} | "
+            f"{median(ratios):.2f} | {round(median(gulp), 1) if gulp else '-'} |"
         )
     return "\n".join(lines)
 

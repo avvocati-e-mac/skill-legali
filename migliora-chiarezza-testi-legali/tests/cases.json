@@ -83,7 +83,7 @@
       },
       "revisione_2026_09": {
         "status": "corrected",
-        "notes": "Tolta l'esimente 'caso fortuito o forza maggiore' dal DOPO: sposta il rischio e va proposta come PROPOSTA nel Motivo, decisa dall'avvocato."
+        "notes": "Tolta l'esimente 'caso fortuito o forza maggiore' dal DOPO: sposta il rischio e va proposta come PROPOSTA nel Motivo, decisa dall'avvocato. 'si obbliga a utilizzare' e' ammesso se usato in modo coerente (contratti.md, regola 1): non piu' vietato."
       }
     },
     "automation": {
@@ -92,9 +92,7 @@
         "DOPO:",
         "Motivo:"
       ],
-      "fatal_forbidden_after": [
-        "si obbliga a utilizzare"
-      ],
+      "fatal_forbidden_after": [],
       "allowed_legal_references": [],
       "must_preserve_in_dopo": [
         "Conduttore",
@@ -113,7 +111,7 @@
             "[da decidere",
             "PROPOSTA",
             "verificabil",
-            "massima diligenza"
+            "parametro"
           ]
         }
       ]
@@ -208,7 +206,7 @@
       },
       "revisione_2026_09": {
         "status": "corrected",
-        "notes": "Il gold di luglio eliminava 'garantisce' (garanzia trasformata in dichiarazione) e inventava un obbligo sulle temperature."
+        "notes": "Il gold di luglio eliminava 'garantisce' (garanzia trasformata in dichiarazione) e inventava un obbligo sulle temperature. 'normative vigenti' reso con 'normativa vigente' e' equivalente: il letterale richiesto e' 'vigent'."
       }
     },
     "automation": {
@@ -225,7 +223,7 @@
       ],
       "must_preserve_in_dopo": [
         "garantisce",
-        "normative vigenti",
+        "vigent",
         "ATP",
         "impianto refrigerante"
       ],
@@ -567,7 +565,7 @@
       },
       "revisione_2026_09": {
         "status": "corrected",
-        "notes": "Corretto secondo la revisione umana: la società è la nostra assistita, la negligenza è Vostra. Tolto 'interamente'."
+        "notes": "Corretto secondo la revisione umana: la società è la nostra assistita, la negligenza è Vostra. Tolto 'interamente'. Tolto l'obbligo di scrivere 'nostra': 'la società' neutra e' corretta; resta vietato 'Vostra società'."
       }
     },
     "automation": {
@@ -599,11 +597,6 @@
         "\\bVostra societ",
         "societ\\S* Vostra",
         "\\bVostra (?:licenza|produzione)"
-      ],
-      "required_one_of": [
-        "\\bnostr[ao]\\b",
-        "\\bassistita\\b",
-        "\\bmandante\\b"
       ]
     },
     "context": {
@@ -1031,7 +1024,7 @@
       },
       "revisione_2026_09": {
         "status": "corrected",
-        "notes": "Il gold di luglio attribuiva al cliente un ruolo (locatore) e al debitore un altro (conduttore) non ricavabili dal testo."
+        "notes": "Il gold di luglio attribuiva al cliente un ruolo (locatore) e al debitore un altro (conduttore) non ricavabili dal testo. Mantenere l'incarico in apertura non e' un errore se la domanda viene subito dopo; resta vietata la zavorra 'con particolare riferimento'."
       }
     },
     "automation": {
@@ -1041,7 +1034,6 @@
         "Motivo:"
       ],
       "fatal_forbidden_after": [
-        "ci ha incaricato di esaminare",
         "con particolare riferimento"
       ],
       "allowed_legal_references": [],
@@ -1139,6 +1131,10 @@
           "format": "problem"
         },
         "human_notes": "c’è la citazione che non va bene ma per il resto meglio di opus"
+      },
+      "revisione_2026_09": {
+        "status": "corrected",
+        "notes": "'gia' rassegnate' indica quali conclusioni: non e' zavorra, non e' piu' vietato."
       }
     },
     "automation": {
@@ -1149,9 +1145,7 @@
       ],
       "fatal_forbidden_after": [
         "integralmente richiamato",
-        "trascritto all'uopo",
-        "gia' rassegnate",
-        "già rassegnate"
+        "trascritto all'uopo"
       ],
       "allowed_legal_references": [],
       "must_preserve_in_dopo": [
@@ -1250,7 +1244,7 @@
       },
       "revisione_2026_09": {
         "status": "corrected",
-        "notes": "Il gold di luglio inventava esempi di manutenzione e un patto di forma scritta. La forma scritta (preferita dal revisore) va proposta come PROPOSTA nel Motivo."
+        "notes": "Il gold di luglio inventava esempi di manutenzione e un patto di forma scritta. La forma scritta (preferita dal revisore) va proposta come PROPOSTA nel Motivo. 'tutte le spese' e 'restano a carico' sono scelte di stile, non errori: non piu' vietate."
       }
     },
     "automation": {
@@ -1259,10 +1253,7 @@
         "DOPO:",
         "Motivo:"
       ],
-      "fatal_forbidden_after": [
-        "tutte le spese",
-        "restano a carico"
-      ],
+      "fatal_forbidden_after": [],
       "allowed_legal_references": [],
       "must_preserve_in_dopo": [
         "Conduttore",
