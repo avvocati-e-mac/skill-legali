@@ -57,23 +57,25 @@ Run in `tests/runs/2026-09-23/dev` (v1) e `tests/runs/2026-09-24/dev`
 (v2.1 = `8e8097f`); rilanciare lo stesso comando completa i casi mancanti.
 Dopo ogni modifica del harness: `python3 tests/reevaluate_runs.py tests/runs`.
 
-## Stato al 2026-09-24
+## Stato finale al 2026-09-24
 
-- DEV completo (38 casi × 2 flash × 3 campioni): v1 3-7%, v2.2 (`bd4cdfb`)
-  90% DeepSeek e 82% Qwen. Scheda e Controllo tolti in v2.2 (non aiutavano).
-- **Holdout lanciato una sola volta** con run-id `holdout-2026-09-24`
-  (v1 e `bd4cdfb`, 2 flash × 3, Opus 5.5 via OpenRouter × 1). Log in
-  scratchpad `run_holdout.log`; se interrotto, rilanciare gli stessi comandi
-  (il runner salta ciò che esiste). Non modificare la skill prima del report.
+- **v2 finale = `bd4cdfb` (v2.2)**. Report: `tests/REPORT-2026-09-24.md`.
+- Holdout eseguito una volta: sui cancelli generici v2 85-90% (flash) e 70%
+  (Opus) contro 12-22% della v1; 96 coppie a 0, McNemar p<0,001.
+- Run archiviati in `tests/runs-archivio/*.jsonl.gz` (i `runs/` grezzi sono
+  solo in locale, esclusi da git).
+- README, CLAUDE.md e AGENTS.md aggiornati sul branch.
 
-## Ancora da fare
+## Ancora da fare (decisioni di Filippo)
 
-| Lavoro | Comando |
-|---|---|
-| Analisi holdout | `analyze_runs.py --run-dir tests/runs/holdout-2026-09-24/holdout --compare chiarezza-v1.0__completa bd4cdfb__completa` |
-| Giudice (esplorativo) | `judge_runs.py --run-dir tests/runs/holdout-2026-09-24/holdout --arms chiarezza-v1.0__completa bd4cdfb__completa` |
-| Revisione cieca di Filippo | `blind_review.py serve --session holdout --run-dir tests/runs/holdout-2026-09-24/holdout --arm-a chiarezza-v1.0__completa --arm-b bd4cdfb__completa --pairs 15` |
-| Report e README | `tests/REPORT-2026-09-24.md`, riga del README e cronologia; poi merge su `main` |
+1. **Revisione cieca** (endpoint secondario), circa 15 coppie:
+   `cd migliora-chiarezza-testi-legali/tests && python3 blind_review.py serve --session holdout --run-dir runs/holdout-2026-09-24/holdout --arm-a chiarezza-v1.0__completa --arm-b bd4cdfb__completa --pairs 15`
+   poi `python3 blind_review.py unblind --session holdout`.
+2. **Giudice LLM** (esplorativo) dopo la ricarica del credito OpenRouter:
+   `python3 judge_runs.py --run-dir runs/holdout-2026-09-24/holdout --arms chiarezza-v1.0__completa bd4cdfb__completa`.
+3. **Merge di `feat/chiarezza-v2` su `main`** dopo la revisione cieca.
+4. Fuori perimetro: la skill `avvocati-e-mac-articolo` installata rimanda a
+   `references/deaizzatore.md` e `stile/voce.md`, che mancano.
 
 **Regola anti-contaminazione:** chi scrive la v2 NON deve leggere
 `holdout.json` fino alla valutazione finale. Verifica integrità:
