@@ -17,10 +17,9 @@ description: >
 
 # Migliora chiarezza testi legali
 
-Obiettivo: rendere il testo chiaro e scorrevole per chi deve leggerlo e
-applicarlo (giudice, controparte, cliente) senza cambiarne il significato
-giuridico. Il registro resta forense: si tolgono oscurità e ridondanza, non
-la tecnica.
+Obiettivo: testo chiaro e scorrevole per chi deve applicarlo (giudice,
+controparte, cliente), con lo stesso significato giuridico. Il registro resta
+forense: si tolgono oscurità e ridondanza, non la tecnica.
 
 ## 1. Quale file aprire
 
@@ -31,20 +30,20 @@ la tecnica.
 | Clausola che si presta a più letture | anche `references/interpretazione-civilistica.md` |
 | Richiesta esplicita di fonti, di Manzoni o dell'elenco dei tic da IA | `references/bibliografia.md`, `references/lezione-manzoni.md`, `references/frasi-da-ia.md` |
 
-Apri al massimo due file per richiesta. Se non puoi leggere file, bastano le
-regole di questa pagina.
+Apri al massimo due file. Senza file bastano le regole di questa pagina.
 
 ## 2. Procedura
 
 <!-- step:inizio -->
-1. **Scheda**, prima di riscrivere, in 3-5 righe: tipo di testo; chi scrive
-   e a chi (chi è "nostro", chi è "Vostro"); elementi che non devono
-   cambiare: soggetti, obblighi, garanzie, eccezioni, condizioni, date,
-   importi, termini tecnici. Se chi scrive o il destinatario non si ricavano
-   dal testo, scrivi "[da confermare]": non indovinare.
+1. **Scheda**, prima di riscrivere, in non più di tre righe: tipo di testo;
+   chi scrive e a chi (chi è "nostro", chi è "Vostro"); elementi che non
+   devono cambiare (soggetti, obblighi, garanzie, eccezioni, date, importi,
+   termini tecnici). Se chi scrive o il destinatario non si ricavano dal
+   testo, scrivi "[da confermare]": non indovinare.
 <!-- step:fine -->
 2. **Diagnosi**: trova i punti oscuri con le regole della sezione 4 e del file
-   di genere.
+   di genere. Non scrivere una sezione di diagnosi a parte: ogni problema si
+   spiega in una riga nel Motivo del suo blocco.
 3. **Riscrittura**: per ogni punto scrivi un blocco con questa forma:
 
    PRIMA: il testo originale
@@ -52,20 +51,17 @@ regole di questa pagina.
    Motivo: una riga concreta sul perché
 
 4. **Testi lunghi** (più di una pagina): tratta la prima sezione, oppure le
-   cinque criticità più importanti, poi chiedi se continuare. Se l'utente ha
-   già chiesto di procedere con tutto, o risponde "tutto", vai fino in fondo
-   senza fermarti.
+   cinque criticità principali, poi chiedi se continuare. Se l'utente ha già
+   chiesto di procedere con tutto, o risponde "tutto", vai fino in fondo.
 5. **Chiusura**: scrivi `TESTO RISCRITTO:` con il testo integrale pronto da
    incollare, poi `Sommario:` in 3-5 righe con le modifiche principali e le
    decisioni lasciate all'avvocato. Se il testo è una sola frase o clausola,
    il DOPO basta: ometti il TESTO RISCRITTO.
 <!-- step:inizio -->
-6. **Controllo**: prima di consegnare, confronta ogni DOPO con la Scheda. Se
-   puoi eseguire codice, lancia `scripts/controlla_invarianti.py` (istruzioni
-   in testa al file) e correggi ciò che segnala. Altrimenti ripassa uno per
-   uno gli otto divieti della sezione 3 e correggi. Chiudi con una riga
-   `Controllo:` con l'esito: "nessuna violazione" oppure che cosa hai
-   corretto.
+6. **Controllo**: confronta ogni DOPO con la Scheda. Se puoi eseguire codice,
+   lancia `scripts/controlla_invarianti.py` e correggi ciò che segnala;
+   altrimenti ripassa gli otto divieti della sezione 3. Chiudi con una riga
+   `Controllo:` con l'esito o con ciò che hai corretto.
 <!-- step:fine -->
 
 ## 3. Otto divieti (valgono per il DOPO e per il TESTO RISCRITTO)
@@ -85,8 +81,10 @@ regole di questa pagina.
    trasferisce il diritto.
 4. Non aggiungere intensificatori ("interamente", "palesemente", "del
    tutto", "gravissimo", "esclusivamente" usato come rafforzativo).
-5. Non sostituire i termini tecnici: prescrizione, decadenza, recesso,
-   risoluzione, caparra, penale, diritto azionato, legittimazione restano.
+5. Non togliere né sostituire date, importi, numeri di atti e termini
+   tecnici: prescrizione, decadenza, recesso, risoluzione, caparra, penale,
+   diritto azionato, legittimazione, travisamento restano. Una data può
+   cambiare forma ("1/3/2024" diventa "1° marzo 2024"), non valore.
 6. Non cambiare il contenuto di conclusioni, domande ed eccezioni
    processuali: puoi cambiarne solo la forma.
 7. Non aggiungere frasi da IA né commenti dentro il testo: "è importante
@@ -105,17 +103,17 @@ regole di questa pagina.
   brevi sono legate da una causa, un'opposizione o una conseguenza, uniscile
   con un connettivo (poiché, quindi, tuttavia, infatti, ma). Il testo deve
   essere chiaro e scorrevole, non a singhiozzo.
-- **Periodo lungo solo se articolato**: va bene se è diviso da punti e
-  virgola in parti complete, ciascuna con soggetto e verbo.
+- **Periodo lungo solo se articolato** in parti complete, separate da punti e
+  virgola, ciascuna con soggetto e verbo.
 - **Chi agisce si vede**: usa la forma attiva quando la passiva nasconde chi
   decide o chi deve fare.
 - **Condizioni ed eccezioni accanto a ciò che modificano**; elementi dello
   stesso tipo nella stessa forma.
 - **Via la zavorra**: doppiette ("nullo e privo di effetto"), formule vuote
   ("si fa presente che", "in ordine a quanto
-  dedotto"), arcaismi ("codesto", "trattasi", "ut supra", "all'uopo").
-- **Tecnicismi sì, gergo di comodo no**: il latinismo rivolto al cliente si
-  traduce accanto.
+  dedotto"), arcaismi e formule di stile ("codesto", "trattasi", "ut supra", "all'uopo",
+  "come sopra rappresentato e difeso").
+- **Tecnicismi sì, gergo no**: il latinismo per il cliente si traduce accanto.
 - **Informazione decisiva in fondo**: chiudi la frase su ciò che conta, non
   su "ai sensi di legge" o "di cui sopra".
 - **Se le regole confliggono** vale quest'ordine: fedeltà giuridica, divieti,
@@ -130,8 +128,8 @@ eventualmente comunicata dal Committente."
 DOPO: "L'Appaltatore consegna le opere entro il termine dell'art. 4 oppure,
 se il Committente comunica una data diversa, entro quella data [da decidere:
 se la data comunicata può anticipare il termine dell'art. 4]."
-Motivo: "dovrà provvedere alla consegna" diventa "consegna"; "e/o comunque"
-non dice quale termine prevale, quindi la scelta resta all'avvocato.
+Motivo: "dovrà provvedere alla consegna" diventa "consegna"; "e/o" non dice
+quale termine prevale: decide l'avvocato.
 
 Atto:
 PRIMA: "Giova evidenziare come l'odierna esponente abbia, sin dalla missiva
@@ -139,11 +137,11 @@ del 3 marzo 2025, palesato la propria contrarietà alla proroga, con ciò
 manifestando in maniera inequivocabile la volontà di non rinnovare."
 DOPO: "Già con la lettera del 3 marzo 2025 l'esponente si è opposta alla proroga:
 ha così manifestato in modo inequivocabile la volontà di non rinnovare."
-Motivo: via la formula vuota e l'arcaismo; soggetto e verbo in apertura; il
-nesso tra i due fatti è reso esplicito.
+Motivo: via formula vuota e arcaismo; soggetto e verbo in apertura; nesso
+esplicito.
 
 ## 6. Ambienti diversi
 
-In Claude (Desktop, Cowork, Code) e in Codex leggi i file e lancia lo script
-con gli strumenti disponibili. Senza accesso ai file o senza esecuzione di
-codice usa solo questa pagina: non inventare strumenti che non hai.
+In Claude (Desktop, Cowork, Code) e in Codex usa gli strumenti disponibili
+per leggere i file e lanciare lo script. Senza di essi usa solo questa
+pagina: non inventare strumenti.
