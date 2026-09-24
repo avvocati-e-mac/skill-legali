@@ -40,19 +40,32 @@ Piano approvato: `~/.claude/plans/esamina-la-il-repository-noble-twilight.md`
    `atti-e-pareri.md`, `contratti.md`, `frasi-da-ia.md`, `lezione-manzoni.md`,
    script `controlla_invarianti.py`, `research/` fuori dal pacchetto, test
    statici v2 (24 verdi), `.skill` rigenerato.
-7. **Run avviati** (output in `tests/runs/2026-09-23/dev/`, non committati):
-   baseline v1 sui 12 casi; v2 `completa` e `senza-step` sui 12 casi.
-   Il runner salta gli output esistenti: rilanciare lo stesso comando
-   completa i run interrotti e aggiunge i casi nuovi.
+7. **Primo confronto DEV (12 casi, 3 campioni, harness corretto)**: v1 3-14%
+   di output senza errori, v2 86% su entrambi i modelli flash (McNemar
+   p<0,001). Scheda e Controllo: nessuna differenza netta (p=0,21); il
+   Controllo dichiara "ok" su output con errori in circa un caso su tre.
+8. **v2.1** (`b28b615`, poi `8e8097f`): niente diagnosi separata, date e
+   numeri conservati, "come sopra rappresentato e difeso" tra le formule.
+9. **DEV a 38 casi** (C013-C038, tre lunghi). **Verifica fonti** fatta
+   (`tests/verifica-fonti-2026-09.md`): tolta Cass. 3704/2018, citata a
+   torto dalla v1. CLAUDE.md e AGENTS.md aggiornati.
+10. **Opus**: la CLI `claude` in sottoprocesso non è autenticata (OAuth
+    scaduto); si usa `anthropic/claude-opus-5.5` via OpenRouter con
+    `run_live.py --samples 1`.
 
-## In corso al momento dell'handoff (verificare l'esito)
+Run in `tests/runs/2026-09-23/dev` (v1) e `tests/runs/2026-09-24/dev`
+(v2.1 = `8e8097f`); rilanciare lo stesso comando completa i casi mancanti.
+Dopo ogni modifica del harness: `python3 tests/reevaluate_runs.py tests/runs`.
 
-| Lavoro | Dove finisce il risultato | Se manca |
-|---|---|---|
-| Holdout (GPT) | `tests/holdout.json` + `tests/holdout.sha256` | `python3 tests/generate_holdout.py` (non rigenera se esiste) |
-| Casi DEV C013-C038 (subagente Sonnet) | `tests/cases_dev_new.json` | rilanciare il compito "casi DEV" (vedi piano, Passo 1) |
-| Verifica fonti (normattiva-mcp, italgiureweb, BuddaLaw) | `tests/verifica-fonti-2026-09.md` (copiato dallo scratchpad) | rilanciare la verifica: elenco voci nel piano, "Verifica giuridica" |
-| Revisione cieca A/B (subagente Sonnet) | `tests/blind_review.py`, `blind_review.html`, `test_blind_review.py` | rilanciare il compito "revisione cieca" |
+## Ancora da fare
+
+| Lavoro | Comando |
+|---|---|
+| v1 e v2.1 sui casi C027-C038 | `run_live.py --version chiarezza-v1.0 ...` e `--version 8e8097f ...` (salta ciò che esiste) |
+| Analisi DEV | `analyze_runs.py --run-dir tests/runs/2026-09-23/dev --run-dir tests/runs/2026-09-24/dev --compare chiarezza-v1.0__completa 8e8097f__completa` |
+| Holdout finale (una volta) | v1 e v2 finale, 2 flash × 3 campioni, Opus via OpenRouter × 1 |
+| Giudice e revisione cieca | `judge_runs.py`, `blind_review.py serve ...` |
+| Report e README | `tests/REPORT-2026-09-XX.md`, riga del README e cronologia |
 
 **Regola anti-contaminazione:** chi scrive la v2 NON deve leggere
 `holdout.json` fino alla valutazione finale. Verifica integrità:
