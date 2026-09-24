@@ -120,6 +120,16 @@ Quando una procedura dipende dal runtime, differenzia sempre in modo esplicito:
 - **File chiave:** `concilio-llm-prompt-legale/concilio-llm-prompt-legale/SKILL.md`, `concilio-llm-prompt-legale/concilio-llm-prompt-legale/references/`, `concilio-llm-prompt-legale/concilio-llm-prompt-legale/scripts/legal_panel.py`
 - **File installazione Claude:** `concilio-llm-prompt-legale/concilio-llm-prompt-legale.skill`
 
+### migliora-chiarezza-testi-legali
+
+- **Cartella:** `migliora-chiarezza-testi-legali/`
+- **Scopo:** rende più chiari atti giudiziari, pareri, diffide e contratti in italiano senza cambiarne il significato giuridico e senza perdere il registro forense (Garner diviso tra atti e contratti, cadenza ispirata a Manzoni, niente frasi tipiche dell'IA)
+- **Trigger:** revisione o riscrittura di contratti, clausole, pareri, diffide o atti giudiziari quando l'obiettivo è chiarezza, leggibilità, sintesi o minore ambiguità
+- **Comportamento:** routing a tabella verso `references/atti-e-pareri.md` o `references/contratti.md`; otto divieti (niente fatti, date, esimenti, intensificatori o fonti aggiunti; persone, garanzie e termini tecnici invariati); blocchi PRIMA/DOPO/Motivo, `TESTO RISCRITTO:` e `Sommario:`; sui testi lunghi lavora la prima parte e chiede se continuare
+- **File chiave:** `migliora-chiarezza-testi-legali/migliora-chiarezza-testi-legali/SKILL.md`, `references/`, `scripts/controlla_invarianti.py`
+- **File installazione Claude:** `migliora-chiarezza-testi-legali/migliora-chiarezza-testi-legali.skill`
+- **Test:** `migliora-chiarezza-testi-legali/tests/` (harness `clarity_eval.py`, runner `run_live.py` su modelli via OpenRouter, holdout congelato `holdout.json` da non leggere prima della valutazione finale). La cartella `research/` sta fuori dal pacchetto installabile.
+
 ### miglioratore-prompt-legale (Miglioratore di prompt legale)
 
 - **Cartella:** `miglioratore-prompt-legale/`
