@@ -1,0 +1,561 @@
+{
+  "server": "claude.ai BuddaLaw",
+  "prefisso": "mcp__claude_ai_BuddaLaw__",
+  "canale": "claude -p + proxy locale ANTHROPIC_BASE_URL (campo tools di /v1/messages)",
+  "tools": [
+    {
+      "description": "Verifica lo stato dell'accesso MCP dell'utente e restituisce i moduli disponibili.\n\nUsa questo tool all'inizio della conversazione per verificare che l'utente\nabbia un accesso attivo e per conoscere i moduli di ricerca disponibili.",
+      "name": "check_access",
+      "parameters": {
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "description": "Recupera il dettaglio completo di un contratto, incluso il template testuale,\nlo schema delle domande per la generazione e il messaggio informativo.\n\nUsa list_contracts o search_contracts per ottenere l'ID del contratto.",
+      "name": "get_contract",
+      "parameters": {
+        "properties": {
+          "contract_id": {
+            "description": "ID del contratto (ottenibile da list_contracts o search_contracts).",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "contract_id"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "description": "Recupera i requisiti contrattuali (generali e specifici) associati a un contratto.\nI Requisiti contrattuali sono degli oggetti così composti:\n- content: il contenuto del requisito vero e proprio (es. il contratto di locazione non può avere un deposito cauzionale maggiore di tre mensilità)\n- relevance MUST (obbligatori), SHOULD (raccomandati), COULD (facoltativi)\n- title: il titolo del requisito\n- reference_data: dati relativi alla fonte dell'obbligo\n- scope: general (se requisiti validi per tutti i contratti), specific (se validi per il solo contratto in corso)\n\nObiettivo: consentire un'analisi strutturata e rigorosa della conformità normativa di un contratto\n\nPrima di usare questo tool, ottieni l'ID del contratto con:\n- search_contracts: ricerca semantica per parole chiave\n- list_contract_categories → list_contracts: navigazione per categoria",
+      "name": "get_contract_requirements",
+      "parameters": {
+        "properties": {
+          "contract_id": {
+            "description": "ID del contratto. Ottienilo tramite search_contracts (ricerca semantica), oppure list_contract_categories + list_contracts (navigazione per categoria).",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "contract_id"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "description": "Recupera il testo completo di una sentenza o provvedimento.\n\nIl tool può essere invocato passando in alternativa:\n\n- dominio + idatto (più affidabili, solitamente sono disponibili da risultati di ricerca precedente)\n- numero + anno + ufficio\n\nSe errore di disambiguazione, richiama con categoria.\n\nIMPORTANTE: per le sentenze della Corte di Cassazione, dominio può essere\nsolo \"civile\" o \"penale\". Se il dominio originale è \"lavoro\", \"tributario\"\no altro, usa \"civile\" per le sentenze di Cassazione civile.\n\nLa risposta include il campo \"public_url\": è il link diretto alla pagina\nweb del provvedimento sulla piattaforma BuddaLaw, dove l'utente può\nconsultarne il testo integrale. Fornisci sempre questo URL all'utente come\nriferimento alla fonte del provvedimento.",
+      "name": "get_judgement",
+      "parameters": {
+        "properties": {
+          "anno": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Anno della sentenza."
+          },
+          "categoria": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Categoria giuridica per disambiguazione (se richiesto dopo errore 409)."
+          },
+          "dominio": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Dominio della banca dati. Obbligatorio con idatto. Valori: tributario, tributario-prassi, penale, civile, merito, privacy, lavoro, data-protection-authority, privacy-edpb, amministrativo, costituzionale, eu-case-law. Per sentenze di Cassazione usare solo 'civile' o 'penale'."
+          },
+          "idatto": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "ID univoco del documento (stringa; può arrivare come numero per provvedimenti Garante Privacy o dominio merito). Modo preferito per recuperare una sentenza."
+          },
+          "numero": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Numero della sentenza. Fallback se idatto non disponibile."
+          },
+          "ufficio": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Ufficio giudiziario (es. 'Cassazione civile')."
+          }
+        },
+        "type": "object"
+      }
+    },
+    {
+      "description": "Restituisce il testo vigente di UN articolo di legge italiana, scaricato da Normattiva (la banca dati ufficiale dello Stato), con rubrica, nome dell'atto e link alla fonte.\n\nQUANDO USARLO: quando conosci già l'articolo e l'atto e ti serve il testo\nesatto per citarlo, riportarlo o verificarlo (es. «art. 2043 c.c.»,\n«art. 26-bis c.p.c.», «art. 14 L. 689/1981», «art. 4 D.M. 55/2014»).\nPer CERCARE norme su un tema senza conoscere l'articolo usa invece\nsearch_articles. Non inventare il testo di un articolo: chiedilo qui.\n\nCOME INDICARE L'ATTO, in uno dei due modi:\n- act: per i codici, i testi unici e le disposizioni di attuazione\n  (es. act='codice_civile', article='2043');\n- act_type + act_year + act_number: per ogni altra legge o decreto\n  (es. act_type='legge', act_year=1981, act_number=689, article='14').\n  Un codice si può chiedere anche così, ma con act è più sicuro.\n\nLe date di vigenza: senza in_force_on il testo è quello vigente oggi; con\nin_force_on (AAAA-MM-GG) quello vigente a quella data.\n\nCOME LEGGERE LA RISPOSTA:\n- text e heading sono il testo e la rubrica dell'articolo; cita sempre\n  act_name e normattiva_url come fonte;\n- se c'è warning, leggilo prima di usare il testo: per esempio Normattiva\n  ha aperto un atto di tipo diverso da quello chiesto (stesso anno e\n  numero) e devi verificare che sia la norma intesa; oppure l'articolo è\n  abrogato, o alcuni commi chiesti non esistono;\n- not_found con message: l'articolo non c'è in quell'atto, o gli estremi\n  portano a un altro atto. Controlla tipo, anno e numero, non è un guasto.\n\nNON FUNZIONA per trattati, convenzioni internazionali e atti dell'Unione\neuropea (su Normattiva c'è solo la legge di ratifica), né per circolari e\nprassi.",
+      "name": "get_law_article",
+      "parameters": {
+        "properties": {
+          "act": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Codice o testo unico, per nome. Da usare in alternativa a act_type/act_year/act_number. Valori: codice_civile, codice_procedura_civile, codice_penale, codice_procedura_penale, costituzione, codice_della_strada, codice_del_consumo, codice_privacy, codice_assicurazioni_private, codice_crisi_impresa, codice_contratti_pubblici, codice_ambiente, codice_beni_culturali, codice_amministrazione_digitale, testo_unico_bancario, testo_unico_finanza, testo_unico_enti_locali, testo_unico_edilizia, testo_unico_sicurezza_lavoro, testo_unico_immigrazione, disposizioni_attuazione_cc, disposizioni_attuazione_cpc, disposizioni_attuazione_cpp."
+          },
+          "act_number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Numero dell'atto (es. 689 per la L. 689/1981). Obbligatorio con act_type."
+          },
+          "act_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Tipo dell'atto, per ogni legge o decreto che non è un codice dell'elenco di 'act'. Valori: legge, decreto_legislativo, decreto_legge, decreto_presidente_repubblica, decreto_presidente_consiglio_ministri, regio_decreto, decreto_ministeriale."
+          },
+          "act_year": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Anno dell'atto, quattro cifre (es. 1981 per la L. 689/1981). Obbligatorio con act_type."
+          },
+          "article": {
+            "description": "Numero dell'articolo come scritto nel testo di legge, con l'eventuale suffisso: '2043', '131-bis', '10-bis', '473-bis.12'. Senza 'art.'.",
+            "type": "string"
+          },
+          "in_force_on": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Facoltativo: data AAAA-MM-GG. Restituisce il testo vigente a quella data invece di quello di oggi: serve per fatti avvenuti quando la norma era diversa."
+          },
+          "paragraphs": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Facoltativo: solo questi commi dell'articolo, es. ['1', '3'] o ['82-101'] per un intervallo. Utile per articoli molto lunghi."
+          }
+        },
+        "required": [
+          "article"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "description": "Recupera il dettaglio completo di un atto processuale, incluso il template,\nle istruzioni per la generazione e lo schema del form.\n\nUsa list_processual_acts o search_processual_acts per ottenere l'ID dell'atto.",
+      "name": "get_processual_act",
+      "parameters": {
+        "properties": {
+          "act_id": {
+            "description": "ID dell'atto processuale (ottenibile da list_processual_acts o search_processual_acts).",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "act_id"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "description": "Restituisce le categorie di contratti disponibili su BuddaLaw.",
+      "name": "list_contract_categories",
+      "parameters": {
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "description": "Restituisce i contratti disponibili in una categoria specifica.\n\nUsa list_contract_categories per ottenere gli ID delle categorie.",
+      "name": "list_contracts",
+      "parameters": {
+        "properties": {
+          "category_id": {
+            "description": "ID della categoria (ottenibile da list_contract_categories).",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "category_id"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "description": "Restituisce le categorie di atti processuali disponibili (Civile, Penale, Lavoro...).",
+      "name": "list_processual_act_categories",
+      "parameters": {
+        "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "description": "Restituisce gli atti processuali disponibili in una categoria specifica.\n\nUsa list_processual_act_categories per ottenere gli ID delle categorie.",
+      "name": "list_processual_acts",
+      "parameters": {
+        "properties": {
+          "category_id": {
+            "description": "ID della categoria (ottenibile da list_processual_act_categories).",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "category_id"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "description": "Elenca gli uffici giudiziari di un dominio, con codice associato.\n\nUtile per filtrare le ricerche per ufficio: ogni voce ha `label` (nome\nleggibile), `value` (valore da usare come filtro ufficio nella ricerca) e\n`codice` (codice univoco dell'ufficio). La prima voce (\"Tutte le ...\") non\napplica alcun filtro.\n\n- merito: tribunali e corti d'appello;\n- amministrativo: T.A.R., Consiglio di Stato e C.G.A.R.S;\n- tributario: Corti di Giustizia Tributaria.",
+      "name": "list_uffici",
+      "parameters": {
+        "properties": {
+          "dominio": {
+            "description": "Dominio della banca dati. Valori: merito, amministrativo, tributario.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "dominio"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "description": "Cerca articoli di legge nei codici e raccolte normative italiane.\n\nDomini disponibili: codice civile, procedura civile, leggi speciali civili,\nprocedura civile speciale, codice penale, diritto tributario, privacy.",
+      "name": "search_articles",
+      "parameters": {
+        "properties": {
+          "domain": {
+            "description": "Dominio normativo. Valori: civil_code, civil_procedure, special_civil, special_civil_procedure, criminal, tax, privacy.",
+            "type": "string"
+          },
+          "max_results": {
+            "default": 5,
+            "description": "Numero massimo di risultati (1-10).",
+            "type": "integer"
+          },
+          "query": {
+            "description": "Testo della ricerca in linguaggio naturale.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query",
+          "domain"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "description": "Cerca sentenze e provvedimenti nelle banche dati giurisprudenziali di Buddalaw.\n\nObiettivo: Consentire all'utente di effettuare ricerche di giurisprudenza (es. sentenze dei tribunali di merito, sentenze di cassazione, ecc.)\n\nLe banche dati disponibili sono:\n- tributari: Sentenze tributarie (Corti Giustizia I° e II° grado)\n- prassi: Prassi tributaria (Circolari, Provvedimenti, Interpelli Agenzia Entrate)\n- penale: Cassazione penale\n- civile: Cassazione civile\n- merito: Sentenze di merito (Tribunali e corti di appello)\n- privacy: Provvedimenti del Garante della Privacy\n- amministrativo: Sentenze amministrative\n- costituzionale: Pronunce della Corte Costituzionale (sentenze e ordinanze)\n- eu-case-law: Giurisprudenza comunitaria (Corte di Giustizia UE e Tribunale UE)\n\nLa scelta della Banca dati avviene tramite il parametro \"search_category\" che accetta esattamente uno dei valori sopra indicati\n\nFiltro per ufficio (solo 'merito', 'amministrativo', 'tributari'): usa il\nparametro 'codiceufficio'. Per ottenere il codice corretto chiama prima il tool\n'list_uffici' col dominio corrispondente (merito / amministrativo / tributario):\nogni voce ha 'label' (nome leggibile), 'value' e 'codice' — passa 'codice' come\n'codiceufficio'. Per le altre banche dati il filtro per ufficio non ha senso e va\nomesso (la cassazione è già distinta da civile/penale, la Corte Costituzionale e\nil Garante Privacy sono organi unici, la giurisprudenza UE non si distingue per\nufficio).\n\nOgni risultato include il campo \"public_url\": è il link diretto alla pagina\nweb del provvedimento sulla piattaforma BuddaLaw, dove l'utente può\nconsultarne il testo integrale. Cita questo URL quando proponi una sentenza\nall'utente, come riferimento alla fonte.",
+      "name": "search_case_law",
+      "parameters": {
+        "properties": {
+          "anno": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Filtra per anno."
+          },
+          "codiceufficio": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Filtra per codice univoco dell'ufficio (match esatto). Applicabile SOLO alle banche dati 'merito', 'amministrativo' e 'tributari'. Il codice si ottiene dal tool 'list_uffici' (campo 'codice' della voce desiderata, usando il 'dominio' corrispondente: merito / amministrativo / tributario). Per le altre banche dati lascialo vuoto."
+          },
+          "data_deposito": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Filtra per data deposito."
+          },
+          "giudice": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Filtra per giudice (solo per 'merito')."
+          },
+          "max_results": {
+            "default": 5,
+            "description": "Numero massimo di risultati (1-20).",
+            "type": "integer"
+          },
+          "numero": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Filtra per numero sentenza."
+          },
+          "query": {
+            "description": "Testo della ricerca in linguaggio naturale.",
+            "type": "string"
+          },
+          "search_category": {
+            "description": "Banca Dati da interrogare. Valori: tributari, prassi, penale, civile, merito, privacy, amministrativo, costituzionale, eu-case-law.",
+            "type": "string"
+          },
+          "semantic_weight": {
+            "default": 0.7,
+            "description": "Peso ricerca semantica vs keyword (0.0-1.0). La ricerca è ibrida, vale a dire che per ogni query vengono effettuate sia ricerche NLP pure, sia ricerche Keyword classiche.",
+            "type": "number"
+          }
+        },
+        "required": [
+          "query",
+          "search_category"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "description": "Ricerca semantica nei contratti BuddaLaw.\n\nData una query in linguaggio naturale, restituisce i contratti più rilevanti.\nUsa quando l'utente descrive un'esigenza senza conoscere il nome del contratto.",
+      "name": "search_contracts",
+      "parameters": {
+        "properties": {
+          "max_results": {
+            "default": 5,
+            "description": "Numero massimo di risultati.",
+            "type": "integer"
+          },
+          "query": {
+            "description": "Testo della ricerca in linguaggio naturale.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "description": "Ricerca semantica negli atti processuali BuddaLaw.\n\nData una query in linguaggio naturale, restituisce gli atti più rilevanti.\nUsa quando l'utente descrive un'esigenza processuale senza conoscere il nome esatto.",
+      "name": "search_processual_acts",
+      "parameters": {
+        "properties": {
+          "max_results": {
+            "default": 5,
+            "description": "Numero massimo di risultati.",
+            "type": "integer"
+          },
+          "query": {
+            "description": "Testo della ricerca in linguaggio naturale.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "description": "Trova sentenze il cui caso concreto è semanticamente simile alla query.\n\nA differenza di 'search_case_law' (che cerca nei chunk del testo), questo tool\ncerca per similarità sul *caso concreto* della sentenza (una sintesi normalizzata\ndel fatto), restituendo un risultato per sentenza. È il flusso ottimale per\ndomande del tipo \"trovami casi simili a...\" oppure \"come viene trattato il caso X\".\n\nPuoi restringere con i filtri: per il filtro esatto sull'ufficio usa\n'codiceufficio', ottenendolo dal tool 'list_uffici' (stesso 'dominio'). Per il\nmerito è disponibile anche il filtro 'giudice'.\n\nOgni risultato include il campo \"public_url\": il link diretto alla pagina del\nprovvedimento sulla piattaforma BuddaLaw. Cita questo URL quando proponi una\nsentenza all'utente, come riferimento alla fonte.",
+      "name": "search_similar_cases",
+      "parameters": {
+        "properties": {
+          "anno": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Filtra per anno della sentenza."
+          },
+          "codiceufficio": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Filtra per codice univoco dell'ufficio (match esatto). Il codice si ottiene dal tool 'list_uffici' (campo 'codice', con lo stesso 'dominio'). Applicabile a merito/amministrativo/tributario."
+          },
+          "data_deposito": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Filtra per data di deposito."
+          },
+          "dominio": {
+            "default": "merito",
+            "description": "Banca dati su cui cercare i casi simili. Oggi è supportato solo 'merito' (default). In futuro 'amministrativo' e 'tributario'.",
+            "type": "string"
+          },
+          "giudice": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Filtra per giudice (ricerca parziale, es. 'Rossi' trova 'MARIO ROSSI'). Solo per 'merito'."
+          },
+          "max_results": {
+            "default": 10,
+            "description": "Numero massimo di risultati (1-20).",
+            "type": "integer"
+          },
+          "numero": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Filtra per numero sentenza."
+          },
+          "query": {
+            "description": "Descrizione in linguaggio naturale del caso di cui cercare precedenti simili (es. 'licenziamento per superamento del periodo di comporto').",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      }
+    }
+  ],
+  "mancanti_attesi": [],
+  "extra_non_attesi": []
+}
