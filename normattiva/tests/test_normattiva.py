@@ -2,7 +2,7 @@
 Suite di test strutturali per la skill normattiva.
 
 Testa la funzione build_urn_link() che implementa la logica URN-NIR
-documentata in normattiva/normattiva/SKILL.md e references/lookup-extended.md.
+documentata in normattiva/normattiva/SKILL.md e references/atti.md.
 
 Esecuzione:
     pip install pytest
@@ -19,6 +19,8 @@ BASE_URL = "https://www.normattiva.it/uri-res/N2Ls?urn:nir:"
 
 FORBIDDEN_ENCODINGS = ["%3A", "%3B", "%7E", "%21", "%3D"]
 
+ATTI_MD = Path(__file__).parent.parent / "normattiva" / "references" / "atti.md"
+
 
 def build_urn_link(
     tipo: str,
@@ -30,12 +32,16 @@ def build_urn_link(
     lettera: str | None = None,
     art_suffix: str | None = None,
     data_storica: str | None = None,
+    emettitore: str = "stato",
 ) -> str:
     """
     Implementa la logica di composizione URN-NIR della skill normattiva.
 
     Pattern:
-        stato:{tipo}:{data};{numero}[:{allegato}][~art{N}[suffix]][!vig=AAAA-MM-GG]
+        {emettitore}:{tipo}:{data};{numero}[:{allegato}][~art{N}[suffix]]{versione}
+
+    versione: `!vig=` (testo in vigore il giorno del clic, default),
+    `!vig=AAAA-MM-GG` (testo a una data) oppure `@originale` (testo pubblicato in G.U.).
 
     Regole:
     - allegato (:N) va dopo il numero per i Regi Decreti storici (c.c., c.p.c., c.p., l.fall.)
@@ -45,11 +51,14 @@ def build_urn_link(
       `-comN` e `-letX` non producono alcun effetto sul portale (pagina
       byte-identica a quella senza) e danno errore sull'API. Il comma si
       indica nell'etichetta del link, non nell'URL.
-    - !vig=data va sempre in coda, dopo tutto il resto
+    - il selettore di versione va sempre in coda, dopo l'articolo: nei codici in
+      allegato scritto prima dell'articolo apre l'art. 1 del decreto (controllo 2026-10-07)
+    - emettitore: `stato`; per d.m. il ministero (es. `ministero.giustizia`),
+      per i D.P.C.M. `presidenza.consiglio.ministri`, con tipo `decreto`
     - Costituzione: nessun numero nell'URN
     - Nessun URL-encoding di : ; ~ ! =
     """
-    urn = f"stato:{tipo}:{data_atto}"
+    urn = f"{emettitore}:{tipo}:{data_atto}"
 
     if numero is not None:
         urn += f";{numero}"
@@ -63,7 +72,11 @@ def build_urn_link(
         # comma e lettera sono deliberatamente ignorati: vedi docstring
         urn += fragment
 
-    if data_storica is not None:
+    if data_storica is None:
+        urn += "!vig="
+    elif data_storica == "originale":
+        urn += "@originale"
+    else:
         urn += f"!vig={data_storica}"
 
     return BASE_URL + urn
@@ -99,6 +112,7 @@ def test_url_corretto(case):
         lettera=case["lettera"],
         art_suffix=case["art_suffix"],
         data_storica=case["data_storica"],
+        emettitore=case["emettitore"],
     )
     assert url == case["url_atteso"], (
         f"\n  Atteso:  {case['url_atteso']}"
@@ -110,7 +124,7 @@ def test_url_corretto(case):
 def test_formato_base(case):
     """Verifica che l'URL inizi sempre con il prefisso corretto."""
     url = case["url_atteso"]
-    assert url.startswith("https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:"), (
+    assert url.startswith(f"https://www.normattiva.it/uri-res/N2Ls?urn:nir:{case['emettitore']}:"), (
         f"URL non inizia con il prefisso corretto: {url}"
     )
 
@@ -158,8 +172,8 @@ def test_nessun_allegato_per_atti_moderni(case):
 
 
 def test_vig_presente_per_versioni_storiche(case):
-    """Se data_storica è impostata, !vig= deve essere nell'URL."""
-    if case.get("data_storica"):
+    """Se data_storica è una data, !vig=data deve essere nell'URL."""
+    if case.get("data_storica") and case["data_storica"] != "originale":
         expected = f"!vig={case['data_storica']}"
         assert expected in case["url_atteso"], (
             f"Parametro !vig= mancante o data errata in: {case['url_atteso']}\n"
@@ -167,12 +181,23 @@ def test_vig_presente_per_versioni_storiche(case):
         )
 
 
-def test_nessun_vig_per_norme_correnti(case):
-    """Se data_storica è null, !vig= NON deve comparire nell'URL."""
-    if case.get("no_vig") or case.get("data_storica") is None:
-        assert "!vig=" not in case["url_atteso"], (
-            f"!vig= inatteso in norma senza data storica: {case['url_atteso']}"
+def test_vig_vuoto_per_norme_correnti(case):
+    """Se data_storica è null, l'URL finisce con `!vig=` senza data.
+
+    Senza suffisso il portale apre la vista multivigente, che può mostrare
+    modifiche con decorrenza futura (art. 2 d.P.R. 633/1972, controllo 2026-10-07).
+    """
+    if case.get("data_storica") is None:
+        assert case["url_atteso"].endswith("!vig="), (
+            f"Norma vigente senza `!vig=` in coda: {case['url_atteso']}"
         )
+
+
+def test_originale_in_coda(case):
+    """Il testo originario si chiede con `@originale` dopo l'articolo."""
+    if case.get("data_storica") == "originale":
+        assert case["url_atteso"].endswith("@originale"), case["url_atteso"]
+        assert "!vig=" not in case["url_atteso"], case["url_atteso"]
 
 
 def test_vig_in_coda(case):
@@ -182,7 +207,7 @@ def test_vig_in_coda(case):
         vig_pos = url.index("!vig=")
         after_vig = url[vig_pos + len("!vig="):]
         # Dopo !vig= ci deve essere solo la data (AAAA-MM-GG), nient'altro
-        assert re.match(r"^\d{4}-\d{2}-\d{2}$", after_vig), (
+        assert re.match(r"^(\d{4}-\d{2}-\d{2})?$", after_vig), (
             f"!vig= non è in coda o data malformata in: {url}"
         )
 
@@ -233,7 +258,7 @@ def test_tipo_atto_corretto(case):
     """Verifica che il tipo atto nell'URL corrisponda a quello nel dataset."""
     url = case["url_atteso"]
     tipo = case["tipo"]
-    assert f"stato:{tipo}:" in url, (
+    assert f"{case['emettitore']}:{tipo}:" in url, (
         f"Tipo atto '{tipo}' non trovato in: {url}"
     )
 
@@ -255,19 +280,35 @@ def test_costituzione_senza_numero(case):
         )
 
 
+def test_atto_presente_nella_tabella_della_skill(case):
+    """L'URN base del caso deve comparire in references/atti.md.
+
+    Lega il dataset alla tabella che il modello usa davvero: se una riga di
+    atti.md cambia, il caso che la usa diventa rosso.
+    """
+    base = f"urn:nir:{case['emettitore']}:{case['tipo']}:{case['data_atto']}"
+    if case["numero"]:
+        base += f";{case['numero']}"
+    if case["allegato"]:
+        base += f":{case['allegato']}"
+    assert f"`{base}`" in ATTI_MD.read_text(encoding="utf-8"), (
+        f"URN base non presente in atti.md: {base}"
+    )
+
+
 def test_id_unici():
     """Verifica che tutti gli ID nel dataset siano unici."""
     ids = [c["id"] for c in CASES]
     assert len(ids) == len(set(ids)), f"ID duplicati: {[x for x in ids if ids.count(x) > 1]}"
 
 
-def test_totale_100_casi():
-    """Verifica che il dataset contenga esattamente 100 casi."""
-    assert len(CASES) == 100, f"Attesi 100 casi, trovati {len(CASES)}"
+def test_totale_103_casi():
+    """Verifica che il dataset contenga esattamente 103 casi."""
+    assert len(CASES) == 103, f"Attesi 103 casi, trovati {len(CASES)}"
 
 
 def test_categorie_presenti():
-    """Verifica che tutte le 8 categorie siano rappresentate."""
+    """Verifica che tutte le 9 categorie siano rappresentate."""
     cats = {c["cat"] for c in CASES}
-    expected = {"A", "B", "C", "D", "E", "F", "G", "H"}
+    expected = {"A", "B", "C", "D", "E", "F", "G", "H", "I"}
     assert cats == expected, f"Categorie mancanti: {expected - cats}"

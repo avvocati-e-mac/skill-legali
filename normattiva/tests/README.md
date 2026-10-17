@@ -8,10 +8,12 @@ Questa cartella contiene **tre** livelli di test per verificare la correttezza d
 
 ```
 tests/
-├── cases.json              ← Dataset: 100 casi di test URN-NIR
+├── cases.json              ← Dataset: 103 casi di test URN-NIR
 ├── test_normattiva.py      ← Livello A: test strutturali (pytest, offline)
-├── test_claude_skill.py    ← Livello B: 15 test end-to-end via Claude API
+├── test_claude_skill.py    ← Livello B: 17 test end-to-end via Claude API
 ├── test_api_live.py        ← Livello C: conformità contro l'API Normattiva (rete)
+
+../normattiva/scripts/verifica.py ← verifica sul portale (d.m., D.P.C.M. e casi che l'API non sa leggere)
 └── README.md
 ```
 
@@ -58,7 +60,25 @@ Cosa verifica:
    inesistente). Un controllo che non sa dire di no non è un controllo.
 3. Che le sintassi che la skill non deve generare (`-com`, `-let`, `~art N-bis`,
    `~all`, `~pre`) **diano errore**. Se un giorno diventassero valide, il test
-   diventa rosso: sarebbe il momento di rimetterle in `lookup-extended.md`.
+   diventa rosso: sarebbe il momento di rimetterle nella skill.
+4. Che **ogni riga `urn:nir:stato:` di `references/atti.md`** (157 atti) apra
+   l'articolo campione (art. 2; art. 1 per le leggi di un solo articolo).
+
+Prima di interrogare l'API il test toglie `!vig=` vuoto e `@originale` dai link:
+l'API rifiuta il primo e ignora il secondo, mentre nel link del portale sono la
+forma giusta. Se l'API risponde 403 o 429 la sessione si ferma: nessun ritento.
+
+**Cosa l'API non sa verificare** (si verifica sul portale con lo script):
+
+- decreti ministeriali e D.P.C.M. (`urn:nir:ministero...`, `urn:nir:presidenza...`):
+  l'API li rifiuta con codice 1003 anche quando il link è giusto;
+- 4 righe registrate in `LIMITI_API` (disposizioni transitorie della
+  Costituzione, l. 76/2016, l. 206/2021, r.d.l. 1578/1933): risultano `xfail`.
+
+```bash
+cd normattiva/normattiva
+python3 scripts/verifica.py < testo-con-link.md    # al massimo 30 link per volta
+```
 
 Cosa **non** verifica, e perché:
 
@@ -68,8 +88,10 @@ Cosa **non** verifica, e perché:
 | Il portale | Risponde 200 a tutto |
 | L'uguaglianza fra due URN | `~art9999` restituisce la stessa pagina di `~art1`: trovarli uguali non prova nulla |
 
-Esito atteso al 2026-08-06: **94 verificati, 3 saltati** (articoli abrogati, che
-restituiscono la sola formula di abrogazione), 0 fallimenti.
+Esito al 2026-10-17: **260 verificati, 3 saltati** (articoli abrogati, che
+restituiscono la sola formula di abrogazione), 4 `xfail` per i limiti dell'API,
+0 fallimenti. Lo stesso giorno lo script ha dato `VERIFICATO` sul portale per le
+4 righe in `xfail` e per i 10 d.m./D.P.C.M. della tabella.
 
 **Avvertenza:** l'endpoint è un servizio interno del portale, non un'API
 pubblica versionata. Può cambiare senza preavviso, e un rosso qui non significa
@@ -80,7 +102,7 @@ settimana.
 
 ## Livello A – Test strutturali (veloce, gratuito)
 
-Verifica che la funzione `build_urn_link()` produca URL URN-NIR corretti per tutti i 100 casi del dataset. Non richiede API key, si esegue in ~1 secondo.
+Verifica che la funzione `build_urn_link()` produca URL URN-NIR corretti per tutti i 103 casi del dataset, e che l'URN base di ogni caso compaia davvero in `references/atti.md` (così un cambio nella tabella della skill rende rosso il caso che la usa). Non richiede API key, si esegue in ~1 secondo.
 
 **Requisiti:**
 ```bash
@@ -93,24 +115,25 @@ cd normattiva/tests
 pytest test_normattiva.py -v
 ```
 
-**Output atteso:** `1403 passed`
+**Output atteso:** `1754 passed`
 
 ### Categorie dei 100 casi
 
 | Cat | N | Descrizione |
 |-----|---|-------------|
-| A   | 15 | Norme correnti (quick lookup) |
+| A   | 15 | Norme correnti (atti più citati) |
 | B   | 10 | Codici storici con allegato `:N` |
 | C   | 15 | Partizioni: bis/ter, comma, lettera |
 | D   | 20 | Versioni storiche con `!vig=` |
 | E   | 10 | Norme abrogate (l.fall., D.Lgs. 50/2016) |
-| F   | 15 | Norme da lookup-extended |
-| G   | 10 | Regression: nessun `!vig=` indesiderato |
+| F   | 15 | Norme dalla tabella completa (`atti.md`) |
+| G   | 10 | Norme vigenti: `!vig=` senza data in coda |
 | H   | 5  | Edge case (Cost. senza numero, ordine parametri) |
+| I   | 3  | d.m. e D.P.C.M. (emettitore al posto di `stato`), `@originale` |
 
 ---
 
-## Livello B – Test Claude API (spot check su 15 casi critici)
+## Livello B – Test Claude API (spot check su 17 casi critici)
 
 Chiama Claude via API con la skill caricata come system prompt e verifica che le risposte contengano i link attesi.
 
@@ -122,13 +145,13 @@ export ANTHROPIC_API_KEY=sk-ant-...
 
 **Esecuzione:**
 ```bash
-python test_claude_skill.py                  # tutti i 15 casi
+python test_claude_skill.py                  # tutti i 17 casi
 python test_claude_skill.py --verbose        # mostra la risposta completa
 python test_claude_skill.py --case B03       # esegue solo il caso B03
 python test_claude_skill.py --delay 2        # 2 secondi tra le chiamate
 ```
 
-**Output atteso:** `15/15 passed`
+**Output atteso:** `17/17 passed`
 
 ### Casi del Livello B
 
@@ -148,7 +171,9 @@ python test_claude_skill.py --delay 2        # 2 secondi tra le chiamate
 | B12 | Costituzione: `art. 24 Cost.` → nessun numero nell'URN |
 | B13 | Articolo bis: `art. 30bis c.p.c.` |
 | B14 | D.P.R.: `art. 1 D.P.R. 380/2001` → tipo `decreto.del.presidente.della.repubblica` |
-| B15 | Norma non in quick lookup: `art. 3 D.Lgs. 36/2023` → data `2023-03-31` |
+| B15 | Norma dalla tabella completa: `art. 3 D.Lgs. 36/2023` → data `2023-03-31` |
+| B16 | Decreto ministeriale: `art. 4 d.m. 55/2014` → `urn:nir:ministero.giustizia:decreto` |
+| B17 | Annotazione: testo identico, apostrofo tipografico conservato, punto della sigla fuori dal link |
 
 ---
 

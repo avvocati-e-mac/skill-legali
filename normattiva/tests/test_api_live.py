@@ -32,6 +32,17 @@ Cosa NON viene verificato, e perché
 - **Il portale**: risponde 200 a tutto.
 - **L'uguaglianza fra due URN**: `~art9999` restituisce la stessa pagina di
   `~art1` e `262:9` la stessa di `262`. Trovarli uguali non prova nulla.
+- **Decreti ministeriali e D.P.C.M.** (`urn:nir:ministero...`,
+  `urn:nir:presidenza...`): l'API li rifiuta (codice 1003) anche quando il
+  portale apre l'articolo giusto. Si verificano con `scripts/verifica.py`.
+
+Il selettore di versione
+------------------------
+I link della skill finiscono con `!vig=` (testo vigente) o `@originale`.
+L'API rifiuta `!vig=` senza data e ignora `@originale`: prima di interrogarla
+li si toglie (`urn_per_api`). `!vig=AAAA-MM-GG` invece resta.
+
+Se l'API risponde 403 o 429 la sessione si ferma subito: nessun ritento.
 """
 
 import json
@@ -46,7 +57,7 @@ import pytest
 
 API = ("https://api.normattiva.it/t/normattiva.api/bff-opendata"
        "/v1/api/v1/atto/dettaglio-atto-urn")
-PAUSA = 0.2   # cortesia verso un servizio pubblico gratuito
+PAUSA = 0.5   # cortesia verso un servizio pubblico gratuito
 TIMEOUT = 30
 
 live = pytest.mark.skipif(
@@ -75,6 +86,10 @@ def interroga(urn: str) -> tuple[int, str]:
         grezzo, stato = e.read(), e.code
     finally:
         time.sleep(PAUSA)
+
+    if stato in (403, 429):
+        pytest.exit(f"Normattiva ha rifiutato la richiesta (HTTP {stato}): mi fermo, "
+                    f"nessun ritento. Riprova più tardi, a mano.", returncode=3)
 
     try:
         corpo = json.loads(grezzo)
@@ -130,6 +145,14 @@ def e_preambolo(testo: str) -> bool:
     return bool(_PREAMBOLO.search(testo[:300]))
 
 
+def urn_per_api(url_o_urn: str) -> str:
+    """Toglie il prefisso del portale e i selettori che l'API non gestisce."""
+    urn = url_o_urn.split("N2Ls?", 1)[-1]
+    if urn.endswith("!vig="):
+        urn = urn[: -len("!vig=")]
+    return urn.replace("@originale", "")
+
+
 def carica_casi():
     return json.loads((Path(__file__).parent / "cases.json").read_text(encoding="utf-8"))
 
@@ -140,7 +163,8 @@ ABROGATO = re.compile(r"\bABROGAT", re.IGNORECASE)
 
 @live
 @pytest.mark.parametrize(
-    "caso", [c for c in carica_casi() if c.get("articolo")],
+    "caso", [c for c in carica_casi()
+             if c.get("articolo") and c.get("emettitore", "stato") == "stato"],
     ids=lambda c: c["id"],
 )
 def test_l_articolo_restituito_e_quello_richiesto(caso):
@@ -150,7 +174,7 @@ def test_l_articolo_restituito_e_quello_richiesto(caso):
     Con l'allegato sbagliato risponde 200 e restituisce il preambolo del regio
     decreto, che sembra un successo.
     """
-    urn = caso["url_atteso"].split("N2Ls?", 1)[1]
+    urn = urn_per_api(caso["url_atteso"])
     stato, testo = interroga(urn)
 
     assert stato == 200, f"{caso['id']} {caso['desc']}: HTTP {stato} per {urn}"
@@ -224,12 +248,12 @@ def test_le_sintassi_che_la_skill_non_deve_generare(descrizione, urn):
     """Documenta perché comma, lettera e partizioni sono fuori dalla skill.
 
     Se un giorno Normattiva le implementasse, questo test diventerebbe rosso:
-    sarebbe il momento di rimetterle in `lookup-extended.md`.
+    sarebbe il momento di rimetterle nella skill (SKILL.md, «Come si scrive l'articolo»).
     """
     stato, _ = interroga(urn)
     assert stato != 200, (
         f"{descrizione}: ora l'API accetta questa sintassi ({urn}). "
-        f"Rivedere la sezione «Partizioni sotto-articolo» di lookup-extended.md."
+        f"Rivedere la sezione «Come si scrive l'articolo» di SKILL.md."
     )
 
 
@@ -239,4 +263,59 @@ def test_il_suffisso_attaccato_funziona():
     stato, testo = interroga("urn:nir:stato:regio.decreto:1942-03-16;262:2~art2645ter")
     assert stato == 200 and numero_articolo(testo) == "2645ter", (
         f"~art2645ter dovrebbe funzionare: HTTP {stato}, testo {testo[:80]!r}"
+    )
+
+
+# ── Tutta la tabella degli atti della skill (references/atti.md) ──────────────
+
+ATTI_MD = Path(__file__).parent.parent / "normattiva" / "references" / "atti.md"
+
+
+def righe_atti():
+    """(sigla, URN base) per ogni riga `urn:nir:stato:` di atti.md."""
+    righe = []
+    for riga in ATTI_MD.read_text(encoding="utf-8").splitlines():
+        m = re.match(r"\|\s*([^|]+?)\s*\|.*`(urn:nir:stato:[^`]+)`", riga)
+        if m:
+            righe.append((m.group(1), m.group(2)))
+    return righe
+
+
+# Righe giuste che l'API non sa confermare: verificate sul portale con
+# scripts/verifica.py il 2026-10-17 (esito VERIFICATO per tutte).
+LIMITI_API = {
+    "urn:nir:stato:costituzione:1947-12-27:1":
+        "disposizioni transitorie: l'API intesta l'articolo in numeri romani (XII)",
+    "urn:nir:stato:legge:2016-05-20;76":
+        "legge di un solo articolo: ~art1 restituisce il preambolo (§3.2)",
+    "urn:nir:stato:legge:2021-11-26;206":
+        "legge di un solo articolo: ~art1 restituisce il preambolo (§3.2)",
+    "urn:nir:stato:regio.decreto.legge:1933-11-27;1578":
+        "l'API risponde 404, il portale apre l'art. 2",
+}
+
+
+@live
+@pytest.mark.parametrize("sigla,base", righe_atti(), ids=[s for s, _ in righe_atti()])
+def test_ogni_riga_di_atti_md_apre_un_articolo(sigla, base):
+    """Ogni URN base della tabella deve restituire l'articolo campione.
+
+    Campione: art. 2, come nei controlli dell'autore; art. 12 per le
+    disposizioni transitorie della Costituzione; art. 1 (non preambolo) per gli
+    atti di un solo articolo, solo se l'art. 2 non c'è.
+    """
+    if base in LIMITI_API:
+        pytest.xfail(f"{sigla}: {LIMITI_API[base]} — verificata sul portale")
+    campione = "12" if base.endswith("1947-12-27:1") else "2"
+    stato, testo = interroga(f"{base}~art{campione}")
+    if stato != 200 and campione == "2":
+        campione = "1"
+        stato, testo = interroga(f"{base}~art1")
+
+    assert stato == 200, f"{sigla}: HTTP {stato} per {base}"
+    if ABROGATO.search(testo) and len(testo) < 400:
+        return  # l'articolo esiste ed è abrogato: la coordinata è giusta
+    assert not e_preambolo(testo), f"{sigla}: preambolo invece dell'art. {campione} ({base})"
+    assert numero_articolo(testo) == campione, (
+        f"{sigla}: chiesto art. {campione}, ricevuto {numero_articolo(testo)!r} ({base})"
     )

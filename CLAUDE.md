@@ -46,16 +46,15 @@ Quando una procedura dipende dal runtime, differenzia sempre in modo esplicito:
 - **Scopo:** genera link cliccabili verso [Normattiva.it](https://www.normattiva.it) per ogni riferimento normativo italiano nel testo, usando il formato URN-NIR
 - **Trigger:** qualsiasi risposta che contiene citazioni normative (art. X c.c., d.lgs., legge n., r.d., d.p.r., Cost., ecc.)
 - **Comportamento:** l'assistente non produce riferimenti normativi "nudi": ogni citazione diventa un link inline
-- **File chiave:** `normattiva/normattiva/SKILL.md`, `normattiva/normattiva/references/lookup-extended.md`, `normattiva/normattiva/references/api-e-verifica.md`
+- **File chiave:** `normattiva/normattiva/SKILL.md`, `normattiva/normattiva/references/atti.md` (tabella di 167 atti), `references/versioni-e-portale.md`, `references/verifica.md`, `references/api-e-verifica.md`, `scripts/verifica.py`
 - **File installazione Claude:** `normattiva/normattiva.skill`
-- **Lookup verificata contro l'API Normattiva il 2026-08-06.** Ogni voce e' stata
-  interrogata davvero e restituisce l'articolo richiesto. Il metodo, i limiti e le
-  trappole note (un URN sbagliato apre spesso una pagina plausibile) sono in
-  `references/api-e-verifica.md`.
-- **Prima di modificare la lookup**, esegui il livello C dei test:
-  `NORMATTIVA_LIVE=1 pytest normattiva/tests/test_api_live.py`. I test strutturali
-  da soli non possono accorgersi di un URN formalmente perfetto che punta al nulla:
-  e' cosi' che due errori sono sopravvissuti fino al 2026-08-06.
+- **Versione 3 (convegno di Ravenna, 7 ottobre 2026)**, sviluppata in Cowork come `demora-normattiva` e adottata qui il 2026-10-17. Il 2026-10-17 tutte le righe di `atti.md` sono state verificate: le 157 righe `urn:nir:stato:` con l'API, i 10 d.m./D.P.C.M. e 4 casi che l'API non sa leggere sul portale con `scripts/verifica.py`.
+- **L'API non è l'unico oracolo:** rifiuta d.m. e D.P.C.M. (`urn:nir:ministero...`, codice 1003) anche quando il link è giusto. Per quelli vale solo `scripts/verifica.py`, che apre il portale e confronta atto, allegato, articolo e versione.
+- **Prima di modificare `atti.md`**, esegui il livello C dei test:
+  `NORMATTIVA_LIVE=1 pytest normattiva/tests/test_api_live.py` (si ferma su 403/429,
+  nessun ritento) e, per le righe non `stato`, lo script sul portale. I test
+  strutturali da soli non possono accorgersi di un URN formalmente perfetto che
+  punta al nulla: e' cosi' che due errori sono sopravvissuti fino al 2026-08-06.
 
 ### buddalaw
 
