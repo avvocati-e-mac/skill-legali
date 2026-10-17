@@ -1,0 +1,16 @@
+{
+  "_nota": "Verdetti attesi per atto_test.md. Il campo 'marcatore' identifica la voce nell'inventario (gli ID C.. dipendono dall'ordine). 'accettabili' elenca i verdetti corretti. Le verifiche reali sono del 17.10.2026 (BuddaLaw, Italgiure).",
+  "voci": [
+    {"marcatore": "n. 222", "accettabili": ["VERIFICATA"], "gravita": null, "perche": "Verbatim identico al punto 4.4.2 (ECLI:IT:COST:2023:222)"},
+    {"marcatore": "giurisprudenza pacifica", "accettabili": ["AFFERMAZIONE DA SOSTENERE"], "gravita": "GRAVE", "perche": "Nessuna fonte; inoltre la tesi non corrisponde al criterio del merito (attitudine conciliativa)"},
+    {"marcatore": "n. 18285", "accettabili": ["VERIFICATA"], "gravita": null, "perche": "Identica alla massima Rv. 641077-01; nel testo (§ 5.1) principio di diritto conforme"},
+    {"marcatore": "n. 18405", "accettabili": ["ESTREMI DA CORREGGERE"], "gravita": "GRAVE", "perche": "È Sez. II, non III (ECLI:IT:CASS:2025:18405CIV); verbatim identico"},
+    {"marcatore": "n. 13143", "accettabili": ["ESISTE MA NON DICE CIÒ"], "gravita": "BLOCCANTE", "perche": "Chimera: le SU 13143/2022 riguardano la P.A. e la vigilanza sulle fiduciarie, e affermano la solidarietà anche con titoli diversi"},
+    {"marcatore": "n. 16396", "accettabili": ["ESISTE MA NON DICE CIÒ"], "gravita": "BLOCCANTE", "perche": "Principio rovesciato: la sentenza afferma che è «legittima la disposta condanna solidale in forza di titoli eterogenei»"},
+    {"marcatore": "n. 28947", "accettabili": ["VERBATIM ALTERATO"], "gravita": "GRAVE", "perche": "Il testo dice «hanno comunque contribuito, per colpa, alla determinazione dell'evento dannoso»; la pronuncia è inoltre sfavorevole al professionista"},
+    {"marcatore": "n. 98765", "accettabili": ["NON REPERITA", "INESISTENTE"], "gravita": "BLOCCANTE", "perche": "Pronuncia inventata: il numero supera la numerazione annua della Cassazione civile. INESISTENTE solo con prova positiva (due fonti, una ufficiale); altrimenti NON REPERITA, con gravità bloccante finché non la si trova"},
+    {"marcatore": "n. 14502", "accettabili": ["VERIFICATA"], "gravita": null, "perche": "Verbatim identico al § 9.1; nota: il principio è affermato per l'appaltatore"},
+    {"marcatore": "art. 2226", "accettabili": ["ESISTE MA NON DICE CIÒ"], "gravita": "BLOCCANTE", "perche": "Cass. SU 15781/2005, Rv. 583089-01: art. 2226 inapplicabile al direttore dei lavori"},
+    {"marcatore": "art. 1669, comma 4", "accettabili": ["ESTREMI DA CORREGGERE"], "gravita": "GRAVE", "perche": "L'art. 1669 c.c. ha due commi; il termine di denuncia è nel primo"}
+  ]
+}
