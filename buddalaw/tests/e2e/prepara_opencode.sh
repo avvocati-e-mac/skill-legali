@@ -4,8 +4,8 @@
 #   bash buddalaw/tests/e2e/prepara_opencode.sh
 #
 # Crea buddalaw/tests/e2e/.opencode-sandbox/ (esclusa da git) con:
-#   - opencode.json: BuddaLaw come server MCP remoto (OAuth), il server searxng
-#     della configurazione globale spento, skill diverse da buddalaw negate,
+#   - opencode.json: BuddaLaw come server MCP remoto (OAuth), gli altri server
+#     della configurazione globale spenti, skill diverse da buddalaw negate,
 #     bash/modifica/webfetch negati;
 #   - un repository git vuoto, perche' opencode cerca AGENTS.md, .opencode/ e
 #     .claude/ risalendo fino alla radice git: cosi' si ferma qui e non legge
@@ -60,6 +60,25 @@ if [ -z "$OC" ]; then
   echo "opencode non trovato nel PATH: installalo (brew install opencode) o imposta OPENCODE_BIN."
   exit 0
 fi
+OPENCODE_DB="$SANDBOX/.opencode-test.db" OPENCODE_DISABLE_EXTERNAL_SKILLS=1 \
+  OPENCODE_DISABLE_CLAUDE_CODE=1 python3 - "$OC" <<'PY'
+import json
+import subprocess
+import sys
+from pathlib import Path
+
+# Legge solo i nomi MCP dalla configurazione risolta, senza stampare chiavi o token.
+proc = subprocess.run([sys.argv[1], "debug", "config"], capture_output=True,
+                      text=True, check=True, timeout=60)
+resolved = json.loads(proc.stdout)
+path = Path("opencode.json")
+config = json.loads(path.read_text())
+for name in resolved.get("mcp", {}):
+    if name != "buddalaw":
+        config["mcp"][name] = {"enabled": False}
+path.write_text(json.dumps(config, ensure_ascii=False, indent=2) + "\n")
+print("Server MCP estranei esclusi dalla sandbox.")
+PY
 echo "Ora esegui una volta:"
 echo "  cd \"$SANDBOX\" && OPENCODE_DB=\"$SANDBOX/.opencode-test.db\" $OC mcp auth buddalaw"
 echo "e controlla con:"

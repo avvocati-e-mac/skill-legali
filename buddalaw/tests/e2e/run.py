@@ -359,6 +359,18 @@ def preflight_opencode(oc: str) -> None:
     if not (SANDBOX / "opencode.json").exists():
         raise Salta(f"cartella di prova assente: esegui bash {QUI / 'prepara_opencode.sh'}")
     env = env_opencode()
+    resolved = subprocess.run([oc, "debug", "config"], cwd=SANDBOX, capture_output=True,
+                              text=True, env=env, timeout=60)
+    if resolved.returncode:
+        raise Salta("impossibile verificare la configurazione risolta di opencode")
+    try:
+        mcp_config = json.loads(resolved.stdout).get("mcp", {})
+    except (ValueError, AttributeError):
+        raise Salta("configurazione risolta di opencode non leggibile")
+    estranei = [name for name, cfg in mcp_config.items()
+                if name != "buddalaw" and cfg.get("enabled", True)]
+    if estranei:
+        raise Salta(f"server MCP estranei abilitati: {', '.join(estranei)}; rilancia prepara_opencode.sh")
     auth = _pulisci(subprocess.run([oc, "auth", "list"], cwd=SANDBOX, capture_output=True, text=True, env=env, timeout=60).stdout)
     if "openrouter" not in auth.lower():
         raise Salta("OpenRouter non autenticato in opencode: esegui `opencode auth login` e scegli OpenRouter")
@@ -455,6 +467,8 @@ def esegui_opencode(oc: str, turni: list[str], config: str, modello: str, cartel
     if config == "nessuna" and (skills / "buddalaw").exists():
         shutil.rmtree(skills / "buddalaw")
     problemi = verifica_skill_opencode(oc, config)
+    if problemi:
+        return Esecuzione(errore="isolamento della skill non verificato"), problemi
     t0 = time.time()
     stdout, sessione = "", None
     for i, prompt in enumerate(turni):
