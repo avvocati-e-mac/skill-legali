@@ -1,7 +1,7 @@
 # Normattiva – API, verifica degli URN e trappole note
 
 Documento tecnico. **Non serve per scrivere un link**: per quello bastano
-`SKILL.md` e `lookup-extended.md`. Serve quando devi **verificare** un URN,
+`SKILL.md` e `atti.md`. Serve quando devi **verificare** un URN,
 recuperare il **testo** di un articolo, o capire perché qualcosa non torna.
 
 Tutte le misure sono state prese il **2026-08-06** con ~500 richieste reali.
@@ -137,9 +137,10 @@ urn:nir:stato:<tipo>:<data>;<numero>[:<allegato>]~art<N>[!vig=AAAA-MM-GG]
 | `bis`/`ter` **attaccati** | `~art2645ter` ✅ · `~art2645-ter` ❌ |
 | Allegato obbligatorio per i codici storici, vietato per il c.p.p. | c.c. senza `:2` → preambolo; c.p.p. con `:1` → 404 |
 | `!vig=AAAA-MM-GG` funziona su tutti i tipi di atto | verificato su Cost., r.d., legge, d.lgs., d.l., d.p.r. |
-| `!vig=` **senza data** | errore: per il testo vigente si **omette** il parametro |
+| `!vig=` **senza data** | errore **sull'API**: per chiedere all'API il testo vigente si omette il parametro. Nel **link** del portale invece `!vig=` senza data è la forma raccomandata dalla skill (testo in vigore il giorno del clic) |
 | `@originale` | l'API lo **ignora** (risposta identica a senza) |
 | Data corta `1942;262:2` | accettata |
+| Emettitore diverso da `stato` (d.m. `urn:nir:ministero.giustizia:decreto:...`, D.P.C.M. `urn:nir:presidenza.consiglio.ministri:decreto:...`) | **rifiutato** (codice 1003, "urn assente o non valido"), anche se il portale apre l'articolo giusto: provato il 2026-10-17 sul d.m. 55/2014. Questi atti si verificano solo sul portale, con `scripts/verifica.py` |
 
 ---
 
@@ -162,8 +163,8 @@ cade sul default; scrivere `"rilevanza"` non produce errore e non cambia nulla.
 
 Una cosa buona: quando non trova nulla **lo dice** (`numeroAttiTrovati: 0`).
 
-**Conclusione: per i codici la lookup di questa skill non è una scorciatoia, è
-l'unica strada.**
+**Conclusione: per i codici la tabella di questa skill (`atti.md`) non è una
+scorciatoia, è l'unica strada.**
 
 ---
 
@@ -196,7 +197,7 @@ metta comunque backoff e limiti.
 
 ---
 
-## 8. Come si verifica una voce della lookup
+## 8. Come si verifica una riga della tabella (`atti.md`)
 
 L'unico controllo che funziona:
 
@@ -227,3 +228,7 @@ Lo script `tests/test_api_live.py` implementa esattamente questo.
 - I 13 atti con `~art1` → preambolo sono un campione, non un censimento.
 - L'assenza di GDPR, CEDU e codice deontologico forense da Normattiva è
   **dedotta**, non misurata.
+- Fino al 2026-10-17 questo file e la skill dicevano che i decreti ministeriali
+  non sono su Normattiva: era sbagliato. L'errore veniva dal tipo
+  `decreto.ministeriale`, che non risolve; la forma giusta mette il ministero al
+  posto di `stato` (vedi SKILL.md).
