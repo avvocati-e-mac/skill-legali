@@ -62,8 +62,11 @@ Quando una procedura dipende dal runtime, differenzia sempre in modo esplicito:
 - **Scopo:** ricerca live di sentenze, normativa, contratti e atti processuali italiani tramite MCP BuddaLaw
 - **Trigger:** quesiti che richiedono sentenze italiane, verifica giurisprudenziale, contratti, atti processuali, prassi tributaria o provvedimenti del Garante Privacy
 - **Comportamento:** l'assistente non cita sentenze specifiche dalla memoria interna; ogni riferimento deve provenire da ricerca live
-- **File chiave:** `buddalaw/buddalaw/SKILL.md`, `buddalaw/buddalaw/references/`
+- **File chiave:** `buddalaw/buddalaw/SKILL.md`, `buddalaw/buddalaw/references/`, `buddalaw/REPORT-sondaggio-v9.md` (comportamenti reali del server), `buddalaw/tests/` (README, CHECKLIST, fixture dello schema)
 - **File installazione Claude:** `buddalaw/buddalaw.skill`
+- **Versione 9.0 (2026-10-17):** allineata allo schema reale dei 16 tool (server BuddaLaw MCP 1.30.0). La skill contiene in fondo un inventario dei tool: se BuddaLaw ne espone uno nuovo, l'assistente avvisa l'utente che la skill potrebbe non essere aggiornata.
+- **Test:** livello A offline (gate) `python3 -m pytest buddalaw/tests/test_struttura.py`; livello C `BUDDALAW_LIVE=1 python3 -m pytest buddalaw/tests/test_mcp_live.py`, il cui primo test diventa rosso quando lo schema live di BuddaLaw cambia (controllo di obsolescenza per il maintainer); livello B `python3 buddalaw/tests/e2e/run.py` (Claude Code isolato e opencode + OpenRouter, con tetto di spesa).
+- **Prima di modificare la skill:** se il livello C segnala un cambio di schema, rigenera la fixture con `python3 buddalaw/tests/tools/estrai_schema.py` e aggiorna l'inventario in fondo a `SKILL.md`. Dopo ogni modifica rigenera `buddalaw.skill`, altrimenti il livello A resta rosso.
 
 ### GestioLex Corpus
 
