@@ -1,8 +1,8 @@
 """
 Test end-to-end della skill normattiva via Claude API (Livello B).
 
-Carica SKILL.md + lookup-extended.md come system prompt, invia una query
-in linguaggio naturale per ciascuno dei 15 casi critici, e verifica che
+Carica SKILL.md + references/atti.md + references/versioni-e-portale.md come
+system prompt, invia una query in linguaggio naturale per ciascuno dei 17 casi critici, e verifica che
 la risposta contenga i link e i comportamenti attesi.
 
 Requisiti:
@@ -25,9 +25,12 @@ from pathlib import Path
 
 
 SKILL_MD = Path(__file__).parent.parent / "normattiva" / "SKILL.md"
-LOOKUP_MD = Path(__file__).parent.parent / "normattiva" / "references" / "lookup-extended.md"
+REFERENCES = [
+    Path(__file__).parent.parent / "normattiva" / "references" / "atti.md",
+    Path(__file__).parent.parent / "normattiva" / "references" / "versioni-e-portale.md",
+]
 
-MODEL = "claude-haiku-4-5-20251001"
+MODEL = "claude-haiku-5-5"
 MAX_TOKENS = 1024
 
 
@@ -164,9 +167,9 @@ CASES: list[TestCase] = [
         ),
         checks=[
             {"type": "contains_url",
-             "pattern": r"normattiva\.it.*262:2~art2051(?!!vig=)"},
+             "pattern": r"normattiva\.it.*262:2~art2051!vig=(?!\d)"},
             {"type": "contains_url",
-             "pattern": r"normattiva\.it.*costituzione:1947-12-27~art24(?!!vig=)"},
+             "pattern": r"normattiva\.it.*costituzione:1947-12-27~art24!vig=(?!\d)"},
             {"type": "contains_url",
              "pattern": r"normattiva\.it.*267:1~art42!vig=201[78]-\d{2}-\d{2}"},
             {"type": "contains_url",
@@ -220,13 +223,31 @@ CASES: list[TestCase] = [
              "pattern": r"normattiva\.it.*decreto\.legislativo:2023-03-31;36~art3"},
         ],
     ),
+    TestCase(
+        id="B16",
+        desc="Decreto ministeriale: art. 4 d.m. 55/2014 — emettitore ministero.giustizia",
+        query="Cita l'art. 4 del d.m. 55/2014 sui parametri forensi.",
+        checks=[
+            {"type": "contains_url",
+             "pattern": r"normattiva\.it.*urn:nir:ministero\.giustizia:decreto:2014-03-10;55~art4"},
+        ],
+    ),
+    TestCase(
+        id="B17",
+        desc="Annotazione: il testo dell'utente resta identico, punto della sigla fuori dal link",
+        query="Metti i link: come prevede l’art. 2697 c.c. l’onere della prova grava sull’attore.",
+        checks=[
+            {"type": "contains_url",
+             "pattern": r"come prevede l’\[art\. 2697 c\.c\]\(https://www\.normattiva\.it/uri-res/N2Ls\?urn:nir:stato:regio\.decreto:1942-03-16;262:2~art2697!vig=\)\. l’onere della prova grava sull’attore\."},
+        ],
+    ),
 ]
 
 
 def load_system_prompt() -> str:
-    skill = SKILL_MD.read_text(encoding="utf-8")
-    lookup = LOOKUP_MD.read_text(encoding="utf-8")
-    return f"{skill}\n\n---\n\n{lookup}"
+    parti = [SKILL_MD.read_text(encoding="utf-8")]
+    parti += [p.read_text(encoding="utf-8") for p in REFERENCES]
+    return "\n\n---\n\n".join(parti)
 
 
 def run_case(client, system_prompt: str, case: TestCase, verbose: bool = False) -> dict:

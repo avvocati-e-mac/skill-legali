@@ -13,8 +13,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;262:2~art2051",
-  "note": "Caso base c.c."
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;262:2~art2051!vig=",
+  "note": "Caso base c.c.",
+  "emettitore": "stato"
  },
  {
   "id": "A02",
@@ -30,8 +31,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1940-10-28;1443:1~art83",
-  "note": "Caso base c.p.c."
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1940-10-28;1443:1~art83!vig=",
+  "note": "Caso base c.p.c.",
+  "emettitore": "stato"
  },
  {
   "id": "A03",
@@ -47,8 +49,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1930-10-19;1398:1~art575",
-  "note": "Caso base c.p."
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1930-10-19;1398:1~art575!vig=",
+  "note": "Caso base c.p.",
+  "emettitore": "stato"
  },
  {
   "id": "A04",
@@ -64,8 +67,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.del.presidente.della.repubblica:1988-09-22;447~art192",
-  "note": "c.p.p. moderno: nessun allegato"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.del.presidente.della.repubblica:1988-09-22;447~art192!vig=",
+  "note": "c.p.p. moderno: nessun allegato",
+  "emettitore": "stato"
  },
  {
   "id": "A05",
@@ -81,8 +85,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:costituzione:1947-12-27~art24",
-  "note": "Costituzione: nessun numero nell'URN"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:costituzione:1947-12-27~art24!vig=",
+  "note": "Costituzione: nessun numero nell'URN",
+  "emettitore": "stato"
  },
  {
   "id": "A06",
@@ -98,8 +103,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:legge:1970-05-20;300~art35",
-  "note": "Statuto Lavoratori"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:legge:1970-05-20;300~art35!vig=",
+  "note": "Statuto Lavoratori",
+  "emettitore": "stato"
  },
  {
   "id": "A07",
@@ -115,8 +121,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2001-06-08;231~art7",
-  "note": "D.Lgs. 231/2001"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2001-06-08;231~art7!vig=",
+  "note": "D.Lgs. 231/2001",
+  "emettitore": "stato"
  },
  {
   "id": "A08",
@@ -132,8 +139,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2003-06-30;196~art13",
-  "note": "D.Lgs. 196/2003 Privacy"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2003-06-30;196~art13!vig=",
+  "note": "D.Lgs. 196/2003 Privacy",
+  "emettitore": "stato"
  },
  {
   "id": "A09",
@@ -149,8 +157,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2008-04-09;81~art17",
-  "note": "D.Lgs. 81/2008 sicurezza lavoro"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2008-04-09;81~art17!vig=",
+  "note": "D.Lgs. 81/2008 sicurezza lavoro",
+  "emettitore": "stato"
  },
  {
   "id": "A10",
@@ -166,8 +175,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;262:2~art2043",
-  "note": "Art. 2043 responsabilità extracontrattuale"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;262:2~art2043!vig=",
+  "note": "Art. 2043 responsabilità extracontrattuale",
+  "emettitore": "stato"
  },
  {
   "id": "A11",
@@ -183,8 +193,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;262:2~art1218",
-  "note": "Art. 1218 inadempimento"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;262:2~art1218!vig=",
+  "note": "Art. 1218 inadempimento",
+  "emettitore": "stato"
  },
  {
   "id": "A12",
@@ -200,8 +211,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1930-10-19;1398:1~art110",
-  "note": "Art. 110 concorso"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1930-10-19;1398:1~art110!vig=",
+  "note": "Art. 110 concorso",
+  "emettitore": "stato"
  },
  {
   "id": "A13",
@@ -217,8 +229,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:costituzione:1947-12-27~art111",
-  "note": "Art. 111 giusto processo"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:costituzione:1947-12-27~art111!vig=",
+  "note": "Art. 111 giusto processo",
+  "emettitore": "stato"
  },
  {
   "id": "A14",
@@ -234,8 +247,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.del.presidente.della.repubblica:1988-09-22;447~art530",
-  "note": "Art. 530 assoluzione"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.del.presidente.della.repubblica:1988-09-22;447~art530!vig=",
+  "note": "Art. 530 assoluzione",
+  "emettitore": "stato"
  },
  {
   "id": "A15",
@@ -251,8 +265,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2008-04-09;81~art29",
-  "note": "Art. 29 valutazione rischi"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2008-04-09;81~art29!vig=",
+  "note": "Art. 29 valutazione rischi",
+  "emettitore": "stato"
  },
  {
   "id": "B01",
@@ -268,8 +283,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;262:2~art1",
-  "note": "Verifica presenza :2 per c.c."
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;262:2~art1!vig=",
+  "note": "Verifica presenza :2 per c.c.",
+  "emettitore": "stato"
  },
  {
   "id": "B02",
@@ -285,8 +301,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1940-10-28;1443:1~art1",
-  "note": "Verifica presenza :1 per c.p.c."
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1940-10-28;1443:1~art1!vig=",
+  "note": "Verifica presenza :1 per c.p.c.",
+  "emettitore": "stato"
  },
  {
   "id": "B03",
@@ -302,8 +319,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1930-10-19;1398:1~art1",
-  "note": "Verifica presenza :1 per c.p."
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1930-10-19;1398:1~art1!vig=",
+  "note": "Verifica presenza :1 per c.p.",
+  "emettitore": "stato"
  },
  {
   "id": "B04",
@@ -319,8 +337,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;267:1~art1",
-  "note": "Verifica presenza :1 per l.fall. [data corretta 2026-08-06: e' 16 marzo, non 16 gennaio]"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;267:1~art1!vig=",
+  "note": "Verifica presenza :1 per l.fall. [data corretta 2026-08-06: e' 16 marzo, non 16 gennaio]",
+  "emettitore": "stato"
  },
  {
   "id": "B05",
@@ -336,8 +355,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;262:2~art2697",
-  "note": "Art. 2697 onere probatorio"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;262:2~art2697!vig=",
+  "note": "Art. 2697 onere probatorio",
+  "emettitore": "stato"
  },
  {
   "id": "B06",
@@ -353,8 +373,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1940-10-28;1443:1~art115",
-  "note": "Art. 115 disponibilità prove"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1940-10-28;1443:1~art115!vig=",
+  "note": "Art. 115 disponibilità prove",
+  "emettitore": "stato"
  },
  {
   "id": "B07",
@@ -370,8 +391,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;267:1~art42",
-  "note": "Art. 42 spossessamento [data corretta 2026-08-06: e' 16 marzo, non 16 gennaio]"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;267:1~art42!vig=",
+  "note": "Art. 42 spossessamento [data corretta 2026-08-06: e' 16 marzo, non 16 gennaio]",
+  "emettitore": "stato"
  },
  {
   "id": "B08",
@@ -387,8 +409,9 @@
   "lettera": null,
   "art_suffix": "bis",
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1930-10-19;1398:1~art416bis",
-  "note": "Art. 416bis associazione mafiosa"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1930-10-19;1398:1~art416bis!vig=",
+  "note": "Art. 416bis associazione mafiosa",
+  "emettitore": "stato"
  },
  {
   "id": "B09",
@@ -404,8 +427,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;262:2",
-  "note": "Link al c.c. senza articolo"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;262:2!vig=",
+  "note": "Link al c.c. senza articolo",
+  "emettitore": "stato"
  },
  {
   "id": "B10",
@@ -421,8 +445,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1930-10-19;1398:1~art640",
-  "note": "Art. 640 truffa"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1930-10-19;1398:1~art640!vig=",
+  "note": "Art. 640 truffa",
+  "emettitore": "stato"
  },
  {
   "id": "C01",
@@ -438,8 +463,9 @@
   "lettera": null,
   "art_suffix": "bis",
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1940-10-28;1443:1~art30bis",
-  "note": "Articolo bis"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1940-10-28;1443:1~art30bis!vig=",
+  "note": "Articolo bis",
+  "emettitore": "stato"
  },
  {
   "id": "C02",
@@ -455,8 +481,9 @@
   "lettera": null,
   "art_suffix": "bis",
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1930-10-19;1398:1~art131bis",
-  "note": "Art. 1-ter c.p. non esiste: sostituito con 131-bis (tenuita' del fatto) [corretto 2026-08-06 con verifica contro l'API]"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1930-10-19;1398:1~art131bis!vig=",
+  "note": "Art. 1-ter c.p. non esiste: sostituito con 131-bis (tenuita' del fatto) [corretto 2026-08-06 con verifica contro l'API]",
+  "emettitore": "stato"
  },
  {
   "id": "C03",
@@ -472,8 +499,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:legge:1970-05-20;300~art7",
-  "note": "Articolo con comma [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:legge:1970-05-20;300~art7!vig=",
+  "note": "Articolo con comma [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]",
+  "emettitore": "stato"
  },
  {
   "id": "C04",
@@ -489,8 +517,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2008-04-09;81~art8",
-  "note": "Articolo con comma specifico [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2008-04-09;81~art8!vig=",
+  "note": "Articolo con comma specifico [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]",
+  "emettitore": "stato"
  },
  {
   "id": "C05",
@@ -506,8 +535,9 @@
   "lettera": "a",
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2001-06-08;231~art5",
-  "note": "Articolo con comma e lettera [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2001-06-08;231~art5!vig=",
+  "note": "Articolo con comma e lettera [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]",
+  "emettitore": "stato"
  },
  {
   "id": "C06",
@@ -523,8 +553,9 @@
   "lettera": null,
   "art_suffix": "bis",
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;262:2~art2478bis",
-  "note": "Art. 2477-bis c.c. non esiste: sostituito con 2478-bis [corretto 2026-08-06 con verifica contro l'API]"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;262:2~art2478bis!vig=",
+  "note": "Art. 2477-bis c.c. non esiste: sostituito con 2478-bis [corretto 2026-08-06 con verifica contro l'API]",
+  "emettitore": "stato"
  },
  {
   "id": "C07",
@@ -540,8 +571,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.del.presidente.della.repubblica:1988-09-22;447~art192",
-  "note": "c.p.p. con comma [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.del.presidente.della.repubblica:1988-09-22;447~art192!vig=",
+  "note": "c.p.p. con comma [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]",
+  "emettitore": "stato"
  },
  {
   "id": "C08",
@@ -557,8 +589,9 @@
   "lettera": "b",
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2003-06-30;196~art4",
-  "note": "Articolo con comma e lettera [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2003-06-30;196~art4!vig=",
+  "note": "Articolo con comma e lettera [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]",
+  "emettitore": "stato"
  },
  {
   "id": "C09",
@@ -574,8 +607,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:costituzione:1947-12-27~art3",
-  "note": "Costituzione con comma [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:costituzione:1947-12-27~art3!vig=",
+  "note": "Costituzione con comma [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]",
+  "emettitore": "stato"
  },
  {
   "id": "C10",
@@ -591,8 +625,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;267:1~art67",
-  "note": "l.fall. con comma [data corretta 2026-08-06: e' 16 marzo, non 16 gennaio] [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;267:1~art67!vig=",
+  "note": "l.fall. con comma [data corretta 2026-08-06: e' 16 marzo, non 16 gennaio] [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]",
+  "emettitore": "stato"
  },
  {
   "id": "C11",
@@ -608,8 +643,9 @@
   "lettera": "a",
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2008-04-09;81~art29",
-  "note": "D.Lgs. 81/2008 con comma e lettera [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2008-04-09;81~art29!vig=",
+  "note": "D.Lgs. 81/2008 con comma e lettera [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]",
+  "emettitore": "stato"
  },
  {
   "id": "C12",
@@ -625,8 +661,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;262:2~art2381",
-  "note": "c.c. con comma [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;262:2~art2381!vig=",
+  "note": "c.c. con comma [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]",
+  "emettitore": "stato"
  },
  {
   "id": "C13",
@@ -642,8 +679,9 @@
   "lettera": null,
   "art_suffix": "septies",
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2001-06-08;231~art25septies",
-  "note": "Art. 25septies D.Lgs. 231/2001"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2001-06-08;231~art25septies!vig=",
+  "note": "Art. 25septies D.Lgs. 231/2001",
+  "emettitore": "stato"
  },
  {
   "id": "C14",
@@ -659,8 +697,9 @@
   "lettera": "b",
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1940-10-28;1443:1~art163",
-  "note": "c.p.c. con comma e lettera [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1940-10-28;1443:1~art163!vig=",
+  "note": "c.p.c. con comma e lettera [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]",
+  "emettitore": "stato"
  },
  {
   "id": "C15",
@@ -676,8 +715,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;262:2~art1175",
-  "note": "c.c. con comma [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;262:2~art1175!vig=",
+  "note": "c.c. con comma [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]",
+  "emettitore": "stato"
  },
  {
   "id": "D01",
@@ -694,7 +734,8 @@
   "art_suffix": null,
   "data_storica": "2018-12-31",
   "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;267:1~art42!vig=2018-12-31",
-  "note": "Procedura fallimentare 2018 [data corretta 2026-08-06: e' 16 marzo, non 16 gennaio]"
+  "note": "Procedura fallimentare 2018 [data corretta 2026-08-06: e' 16 marzo, non 16 gennaio]",
+  "emettitore": "stato"
  },
  {
   "id": "D02",
@@ -711,7 +752,8 @@
   "art_suffix": null,
   "data_storica": "2011-12-31",
   "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:legge:1970-05-20;300~art18!vig=2011-12-31",
-  "note": "Art. 18 pre Jobs Act"
+  "note": "Art. 18 pre Jobs Act",
+  "emettitore": "stato"
  },
  {
   "id": "D03",
@@ -728,7 +770,8 @@
   "art_suffix": null,
   "data_storica": "2008-08-02",
   "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2008-04-09;81~art29!vig=2008-08-02",
-  "note": "Pre-correttivo D.Lgs. 106/2009"
+  "note": "Pre-correttivo D.Lgs. 106/2009",
+  "emettitore": "stato"
  },
  {
   "id": "D04",
@@ -745,7 +788,8 @@
   "art_suffix": null,
   "data_storica": "2003-12-31",
   "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;262:2~art155!vig=2003-12-31",
-  "note": "Affidamento figli pre-riforma 2006"
+  "note": "Affidamento figli pre-riforma 2006",
+  "emettitore": "stato"
  },
  {
   "id": "D05",
@@ -762,7 +806,8 @@
   "art_suffix": null,
   "data_storica": "2022-12-31",
   "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2016-04-18;50~art105!vig=2022-12-31",
-  "note": "Subappalto gara 2022"
+  "note": "Subappalto gara 2022",
+  "emettitore": "stato"
  },
  {
   "id": "D06",
@@ -779,7 +824,8 @@
   "art_suffix": null,
   "data_storica": "2013-12-31",
   "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;262:2~art2477!vig=2013-12-31",
-  "note": "Sindaco SRL pre-D.Lgs. 14/2019 [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]"
+  "note": "Sindaco SRL pre-D.Lgs. 14/2019 [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]",
+  "emettitore": "stato"
  },
  {
   "id": "D07",
@@ -796,7 +842,8 @@
   "art_suffix": null,
   "data_storica": "2017-12-31",
   "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2003-06-30;196~art13!vig=2017-12-31",
-  "note": "Privacy pre-GDPR"
+  "note": "Privacy pre-GDPR",
+  "emettitore": "stato"
  },
  {
   "id": "D08",
@@ -813,7 +860,8 @@
   "art_suffix": null,
   "data_storica": "2007-12-31",
   "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2001-06-08;231~art25!vig=2007-12-31",
-  "note": "Pre-inserimento art. 25-septies"
+  "note": "Pre-inserimento art. 25-septies",
+  "emettitore": "stato"
  },
  {
   "id": "D09",
@@ -830,7 +878,8 @@
   "art_suffix": null,
   "data_storica": "2020-12-31",
   "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;267:1!vig=2020-12-31",
-  "note": "l.fall. senza articolo con !vig= [data corretta 2026-08-06: e' 16 marzo, non 16 gennaio]"
+  "note": "l.fall. senza articolo con !vig= [data corretta 2026-08-06: e' 16 marzo, non 16 gennaio]",
+  "emettitore": "stato"
  },
  {
   "id": "D10",
@@ -847,7 +896,8 @@
   "art_suffix": null,
   "data_storica": "2015-12-31",
   "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2008-04-09;81~art4!vig=2015-12-31",
-  "note": "D.Lgs. 81/2008 versione 2015"
+  "note": "D.Lgs. 81/2008 versione 2015",
+  "emettitore": "stato"
  },
  {
   "id": "D11",
@@ -864,7 +914,8 @@
   "art_suffix": null,
   "data_storica": "1980-01-01",
   "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;262:2~art1325!vig=1980-01-01",
-  "note": "Versione storica lontana"
+  "note": "Versione storica lontana",
+  "emettitore": "stato"
  },
  {
   "id": "D12",
@@ -881,7 +932,8 @@
   "art_suffix": null,
   "data_storica": "2005-06-15",
   "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1930-10-19;1398:1~art629!vig=2005-06-15",
-  "note": "c.p. con data storica specifica"
+  "note": "c.p. con data storica specifica",
+  "emettitore": "stato"
  },
  {
   "id": "D13",
@@ -898,7 +950,8 @@
   "art_suffix": null,
   "data_storica": "2000-12-31",
   "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:costituzione:1947-12-27~art117!vig=2000-12-31",
-  "note": "Art. 117 pre-riforma Titolo V 2001"
+  "note": "Art. 117 pre-riforma Titolo V 2001",
+  "emettitore": "stato"
  },
  {
   "id": "D14",
@@ -915,7 +968,8 @@
   "art_suffix": null,
   "data_storica": "2010-06-30",
   "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:legge:1970-05-20;300~art18!vig=2010-06-30",
-  "note": "Art. 18 co. 1 con data storica [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]"
+  "note": "Art. 18 co. 1 con data storica [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]",
+  "emettitore": "stato"
  },
  {
   "id": "D15",
@@ -932,7 +986,8 @@
   "art_suffix": null,
   "data_storica": "2010-01-01",
   "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2001-06-08;231~art5!vig=2010-01-01",
-  "note": "D.Lgs. 231/2001 art. 5 co. 1 versione 2010 [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]"
+  "note": "D.Lgs. 231/2001 art. 5 co. 1 versione 2010 [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]",
+  "emettitore": "stato"
  },
  {
   "id": "D16",
@@ -949,7 +1004,8 @@
   "art_suffix": null,
   "data_storica": "2005-03-01",
   "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1940-10-28;1443:1~art360!vig=2005-03-01",
-  "note": "Art. 360 ricorso cassazione pre-riforma 2006"
+  "note": "Art. 360 ricorso cassazione pre-riforma 2006",
+  "emettitore": "stato"
  },
  {
   "id": "D17",
@@ -966,7 +1022,8 @@
   "art_suffix": null,
   "data_storica": "2017-05-20",
   "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2016-04-18;50~art36!vig=2017-05-20",
-  "note": "D.Lgs. 50/2016 subsoglia versione originaria"
+  "note": "D.Lgs. 50/2016 subsoglia versione originaria",
+  "emettitore": "stato"
  },
  {
   "id": "D18",
@@ -983,7 +1040,8 @@
   "art_suffix": null,
   "data_storica": "2018-12-31",
   "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;262:2~art2086!vig=2018-12-31",
-  "note": "Art. 2086 ante D.Lgs. 14/2019"
+  "note": "Art. 2086 ante D.Lgs. 14/2019",
+  "emettitore": "stato"
  },
  {
   "id": "D19",
@@ -1000,7 +1058,8 @@
   "art_suffix": null,
   "data_storica": "2009-12-31",
   "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2008-04-09;81~art17!vig=2009-12-31",
-  "note": "D.Lgs. 81/2008 obbligo non delegabile 2009 [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]"
+  "note": "D.Lgs. 81/2008 obbligo non delegabile 2009 [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]",
+  "emettitore": "stato"
  },
  {
   "id": "D20",
@@ -1017,7 +1076,8 @@
   "art_suffix": null,
   "data_storica": "1990-01-01",
   "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1930-10-19;1398:1~art575!vig=1990-01-01",
-  "note": "Art. 575 omicidio versione storica"
+  "note": "Art. 575 omicidio versione storica",
+  "emettitore": "stato"
  },
  {
   "id": "E01",
@@ -1034,7 +1094,8 @@
   "art_suffix": null,
   "data_storica": "2022-07-14",
   "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;267:1~art1!vig=2022-07-14",
-  "note": "Ultimo giorno vigenza l.fall. [data corretta 2026-08-06: e' 16 marzo, non 16 gennaio]"
+  "note": "Ultimo giorno vigenza l.fall. [data corretta 2026-08-06: e' 16 marzo, non 16 gennaio]",
+  "emettitore": "stato"
  },
  {
   "id": "E02",
@@ -1051,7 +1112,8 @@
   "art_suffix": null,
   "data_storica": "2021-06-30",
   "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;267:1~art5!vig=2021-06-30",
-  "note": "l.fall. art. 5 insolvenza 2021 [data corretta 2026-08-06: e' 16 marzo, non 16 gennaio]"
+  "note": "l.fall. art. 5 insolvenza 2021 [data corretta 2026-08-06: e' 16 marzo, non 16 gennaio]",
+  "emettitore": "stato"
  },
  {
   "id": "E03",
@@ -1068,7 +1130,8 @@
   "art_suffix": null,
   "data_storica": "2019-12-31",
   "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;267:1~art67!vig=2019-12-31",
-  "note": "l.fall. revocatoria 2019 [data corretta 2026-08-06: e' 16 marzo, non 16 gennaio]"
+  "note": "l.fall. revocatoria 2019 [data corretta 2026-08-06: e' 16 marzo, non 16 gennaio]",
+  "emettitore": "stato"
  },
  {
   "id": "E04",
@@ -1085,7 +1148,8 @@
   "art_suffix": null,
   "data_storica": "2015-01-01",
   "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;267:1~art161!vig=2015-01-01",
-  "note": "l.fall. concordato preventivo 2015 [data corretta 2026-08-06: e' 16 marzo, non 16 gennaio]"
+  "note": "l.fall. concordato preventivo 2015 [data corretta 2026-08-06: e' 16 marzo, non 16 gennaio]",
+  "emettitore": "stato"
  },
  {
   "id": "E05",
@@ -1102,7 +1166,8 @@
   "art_suffix": null,
   "data_storica": "2023-06-30",
   "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2016-04-18;50~art30!vig=2023-06-30",
-  "note": "Su questo atto ~art1 restituisce il preambolo, non l'articolo 1 [corretto 2026-08-06 con verifica contro l'API]"
+  "note": "Su questo atto ~art1 restituisce il preambolo, non l'articolo 1 [corretto 2026-08-06 con verifica contro l'API]",
+  "emettitore": "stato"
  },
  {
   "id": "E06",
@@ -1119,7 +1184,8 @@
   "art_suffix": null,
   "data_storica": "2020-06-15",
   "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2016-04-18;50~art80!vig=2020-06-15",
-  "note": "D.Lgs. 50/2016 motivi esclusione 2020"
+  "note": "D.Lgs. 50/2016 motivi esclusione 2020",
+  "emettitore": "stato"
  },
  {
   "id": "E07",
@@ -1136,7 +1202,8 @@
   "art_suffix": null,
   "data_storica": "2018-04-20",
   "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2016-04-18;50~art95!vig=2018-04-20",
-  "note": "D.Lgs. 50/2016 criteri aggiudicazione 2018"
+  "note": "D.Lgs. 50/2016 criteri aggiudicazione 2018",
+  "emettitore": "stato"
  },
  {
   "id": "E08",
@@ -1153,7 +1220,8 @@
   "art_suffix": null,
   "data_storica": "2017-03-01",
   "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;267:1~art67!vig=2017-03-01",
-  "note": "l.fall. art. 67 co. 2 versione 2017 [data corretta 2026-08-06: e' 16 marzo, non 16 gennaio] [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]"
+  "note": "l.fall. art. 67 co. 2 versione 2017 [data corretta 2026-08-06: e' 16 marzo, non 16 gennaio] [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]",
+  "emettitore": "stato"
  },
  {
   "id": "E09",
@@ -1170,7 +1238,8 @@
   "art_suffix": null,
   "data_storica": "2019-11-14",
   "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2016-04-18;50~art105!vig=2019-11-14",
-  "note": "Subappalto 30% versione 2019 [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]"
+  "note": "Subappalto 30% versione 2019 [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]",
+  "emettitore": "stato"
  },
  {
   "id": "E10",
@@ -1187,7 +1256,8 @@
   "art_suffix": null,
   "data_storica": "2010-01-01",
   "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;267:1~art217!vig=2010-01-01",
-  "note": "l.fall. bancarotta semplice 2010 [data corretta 2026-08-06: e' 16 marzo, non 16 gennaio]"
+  "note": "l.fall. bancarotta semplice 2010 [data corretta 2026-08-06: e' 16 marzo, non 16 gennaio]",
+  "emettitore": "stato"
  },
  {
   "id": "F01",
@@ -1203,8 +1273,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2023-03-31;36~art3",
-  "note": "Nuovo Codice Appalti"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2023-03-31;36~art3!vig=",
+  "note": "Nuovo Codice Appalti",
+  "emettitore": "stato"
  },
  {
   "id": "F02",
@@ -1220,8 +1291,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2019-01-12;14~art2",
-  "note": "Codice della Crisi"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2019-01-12;14~art2!vig=",
+  "note": "Codice della Crisi",
+  "emettitore": "stato"
  },
  {
   "id": "F03",
@@ -1237,8 +1309,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.del.presidente.della.repubblica:2001-06-06;380~art1",
-  "note": "T.U. Edilizia"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.del.presidente.della.repubblica:2001-06-06;380~art1!vig=",
+  "note": "T.U. Edilizia",
+  "emettitore": "stato"
  },
  {
   "id": "F04",
@@ -1254,8 +1327,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.del.presidente.della.repubblica:1986-12-22;917~art81",
-  "note": "T.U.I.R."
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.del.presidente.della.repubblica:1986-12-22;917~art81!vig=",
+  "note": "T.U.I.R.",
+  "emettitore": "stato"
  },
  {
   "id": "F05",
@@ -1271,8 +1345,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2000-08-18;267~art2",
-  "note": "Su questo atto ~art1 restituisce il preambolo, non l'articolo 1 [corretto 2026-08-06 con verifica contro l'API]"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2000-08-18;267~art2!vig=",
+  "note": "Su questo atto ~art1 restituisce il preambolo, non l'articolo 1 [corretto 2026-08-06 con verifica contro l'API]",
+  "emettitore": "stato"
  },
  {
   "id": "F06",
@@ -1288,8 +1363,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2005-09-06;206~art2",
-  "note": "Codice del Consumo"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2005-09-06;206~art2!vig=",
+  "note": "Codice del Consumo",
+  "emettitore": "stato"
  },
  {
   "id": "F07",
@@ -1305,8 +1381,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2005-09-07;209~art2",
-  "note": "Su questo atto ~art1 restituisce il preambolo, non l'articolo 1 [corretto 2026-08-06 con verifica contro l'API]"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2005-09-07;209~art2!vig=",
+  "note": "Su questo atto ~art1 restituisce il preambolo, non l'articolo 1 [corretto 2026-08-06 con verifica contro l'API]",
+  "emettitore": "stato"
  },
  {
   "id": "F08",
@@ -1322,8 +1399,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2001-03-30;165~art2",
-  "note": "T.U. Pubblico Impiego"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2001-03-30;165~art2!vig=",
+  "note": "T.U. Pubblico Impiego",
+  "emettitore": "stato"
  },
  {
   "id": "F09",
@@ -1339,8 +1417,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2015-06-15;81~art2",
-  "note": "Su questo atto ~art1 restituisce il preambolo, non l'articolo 1 [corretto 2026-08-06 con verifica contro l'API]"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2015-06-15;81~art2!vig=",
+  "note": "Su questo atto ~art1 restituisce il preambolo, non l'articolo 1 [corretto 2026-08-06 con verifica contro l'API]",
+  "emettitore": "stato"
  },
  {
   "id": "F10",
@@ -1356,8 +1435,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:1998-07-25;286~art2",
-  "note": "Su questo atto ~art1 restituisce il preambolo, non l'articolo 1 [corretto 2026-08-06 con verifica contro l'API]"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:1998-07-25;286~art2!vig=",
+  "note": "Su questo atto ~art1 restituisce il preambolo, non l'articolo 1 [corretto 2026-08-06 con verifica contro l'API]",
+  "emettitore": "stato"
  },
  {
   "id": "F11",
@@ -1373,8 +1453,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2023-03-31;36~art119",
-  "note": "Subappalto nuovo codice appalti"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2023-03-31;36~art119!vig=",
+  "note": "Subappalto nuovo codice appalti",
+  "emettitore": "stato"
  },
  {
   "id": "F12",
@@ -1390,8 +1471,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2019-01-12;14~art12",
-  "note": "Codice Crisi composizione negoziata"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2019-01-12;14~art12!vig=",
+  "note": "Codice Crisi composizione negoziata",
+  "emettitore": "stato"
  },
  {
   "id": "F13",
@@ -1407,8 +1489,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.del.presidente.della.repubblica:2001-06-06;380~art10",
-  "note": "T.U. Edilizia con comma [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.del.presidente.della.repubblica:2001-06-06;380~art10!vig=",
+  "note": "T.U. Edilizia con comma [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]",
+  "emettitore": "stato"
  },
  {
   "id": "F14",
@@ -1424,8 +1507,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2000-08-18;267~art50",
-  "note": "TUEL poteri sindaco [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2000-08-18;267~art50!vig=",
+  "note": "TUEL poteri sindaco [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]",
+  "emettitore": "stato"
  },
  {
   "id": "F15",
@@ -1441,8 +1525,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2005-09-06;206~art130",
-  "note": "Garanzia legale conformità"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2005-09-06;206~art130!vig=",
+  "note": "Garanzia legale conformità",
+  "emettitore": "stato"
  },
  {
   "id": "G01",
@@ -1458,9 +1543,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;262:2~art2043",
-  "no_vig": true,
-  "note": "Nessun !vig= su norma vigente"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;262:2~art2043!vig=",
+  "note": "Nessun !vig= su norma vigente — Norma vigente: !vig= senza data (testo in vigore il giorno del clic).",
+  "emettitore": "stato"
  },
  {
   "id": "G02",
@@ -1476,9 +1561,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:costituzione:1947-12-27~art24",
-  "no_vig": true,
-  "note": "Nessun !vig= su Cost."
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:costituzione:1947-12-27~art24!vig=",
+  "note": "Nessun !vig= su Cost. — Norma vigente: !vig= senza data (testo in vigore il giorno del clic).",
+  "emettitore": "stato"
  },
  {
   "id": "G03",
@@ -1494,9 +1579,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1930-10-19;1398:1~art110",
-  "no_vig": true,
-  "note": "Nessun !vig= su c.p."
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1930-10-19;1398:1~art110!vig=",
+  "note": "Nessun !vig= su c.p. — Norma vigente: !vig= senza data (testo in vigore il giorno del clic).",
+  "emettitore": "stato"
  },
  {
   "id": "G04",
@@ -1512,9 +1597,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2001-06-08;231~art7",
-  "no_vig": true,
-  "note": "Nessun !vig= su D.Lgs. 231/2001"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2001-06-08;231~art7!vig=",
+  "note": "Nessun !vig= su D.Lgs. 231/2001 — Norma vigente: !vig= senza data (testo in vigore il giorno del clic).",
+  "emettitore": "stato"
  },
  {
   "id": "G05",
@@ -1530,9 +1615,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.del.presidente.della.repubblica:1988-09-22;447~art192",
-  "no_vig": true,
-  "note": "Nessun !vig= su c.p.p."
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.del.presidente.della.repubblica:1988-09-22;447~art192!vig=",
+  "note": "Nessun !vig= su c.p.p. — Norma vigente: !vig= senza data (testo in vigore il giorno del clic).",
+  "emettitore": "stato"
  },
  {
   "id": "G06",
@@ -1548,9 +1633,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2008-04-09;81~art17",
-  "no_vig": true,
-  "note": "Nessun !vig= su D.Lgs. 81/2008"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2008-04-09;81~art17!vig=",
+  "note": "Nessun !vig= su D.Lgs. 81/2008 — Norma vigente: !vig= senza data (testo in vigore il giorno del clic).",
+  "emettitore": "stato"
  },
  {
   "id": "G07",
@@ -1566,9 +1651,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2023-03-31;36~art3",
-  "no_vig": true,
-  "note": "Nessun !vig= su norma recente"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2023-03-31;36~art3!vig=",
+  "note": "Nessun !vig= su norma recente — Norma vigente: !vig= senza data (testo in vigore il giorno del clic).",
+  "emettitore": "stato"
  },
  {
   "id": "G08",
@@ -1584,9 +1669,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1940-10-28;1443:1~art83",
-  "no_vig": true,
-  "note": "Nessun !vig= su c.p.c."
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1940-10-28;1443:1~art83!vig=",
+  "note": "Nessun !vig= su c.p.c. — Norma vigente: !vig= senza data (testo in vigore il giorno del clic).",
+  "emettitore": "stato"
  },
  {
   "id": "G09",
@@ -1602,9 +1687,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:legge:1970-05-20;300~art35",
-  "no_vig": true,
-  "note": "Nessun !vig= su L. 300/1970"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:legge:1970-05-20;300~art35!vig=",
+  "note": "Nessun !vig= su L. 300/1970 — Norma vigente: !vig= senza data (testo in vigore il giorno del clic).",
+  "emettitore": "stato"
  },
  {
   "id": "G10",
@@ -1620,9 +1705,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2019-01-12;14~art2",
-  "no_vig": true,
-  "note": "Nessun !vig= su Codice Crisi"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2019-01-12;14~art2!vig=",
+  "note": "Nessun !vig= su Codice Crisi — Norma vigente: !vig= senza data (testo in vigore il giorno del clic).",
+  "emettitore": "stato"
  },
  {
   "id": "H01",
@@ -1638,8 +1723,9 @@
   "lettera": null,
   "art_suffix": null,
   "data_storica": null,
-  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:costituzione:1947-12-27",
-  "note": "Costituzione senza articolo"
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:costituzione:1947-12-27!vig=",
+  "note": "Costituzione senza articolo",
+  "emettitore": "stato"
  },
  {
   "id": "H02",
@@ -1656,7 +1742,8 @@
   "art_suffix": null,
   "data_storica": "2010-01-01",
   "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2001-06-08;231~art5!vig=2010-01-01",
-  "note": "!vig= in coda dopo comma+lettera [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]"
+  "note": "!vig= in coda dopo comma+lettera [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]",
+  "emettitore": "stato"
  },
  {
   "id": "H03",
@@ -1673,7 +1760,8 @@
   "art_suffix": "bis",
   "data_storica": "2010-06-01",
   "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1930-10-19;1398:1~art416bis!vig=2010-06-01",
-  "note": "Art. bis con data storica"
+  "note": "Art. bis con data storica",
+  "emettitore": "stato"
  },
  {
   "id": "H04",
@@ -1690,7 +1778,8 @@
   "art_suffix": null,
   "data_storica": "2013-12-31",
   "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;262:2~art2477!vig=2013-12-31",
-  "note": "Ordine: allegato:N ~ art ~ !vig= [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]"
+  "note": "Ordine: allegato:N ~ art ~ !vig= [comma/lettera fuori dall'URN dal 2026-08-06: inerti sul portale, errore sull'API]",
+  "emettitore": "stato"
  },
  {
   "id": "H05",
@@ -1708,6 +1797,61 @@
   "data_storica": "2020-01-01",
   "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;262:2~art2051!vig=2020-01-01",
   "no_url_encoding": true,
-  "note": "Nessun %3A %3B %7E %21"
+  "note": "Nessun %3A %3B %7E %21",
+  "emettitore": "stato"
+ },
+ {
+  "id": "I01",
+  "cat": "I",
+  "desc": "d.m. 55/2014 art. 4 (parametri forensi)",
+  "norma": "d.m. 55/2014",
+  "emettitore": "ministero.giustizia",
+  "tipo": "decreto",
+  "data_atto": "2014-03-10",
+  "numero": "55",
+  "allegato": null,
+  "articolo": 4,
+  "comma": null,
+  "lettera": null,
+  "art_suffix": null,
+  "data_storica": null,
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:ministero.giustizia:decreto:2014-03-10;55~art4!vig=",
+  "note": "Decreto ministeriale: emettitore al posto di stato. Verificato sul portale il 2026-10-17 (l'API invece rifiuta questi URN)."
+ },
+ {
+  "id": "I02",
+  "cat": "I",
+  "desc": "d.P.C.M. 159/2013 art. 2 (ISEE)",
+  "norma": "d.P.C.M. 159/2013",
+  "emettitore": "presidenza.consiglio.ministri",
+  "tipo": "decreto",
+  "data_atto": "2013-12-05",
+  "numero": "159",
+  "allegato": null,
+  "articolo": 2,
+  "comma": null,
+  "lettera": null,
+  "art_suffix": null,
+  "data_storica": null,
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:presidenza.consiglio.ministri:decreto:2013-12-05;159~art2!vig=",
+  "note": "D.P.C.M. numerato: emettitore presidenza.consiglio.ministri, tipo decreto."
+ },
+ {
+  "id": "I03",
+  "cat": "I",
+  "desc": "l. 898/1970 art. 3 nel testo originario",
+  "norma": "legge",
+  "emettitore": "stato",
+  "tipo": "legge",
+  "data_atto": "1970-12-01",
+  "numero": "898",
+  "allegato": null,
+  "articolo": 3,
+  "comma": null,
+  "lettera": null,
+  "art_suffix": null,
+  "data_storica": "originale",
+  "url_atteso": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:legge:1970-12-01;898~art3@originale",
+  "note": "Testo originario: @originale dopo l'articolo, non !vig= con la data dell'atto."
  }
 ]
