@@ -95,6 +95,9 @@ questa esclusione prima di collegarsi: se trova un altro server abilitato,
 chiede di ripetere la preparazione e non avvia le conversazioni.
 I relativi controlli offline si eseguono con
 `python3 -m pytest buddalaw/tests/test_e2e_runner.py`.
+Sono escluse anche le deleghe interne di OpenCode e le domande interattive:
+ogni prova deve essere eseguita dal modello scelto e concludersi senza
+attendere una risposta nella finestra di OpenCode.
 
 ```bash
 python3 buddalaw/tests/e2e/run.py --runtime claude --config v9            # tutti i casi, 1 volta

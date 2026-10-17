@@ -74,3 +74,28 @@ def test_skill_globale_non_avvia_il_modello(runner, monkeypatch, tmp_path):
     assert problems == ["skill globale"]
     assert ex.costo == 0
     assert ex.errore == "isolamento della skill non verificato"
+
+
+@pytest.mark.parametrize("message", ["HTTP 500: Internal server error", "Circuit breaker aperto"])
+def test_guasto_server_ferma_senza_ritento(runner, message):
+    with pytest.raises(runner.Blocco):
+        runner.controlla_blocco(message, True)
+
+
+def test_numero_articolo_non_e_errore_http(runner):
+    runner.controlla_blocco("La sentenza richiama l'art. 500 c.p.c.", False)
+
+
+def test_guasto_connessione_non_viene_chiamato_login_mancante(runner, monkeypatch):
+    def fake_run(cmd, **kwargs):
+        if cmd[1:] == ["debug", "config"]:
+            out = '{"mcp":{"buddalaw":{"enabled":true}}}'
+        elif cmd[1:] == ["auth", "list"]:
+            out = "OpenRouter authenticated"
+        else:
+            out = "✗ buddalaw failed\nMCP error -32000: Connection closed\nhttps://mcp.buddalaw.com/mcp"
+        return subprocess.CompletedProcess(cmd, 0, out)
+
+    monkeypatch.setattr(runner.subprocess, "run", fake_run)
+    with pytest.raises(runner.Salta, match="collegamento BuddaLaw non riuscito.*Connection closed"):
+        runner.preflight_opencode("opencode")

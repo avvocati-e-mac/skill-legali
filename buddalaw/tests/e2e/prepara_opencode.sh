@@ -42,12 +42,17 @@ cat > opencode.json <<'JSON'
     }
   },
   "agent": {
-    "build": { "steps": 8 }
+    "build": {
+      "steps": 8,
+      "permission": { "task": "deny", "question": "deny" }
+    }
   },
   "permission": {
     "skill": { "*": "deny", "buddalaw": "allow" },
     "bash": "deny",
     "edit": "deny",
+    "task": "deny",
+    "question": "deny",
     "webfetch": "deny",
     "websearch": "deny",
     "read": "allow"

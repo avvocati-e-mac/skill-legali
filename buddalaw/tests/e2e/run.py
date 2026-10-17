@@ -88,7 +88,7 @@ DOMINI_LINK = ("platform.buddalaw.com", "normattiva.it")
 # blocco del server: solo su risultati di errore o brevi, per non scambiare un
 # «art. 403» in una sentenza per un codice HTTP
 BLOCCO_RE = re.compile(
-    r"(?i)(\b(http|status(code)?|errore?|error|codice)\b\W{0,3}\D{0,12}\b(403|429)\b"
+    r"(?i)(\b(http|status(code)?|errore?|error|codice)\b\W{0,3}\D{0,12}\b(403|429|500)\b"
     r"|too many requests|rate.?limit|forbidden|troppe richieste|account (bloccato|sospeso)|quota (esaurita|exceeded)"
     # guasto del server (osservato il 2026-10-17): le prove successive non misurano la skill
     r"|circuit breaker|backend temporaneamente non disponibile|servizio non è momentaneamente disponibile)"
@@ -378,9 +378,15 @@ def preflight_opencode(oc: str) -> None:
     riga = next((r for r in mcp.splitlines() if "buddalaw" in r.lower()), "")
     if not riga:
         raise Salta("server MCP buddalaw non configurato nella sandbox: rilancia prepara_opencode.sh")
-    if "needs authentication" in riga or "needs_auth" in riga or "✗" in riga or "failed" in riga.lower():
+    if "needs authentication" in riga or "needs_auth" in riga:
         raise Salta(f"BuddaLaw non autenticato in opencode ({riga.strip(' │●')}): "
                     f"cd \"{SANDBOX}\" && OPENCODE_DB=\"{SANDBOX / '.opencode-test.db'}\" {oc} mcp auth buddalaw")
+    if "✗" in riga or "failed" in riga.lower() or "connected" not in riga.lower():
+        lines = mcp.splitlines()
+        pos = lines.index(riga)
+        dettaglio = " ".join(lines[pos:pos + 3]).strip()
+        controlla_blocco(dettaglio, True)
+        raise Salta(f"collegamento BuddaLaw non riuscito: {dettaglio}")
 
 
 def verifica_skill_opencode(oc: str, config: str) -> list[str]:
