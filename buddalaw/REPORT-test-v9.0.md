@@ -14,8 +14,8 @@
 | Runtime | Claude Code headless (`claude -p`), connettore claude.ai BuddaLaw |
 | Modello | `claude-haiku-5-5`. Il modello predefinito non è stato provato (server fuori servizio) |
 | Isolamento | `--disable-slash-commands`: nessuna skill installata è attiva, nemmeno la v8.3 in `~/.claude/skills`. Skill iniettata con `--append-system-prompt-file`. Tool ridotti a Read e ToolSearch, altri server MCP vietati. `system/init` controllato a ogni esecuzione |
-| opencode (Qwen 3.8 Flash, DeepSeek V4.1 Flash) | Saltato: OpenRouter è autenticato, ma BuddaLaw nella sandbox non ancora (`buddalaw needs authentication`) |
-| Codex / OpenAI | **Non collaudato**: in `~/.codex/config.toml` non c'è il server BuddaLaw |
+| opencode (Qwen 3.8 Flash-Next, DeepSeek V4.1 Flash) | Prima tornata saltata per accesso mancante; nella ripresa entrambi hanno concluso il quesito mirato descritto sotto, con OpenCode 1.18.19 e OpenRouter |
+| GPT Astra / Luna | Nella ripresa: due subagenti indipendenti con i tool MCP BuddaLaw nativi. Questo non equivale a un collaudo della CLI Codex o della sua configurazione locale |
 
 ## Cronologia
 
@@ -32,7 +32,7 @@ Un'esecuzione è «colpita» se almeno una risposta di BuddaLaw diceva «Circuit
 
 ## Livello A
 
-52 test passati su 52, con l'archivio `.skill` rigenerato dopo le correzioni. Description: 941 caratteri (limite 1024). `SKILL.md`: 187 righe.
+52 test passati su 52, con l'archivio `.skill` rigenerato dopo le correzioni. Nella ripresa si aggiungono 9 controlli offline del runner: **61/61**. Description: 941 caratteri (limite 1024). `SKILL.md`: 187 righe; nessuna modifica alla skill durante il confronto mirato.
 
 ## Livello B — esiti v9.0 con Haiku
 
@@ -85,7 +85,7 @@ Formato: esecuzioni promosse / esecuzioni valide. «—» = nessuna esecuzione v
 | Livello A verde | sì |
 | Livello C verde o fermo dichiarato | verde poco prima del guasto (S3, 12/12); da rifare dopo le correzioni |
 | ≥ 90% dei casi ⚡ con Haiku (2 su 3) | sì sui dati validi (94%); le 3 ripetizioni complete non sono state possibili |
-| ≥ 80% con Qwen e DeepSeek | non verificato: BuddaLaw non ancora autenticato in opencode |
+| ≥ 80% con Qwen e DeepSeek | non verificato sull'intera suite; accesso OpenCode risolto e confronto mirato completato, con violazioni rilevate in entrambi i modelli |
 | Zero link inventati | sì: 114 esecuzioni su 114 |
 | Costo dichiarato | sì, ≈ 0,94 $ |
 | v9 ≥ v8.4, migliore sui divari G1–G8 | non verificato (guasto); pari sui 3 casi validi |
@@ -119,9 +119,61 @@ Applicate alla skill dopo questi dati. Sono controllate dal livello A, ma non an
 - segnaposto al posto di estremi ed esempi presi da casi veri;
 - `chiama_mcp.py` si ferma anche sul «circuit breaker».
 
-## Da fare quando il server risponde di nuovo (con il via dell'utente)
+## Lavoro generale ancora da completare dopo la ripresa autorizzata
 
-1. Livello C.
+1. Livello C, dopo aver risolto l'ID Haiku rifiutato nella ripresa.
 2. `--config v9 --solo-lampo --runs 3` (in particolare B12, B13, B23, B24), poi `--config v8.4,nessuna --solo-lampo` e `--modello default --solo-lampo`.
-3. Autenticare BuddaLaw in opencode e lanciare `--runtime opencode --config v9 --runs 1`, poi `--solo-lampo --runs 3`.
+3. Applicare la preparazione OpenCode aggiornata e completare `--runtime opencode --config v9 --runs 1`, poi `--solo-lampo --runs 3`. BuddaLaw e OpenRouter risultano autenticati.
 4. Aggiornare questo report.
+
+## Ripresa: confronto mirato con quattro modelli
+
+Il maintainer ha autorizzato la ripresa e poi richiesto un unico quesito di
+responsabilità sanitaria, identico per quattro modelli. La suite generale è
+stata interrotta per dare precedenza a questo confronto: Qwen aveva concluso
+B00–B02, tutti passati; questo campione non dimostra il raggiungimento della
+soglia dell'80%. Le ripetizioni preparatorie con isolamento fallito sono escluse.
+
+| Modello e ambiente | `search_*` | `get_judgement` richiesti / integrali ottenuti | `get_law_article` | Esiti osservati |
+|---|---:|---:|---:|---|
+| GPT Astra, subagente MCP nativo, ragionamento high | 4 | 2 / 1 | 16 | Limiti rispettati, zero errori di schema; 5 link giurisprudenziali tutti presenti nei grezzi |
+| GPT Luna, subagente MCP nativo, ragionamento low | 3 | 2 / 2 dichiarati | 7 | Limiti rispettati; 2 link e letture descritti nell'audit, grezzi non conservati |
+| DeepSeek V4.1 Flash, OpenCode/OpenRouter | **10** | 1 / 0 (`not_found`) | 6 | Tetto ricerche superato; link normativi usati senza Normattiva; zero URL giurisprudenziali alterati su 16 |
+| Qwen 3.8 Flash-Next, OpenCode/OpenRouter | **7** | 1 / 0 (`not_found`) | 21 | Tetto ricerche superato; 4 chiamate non conformi allo schema; **1 URL alterato su 12** |
+
+I conteggi includono i tentativi rifiutati: per Qwen due ricerche usano `anno`
+come stringa e due letture normative inviano `paragraphs` come stringa anziché
+elenco. Il link alterato aggiunge uno zero al numero nell'ECLI: non dimostra una
+sentenza inventata, ma viola la copia identica di `public_url`.
+
+I due subagenti GPT hanno usato anche Normattiva per il formato dei link, come
+richiesto dal loro ambiente; OpenCode aveva soltanto BuddaLaw. Il confronto non
+isola quindi il solo effetto del modello. Astra distingue con maggiore
+precisione gli adempimenti processuali e i rapporti interni; Luna è meno
+dettagliata su questi punti. Nelle due risposte OpenRouter sono presenti
+passaggi da verificare sul mantenimento della cronologia clinica e
+sull'applicazione concreta delle norme. Nessuna risposta è stata riscritta.
+
+**Costo riportato da OpenCode per le due risposte concluse:** DeepSeek
+0,02265 $, Qwen 0,03515 $, totale **0,05780 $**; durata rispettivamente 84,4 e
+444,6 secondi. Esclusi preparazione e tentativo incompleto; costi GPT non
+disponibili. Non sono stati osservati blocchi 403/429, HTTP 500 o circuit
+breaker nelle quattro prove concluse. I controlli tecnici non certificano ogni
+conclusione giuridica.
+
+**Correzioni al runner nate dalle prove:** tutti i server MCP globali estranei
+vengono disabilitati nella sola sandbox; una skill caricata dalla posizione
+sbagliata impedisce l'avvio del modello; deleghe interne e domande interattive
+sono escluse; i guasti MCP non vengono più descritti come login mancante e
+HTTP 500 provoca lo stop. Un primo tentativo DeepSeek rimasto aperto su un
+subagente `explore` è stato interrotto e conservato separatamente. Per il solo
+quesito articolato sono stati consentiti 16 passi OpenCode, contro gli 8 della
+suite ordinaria; i limiti comportamentali della skill restano invariati.
+
+Risposte, audit e tracce sono conservati localmente in
+`tests/e2e/results/20261017-caso-chirurgo/`, esclusa da git. Le quattro risposte
+originali e il confronto sono stati copiati, con verifica dell'integrità, nella
+cartella Downloads richiesta dal maintainer. Nessuna copia installata della
+skill è stata aggiornata. Rimangono da completare la suite generale, le tre
+ripetizioni critiche e il confronto v8.4/nessuna; il vecchio canale di livello C
+ha inoltre rifiutato l'ID Haiku configurato, senza effettuare chiamate BuddaLaw.
