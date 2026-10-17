@@ -1,0 +1,787 @@
+{
+  "_leggimi": [
+    "Casi del livello B (end-to-end) della skill buddalaw. Li esegue run.py.",
+    "id con prefisso B; 'checklist' rimanda all'id T di buddalaw/tests/CHECKLIST.md.",
+    "checklist_extra: altri id T coperti dallo stesso caso (es. controlli generali sempre attivi).",
+    "lampo=true segna i casi ⚡ (gli unici ripetuti 3 volte e usati per il confronto fra configurazioni).",
+    "Nomi dei tool: solo la parte finale (search_case_law), il runner toglie i prefissi.",
+    "Vincoli sugli argomenti: valore letterale (uguaglianza; stringhe senza maiuscole/minuscole),",
+    "  {'regex': ...}, {'assente': true}, {'presente': true}, {'tipo': 'int'|'str'}, {'in': [...]}, {'non': valore}.",
+    "deve_chiamare: ogni voce deve essere soddisfatta da almeno una chiamata; {'uno_di': [voci]} = basta una delle alternative.",
+    "max_chiamate: tetto alle chiamate BuddaLaw escluso check_access; max_ricerche: tetto ai tool search_*.",
+    "avviso: numero esatto di righe '⚠ BuddaLaw è stato aggiornato' attese nel testo.",
+    "morbidi: stessi controlli, ma riportati senza bocciare il caso.",
+    "config: configurazione imposta al caso; solo_se_config: il caso gira solo se la configurazione scelta è fra queste.",
+    "per_config: controlli aggiuntivi che valgono solo per una configurazione.",
+    "turni_successivi: altri messaggi dell'utente nella stessa conversazione (Claude: stdin stream-json; opencode: --session).",
+    "prima_di: coppie [tool A, tool B], A deve comparire prima di B. max_check_access: tetto su tutta la conversazione.",
+    "estremi_da_tool: ogni 'n. NUMERO/ANNO' del testo deve comparire nei tool_result. virgolettati_fedeli: ogni «virgolettato» ≥25 caratteri deve essere letterale."
+  ],
+  "casi": [
+    {
+      "id": "B00",
+      "titolo": "Controllo di isolamento: quale skill è caricata",
+      "checklist": null,
+      "lampo": true,
+      "prompt": "Prima di cominciare: quale versione della skill BuddaLaw stai seguendo? Rispondi in una riga col numero di versione (scrivi «nessuna» se non hai istruzioni di una skill BuddaLaw). Non fare ricerche.",
+      "max_chiamate": 0,
+      "non_deve_contenere": [
+        "8\\.3"
+      ],
+      "per_config": {
+        "v9": {
+          "deve_contenere": [
+            "9\\.0"
+          ]
+        },
+        "v8.4": {
+          "deve_contenere": [
+            "8\\.4"
+          ]
+        },
+        "nessuna": {
+          "non_deve_contenere": [
+            "9\\.0",
+            "8\\.4"
+          ]
+        }
+      }
+    },
+    {
+      "id": "B01",
+      "titolo": "IVA: search_category tributari, dominio tributario",
+      "checklist": "T63",
+      "lampo": true,
+      "prompt": "Al mio cliente l'Agenzia ha negato la detrazione IVA per operazioni ritenute soggettivamente inesistenti, ma lui era in buona fede. Cercami sentenze delle Corti di giustizia tributaria sulla buona fede del cessionario e leggimi il testo di quella più pertinente.",
+      "deve_chiamare": [
+        {
+          "tool": "search_case_law",
+          "argomenti": {
+            "search_category": "tributari"
+          }
+        },
+        {
+          "tool": "get_judgement",
+          "argomenti": {
+            "dominio": "tributario"
+          }
+        }
+      ],
+      "non_deve_chiamare": [
+        {
+          "tool": "search_case_law",
+          "argomenti": {
+            "search_category": "tributario"
+          }
+        },
+        {
+          "tool": "get_judgement",
+          "argomenti": {
+            "dominio": "tributari"
+          }
+        }
+      ],
+      "deve_contenere": [
+        "platform\\.buddalaw\\.com"
+      ],
+      "checklist_extra": [
+        "T62"
+      ],
+      "_nota": "T62: in opencode i tool hanno il prefisso buddalaw_; il runner boccia ogni esecuzione opencode che dichiara i tool non disponibili senza averli chiamati."
+    },
+    {
+      "id": "B02",
+      "titolo": "Cassazione nota per numero: dominio civile, niente ufficio",
+      "checklist": "T57",
+      "lampo": true,
+      "prompt": "Il collega avversario nella comparsa cita Cass. civ. n. 3285/2022. Me la trovi e mi dici in poche righe che cosa ha deciso?",
+      "deve_chiamare": [
+        {
+          "uno_di": [
+            {
+              "tool": "get_judgement",
+              "argomenti": {
+                "dominio": "civile",
+                "numero": {
+                  "in": [
+                    3285,
+                    "3285",
+                    "03285"
+                  ]
+                },
+                "anno": {
+                  "in": [
+                    2022,
+                    "2022"
+                  ]
+                },
+                "ufficio": {
+                  "assente": true
+                }
+              }
+            },
+            {
+              "tool": "search_case_law",
+              "argomenti": {
+                "search_category": "civile",
+                "numero": "03285"
+              }
+            }
+          ]
+        }
+      ],
+      "non_deve_chiamare": [
+        {
+          "tool": "get_judgement",
+          "argomenti": {
+            "dominio": "civile",
+            "ufficio": {
+              "presente": true
+            }
+          }
+        }
+      ],
+      "max_chiamate": 4,
+      "deve_contenere": [
+        "3285/2022",
+        "platform\\.buddalaw\\.com"
+      ],
+      "checklist_extra": [
+        "T64"
+      ],
+      "_nota": "T64 (fedeltà dei link) è un controllo generale attivo in ogni caso; qui è il caso di riferimento. Regola prudente: niente ufficio con dominio civile (il falso not_found nasce senza dominio)."
+    },
+    {
+      "id": "B03",
+      "titolo": "Corte costituzionale",
+      "checklist": "T49",
+      "lampo": true,
+      "prompt": "Cerca sentenze della Corte costituzionale sull'indennità per il licenziamento illegittimo nel contratto a tutele crescenti.",
+      "deve_chiamare": [
+        {
+          "tool": "search_case_law",
+          "argomenti": {
+            "search_category": "costituzionale"
+          }
+        }
+      ],
+      "deve_contenere": [
+        "Corte cost"
+      ],
+      "max_chiamate": 6
+    },
+    {
+      "id": "B04",
+      "titolo": "Corte di giustizia UE con numero di causa",
+      "checklist": "T50",
+      "lampo": true,
+      "prompt": "Che cosa ha stabilito la Corte di giustizia UE nella causa C-618/10 (Banco Español de Crédito) sul potere del giudice nazionale di modificare una clausola abusiva?",
+      "deve_chiamare": [
+        {
+          "uno_di": [
+            {
+              "tool": "search_case_law",
+              "argomenti": {
+                "search_category": "eu-case-law"
+              }
+            },
+            {
+              "tool": "get_judgement",
+              "argomenti": {
+                "dominio": "eu-case-law"
+              }
+            }
+          ]
+        }
+      ],
+      "non_deve_chiamare": [
+        {
+          "tool": "search_case_law",
+          "argomenti": {
+            "search_category": "civile"
+          }
+        }
+      ],
+      "deve_contenere": [
+        "C-618/10"
+      ],
+      "max_chiamate": 6
+    },
+    {
+      "id": "B05",
+      "titolo": "Casi simili di merito",
+      "checklist": "T51",
+      "lampo": true,
+      "prompt": "Ho un cliente licenziato per superamento del periodo di comporto, ma secondo lui parte delle assenze dipendeva da una malattia professionale causata dall'azienda. Ci sono casi simili decisi dai tribunali?",
+      "deve_chiamare": [
+        {
+          "tool": "search_similar_cases",
+          "argomenti": {
+            "dominio": {
+              "in": [
+                "merito",
+                null
+              ]
+            }
+          }
+        }
+      ],
+      "non_deve_chiamare": [
+        {
+          "tool": "search_similar_cases",
+          "argomenti": {
+            "dominio": {
+              "regex": "^(?!merito$).+"
+            }
+          }
+        }
+      ],
+      "deve_contenere": [
+        "platform\\.buddalaw\\.com"
+      ],
+      "max_chiamate": 6
+    },
+    {
+      "id": "B06",
+      "titolo": "Ufficio indicato: list_uffici → codiceufficio",
+      "checklist": "T52",
+      "lampo": true,
+      "prompt": "Come decide il Tribunale di Milano sul licenziamento per superamento del periodo di comporto? Mi interessano solo le sue sentenze.",
+      "deve_chiamare": [
+        {
+          "tool": "list_uffici",
+          "argomenti": {
+            "dominio": "merito"
+          }
+        },
+        {
+          "uno_di": [
+            {
+              "tool": "search_case_law",
+              "argomenti": {
+                "search_category": "merito",
+                "codiceufficio": {
+                  "regex": "^\\d{6,}$"
+                }
+              }
+            },
+            {
+              "tool": "search_similar_cases",
+              "argomenti": {
+                "codiceufficio": {
+                  "regex": "^\\d{6,}$"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "non_deve_chiamare": [
+        {
+          "tool": "search_case_law",
+          "argomenti": {
+            "search_category": "civile",
+            "codiceufficio": {
+              "presente": true
+            }
+          }
+        }
+      ],
+      "max_chiamate": 6
+    },
+    {
+      "id": "B07",
+      "titolo": "get_law_article con in_force_on: 163-bis c.p.c. al 2022",
+      "checklist": "T53",
+      "lampo": true,
+      "prompt": "Che termine minimo per comparire prevedeva l'art. 163-bis c.p.c. a giugno 2022? Leggimi il testo di allora.",
+      "deve_chiamare": [
+        {
+          "tool": "get_law_article",
+          "argomenti": {
+            "act": "codice_procedura_civile",
+            "article": {
+              "regex": "^163[- ]?bis$"
+            },
+            "in_force_on": {
+              "regex": "^2022-0[5-7]-\\d{2}$"
+            }
+          }
+        }
+      ],
+      "non_deve_chiamare": [
+        {
+          "tool": "search_case_law"
+        }
+      ],
+      "deve_contenere": [
+        "(?i)\\b(90|novanta)\\b"
+      ],
+      "morbidi": {
+        "deve_contenere": [
+          "2022"
+        ]
+      },
+      "max_chiamate": 3
+    },
+    {
+      "id": "B08",
+      "titolo": "Articolo abrogato: 594 c.p.",
+      "checklist": "T54",
+      "lampo": false,
+      "prompt": "Leggimi il testo dell'art. 594 c.p. sull'ingiuria, mi serve per una querela.",
+      "deve_chiamare": [
+        {
+          "tool": "get_law_article",
+          "argomenti": {
+            "act": "codice_penale",
+            "article": "594"
+          }
+        }
+      ],
+      "deve_contenere": [
+        "(?i)abrogat|depenalizzat"
+      ],
+      "max_chiamate": 3
+    },
+    {
+      "id": "B09",
+      "titolo": "SU 577/2008 non disponibile: nessun link inventato",
+      "checklist": "T45",
+      "lampo": true,
+      "prompt": "Analizzami la sentenza delle Sezioni Unite n. 577/2008 sul contatto sociale e la responsabilità della struttura sanitaria.",
+      "deve_chiamare": [
+        {
+          "tool": "get_judgement",
+          "argomenti": {
+            "numero": {
+              "in": [
+                577,
+                "577",
+                "00577"
+              ]
+            },
+            "anno": {
+              "in": [
+                2008,
+                "2008"
+              ]
+            },
+            "ufficio": {
+              "assente": true
+            }
+          }
+        }
+      ],
+      "deve_contenere": [
+        "(?i)non (è |e' |risulta )?(disponibile|presente)"
+      ],
+      "non_deve_contenere": [
+        "\\[[^\\]]*577/2008[^\\]]*\\]\\(",
+        "(?i)errore tecnico|guasto"
+      ],
+      "max_chiamate": 6
+    },
+    {
+      "id": "B10",
+      "titolo": "Sezioni Unite e contrasto: tetto alle chiamate",
+      "checklist": "T65",
+      "lampo": false,
+      "prompt": "La clausola penale manifestamente eccessiva può essere ridotta d'ufficio dal giudice, anche se il debitore non lo chiede? Ci sono state pronunce delle Sezioni Unite o contrasti?",
+      "deve_chiamare": [
+        {
+          "tool": "search_case_law",
+          "argomenti": {
+            "search_category": "civile"
+          }
+        }
+      ],
+      "max_ricerche": 5,
+      "max_per_tool": {
+        "get_judgement": 3
+      },
+      "max_chiamate": 7,
+      "morbidi": {
+        "deve_contenere": [
+          "(?i)sezioni unite|sez\\. ?un"
+        ]
+      }
+    },
+    {
+      "id": "B11",
+      "titolo": "Domanda in inglese: risposta e ricerca in italiano",
+      "checklist": "T30",
+      "lampo": false,
+      "prompt": "Find Italian Supreme Court case law on dismissal for exceeding the sick-leave protection period (periodo di comporto).",
+      "deve_chiamare": [
+        {
+          "tool": "search_case_law",
+          "argomenti": {
+            "search_category": "civile",
+            "query": {
+              "regex": "(?i)comporto|licenziament|malattia"
+            }
+          }
+        }
+      ],
+      "morbidi": {
+        "deve_contenere": [
+          "(?i)in italiano"
+        ]
+      },
+      "max_chiamate": 6
+    },
+    {
+      "id": "B12",
+      "titolo": "Avviso di aggiornamento vero (inventario ridotto)",
+      "checklist": "T59",
+      "lampo": true,
+      "config": "v9-ridotta",
+      "solo_se_config": [
+        "v9"
+      ],
+      "prompt": "Cerca qualche sentenza della Cassazione sulla responsabilità del Comune per una buca stradale non segnalata (art. 2051 c.c.).",
+      "deve_chiamare": [
+        {
+          "tool": "search_case_law",
+          "argomenti": {
+            "search_category": "civile"
+          }
+        }
+      ],
+      "avviso": 1,
+      "deve_contenere": [
+        "(?i)search_similar_cases"
+      ],
+      "max_chiamate": 6
+    },
+    {
+      "id": "B13",
+      "titolo": "Nessun falso avviso con l'inventario completo",
+      "checklist": "T60",
+      "lampo": true,
+      "prompt": "Cerca qualche sentenza della Cassazione sulla responsabilità del Comune per una buca stradale non segnalata (art. 2051 c.c.).",
+      "deve_chiamare": [
+        {
+          "tool": "search_case_law",
+          "argomenti": {
+            "search_category": "civile"
+          }
+        }
+      ],
+      "avviso": 0,
+      "max_chiamate": 6,
+      "checklist_extra": [
+        "T60"
+      ]
+    },
+    {
+      "id": "B14",
+      "titolo": "Passa la mano: verifica delle citazioni di un atto",
+      "checklist": "T68",
+      "lampo": true,
+      "prompt": "Controlla le citazioni di questo passaggio della mia comparsa prima del deposito:\n\n«Come affermato da Cass. civ., Sez. III, n. 18392/2017, in tema di responsabilità del custode il caso fortuito può consistere anche nella condotta del danneggiato; nello stesso senso Cass. civ., Sez. VI-3, ord. n. 2480/2018, secondo cui \"quanto più la situazione di possibile danno è suscettibile di essere prevista e superata attraverso l'adozione da parte del danneggiato delle normali cautele, tanto più incidente deve considerarsi l'efficienza causale del comportamento imprudente del medesimo\". Si richiama altresì l'art. 2051 c.c.»",
+      "morbidi": {
+        "deve_contenere": [
+          "(?i)verifica-citazioni-legali|verifica delle citazioni"
+        ],
+        "max_ricerche": 3
+      },
+      "max_chiamate": 8
+    },
+    {
+      "id": "B15",
+      "titolo": "Passa la mano: solo link a una norma",
+      "checklist": "T69",
+      "lampo": false,
+      "prompt": "Dammi solo il link Normattiva all'art. 2043 c.c., niente altro.",
+      "non_deve_chiamare": [
+        {
+          "tool": "search_case_law"
+        },
+        {
+          "tool": "search_similar_cases"
+        }
+      ],
+      "max_chiamate": 2
+    },
+    {
+      "id": "B16",
+      "titolo": "Prima ricerca: check_access prima della ricerca",
+      "checklist": "T01",
+      "lampo": true,
+      "prompt": "Cerca sentenze sulla responsabilità medica in ambito ospedaliero.",
+      "prima_di": [
+        [
+          "check_access",
+          "search_case_law"
+        ]
+      ],
+      "deve_chiamare": [
+        {
+          "tool": "check_access"
+        },
+        {
+          "tool": "search_case_law",
+          "argomenti": {
+            "search_category": {
+              "in": [
+                "civile",
+                "merito"
+              ]
+            }
+          }
+        }
+      ],
+      "max_chiamate": 6
+    },
+    {
+      "id": "B17",
+      "titolo": "Niente sentenze dalla memoria",
+      "checklist": "T04",
+      "lampo": true,
+      "prompt": "Citami qualche sentenza importante della Cassazione sulla responsabilità precontrattuale, senza fare ricerche: mi bastano gli estremi che ricordi.",
+      "estremi_da_tool": true,
+      "max_chiamate": 6
+    },
+    {
+      "id": "B18",
+      "titolo": "Sentenza indicata dall'utente: numero e anno interi, niente ufficio",
+      "checklist": "T05",
+      "lampo": true,
+      "checklist_extra": [
+        "T70"
+      ],
+      "prompt": "L'avvocato avversario cita Cass. n. 12345/2024: puoi analizzarla?",
+      "deve_chiamare": [
+        {
+          "uno_di": [
+            {
+              "tool": "get_judgement",
+              "argomenti": {
+                "dominio": {
+                  "in": [
+                    "civile",
+                    "penale"
+                  ]
+                },
+                "numero": {
+                  "tipo": "int"
+                },
+                "anno": {
+                  "tipo": "int"
+                },
+                "ufficio": {
+                  "assente": true
+                }
+              }
+            },
+            {
+              "tool": "search_case_law",
+              "argomenti": {
+                "numero": "12345",
+                "anno": {
+                  "tipo": "int"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "non_deve_chiamare": [
+        {
+          "tool": "get_judgement",
+          "argomenti": {
+            "ufficio": {
+              "presente": true
+            },
+            "dominio": {
+              "in": [
+                "civile",
+                "penale",
+                null
+              ]
+            }
+          }
+        }
+      ],
+      "max_chiamate": 5
+    },
+    {
+      "id": "B19",
+      "titolo": "«Più recenti»: anno, non data_deposito",
+      "checklist": "T35",
+      "lampo": true,
+      "prompt": "Cerca le sentenze più recenti della Cassazione sul licenziamento per giustificato motivo oggettivo.",
+      "deve_chiamare": [
+        {
+          "tool": "search_case_law",
+          "argomenti": {
+            "search_category": "civile",
+            "anno": {
+              "tipo": "int"
+            }
+          }
+        }
+      ],
+      "non_deve_chiamare": [
+        {
+          "tool": "search_case_law",
+          "argomenti": {
+            "data_deposito": {
+              "presente": true
+            }
+          }
+        }
+      ],
+      "max_chiamate": 6
+    },
+    {
+      "id": "B20",
+      "titolo": "Atto di tipo diverso: warning e niente normattiva_url sbagliato",
+      "checklist": "T55",
+      "lampo": false,
+      "prompt": "Leggimi l'art. 2 della legge 81/2008.",
+      "deve_chiamare": [
+        {
+          "tool": "get_law_article",
+          "argomenti": {
+            "act_year": {
+              "in": [
+                2008,
+                "2008"
+              ]
+            },
+            "act_number": {
+              "in": [
+                81,
+                "81"
+              ]
+            },
+            "article": "2"
+          }
+        }
+      ],
+      "deve_contenere": [
+        "(?i)decreto legislativo|d\\.\\s?lgs"
+      ],
+      "non_deve_contenere": [
+        "normattiva\\.it[^\\s)]*legge:2008;81"
+      ],
+      "max_chiamate": 3
+    },
+    {
+      "id": "B21",
+      "titolo": "not_found Cassazione penale: «non disponibile»",
+      "checklist": "T56",
+      "lampo": true,
+      "prompt": "Analizzami Cass. pen. n. 34090/2017.",
+      "deve_chiamare": [
+        {
+          "tool": "get_judgement",
+          "argomenti": {
+            "dominio": "penale",
+            "numero": {
+              "in": [
+                34090,
+                "34090"
+              ]
+            },
+            "anno": {
+              "in": [
+                2017,
+                "2017"
+              ]
+            }
+          }
+        }
+      ],
+      "deve_contenere": [
+        "(?i)non (è |e' |risulta )?(disponibile|presente)"
+      ],
+      "non_deve_contenere": [
+        "\\[[^\\]]*34090/2017[^\\]]*\\]\\(",
+        "(?i)errore tecnico|guasto|non esiste"
+      ],
+      "max_chiamate": 4
+    },
+    {
+      "id": "B22",
+      "titolo": "Virgolettati letterali, non dalla sintesi",
+      "checklist": "T58",
+      "lampo": true,
+      "prompt": "Trovami una sentenza della Cassazione sul danno da perdita del rapporto parentale per la morte di un fratello non convivente e riportami tra virgolette, parola per parola, il passaggio decisivo.",
+      "deve_chiamare": [
+        {
+          "tool": "search_case_law",
+          "argomenti": {
+            "search_category": "civile"
+          }
+        }
+      ],
+      "virgolettati_fedeli": true,
+      "max_chiamate": 6
+    },
+    {
+      "id": "B23",
+      "titolo": "Avviso vero una sola volta su tre turni",
+      "checklist": "T61",
+      "lampo": false,
+      "config": "v9-ridotta",
+      "solo_se_config": [
+        "v9"
+      ],
+      "prompt": "Cerca qualche sentenza della Cassazione sulla responsabilità del Comune per una buca stradale non segnalata.",
+      "turni_successivi": [
+        "Ora cerca anche qualche sentenza dei tribunali sullo stesso tema.",
+        "Ci sono casi simili a quello di un ciclista caduto in una buca coperta dall'acqua piovana?"
+      ],
+      "avviso": 1,
+      "max_check_access": 1,
+      "max_chiamate": 14
+    },
+    {
+      "id": "B24",
+      "titolo": "check_access una volta e nessun falso avviso su tre turni",
+      "checklist": "T67",
+      "lampo": false,
+      "checklist_extra": [
+        "T60"
+      ],
+      "prompt": "Cerca sentenze della Cassazione sulla responsabilità medica per ritardo nella diagnosi.",
+      "turni_successivi": [
+        "Ora cerca anche sentenze sul condominio e le infiltrazioni dal lastrico solare.",
+        "E qualche provvedimento del Garante privacy sulla videosorveglianza condominiale?"
+      ],
+      "avviso": 0,
+      "max_check_access": 1,
+      "max_chiamate": 14
+    },
+    {
+      "id": "B25",
+      "titolo": "Contratto su modello: ID interi",
+      "checklist": "T70",
+      "lampo": false,
+      "prompt": "Mi serve il modello di un contratto di locazione commerciale, con i requisiti obbligatori di legge.",
+      "deve_chiamare": [
+        {
+          "tool": "get_contract",
+          "argomenti": {
+            "contract_id": {
+              "tipo": "int"
+            }
+          }
+        },
+        {
+          "tool": "get_contract_requirements",
+          "argomenti": {
+            "contract_id": {
+              "tipo": "int"
+            }
+          }
+        }
+      ],
+      "max_chiamate": 6
+    }
+  ]
+}

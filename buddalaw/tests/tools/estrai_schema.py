@@ -34,6 +34,7 @@ import json
 import os
 import ssl
 import subprocess
+import tempfile
 import sys
 import threading
 import urllib.error
@@ -135,9 +136,12 @@ def lancia(timeout: int = 240) -> tuple[list[dict], set[str]]:
         "--output-format", "stream-json", "--verbose",
         "--no-session-persistence", "--max-turns", "3",
         "--allowedTools", "ToolSearch", "--model", MODELLO,
+        "--max-budget-usd", "0.10", "--disable-slash-commands",
     ]
     try:
-        proc = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, env=env)
+        # cartella vuota: niente CLAUDE.md del repo nel contesto
+        with tempfile.TemporaryDirectory() as vuota:
+            proc = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, env=env, cwd=vuota)
     finally:
         srv.shutdown()
     if not raccolta:
