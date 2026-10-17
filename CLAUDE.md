@@ -129,6 +129,16 @@ Quando una procedura dipende dal runtime, differenzia sempre in modo esplicito:
 - **File chiave:** `miglioratore-prompt-legale/miglioratore-prompt-legale/SKILL.md`, `miglioratore-prompt-legale/miglioratore-prompt-legale/references/`
 - **File installazione Claude:** `miglioratore-prompt-legale/miglioratore-prompt-legale.skill`
 
+### verifica-citazioni-legali
+
+- **Cartella:** `verifica-citazioni-legali/`
+- **Scopo:** verifica le citazioni di un atto, parere, memoria o contratto già scritto (specie se generato o rivisto con IA): esistenza ed estremi delle pronunce, verbatim, natura e pertinenza del passo, passi contrari, norme e vigenza
+- **Trigger:** richieste di verificare, controllare o revisionare citazioni, sentenze, massime, riferimenti normativi o virgolettati; «esiste questa sentenza?», «controlla l'atto prima del deposito», ricerca di allucinazioni in testi scritti con IA
+- **Comportamento:** verifica solo sulla fonte letta, mai a memoria; non dichiara «inesistente» senza prova positiva; chiede all'utente quali banche dati usare; produce un report con tabella delle azioni e testo da incollare; non modifica mai l'atto originale e applica solo le correzioni scelte, su una copia
+- **File chiave:** `verifica-citazioni-legali/verifica-citazioni-legali/SKILL.md`, `references/`, `scripts/estrai_citazioni.py`, `scripts/confronta_verbatim.py`, `assets/test/` (atto di collaudo con verdetti attesi)
+- **File installazione Claude:** `verifica-citazioni-legali/verifica-citazioni-legali.skill`
+- **Riservatezza:** gli esempi e l'atto di collaudo non contengono dati di parti o pratiche reali; mantenerli così
+
 ---
 
 ## Struttura standard di una skill
