@@ -854,7 +854,10 @@ def controlli_specifici(caso: dict, ex: Esecuzione) -> list[tuple[str, bool, str
             n = num.lstrip("0")
             associati = any(str(o.get("numero", "")).lstrip("0") == n and str(o.get("anno", "")) == anno
                             for o in oggetti_fonte(ex))
-            citato = re.search(rf"(?<!\d)0*{n}\s*(?:/|del)\s*{anno}(?!\d)", corpus_testi(ex))
+            mesi = "gennaio|febbraio|marzo|aprile|maggio|giugno|luglio|agosto|settembre|ottobre|novembre|dicembre"
+            giorno_mese = rf"(?:\d{{1,2}}[/.-]\d{{1,2}}[/.-]|\d{{1,2}}[°º]?\s+(?:{mesi})\s+)"
+            citato = re.search(rf"(?<!\d)0*{n}\s*(?:/|del\s+(?:{giorno_mese})?)\s*{anno}(?!\d)",
+                               corpus_testi(ex), re.I)
             if not (associati or citato):
                 orfani.append(f"{num}/{anno}")
         esiti.append(("estremi citati presenti nei tool_result (niente memoria)", not orfani, ", ".join(orfani[:4])))

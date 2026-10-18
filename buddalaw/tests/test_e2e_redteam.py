@@ -79,6 +79,13 @@ def test_numero_e_anno_devono_appartenere_alla_stessa_fonte(runner):
     assert not all(ok for _,ok,_ in runner.controlli_specifici({'estremi_da_tool': True},ex))
 
 
+@pytest.mark.parametrize('data',['31/07/2024','31 luglio 2024','2024-07-31'])
+def test_estremi_con_data_completa_della_fonte_non_sono_memoria(runner,data):
+    ex=run_ok(runner);ex.testi=['Cass. n. 21511/2024']
+    ex.fonti=[source(runner,'search_case_law',{'testo':f'Ordinanza n. 21511 del {data}, Rv. 672043.'})]
+    assert all(ok for _,ok,_ in runner.controlli_specifici({'estremi_da_tool':True},ex))
+
+
 def test_schema_errato_non_passa_i_controlli_generali(runner):
     ex = run_ok(runner)
     ex.chiamate = [{'tool':'search_case_law','nome_originale':'buddalaw_search_case_law',
