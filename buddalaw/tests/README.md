@@ -175,6 +175,9 @@ Per lavorare in parallelo, assegna una cartella diversa a ogni processo con
 processi si fermano, conservando le tracce parziali. Un file di arresto già
 presente impedisce nuove esecuzioni: non viene cancellato automaticamente.
 Le richieste già inviate potrebbero completarsi; non vengono avviati ritenti.
+Anche un evento nativo Claude di quota esaurita ferma subito la tornata e
+pubblica lo stesso arresto: non si provano altri casi o provider. Il solo stato
+«crediti extra disabilitati», con quota ancora disponibile, non ferma il test.
 I tetti di spesa restano separati per modello. Il manifest registra sandbox
 e uso dell'arresto condiviso; i relativi controlli sono in `test_parallel_stop.py`.
 OpenCode dispone di 16 passi per quesito e legge soltanto la skill in prova e

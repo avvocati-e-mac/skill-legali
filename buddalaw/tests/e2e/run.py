@@ -143,7 +143,7 @@ def verifica_abbonamento_claude(runtimes: list[str], modello: str | None) -> dic
 def verifica_stop_condiviso():
     path = os.environ.get("BUDDALAW_STOP_FILE")
     if path and Path(path).exists():
-        raise Blocco("arresto condiviso: un altro collaudo ha segnalato un guasto; nessun ritento")
+        raise Blocco("arresto condiviso: collaudo fermato; nessun nuovo tentativo")
 
 
 def condividi_stop():
@@ -479,12 +479,16 @@ def verifica_skill_opencode(oc: str, config: str) -> list[str]:
 
 
 def controllore_live(budget=None):
-    """Conserva gli ID Claude per controllare soltanto i risultati BuddaLaw."""
+    """Controlla la quota nativa del provider e i risultati MCP BuddaLaw."""
     budda_ids = set()
     costo = 0.0
     def controlla(ev):
         nonlocal costo
         tipo = ev.get("type")
+        if tipo == "rate_limit_event":
+            info = ev.get("rate_limit_info") or ev.get("rateLimitInfo") or {}
+            if info.get("status") == "rejected":
+                raise Blocco("limite di utilizzo Claude raggiunto; nessun ritento o cambio di provider")
         if tipo == "step_finish":
             costo += float((ev.get("part") or {}).get("cost") or 0)
             if budget is not None and costo >= budget:

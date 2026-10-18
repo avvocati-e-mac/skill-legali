@@ -78,3 +78,24 @@ def test_timeout_mcp_in_preflight_e_guasto(runner, monkeypatch):
     monkeypatch.setattr(runner.subprocess, 'run', run)
     with pytest.raises(runner.Blocco, match='timeout del controllo MCP'):
         runner.preflight_opencode('opencode')
+
+
+def test_quota_claude_ferma_prima_dell_azione_successiva(runner,monkeypatch,tmp_path):
+    flag = tmp_path/'STOP'
+    marker = tmp_path/'tentativo-successivo'
+    monkeypatch.setenv('BUDDALAW_STOP_FILE',str(flag))
+    ev = {'type':'rate_limit_event','rate_limit_info':{
+        'status':'rejected','rateLimitType':'five_hour','isUsingOverage':False}}
+    script = (f'import time;from pathlib import Path;print({json.dumps(ev)!r},flush=True);'
+              f'time.sleep(1);Path({str(marker)!r}).touch()')
+    with pytest.raises(runner.Blocco,match='limite di utilizzo Claude'):
+        runner._processo_su_file([sys.executable,'-u','-c',script],tmp_path,dict(runner.os.environ),
+                                tmp_path/'quota.jsonl',5,runner.controllore_live())
+    assert flag.exists()
+    assert not marker.exists()
+
+
+def test_crediti_extra_disabilitati_non_significa_quota_esaurita(runner):
+    runner.controllore_live()({'type':'rate_limit_event','rate_limit_info':{
+        'status':'allowed','overageStatus':'rejected','overageDisabledReason':'org_level_disabled',
+        'isUsingOverage':False}})
