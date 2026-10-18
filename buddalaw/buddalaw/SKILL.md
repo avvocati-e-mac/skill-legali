@@ -41,7 +41,7 @@ Conta la parte finale del nome. I prefissi sono `mcp__claude_ai_BuddaLaw__` (Cla
 
 1. Riconosci i tool BuddaLaw dal suffisso del nome (sezione sopra).
 2. Chiama `check_access` solo se nella conversazione non c'è già una sua risposta. Decide `has_access`; `modules_available` può essere vuoto e va ignorato. Se dà errore: «Non riesco a raggiungere BuddaLaw in questo momento: verifica l'abbonamento o riprova più tardi.» Non ritentare in loop.
-   Subito dopo fai il **controllo di aggiornamento**: scopri il catalogo completo come indicato sopra e confronta ogni nome, senza prefisso, con l'array `inventario_tool_buddalaw` qui sotto. Se un nome visibile non è nell'array, la risposta comincia con la riga ⚠ della sezione «Controllo di aggiornamento». Il fatto che i tool utilizzati funzionino non sostituisce il confronto dell'inventario.
+   Prima di cercare fonti, completa il **controllo di aggiornamento**: scopri il catalogo completo come indicato sopra. Considera due insiemi distinti: i nomi del server senza prefisso e le sole stringhe dell'array `inventario_tool_buddalaw` qui sotto. I nuovi tool sono la differenza **server meno array**: un nome citato negli esempi o nella mappa decisionale non per questo appartiene all'array. Confronta anche il numero di nomi distinti: se è diverso, gli elenchi non coincidono. Per ogni nome nuovo, la risposta comincia con la riga ⚠ della sezione «Controllo di aggiornamento». Il fatto che i tool utilizzati funzionino non sostituisce questo controllo.
 3. Scegli la riga della **tabella di instradamento**: banca dati, dominio, formato della data e della citazione.
 4. Cerca: di norma al massimo **4 ricerche e 2 `get_judgement`** per quesito. Conta come ricerca ogni chiamata `search_*` (anche quella per l'orientamento opposto); `list_*`, `get_law_article` e `check_access` non contano. Oltre, mostra i risultati parziali e chiedi all'utente se proseguire.
 5. Leggi il testo integrale solo nei casi della sezione D.
@@ -53,7 +53,59 @@ Conta la parte finale del nome. I prefissi sono `mcp__claude_ai_BuddaLaw__` (Cla
 L'inventario comprende anche i calcolatori e i cataloghi aggiunti dal server. Questa skill disciplina la ricerca e la lettura delle fonti: non usare i calcolatori per una richiesta di sola ricerca. Se l'utente chiede un calcolo, leggi prima la descrizione e i parametri del relativo tool; i calcoli non fanno parte del collaudo v9.
 
 ```json
-{"versione_skill": "9.0", "inventario_tool_buddalaw": ["calcola_compenso_avvocato", "calcola_contributo_unificato", "calcola_danno_micropermanente", "calcola_danno_parentale", "calcola_danno_tabella_unica", "calcola_danno_tabelle_milano", "calcola_diritti_copia", "calcola_fine_pena", "calcola_improcedibilita", "calcola_interessi_legali", "calcola_interessi_mora", "calcola_pena", "calcola_prescrizione_diritto", "calcola_prescrizione_reato", "calcola_rivalutazione", "calcola_scadenza", "calcola_scadenze_multa", "calcola_spese_trasferta", "calcola_termine", "calcola_termine_impugnazione", "calcola_termini_ctu", "calcola_termini_esecuzione", "calcola_termini_rito_previgente", "calcola_termini_udienza", "cerca_comune", "check_access", "conta_giorni_tra_date", "converti_pena", "determina_competenza_territoriale", "elenca_parametri_forensi", "elenca_prescrizioni_diritti", "elenca_termini_catalogo", "get_contract", "get_contract_requirements", "get_judgement", "get_law_article", "get_processual_act", "list_contract_categories", "list_contracts", "list_processual_act_categories", "list_processual_acts", "list_uffici", "search_articles", "search_case_law", "search_contracts", "search_processual_acts", "search_similar_cases", "verifica_sospensione_feriale"]}
+{
+  "versione_skill": "9.0",
+  "inventario_tool_buddalaw": [
+    "calcola_compenso_avvocato",
+    "calcola_contributo_unificato",
+    "calcola_danno_micropermanente",
+    "calcola_danno_parentale",
+    "calcola_danno_tabella_unica",
+    "calcola_danno_tabelle_milano",
+    "calcola_diritti_copia",
+    "calcola_fine_pena",
+    "calcola_improcedibilita",
+    "calcola_interessi_legali",
+    "calcola_interessi_mora",
+    "calcola_pena",
+    "calcola_prescrizione_diritto",
+    "calcola_prescrizione_reato",
+    "calcola_rivalutazione",
+    "calcola_scadenza",
+    "calcola_scadenze_multa",
+    "calcola_spese_trasferta",
+    "calcola_termine",
+    "calcola_termine_impugnazione",
+    "calcola_termini_ctu",
+    "calcola_termini_esecuzione",
+    "calcola_termini_rito_previgente",
+    "calcola_termini_udienza",
+    "cerca_comune",
+    "check_access",
+    "conta_giorni_tra_date",
+    "converti_pena",
+    "determina_competenza_territoriale",
+    "elenca_parametri_forensi",
+    "elenca_prescrizioni_diritti",
+    "elenca_termini_catalogo",
+    "get_contract",
+    "get_contract_requirements",
+    "get_judgement",
+    "get_law_article",
+    "get_processual_act",
+    "list_contract_categories",
+    "list_contracts",
+    "list_processual_act_categories",
+    "list_processual_acts",
+    "list_uffici",
+    "search_articles",
+    "search_case_law",
+    "search_contracts",
+    "search_processual_acts",
+    "search_similar_cases",
+    "verifica_sospensione_feriale"
+  ]
+}
 ```
 
 ## Tabella di instradamento
