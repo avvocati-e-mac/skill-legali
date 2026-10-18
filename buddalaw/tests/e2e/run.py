@@ -777,11 +777,21 @@ def fonti_probatorie(ex: Esecuzione) -> list[dict]:
         "search_contracts", "search_processual_acts", "list_contracts", "list_processual_acts"}
         and not f.get("is_error")]
     # Un Read è una fonte solo quando legge un file esplicitamente restituito da BuddaLaw.
-    riferimenti = "\n".join(f.get("output", "") + json.dumps(f.get("metadata", {})) for f in fonti)
+    percorsi = set()
+    for fonte in fonti:
+        for path in re.findall(r"Full output saved to:[ \t]*(/[^\r\n]+)", fonte.get("output", "")):
+            if "/tool-results/" in path or "/tool-output/" in path:
+                percorsi.add(path.strip())
+        for value in _stringhe(fonte.get("metadata", {})):
+            if value.startswith("/") and "/tool-output/" in value:
+                percorsi.add(value)
     for f in ex.fonti:
         path = (f.get("argomenti") or {}).get("filePath") or (f.get("argomenti") or {}).get("file_path")
-        if f.get("tool", "").lower() == "read" and path and str(path) in riferimenti and "/tool-output/" in str(path):
-            fonti.append(f)
+        if f.get("tool", "").lower() == "read" and not f.get("is_error") and path in percorsi:
+            fonte = dict(f)
+            # Read di Claude numera le righe: il prefisso non appartiene al JSON.
+            fonte["output"] = re.sub(r"(?m)^\s*\d+\t", "", f.get("output", ""))
+            fonti.append(fonte)
     return fonti
 
 

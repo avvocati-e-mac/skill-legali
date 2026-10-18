@@ -105,6 +105,11 @@ I relativi controlli offline si eseguono con
 `python3 -m pytest buddalaw/tests/test_e2e_runner.py`.
 Gli attacchi al valutatore sono in `test_e2e_redteam.py`: verificano, tra l'altro,
 che una suite vuota non passi e che un esempio nella skill non valga come fonte.
+Le risposte MCP lunghe possono essere salvate dal runtime in un file. La
+lettura di quel file vale come fonte soltanto se il percorso coincide
+esattamente con quello restituito da BuddaLaw e la lettura è riuscita.
+`test_persisted_sources.py` protegge questa provenienza: leggere un file
+arbitrario o un percorso che è solo un prefisso non prova una citazione.
 `test_schema_discovery.py` controlla che il verificatore scopra anche strumenti
 mai presenti nella vecchia fixture e rifiuti definizioni parziali. Tutti i
 controlli offline si lanciano con `python3 -m pytest buddalaw/tests`
