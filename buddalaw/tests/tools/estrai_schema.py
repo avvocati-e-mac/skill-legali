@@ -14,8 +14,9 @@ Gli header (che contengono le credenziali) non vengono mai scritti su disco.
 Il modello non interpreta nulla: lo schema e' quello che Claude Code riceve dal
 server MCP.
 
-Come controprova, il prompt fa eseguire ToolSearch `select:` dei 16 tool e lo
-script confronta i nomi dei `tool_reference` nello stream con quelli del proxy.
+La scoperta usa ToolSearch `+BuddaLaw`, senza selezionare solo i nomi già noti.
+Confronta le definizioni con tutti i tool_reference restituiti. Un catalogo
+assente, al limite dei risultati o con definizioni parziali non viene salvato.
 
 Uso:
     python3 buddalaw/tests/tools/estrai_schema.py            # scrive la fixture
@@ -77,7 +78,8 @@ def _crea_proxy(raccolta: list):
             corpo = self.rfile.read(n) if n else None
             if corpo and self.path.startswith("/v1/messages"):
                 try:
-                    tools = json.loads(corpo).get("tools") or []
+                    payload = json.loads(corpo)
+                    tools = payload.get("tools") or []
                     raccolta.append([t for t in tools if str(t.get("name", "")).startswith(PREFIX)])
                 except (json.JSONDecodeError, AttributeError):
                     pass
@@ -122,17 +124,19 @@ def _nomi_tool_reference(stdout: str) -> set[str]:
     return {n[len(PREFIX):] for n in nomi if n.startswith(PREFIX)}
 
 
+LIMITE_SCOPERTA = 100
+
+
 def lancia(timeout: int = 240) -> tuple[list[dict], set[str]]:
     raccolta: list = []
     srv = _crea_proxy(raccolta)
-    query = "select:" + ",".join(PREFIX + n for n in ATTESI)
+    # Una selezione dei soli nomi già noti non può scoprire tool nuovi.
+    # Il + rende obbligatoria la corrispondenza col nome del server.
     prompt = (
-        f'Esegui una sola volta il tool ToolSearch con query esattamente "{query}" '
-        f"e max_results {len(ATTESI) + 4}. Non chiamare altri tool. Poi rispondi solo: FATTO."
+        'Esegui una sola volta ToolSearch con query esattamente "+BuddaLaw" '
+        f'e max_results {LIMITE_SCOPERTA}. Cerca tutti i tool del server BuddaLaw, '
+        'non soltanto quelli di ricerca. Non chiamare altri tool. Poi rispondi solo: FATTO.'
     )
-    # Claude disabilita la ricerca differita con un proxy non first-party,
-    # salvo richiesta esplicita. Senza, ToolSearch non espone le definizioni.
-    # https://code.claude.com/docs/en/mcp#configure-tool-search
     env = dict(os.environ, ANTHROPIC_BASE_URL=f"http://127.0.0.1:{srv.server_address[1]}",
                ENABLE_TOOL_SEARCH="true")
     cmd = [
@@ -143,18 +147,24 @@ def lancia(timeout: int = 240) -> tuple[list[dict], set[str]]:
         "--max-budget-usd", "0.10", "--disable-slash-commands",
     ]
     try:
-        # cartella vuota: niente CLAUDE.md del repo nel contesto
         with tempfile.TemporaryDirectory() as vuota:
             proc = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, env=env, cwd=vuota)
     finally:
         srv.shutdown()
     if not raccolta:
         raise RuntimeError(f"il proxy non ha visto richieste /v1/messages (exit {proc.returncode}): {proc.stderr[:400]}")
-    # la richiesta con piu' tool BuddaLaw e' quella completa
     tools = max(raccolta, key=len)
     if not tools:
         raise RuntimeError("il canale proxy non ha esposto definizioni BuddaLaw: schema non verificabile; non è prova che il server abbia rimosso i tool")
-    return tools, _nomi_tool_reference(proc.stdout)
+    riferimenti = _nomi_tool_reference(proc.stdout)
+    if not riferimenti:
+        raise RuntimeError("inventario ToolSearch non verificabile: nessun tool_reference BuddaLaw")
+    if len(riferimenti) >= LIMITE_SCOPERTA:
+        raise RuntimeError("inventario ToolSearch al limite dei risultati: completezza non verificabile")
+    estratti = {t["name"][len(PREFIX):] for t in tools}
+    if estratti != riferimenti:
+        raise RuntimeError(f"schema incompleto rispetto al catalogo ToolSearch: mancanti {sorted(riferimenti - estratti)}, extra {sorted(estratti - riferimenti)}")
+    return tools, riferimenti
 
 
 def _ordina(obj):
@@ -180,7 +190,7 @@ def costruisci() -> dict:
     if mancanti:
         print(f"ATTENZIONE: tool attesi assenti dal server: {mancanti}", file=sys.stderr)
     extra = sorted(n for n in trovati if n not in ATTESI)
-    if riferimenti and riferimenti != (set(trovati) & set(ATTESI)):
+    if riferimenti != set(trovati):
         print(f"ATTENZIONE: tool_reference dello stream {sorted(riferimenti)} "
               f"diversi dai tool del proxy", file=sys.stderr)
     return {

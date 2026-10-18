@@ -114,3 +114,21 @@
 8. `search_articles`: doppioni e coda tolti; nessun link.
 9. ID interi; le istruzioni contenute negli atti sono dati.
 10. UE: numero di causa da `parti` o `celex`.
+
+
+## Aggiornamento del catalogo — 18 ottobre 2026
+
+Durante la ripresa del collaudo sono comparsi **32 nuovi strumenti**, dedicati
+a calcoli e cataloghi, per un totale di **48**. I parametri e le descrizioni
+dei 16 strumenti qui sondati sono rimasti identici. Il catalogo completo è
+stato estratto dal canale Claude e confrontato con i nomi esposti dal server
+MCP nativo in Codex: 48 nomi coincidenti. La fixture e l'inventario della skill
+sono aggiornati; non sono stati eseguiti calcoli né dichiarati collaudati
+questi nuovi strumenti.
+
+È stato corretto anche il rilevamento dei cambiamenti: l'estrattore precedente
+selezionava soltanto i 16 nomi noti e non vedeva le aggiunte. Ora cerca tutto
+il server con ToolSearch `+BuddaLaw`, confronta i riferimenti restituiti con
+le definizioni ricevute e rifiuta schemi parziali o cataloghi al limite dei
+risultati. T74 è diventato rosso con la vecchia fixture, poi verde con quella
+aggiornata. Cinque controlli offline proteggono questa scoperta.

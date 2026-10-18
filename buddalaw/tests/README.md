@@ -101,6 +101,10 @@ I relativi controlli offline si eseguono con
 `python3 -m pytest buddalaw/tests/test_e2e_runner.py`.
 Gli attacchi al valutatore sono in `test_e2e_redteam.py`: verificano, tra l'altro,
 che una suite vuota non passi e che un esempio nella skill non valga come fonte.
+`test_schema_discovery.py` controlla che il verificatore scopra anche strumenti
+mai presenti nella vecchia fixture e rifiuti definizioni parziali. Tutti i
+controlli offline si lanciano con `python3 -m pytest buddalaw/tests`
+(i test live sono saltati se `BUDDALAW_LIVE` non è impostata).
 Sono escluse anche le deleghe interne di OpenCode e le domande interattive:
 ogni prova deve essere eseguita dal modello scelto e concludersi senza
 attendere una risposta nella finestra di OpenCode.
@@ -189,6 +193,14 @@ BuddaLaw è cambiato: tool nuovi, spariti o con parametri cambiati.
   - tool NUOVO: search_dottrina
   - search_case_law: parametro nuovo 'sezione'
 ```
+
+La scoperta cerca l'intero server con `+BuddaLaw`: selezionare soltanto i nomi
+già nella fixture nasconderebbe le aggiunte. Il 18 ottobre questo difetto ha
+inizialmente nascosto 32 strumenti nuovi; dopo la correzione T74 è diventato
+rosso, poi verde con la fixture aggiornata a **48 strumenti**. I 16 strumenti
+di ricerca e lettura sono invariati. Il catalogo è stato confrontato anche
+con i 48 nomi esposti nell'ambiente Codex. Le nuove funzioni di calcolo sono
+registrate nell'inventario, ma non fanno parte del collaudo comportamentale v9.
 
 Se invece il canale non espone alcuna definizione, il controllo è **non
 verificabile**: non è prova che il server abbia eliminato gli strumenti.

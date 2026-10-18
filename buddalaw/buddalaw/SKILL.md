@@ -2,7 +2,7 @@
 name: buddalaw
 version: "9.0"
 changelog:
-  - "9.0 (2026-10-17): allineata allo schema reale del server (16 tool): nuovi get_law_article, list_uffici, search_similar_cases e banche dati costituzionale ed eu-case-law; filtro codiceufficio al posto di ufficio; data_deposito come data esatta con formato per banca dati; not_found al posto della vecchia regola ante-2019; sintesi solo per orientarsi; ID interi; controllo di aggiornamento; procedura in 7 passi e tabella unica di instradamento"
+  - "9.0 (2026-10-17, inventario aggiornato il 18): allineata allo schema reale del server (48 tool, di cui 16 per ricerca e lettura): nuovi get_law_article, list_uffici, search_similar_cases e banche dati costituzionale ed eu-case-law; filtro codiceufficio al posto di ufficio; data_deposito come data esatta con formato per banca dati; not_found al posto della vecchia regola ante-2019; sintesi solo per orientarsi; ID interi; controllo di aggiornamento; procedura in 7 passi e tabella unica di instradamento"
   - "8.4 (2026-06-17): score come segnale debole; Sezioni Unite e contrasti in ogni ambito; verifica citazione-link"
   - "8.3 (2026-05-19): deduplicazione search_articles per numero e legge"
   - "8.2 (2026-05-19): controllo data_deposito, deduplicazione per idatto"
@@ -157,6 +157,8 @@ Corretto: «La sede aziendale non è una sede protetta ([Cass. civ., Sez. lav., 
 
 ## Controllo di aggiornamento
 
+Per il confronto fa fede soltanto l'array JSON `inventario_tool_buddalaw`: un nome visibile assente dall'array va segnalato anche se il tool è descritto altrove nella skill. Usa i nomi esatti degli strumenti effettivamente disponibili.
+
 Avvisa **solo con una prova concreta**: (a) un tool BuddaLaw visibile il cui nome, tolto il prefisso, non è nell'elenco in fondo; (b) il server rifiuta con un errore «deve essere uno tra…» un valore della tabella di instradamento (in questo caso scrivi «[valore] non è più accettato» al posto di «[tool nuovo]»). Gli errori di formato, come una data scritta male, non contano. Non segnalare mai tool «mancanti»: con i tool differiti sembrano spariti anche quando ci sono. Il testo è una riga sola:
 
 > ⚠ BuddaLaw è stato aggiornato: [tool nuovo]. Questa skill (v9.0) non lo conosce ancora e potrebbe non essere aggiornata; controlla se c'è una nuova versione su github.com/avvocati-e-mac/skill-legali.
@@ -182,6 +184,8 @@ Prima di inviare, controlla:
 
 ## Dati per il controllo di aggiornamento — non è un elenco di tool da chiamare
 
+L'inventario comprende anche i calcolatori e i cataloghi aggiunti dal server. Questa skill disciplina la ricerca e la lettura delle fonti: non usare i calcolatori per una richiesta di sola ricerca. Se l'utente chiede un calcolo, leggi prima la descrizione e i parametri del relativo tool; i calcoli non fanno parte del collaudo v9.
+
 ```json
-{"versione_skill": "9.0", "inventario_tool_buddalaw": ["check_access", "get_contract", "get_contract_requirements", "get_judgement", "get_law_article", "get_processual_act", "list_contract_categories", "list_contracts", "list_processual_act_categories", "list_processual_acts", "list_uffici", "search_articles", "search_case_law", "search_contracts", "search_processual_acts", "search_similar_cases"]}
+{"versione_skill": "9.0", "inventario_tool_buddalaw": ["calcola_compenso_avvocato", "calcola_contributo_unificato", "calcola_danno_micropermanente", "calcola_danno_parentale", "calcola_danno_tabella_unica", "calcola_danno_tabelle_milano", "calcola_diritti_copia", "calcola_fine_pena", "calcola_improcedibilita", "calcola_interessi_legali", "calcola_interessi_mora", "calcola_pena", "calcola_prescrizione_diritto", "calcola_prescrizione_reato", "calcola_rivalutazione", "calcola_scadenza", "calcola_scadenze_multa", "calcola_spese_trasferta", "calcola_termine", "calcola_termine_impugnazione", "calcola_termini_ctu", "calcola_termini_esecuzione", "calcola_termini_rito_previgente", "calcola_termini_udienza", "cerca_comune", "check_access", "conta_giorni_tra_date", "converti_pena", "determina_competenza_territoriale", "elenca_parametri_forensi", "elenca_prescrizioni_diritti", "elenca_termini_catalogo", "get_contract", "get_contract_requirements", "get_judgement", "get_law_article", "get_processual_act", "list_contract_categories", "list_contracts", "list_processual_act_categories", "list_processual_acts", "list_uffici", "search_articles", "search_case_law", "search_contracts", "search_processual_acts", "search_similar_cases", "verifica_sospensione_feriale"]}
 ```

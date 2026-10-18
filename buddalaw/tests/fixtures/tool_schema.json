@@ -4,10 +4,2969 @@
   "canale": "claude -p + proxy locale ANTHROPIC_BASE_URL (campo tools di /v1/messages)",
   "tools": [
     {
+      "description": "Compenso dell'avvocato secondo i parametri forensi (valori medi, minimi e massimi per fase e scaglione) con il prospetto: spese generali 15%, cassa 4%, IVA, ritenuta. Prima trova la chiave della tabella con elenca_parametri_forensi.\n\nIl calcolo è deterministico (codice verificato su norme e casi), non una stima: riporta le date e gli importi così come escono, con le avvertenze.",
+      "name": "calcola_compenso_avvocato",
+      "parameters": {
+        "properties": {
+          "accordo_mediazione": {
+            "default": false,
+            "description": "Solo mediazione_negoziazione: accordo raggiunto (art. 20, c. 1-bis).",
+            "title": "Accordo Mediazione",
+            "type": "boolean"
+          },
+          "aumento_oltre_520000_pct": {
+            "default": 0,
+            "description": "Oltre 520.000 €: aumento per ogni gradino, da 0 a 30 (art. 6).",
+            "maximum": 30,
+            "minimum": 0,
+            "title": "Aumento Oltre 520000 Pct",
+            "type": "number"
+          },
+          "conciliazione_giudiziale": {
+            "default": false,
+            "description": "Conciliazione giudiziale o transazione della causa (art. 4, c. 6).",
+            "title": "Conciliazione Giudiziale",
+            "type": "boolean"
+          },
+          "criterio_oltre_520000": {
+            "anyOf": [
+              {
+                "enum": [
+                  "aliquota_unica",
+                  "progressivo"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Solo stragiudiziale oltre 520.000 (art. 22). Vuoto: aliquota_unica, con l'altra lettura in avvertenza.",
+            "title": "Criterio Oltre 520000"
+          },
+          "fasi": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 10,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Fasi svolte, coi nomi della tabella. Vuoto: tutte, tranne le cautelari.",
+            "title": "Fasi"
+          },
+          "numero_assistiti": {
+            "default": 1,
+            "maximum": 1000,
+            "minimum": 1,
+            "title": "Numero Assistiti",
+            "type": "integer"
+          },
+          "organo": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Solo penale: l'organo (da elenca_parametri_forensi, es. tribunale_monocratico).",
+            "title": "Organo"
+          },
+          "patrocinio_stato": {
+            "default": false,
+            "title": "Patrocinio Stato",
+            "type": "boolean"
+          },
+          "procedimento": {
+            "description": "Chiave della tabella, da elenca_parametri_forensi (es. tribunale_cognizione, corte_appello, stragiudiziale, penale).",
+            "title": "Procedimento",
+            "type": "string"
+          },
+          "regime_forfettario": {
+            "default": false,
+            "description": "Avvocato in regime forfettario: niente IVA.",
+            "title": "Regime Forfettario",
+            "type": "boolean"
+          },
+          "ritenuta_acconto": {
+            "default": false,
+            "description": "Cliente sostituto d'imposta: ritenuta del 20%.",
+            "title": "Ritenuta Acconto",
+            "type": "boolean"
+          },
+          "spese_esenti": {
+            "default": 0,
+            "description": "Spese esenti da IVA anticipate (es. contributo unificato).",
+            "maximum": 1000000000000,
+            "minimum": 0,
+            "title": "Spese Esenti",
+            "type": "number"
+          },
+          "valore": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0,
+                "maximum": 1000000000000,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Valore della causa o della pratica in euro.",
+            "title": "Valore"
+          },
+          "valore_indeterminabile": {
+            "anyOf": [
+              {
+                "enum": [
+                  "ordinario",
+                  "complesso",
+                  "particolare_importanza"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Al posto del valore, per le cause di valore indeterminabile: ordinario 26.000-52.000, complesso 52.000-260.000, particolare_importanza fino a 520.000.",
+            "title": "Valore Indeterminabile"
+          },
+          "variazione_pct": {
+            "default": 0,
+            "description": "Aumento o diminuzione rispetto al valore medio, da -50 a +50.",
+            "maximum": 50,
+            "minimum": -50,
+            "title": "Variazione Pct",
+            "type": "number"
+          }
+        },
+        "required": [
+          "procedimento"
+        ],
+        "title": "LawyerFeesArgs",
+        "type": "object"
+      }
+    },
+    {
+      "description": "Contributo unificato (art. 13 d.P.R. 115/2002) e anticipazione forfettaria di 27 € per tipo di procedimento, valore e grado, con aumenti ed esenzioni.\n\nIl calcolo è deterministico (codice verificato su norme e casi), non una stima: riporta le date e gli importi così come escono, con le avvertenze.",
+      "name": "calcola_contributo_unificato",
+      "parameters": {
+        "properties": {
+          "giudice_di_pace_esclusiva": {
+            "default": false,
+            "description": "Causa di valore indeterminabile di competenza esclusiva del giudice di pace (237 €); solo con valore_indeterminabile.",
+            "title": "Giudice Di Pace Esclusiva",
+            "type": "boolean"
+          },
+          "grado": {
+            "default": "primo",
+            "enum": [
+              "primo",
+              "impugnazione",
+              "cassazione"
+            ],
+            "title": "Grado",
+            "type": "string"
+          },
+          "omessa_pec_o_codice_fiscale": {
+            "default": false,
+            "description": "Difensore senza PEC o parte senza codice fiscale nell'atto: aumento della metà (art. 13, c. 3-bis).",
+            "title": "Omessa Pec O Codice Fiscale",
+            "type": "boolean"
+          },
+          "procedimento": {
+            "description": "cognizione: processo ordinario per valore; procedimento_speciale: libro IV, titolo I c.p.c. (monitorio, cautelare, possessorio, convalida di sfratto, opposizione a decreto ingiuntivo); famiglia_congiunta: art. 473-bis.51; famiglia_contenziosa: art. 473-bis.47; camera_di_consiglio: artt. 737-742-bis; esecuzione_altra: consegna e rilascio, obblighi di fare.",
+            "enum": [
+              "cognizione",
+              "procedimento_speciale",
+              "reclamo_cautelare",
+              "lavoro",
+              "previdenza",
+              "famiglia_congiunta",
+              "famiglia_contenziosa",
+              "volontaria_giurisdizione",
+              "camera_di_consiglio",
+              "liquidazione_giudiziale",
+              "esecuzione_immobiliare",
+              "esecuzione_mobiliare",
+              "esecuzione_presso_terzi",
+              "esecuzione_altra",
+              "opposizione_atti_esecutivi",
+              "ricerca_beni_492bis",
+              "cittadinanza",
+              "tributario",
+              "amministrativo"
+            ],
+            "title": "Procedimento",
+            "type": "string"
+          },
+          "reddito_sotto_soglia": {
+            "default": false,
+            "description": "Lavoro, previdenza e pubblico impiego davanti al TAR: parte con reddito sotto tre volte il limite del patrocinio, esente (art. 9, c. 1-bis).",
+            "title": "Reddito Sotto Soglia",
+            "type": "boolean"
+          },
+          "ricorrenti": {
+            "default": 1,
+            "description": "Solo cittadinanza: il contributo è per ricorrente.",
+            "maximum": 1000,
+            "minimum": 1,
+            "title": "Ricorrenti",
+            "type": "integer"
+          },
+          "sezione_specializzata": {
+            "default": false,
+            "description": "Sezione specializzata in materia di impresa (art. 13, c. 1-ter): importo doppio.",
+            "title": "Sezione Specializzata",
+            "type": "boolean"
+          },
+          "tipo_amministrativo": {
+            "anyOf": [
+              {
+                "enum": [
+                  "accesso_silenzio_ottemperanza",
+                  "accesso_informazione_ambientale",
+                  "pubblico_impiego",
+                  "rito_abbreviato",
+                  "appalti",
+                  "altri"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Solo amministrativo: il tipo di ricorso.",
+            "title": "Tipo Amministrativo"
+          },
+          "valore": {
+            "anyOf": [
+              {
+                "maximum": 1000000000000,
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Valore della causa in euro, dove conta.",
+            "title": "Valore"
+          },
+          "valore_indeterminabile": {
+            "default": false,
+            "title": "Valore Indeterminabile",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "procedimento"
+        ],
+        "title": "UnifiedContributionArgs",
+        "type": "object"
+      }
+    },
+    {
+      "description": "Danno biologico da lesioni di lieve entità, 1-9 punti (art. 139 cod. ass.: sinistri stradali e responsabilità sanitaria), permanente e temporanea, con gli importi del decreto vigente alla liquidazione. Non calcolare a mente.\n\nIl calcolo è deterministico (codice verificato su norme e casi), non una stima: riporta le date e gli importi così come escono, con le avvertenze.",
+      "name": "calcola_danno_micropermanente",
+      "parameters": {
+        "$defs": {
+          "PartialDisability": {
+            "properties": {
+              "giorni": {
+                "maximum": 3650,
+                "minimum": 0,
+                "title": "Giorni",
+                "type": "integer"
+              },
+              "percentuale": {
+                "description": "Percentuale di inabilità, es. 50 per il 50%.",
+                "exclusiveMinimum": 0,
+                "maximum": 100,
+                "title": "Percentuale",
+                "type": "number"
+              }
+            },
+            "required": [
+              "giorni",
+              "percentuale"
+            ],
+            "title": "PartialDisability",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "data_liquidazione": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Data della liquidazione; vuoto: oggi. Decide gli importi del decreto applicabile.",
+            "title": "Data Liquidazione"
+          },
+          "eta": {
+            "description": "Età del danneggiato alla stabilizzazione dei postumi, in anni.",
+            "maximum": 100,
+            "minimum": 0,
+            "title": "Eta",
+            "type": "integer"
+          },
+          "giorni_itt": {
+            "default": 0,
+            "description": "Giorni di inabilità temporanea totale.",
+            "maximum": 3650,
+            "minimum": 0,
+            "title": "Giorni Itt",
+            "type": "integer"
+          },
+          "itp": {
+            "description": "Periodi di inabilità temporanea parziale, ciascuno con giorni e percentuale.",
+            "items": {
+              "$ref": "#/$defs/PartialDisability"
+            },
+            "maxItems": 10,
+            "title": "Itp",
+            "type": "array"
+          },
+          "personalizza_temporanea": {
+            "default": false,
+            "description": "Se la personalizzazione si applica anche alla temporanea.",
+            "title": "Personalizza Temporanea",
+            "type": "boolean"
+          },
+          "personalizzazione_pct": {
+            "default": 0,
+            "description": "Personalizzazione, da 0 a 20% (art. 139, c. 3).",
+            "maximum": 20,
+            "minimum": 0,
+            "title": "Personalizzazione Pct",
+            "type": "number"
+          },
+          "punti": {
+            "description": "Punti di invalidità permanente, da 1 a 9.",
+            "maximum": 9,
+            "minimum": 1,
+            "title": "Punti",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "punti",
+          "eta"
+        ],
+        "title": "MicroPermanentArgs",
+        "type": "object"
+      }
+    },
+    {
+      "description": "Danno da perdita del rapporto parentale con le tabelle integrate a punti di Milano 2024: età della vittima e del superstite, convivenza, altri superstiti, qualità della relazione.\n\nIl calcolo è deterministico (codice verificato su norme e casi), non una stima: riporta le date e gli importi così come escono, con le avvertenze.",
+      "name": "calcola_danno_parentale",
+      "parameters": {
+        "properties": {
+          "altri_superstiti": {
+            "description": "Numero degli altri superstiti del nucleo familiare.",
+            "maximum": 50,
+            "minimum": 0,
+            "title": "Altri Superstiti",
+            "type": "integer"
+          },
+          "convivenza": {
+            "enum": [
+              "convivenza",
+              "convivenza_oltre_30_anni",
+              "convivenza_oltre_40_anni",
+              "stesso_stabile_o_complesso_condominiale",
+              "nessuna"
+            ],
+            "title": "Convivenza",
+            "type": "string"
+          },
+          "eta_superstite": {
+            "description": "Età del familiare che chiede il risarcimento.",
+            "maximum": 100,
+            "minimum": 0,
+            "title": "Eta Superstite",
+            "type": "integer"
+          },
+          "eta_vittima": {
+            "description": "Età della persona deceduta.",
+            "maximum": 100,
+            "minimum": 0,
+            "title": "Eta Vittima",
+            "type": "integer"
+          },
+          "qualita_relazione": {
+            "description": "Punti per qualità e intensità della relazione, da 0 a 30: la valutazione è sul caso.",
+            "maximum": 30,
+            "minimum": 0,
+            "title": "Qualita Relazione",
+            "type": "integer"
+          },
+          "relazione": {
+            "description": "genitore_figlio_coniuge: anche unito civilmente o convivente di fatto; fratello_nipote: la seconda tabella di Milano, per fratelli e nipoti.",
+            "enum": [
+              "genitore_figlio_coniuge",
+              "fratello_nipote"
+            ],
+            "title": "Relazione",
+            "type": "string"
+          }
+        },
+        "required": [
+          "relazione",
+          "eta_vittima",
+          "eta_superstite",
+          "convivenza",
+          "altri_superstiti",
+          "qualita_relazione"
+        ],
+        "title": "ParentalLossArgs",
+        "type": "object"
+      }
+    },
+    {
+      "description": "Danno non patrimoniale da 10 a 100 punti con la tabella unica nazionale (art. 138 cod. ass., d.P.R. 12/2025): biologico, morale, personalizzazione, temporanea; dice se si applica in via diretta o indiretta.\n\nIl calcolo è deterministico (codice verificato su norme e casi), non una stima: riporta le date e gli importi così come escono, con le avvertenze.",
+      "name": "calcola_danno_tabella_unica",
+      "parameters": {
+        "$defs": {
+          "PartialDisability": {
+            "properties": {
+              "giorni": {
+                "maximum": 3650,
+                "minimum": 0,
+                "title": "Giorni",
+                "type": "integer"
+              },
+              "percentuale": {
+                "description": "Percentuale di inabilità, es. 50 per il 50%.",
+                "exclusiveMinimum": 0,
+                "maximum": 100,
+                "title": "Percentuale",
+                "type": "number"
+              }
+            },
+            "required": [
+              "giorni",
+              "percentuale"
+            ],
+            "title": "PartialDisability",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "data_liquidazione": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Data della liquidazione; vuoto: oggi.",
+            "title": "Data Liquidazione"
+          },
+          "data_sinistro": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Data del sinistro: decide se la tabella unica si applica in via diretta (sinistri successivi al 5/3/2025) o indiretta come parametro equitativo.",
+            "title": "Data Sinistro"
+          },
+          "eta": {
+            "description": "Età del danneggiato alla stabilizzazione dei postumi, in anni.",
+            "maximum": 100,
+            "minimum": 0,
+            "title": "Eta",
+            "type": "integer"
+          },
+          "giorni_itt": {
+            "default": 0,
+            "description": "Giorni di inabilità temporanea totale.",
+            "maximum": 3650,
+            "minimum": 0,
+            "title": "Giorni Itt",
+            "type": "integer"
+          },
+          "itp": {
+            "description": "Periodi di inabilità temporanea parziale, ciascuno con giorni e percentuale.",
+            "items": {
+              "$ref": "#/$defs/PartialDisability"
+            },
+            "maxItems": 10,
+            "title": "Itp",
+            "type": "array"
+          },
+          "livello_morale": {
+            "description": "Livello della componente morale: la scelta è del giudice, sul caso.",
+            "enum": [
+              "minimo",
+              "medio",
+              "massimo"
+            ],
+            "title": "Livello Morale",
+            "type": "string"
+          },
+          "morale_temporanea_pct": {
+            "anyOf": [
+              {
+                "maximum": 60,
+                "minimum": 30,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Incremento per il morale sulla temporanea, da 30 a 60%: obbligatorio se ci sono giorni di inabilità temporanea.",
+            "title": "Morale Temporanea Pct"
+          },
+          "personalizza_morale": {
+            "default": false,
+            "description": "True se la personalizzazione si calcola anche sul morale, non sul solo biologico.",
+            "title": "Personalizza Morale",
+            "type": "boolean"
+          },
+          "personalizzazione_pct": {
+            "default": 0,
+            "description": "Personalizzazione, da 0 a 30% (art. 138, c. 3).",
+            "maximum": 30,
+            "minimum": 0,
+            "title": "Personalizzazione Pct",
+            "type": "number"
+          },
+          "punti": {
+            "description": "Punti di invalidità permanente, da 10 a 100.",
+            "maximum": 100,
+            "minimum": 10,
+            "title": "Punti",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "punti",
+          "eta",
+          "livello_morale"
+        ],
+        "title": "TunPermanentArgs",
+        "type": "object"
+      }
+    },
+    {
+      "description": "Danno da lesione dell'integrità psicofisica con le Tabelle di Milano 2024 (1-100 punti), permanente e temporanea, con la personalizzazione.\n\nIl calcolo è deterministico (codice verificato su norme e casi), non una stima: riporta le date e gli importi così come escono, con le avvertenze.",
+      "name": "calcola_danno_tabelle_milano",
+      "parameters": {
+        "$defs": {
+          "PartialDisability": {
+            "properties": {
+              "giorni": {
+                "maximum": 3650,
+                "minimum": 0,
+                "title": "Giorni",
+                "type": "integer"
+              },
+              "percentuale": {
+                "description": "Percentuale di inabilità, es. 50 per il 50%.",
+                "exclusiveMinimum": 0,
+                "maximum": 100,
+                "title": "Percentuale",
+                "type": "number"
+              }
+            },
+            "required": [
+              "giorni",
+              "percentuale"
+            ],
+            "title": "PartialDisability",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "eta": {
+            "description": "Età del danneggiato alla stabilizzazione dei postumi, in anni.",
+            "maximum": 100,
+            "minimum": 0,
+            "title": "Eta",
+            "type": "integer"
+          },
+          "giorni_itt": {
+            "default": 0,
+            "description": "Giorni di inabilità temporanea totale.",
+            "maximum": 3650,
+            "minimum": 0,
+            "title": "Giorni Itt",
+            "type": "integer"
+          },
+          "itp": {
+            "description": "Periodi di inabilità temporanea parziale, ciascuno con giorni e percentuale.",
+            "items": {
+              "$ref": "#/$defs/PartialDisability"
+            },
+            "maxItems": 10,
+            "title": "Itp",
+            "type": "array"
+          },
+          "personalizza_solo_biologico": {
+            "default": false,
+            "title": "Personalizza Solo Biologico",
+            "type": "boolean"
+          },
+          "personalizzazione_pct": {
+            "default": 0,
+            "description": "Personalizzazione, fino al massimo del punto (50% fino a 9 punti, poi a scendere fino al 25%).",
+            "maximum": 50,
+            "minimum": 0,
+            "title": "Personalizzazione Pct",
+            "type": "number"
+          },
+          "personalizzazione_temporanea_pct": {
+            "default": 0,
+            "description": "Personalizzazione della temporanea, da 0 a 50%.",
+            "maximum": 50,
+            "minimum": 0,
+            "title": "Personalizzazione Temporanea Pct",
+            "type": "number"
+          },
+          "punti": {
+            "description": "Punti di invalidità permanente, da 1 a 100.",
+            "maximum": 100,
+            "minimum": 1,
+            "title": "Punti",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "punti",
+          "eta"
+        ],
+        "title": "MilanPermanentArgs",
+        "type": "object"
+      }
+    },
+    {
+      "description": "Diritti di copia degli atti giudiziari (d.P.R. 115/2002, allegati 6-8): copie semplici, autentiche, telematiche, urgenti, esenzioni.\n\nIl calcolo è deterministico (codice verificato su norme e casi), non una stima: riporta le date e gli importi così come escono, con le avvertenze.",
+      "name": "calcola_diritti_copia",
+      "parameters": {
+        "properties": {
+          "giudice_di_pace": {
+            "default": false,
+            "title": "Giudice Di Pace",
+            "type": "boolean"
+          },
+          "invii": {
+            "default": 1,
+            "description": "Solo telematica e supporto_fisico: numero di trasmissioni o di supporti.",
+            "maximum": 1000,
+            "minimum": 1,
+            "title": "Invii",
+            "type": "integer"
+          },
+          "pagine": {
+            "default": 1,
+            "maximum": 100000,
+            "minimum": 1,
+            "title": "Pagine",
+            "type": "integer"
+          },
+          "tipo": {
+            "description": "semplice e autentica: copie cartacee per pagine; telematica, supporto_fisico: copie non cartacee a importo fisso (allegato 8); estratta_dal_fascicolo e attestata_dal_difensore: esenti (art. 40, c. 1-quater e 1-quinquies).",
+            "enum": [
+              "semplice",
+              "autentica",
+              "telematica",
+              "supporto_fisico",
+              "estratta_dal_fascicolo",
+              "attestata_dal_difensore"
+            ],
+            "title": "Tipo",
+            "type": "string"
+          },
+          "urgente": {
+            "default": false,
+            "description": "Copia cartacea rilasciata con urgenza: diritti triplicati (art. 270).",
+            "title": "Urgente",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "tipo"
+        ],
+        "title": "CopyFeesArgs",
+        "type": "object"
+      }
+    },
+    {
+      "description": "Fine pena naturale e con la liberazione anticipata (45 giorni a semestre, 75 per i semestri 2013-2015), con presofferto e interruzioni.\n\nIl calcolo è deterministico (codice verificato su norme e casi), non una stima: riporta le date e gli importi così come escono, con le avvertenze.",
+      "name": "calcola_fine_pena",
+      "parameters": {
+        "$defs": {
+          "DurationArg": {
+            "properties": {
+              "anni": {
+                "default": 0,
+                "maximum": 100,
+                "minimum": 0,
+                "title": "Anni",
+                "type": "integer"
+              },
+              "giorni": {
+                "default": 0,
+                "maximum": 36500,
+                "minimum": 0,
+                "title": "Giorni",
+                "type": "integer"
+              },
+              "mesi": {
+                "default": 0,
+                "maximum": 1200,
+                "minimum": 0,
+                "title": "Mesi",
+                "type": "integer"
+              }
+            },
+            "title": "DurationArg",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "alla_data": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Data a cui dire quanti semestri sono maturati.",
+            "title": "Alla Data"
+          },
+          "condannato_art_4_bis": {
+            "default": false,
+            "description": "Condanna per un reato dell'art. 4-bis o.p.: niente 75 giorni per i semestri 2013-2015.",
+            "title": "Condannato Art 4 Bis",
+            "type": "boolean"
+          },
+          "data_inizio": {
+            "description": "Inizio dell'esecuzione, AAAA-MM-GG.",
+            "format": "date",
+            "title": "Data Inizio",
+            "type": "string"
+          },
+          "interruzioni_giorni": {
+            "default": 0,
+            "description": "Giorni di interruzione dell'esecuzione (evasione, sospensione).",
+            "maximum": 36500,
+            "minimum": 0,
+            "title": "Interruzioni Giorni",
+            "type": "integer"
+          },
+          "pena": {
+            "$ref": "#/$defs/DurationArg",
+            "description": "Pena da espiare."
+          },
+          "presofferto_giorni": {
+            "default": 0,
+            "description": "Giorni di custodia cautelare o pena già sofferti, da detrarre.",
+            "maximum": 36500,
+            "minimum": 0,
+            "title": "Presofferto Giorni",
+            "type": "integer"
+          },
+          "presofferto_per_liberazione_anticipata": {
+            "default": true,
+            "description": "Se il presofferto conta per i semestri della liberazione anticipata.",
+            "title": "Presofferto Per Liberazione Anticipata",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "pena",
+          "data_inizio"
+        ],
+        "title": "EndOfSentenceArgs",
+        "type": "object"
+      }
+    },
+    {
+      "description": "Termine di improcedibilità del giudizio di appello o di cassazione (art. 344-bis c.p.p.) per i reati dal 1/1/2020, con il regime transitorio.\n\nIl calcolo è deterministico (codice verificato su norme e casi), non una stima: riporta le date e gli importi così come escono, con le avvertenze.",
+      "name": "calcola_improcedibilita",
+      "parameters": {
+        "properties": {
+          "atti_arrivati_prima_della_riforma": {
+            "default": false,
+            "description": "Atti già pervenuti al giudice dell'impugnazione al 19/10/2021.",
+            "title": "Atti Arrivati Prima Della Riforma",
+            "type": "boolean"
+          },
+          "data_fatto": {
+            "description": "Data del reato: l'improcedibilità vale per i reati dal 1/1/2020.",
+            "format": "date",
+            "title": "Data Fatto",
+            "type": "string"
+          },
+          "data_impugnazione": {
+            "description": "Data dell'impugnazione; con più impugnazioni, la prima.",
+            "format": "date",
+            "title": "Data Impugnazione",
+            "type": "string"
+          },
+          "ergastolo": {
+            "default": false,
+            "description": "Delitto punito con l'ergastolo: l'improcedibilità non si applica (c. 9).",
+            "title": "Ergastolo",
+            "type": "boolean"
+          },
+          "giorni_sospensione": {
+            "default": 0,
+            "maximum": 36500,
+            "minimum": 0,
+            "title": "Giorni Sospensione",
+            "type": "integer"
+          },
+          "grado": {
+            "enum": [
+              "appello",
+              "cassazione"
+            ],
+            "title": "Grado",
+            "type": "string"
+          },
+          "proroga_mesi": {
+            "default": 0,
+            "description": "Proroghe disposte dal giudice (art. 344-bis, c. 4).",
+            "maximum": 24,
+            "minimum": 0,
+            "title": "Proroga Mesi",
+            "type": "integer"
+          },
+          "scadenza_deposito_motivazione": {
+            "description": "Scadenza del termine per il deposito della motivazione (art. 544 c.p.p.), anche prorogato.",
+            "format": "date",
+            "title": "Scadenza Deposito Motivazione",
+            "type": "string"
+          }
+        },
+        "required": [
+          "data_fatto",
+          "grado",
+          "scadenza_deposito_motivazione",
+          "data_impugnazione"
+        ],
+        "title": "InadmissibilityArgs",
+        "type": "object"
+      }
+    },
+    {
+      "description": "Interessi legali (art. 1284 c.c.) su una somma fra due date, periodo per periodo col saggio di ciascun anno; dalla domanda giudiziale il saggio dell'art. 1284, c. 4. Non calcolare mai interessi a mente.\n\nIl calcolo è deterministico (codice verificato su norme e casi), non una stima: riporta le date e gli importi così come escono, con le avvertenze.",
+      "name": "calcola_interessi_legali",
+      "parameters": {
+        "properties": {
+          "capitale": {
+            "description": "Somma su cui maturano gli interessi, in euro.",
+            "exclusiveMinimum": 0,
+            "maximum": 1000000000000,
+            "title": "Capitale",
+            "type": "number"
+          },
+          "data_domanda_giudiziale": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Data della domanda giudiziale, se c'è: dalla domanda proposta dall'11/12/2014 si applica il saggio delle transazioni commerciali (art. 1284, c. 4 c.c.).",
+            "title": "Data Domanda Giudiziale"
+          },
+          "data_fine": {
+            "description": "Fino a quando, AAAA-MM-GG (successiva all'inizio).",
+            "format": "date",
+            "title": "Data Fine",
+            "type": "string"
+          },
+          "data_inizio": {
+            "description": "Da quando decorrono gli interessi, AAAA-MM-GG.",
+            "format": "date",
+            "title": "Data Inizio",
+            "type": "string"
+          }
+        },
+        "required": [
+          "capitale",
+          "data_inizio",
+          "data_fine"
+        ],
+        "title": "LegalInterestArgs",
+        "type": "object"
+      }
+    },
+    {
+      "description": "Interessi di mora nelle transazioni commerciali (d.lgs. 231/2002): tasso BCE del semestre più 8 punti (7 per i contratti fino al 2012), semestre per semestre.\n\nIl calcolo è deterministico (codice verificato su norme e casi), non una stima: riporta le date e gli importi così come escono, con le avvertenze.",
+      "name": "calcola_interessi_mora",
+      "parameters": {
+        "properties": {
+          "capitale": {
+            "description": "Somma dovuta, in euro.",
+            "exclusiveMinimum": 0,
+            "maximum": 1000000000000,
+            "title": "Capitale",
+            "type": "number"
+          },
+          "data_contratto": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Data del contratto: fino al 31/12/2012 BCE + 7 punti, dopo + 8. Se manca, + 8 con un'avvertenza.",
+            "title": "Data Contratto"
+          },
+          "data_fine": {
+            "description": "Fino a quando, AAAA-MM-GG.",
+            "format": "date",
+            "title": "Data Fine",
+            "type": "string"
+          },
+          "data_inizio": {
+            "description": "Da quando decorre la mora, AAAA-MM-GG.",
+            "format": "date",
+            "title": "Data Inizio",
+            "type": "string"
+          },
+          "punti_agroalimentare": {
+            "default": 0,
+            "description": "Punti in più delle cessioni di prodotti agricoli e alimentari: 2 (art. 62 d.l. 1/2012) o 4 (art. 4 d.lgs. 198/2021); 0 negli altri casi.",
+            "maximum": 4,
+            "minimum": 0,
+            "title": "Punti Agroalimentare",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "capitale",
+          "data_inizio",
+          "data_fine"
+        ],
+        "title": "LatePaymentInterestArgs",
+        "type": "object"
+      }
+    },
+    {
+      "description": "Applica alla pena base aumenti e diminuzioni in sequenza (art. 63 c.p.), con i limiti degli artt. 66 e 67, e poi la riduzione del rito (abbreviato, patteggiamento); restituisce ogni passaggio. Quali circostanze e quali frazioni lo decidi tu: il tool fa solo i conti, che non vanno mai fatti a mente.\n\nIl calcolo è deterministico (codice verificato su norme e casi), non una stima: riporta le date e gli importi così come escono, con le avvertenze.",
+      "name": "calcola_pena",
+      "parameters": {
+        "$defs": {
+          "DurationArg": {
+            "properties": {
+              "anni": {
+                "default": 0,
+                "maximum": 100,
+                "minimum": 0,
+                "title": "Anni",
+                "type": "integer"
+              },
+              "giorni": {
+                "default": 0,
+                "maximum": 36500,
+                "minimum": 0,
+                "title": "Giorni",
+                "type": "integer"
+              },
+              "mesi": {
+                "default": 0,
+                "maximum": 1200,
+                "minimum": 0,
+                "title": "Mesi",
+                "type": "integer"
+              }
+            },
+            "title": "DurationArg",
+            "type": "object"
+          },
+          "PenaltyStep": {
+            "properties": {
+              "descrizione": {
+                "default": "",
+                "description": "Es. «art. 61 n. 5», «attenuanti generiche».",
+                "maxLength": 200,
+                "title": "Descrizione",
+                "type": "string"
+              },
+              "frazione": {
+                "description": "La frazione, es. «1/3», «2/3», «1/6».",
+                "title": "Frazione",
+                "type": "string"
+              },
+              "natura": {
+                "default": "altro",
+                "description": "Decide i limiti degli artt. 66 e 67 c.p., che non valgono per le circostanze ad effetto speciale.",
+                "enum": [
+                  "aggravante",
+                  "aggravante_effetto_speciale",
+                  "attenuante",
+                  "attenuante_effetto_speciale",
+                  "continuazione",
+                  "altro"
+                ],
+                "title": "Natura",
+                "type": "string"
+              },
+              "tipo": {
+                "enum": [
+                  "aumento",
+                  "diminuzione"
+                ],
+                "title": "Tipo",
+                "type": "string"
+              }
+            },
+            "required": [
+              "tipo",
+              "frazione"
+            ],
+            "title": "PenaltyStep",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "diminuzione_patteggiamento": {
+            "default": "1/3",
+            "description": "Solo patteggiamento: la diminuzione, fino a «1/3».",
+            "title": "Diminuzione Patteggiamento",
+            "type": "string"
+          },
+          "massimo_edittale": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/DurationArg"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Massimo edittale del reato, per il limite del triplo dell'art. 66."
+          },
+          "operazioni": {
+            "description": "Aumenti e diminuzioni nell'ordine in cui si applicano: ciascuna sul risultato della precedente (art. 63 c.p.).",
+            "items": {
+              "$ref": "#/$defs/PenaltyStep"
+            },
+            "maxItems": 20,
+            "title": "Operazioni",
+            "type": "array"
+          },
+          "pena_detentiva": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/DurationArg"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Pena base detentiva."
+          },
+          "pena_pecuniaria_euro": {
+            "anyOf": [
+              {
+                "maximum": 1000000000,
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Pena base pecuniaria, in euro.",
+            "title": "Pena Pecuniaria Euro"
+          },
+          "rito": {
+            "default": "ordinario",
+            "enum": [
+              "ordinario",
+              "abbreviato",
+              "patteggiamento"
+            ],
+            "title": "Rito",
+            "type": "string"
+          },
+          "sentenza_non_impugnata": {
+            "default": false,
+            "description": "Solo abbreviato: un sesto in più se la sentenza non è impugnata (art. 442, c. 2-bis c.p.p.).",
+            "title": "Sentenza Non Impugnata",
+            "type": "boolean"
+          },
+          "specie_detentiva": {
+            "default": "reclusione",
+            "enum": [
+              "reclusione",
+              "arresto"
+            ],
+            "title": "Specie Detentiva",
+            "type": "string"
+          },
+          "tipo_reato": {
+            "default": "delitto",
+            "description": "Nell'abbreviato: un terzo per i delitti, metà per le contravvenzioni.",
+            "enum": [
+              "delitto",
+              "contravvenzione"
+            ],
+            "title": "Tipo Reato",
+            "type": "string"
+          }
+        },
+        "title": "ApplyPenaltyStepsArgs",
+        "type": "object"
+      }
+    },
+    {
+      "description": "Il giorno in cui un diritto si prescrive (artt. 2934-2963 c.c. e leggi speciali), con interruzioni, sospensioni, giudicato e proroga del termine festivo. Non contare mai a mente.\n\nIl calcolo è deterministico (codice verificato su norme e casi), non una stima: riporta le date e gli importi così come escono, con le avvertenze.",
+      "name": "calcola_prescrizione_diritto",
+      "parameters": {
+        "$defs": {
+          "SuspensionPeriod": {
+            "properties": {
+              "al": {
+                "format": "date",
+                "title": "Al",
+                "type": "string"
+              },
+              "dal": {
+                "format": "date",
+                "title": "Dal",
+                "type": "string"
+              }
+            },
+            "required": [
+              "dal",
+              "al"
+            ],
+            "title": "SuspensionPeriod",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "atti_interruttivi": {
+            "description": "Date degli atti interruttivi (costituzione in mora, domanda giudiziale, riconoscimento del debito). Per la domanda giudiziale la prescrizione non corre fino al giudicato: indica anche la data del giudicato come interruzione.",
+            "items": {
+              "format": "date",
+              "type": "string"
+            },
+            "maxItems": 50,
+            "title": "Atti Interruttivi",
+            "type": "array"
+          },
+          "data_decorrenza": {
+            "description": "Giorno da cui la prescrizione decorre (art. 2935 c.c.; la decorrenza di ogni voce è nel catalogo), AAAA-MM-GG.",
+            "format": "date",
+            "title": "Data Decorrenza",
+            "type": "string"
+          },
+          "data_giudicato": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Passaggio in giudicato della sentenza di condanna: il termine diventa decennale (art. 2953 c.c.).",
+            "title": "Data Giudicato"
+          },
+          "id_diritto": {
+            "description": "Id della voce, da elenca_prescrizioni_diritti (es. fatto_illecito, mutuo_rate, condominio_ordinarie).",
+            "title": "Id Diritto",
+            "type": "string"
+          },
+          "sospensioni": {
+            "description": "Periodi di sospensione (artt. 2941-2942 c.c.).",
+            "items": {
+              "$ref": "#/$defs/SuspensionPeriod"
+            },
+            "maxItems": 20,
+            "title": "Sospensioni",
+            "type": "array"
+          },
+          "utente_protetto": {
+            "default": true,
+            "description": "Solo bollette di luce, gas e acqua: utente domestico, microimpresa o professionista (L. 205/2017).",
+            "title": "Utente Protetto",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id_diritto",
+          "data_decorrenza"
+        ],
+        "title": "RightPrescriptionArgs",
+        "type": "object"
+      }
+    },
+    {
+      "description": "Scadenza della prescrizione del reato sul testo vigente (artt. 157-161-bis c.p.) con il regime della data del fatto, interruzioni, sospensioni, raddoppi; per i reati dal 2020 dice se la prescrizione cessa col primo grado.\n\nIl calcolo è deterministico (codice verificato su norme e casi), non una stima: riporta le date e gli importi così come escono, con le avvertenze.",
+      "name": "calcola_prescrizione_reato",
+      "parameters": {
+        "$defs": {
+          "DurationArg": {
+            "properties": {
+              "anni": {
+                "default": 0,
+                "maximum": 100,
+                "minimum": 0,
+                "title": "Anni",
+                "type": "integer"
+              },
+              "giorni": {
+                "default": 0,
+                "maximum": 36500,
+                "minimum": 0,
+                "title": "Giorni",
+                "type": "integer"
+              },
+              "mesi": {
+                "default": 0,
+                "maximum": 1200,
+                "minimum": 0,
+                "title": "Mesi",
+                "type": "integer"
+              }
+            },
+            "title": "DurationArg",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "data_decorrenza": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Data Decorrenza"
+          },
+          "data_fatto": {
+            "description": "Data del fatto: decide il regime (L. 251/2005, L. 103/2017, dal 1/1/2020 la cessazione col primo grado).",
+            "format": "date",
+            "title": "Data Fatto",
+            "type": "string"
+          },
+          "decorrenza": {
+            "default": "consumato",
+            "description": "Art. 158: consumato dal fatto; tentato, permanente, continuato dalla cessazione; condizione dall'avveramento; minore dal diciottesimo anno della persona offesa. Per tutti tranne consumato indica data_decorrenza.",
+            "enum": [
+              "consumato",
+              "tentato",
+              "permanente",
+              "continuato",
+              "condizione",
+              "minore"
+            ],
+            "title": "Decorrenza",
+            "type": "string"
+          },
+          "giorni_sospensione": {
+            "default": 0,
+            "description": "Tutti i giorni di sospensione (art. 159).",
+            "maximum": 36500,
+            "minimum": 0,
+            "title": "Giorni Sospensione",
+            "type": "integer"
+          },
+          "giorni_sospensione_prima_ultimo_atto": {
+            "default": 0,
+            "description": "Quanti dei giorni di sospensione sono anteriori all'ultimo atto interruttivo.",
+            "maximum": 36500,
+            "minimum": 0,
+            "title": "Giorni Sospensione Prima Ultimo Atto",
+            "type": "integer"
+          },
+          "interrotta": {
+            "default": true,
+            "description": "Se ci sono stati atti interruttivi (art. 160).",
+            "title": "Interrotta",
+            "type": "boolean"
+          },
+          "massimo_edittale": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/DurationArg"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Massimo della pena del reato consumato o tentato, senza circostanze salvo le aggravanti a effetto speciale e di specie diversa, col loro aumento massimo (art. 157, c. 2-3)."
+          },
+          "raddoppio": {
+            "default": false,
+            "description": "Termine raddoppiato dell'art. 157, c. 6 (es. artt. 572, 589-bis, reati sessuali).",
+            "title": "Raddoppio",
+            "type": "boolean"
+          },
+          "sentenza_primo_grado": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Sentenza Primo Grado"
+          },
+          "tetto_interruzione": {
+            "default": "un_quarto",
+            "description": "Aumento massimo per interruzione (art. 161, c. 2): un quarto di regola; metà, due terzi, doppio per i casi della norma; nessun_limite per l'art. 51, c. 3-bis e 3-quater c.p.p.",
+            "enum": [
+              "un_quarto",
+              "meta",
+              "due_terzi",
+              "doppio",
+              "nessun_limite"
+            ],
+            "title": "Tetto Interruzione",
+            "type": "string"
+          },
+          "tipo_pena": {
+            "enum": [
+              "detentiva",
+              "pecuniaria",
+              "diversa",
+              "ergastolo"
+            ],
+            "title": "Tipo Pena",
+            "type": "string"
+          },
+          "tipo_reato": {
+            "enum": [
+              "delitto",
+              "contravvenzione"
+            ],
+            "title": "Tipo Reato",
+            "type": "string"
+          },
+          "ultimo_atto_interruttivo": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Ultimo Atto Interruttivo"
+          }
+        },
+        "required": [
+          "data_fatto",
+          "tipo_reato",
+          "tipo_pena"
+        ],
+        "title": "CrimeLimitationArgs",
+        "type": "object"
+      }
+    },
+    {
+      "description": "Rivalutazione con l'indice FOI dell'ISTAT fra due date; con con_interessi il debito di valore (rivalutazione più interessi legali sul capitale rivalutato via via, Cass. SU 1712/1995).\n\nIl calcolo è deterministico (codice verificato su norme e casi), non una stima: riporta le date e gli importi così come escono, con le avvertenze.",
+      "name": "calcola_rivalutazione",
+      "parameters": {
+        "properties": {
+          "capitale": {
+            "description": "Somma da rivalutare, in euro.",
+            "exclusiveMinimum": 0,
+            "maximum": 1000000000000,
+            "title": "Capitale",
+            "type": "number"
+          },
+          "con_interessi": {
+            "default": false,
+            "description": "True per un debito di valore (risarcimento): rivalutazione più interessi legali sul capitale rivalutato via via (Cass. SU 1712/1995).",
+            "title": "Con Interessi",
+            "type": "boolean"
+          },
+          "data_fine": {
+            "description": "Data a cui si rivaluta, AAAA-MM-GG.",
+            "format": "date",
+            "title": "Data Fine",
+            "type": "string"
+          },
+          "data_inizio": {
+            "description": "Data da cui si rivaluta, AAAA-MM-GG.",
+            "format": "date",
+            "title": "Data Inizio",
+            "type": "string"
+          },
+          "mese_indice": {
+            "default": "mese_della_data",
+            "description": "Quale indice FOI usare per ogni data: quello del suo mese o del mese precedente.",
+            "enum": [
+              "mese_della_data",
+              "mese_precedente"
+            ],
+            "title": "Mese Indice",
+            "type": "string"
+          }
+        },
+        "required": [
+          "capitale",
+          "data_inizio",
+          "data_fine"
+        ],
+        "title": "RevaluationArgs",
+        "type": "object"
+      }
+    },
+    {
+      "description": "Aggiunge o toglie giorni a una data per una scadenza che non è un termine processuale civile (contrattuale, amministrativa, di diffida): slittano solo domeniche e festivi, il sabato resta valido; sospensione feriale a scelta. Per i termini del processo civile usa calcola_termine.\n\nIl calcolo è deterministico (codice verificato su norme e casi), non una stima: riporta le date e gli importi così come escono, con le avvertenze.",
+      "name": "calcola_scadenza",
+      "parameters": {
+        "properties": {
+          "data": {
+            "description": "Data di partenza, AAAA-MM-GG.",
+            "format": "date",
+            "title": "Data",
+            "type": "string"
+          },
+          "giorni": {
+            "description": "Numero di giorni da aggiungere o togliere.",
+            "maximum": 3650,
+            "minimum": 1,
+            "title": "Giorni",
+            "type": "integer"
+          },
+          "prima": {
+            "default": false,
+            "description": "True per contare all'indietro dalla data.",
+            "title": "Prima",
+            "type": "boolean"
+          },
+          "sospensione_feriale": {
+            "default": false,
+            "description": "True per un termine processuale soggetto alla sospensione feriale (1-31 agosto).",
+            "title": "Sospensione Feriale",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "data",
+          "giorni"
+        ],
+        "title": "CalculateGenericDeadlineArgs",
+        "type": "object"
+      }
+    },
+    {
+      "description": "Scadenze di una multa del Codice della strada secondo la fase: pagamento in misura ridotta e sconto del 30% (art. 202), ricorso al Prefetto (art. 203) o al giudice di pace (art. 204-bis), silenzio-assenso del Prefetto, pagamento o opposizione dopo il rigetto.\n\nIl calcolo è deterministico (codice verificato su norme e casi), non una stima: riporta le date e gli importi così come escono, con le avvertenze.",
+      "name": "calcola_scadenze_multa",
+      "parameters": {
+        "properties": {
+          "azione": {
+            "default": "pagare",
+            "description": "Che cosa si vuole fare. Dopo il rigetto del Prefetto, ricorso_gdp è l'opposizione all'ordinanza-ingiunzione.",
+            "enum": [
+              "pagare",
+              "ricorso_prefetto",
+              "ricorso_gdp"
+            ],
+            "title": "Azione",
+            "type": "string"
+          },
+          "data": {
+            "description": "Data della contestazione o della notifica del verbale, della presentazione del ricorso, o della notifica dell'ordinanza-ingiunzione o della sentenza del giudice di pace, secondo la situazione. AAAA-MM-GG.",
+            "format": "date",
+            "title": "Data",
+            "type": "string"
+          },
+          "ricorso_presentato_a": {
+            "default": "organo_accertatore",
+            "description": "Solo per ricorso_prefetto_presentato: dove è stato presentato il ricorso (cambia il termine del silenzio-assenso).",
+            "enum": [
+              "organo_accertatore",
+              "prefetto"
+            ],
+            "title": "Ricorso Presentato A",
+            "type": "string"
+          },
+          "sanzione_minima": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Minimo edittale della sanzione, per lo sconto del 30% e il contributo unificato.",
+            "title": "Sanzione Minima"
+          },
+          "situazione": {
+            "description": "A che punto è la multa del Codice della strada.",
+            "enum": [
+              "contestata",
+              "notificata",
+              "ricorso_prefetto_presentato",
+              "ricorso_gdp_presentato",
+              "rigetto_prefetto",
+              "rigetto_gdp"
+            ],
+            "title": "Situazione",
+            "type": "string"
+          }
+        },
+        "required": [
+          "situazione",
+          "data"
+        ],
+        "title": "CalculateTrafficFineDeadlinesArgs",
+        "type": "object"
+      }
+    },
+    {
+      "description": "Rimborso della trasferta dell'avvocato (art. 27 d.m. 55/2014): un quinto del prezzo del carburante per chilometro, pedaggi, parcheggi, albergo, altri mezzi.\n\nIl calcolo è deterministico (codice verificato su norme e casi), non una stima: riporta le date e gli importi così come escono, con le avvertenze.",
+      "name": "calcola_spese_trasferta",
+      "parameters": {
+        "properties": {
+          "albergo": {
+            "default": 0,
+            "description": "Spesa di albergo (fino a quattro stelle): +10%.",
+            "maximum": 1000000000000,
+            "minimum": 0,
+            "title": "Albergo",
+            "type": "number"
+          },
+          "altri_mezzi": {
+            "default": 0,
+            "description": "Treno, aereo e altri mezzi, al costo.",
+            "maximum": 1000000000000,
+            "minimum": 0,
+            "title": "Altri Mezzi",
+            "type": "number"
+          },
+          "indennita_trasferta": {
+            "anyOf": [
+              {
+                "maximum": 1000000000000,
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Indennità di trasferta, solo se indicata: non ha un parametro.",
+            "title": "Indennita Trasferta"
+          },
+          "km": {
+            "default": 0,
+            "description": "Chilometri percorsi con il proprio mezzo.",
+            "maximum": 100000,
+            "minimum": 0,
+            "title": "Km",
+            "type": "number"
+          },
+          "parcheggi": {
+            "default": 0,
+            "maximum": 1000000000000,
+            "minimum": 0,
+            "title": "Parcheggi",
+            "type": "number"
+          },
+          "pedaggi": {
+            "default": 0,
+            "maximum": 1000000000000,
+            "minimum": 0,
+            "title": "Pedaggi",
+            "type": "number"
+          },
+          "prezzo_carburante_litro": {
+            "anyOf": [
+              {
+                "maximum": 100,
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Prezzo del carburante al litro, se si chiede il rimborso chilometrico.",
+            "title": "Prezzo Carburante Litro"
+          }
+        },
+        "title": "TravelExpensesArgs",
+        "type": "object"
+      }
+    },
+    {
+      "description": "Calcola la scadenza di un termine processuale civile (art. 155 c.p.c., sospensione feriale, festivi, sabato, termini liberi e a ritroso). Non contare mai i giorni a mente: ogni scadenza che scrivi deve venire da questo tool o dagli altri calcola_termin*. Passa l'id del catalogo oppure durata e unità.\n\nIl calcolo è deterministico (codice verificato su norme e casi), non una stima: riporta le date e gli importi così come escono, con le avvertenze.",
+      "name": "calcola_termine",
+      "parameters": {
+        "properties": {
+          "a_ritroso": {
+            "default": false,
+            "description": "True se il termine si conta all'indietro da un'udienza.",
+            "title": "A Ritroso",
+            "type": "boolean"
+          },
+          "data_decorrenza": {
+            "description": "Data da cui il termine decorre (notifica, comunicazione, deposito) o, per i termini a ritroso, data dell'udienza. Formato AAAA-MM-GG.",
+            "format": "date",
+            "title": "Data Decorrenza",
+            "type": "string"
+          },
+          "id_termine": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Id della voce del catalogo (da elenca_termini_catalogo). Se indicato, durata, unità, direzione e termine libero vengono dal catalogo: non indicarli.",
+            "title": "Id Termine"
+          },
+          "libero": {
+            "default": false,
+            "description": "True per un termine libero (non si contano né il primo né l'ultimo giorno).",
+            "title": "Libero",
+            "type": "boolean"
+          },
+          "materia": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Id della materia del catalogo della sospensione feriale (da verifica_sospensione_feriale, es. lavoro_previdenza, opposizione_esecuzione_615, tributario_processo): decide se la sospensione si applica.",
+            "title": "Materia"
+          },
+          "quantita": {
+            "anyOf": [
+              {
+                "maximum": 3650,
+                "minimum": 1,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Durata, se il termine non è nel catalogo (al massimo 3650 giorni, 120 mesi, 50 anni).",
+            "title": "Quantita"
+          },
+          "sospensione_feriale": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Se applicare la sospensione feriale. Lascialo vuoto se non sei sicuro: decide la materia, se indicata, poi il default della voce del catalogo; altrimenti si calcolano entrambe le date.",
+            "title": "Sospensione Feriale"
+          },
+          "unita": {
+            "default": "giorni",
+            "enum": [
+              "giorni",
+              "mesi",
+              "anni"
+            ],
+            "title": "Unita",
+            "type": "string"
+          }
+        },
+        "required": [
+          "data_decorrenza"
+        ],
+        "title": "CalculateDeadlineArgs",
+        "type": "object"
+      }
+    },
+    {
+      "description": "Calcola il termine breve o lungo per appello, ricorso per cassazione, revocazione e opposizione di terzo nel processo civile, amministrativo e tributario.\n\nIl calcolo è deterministico (codice verificato su norme e casi), non una stima: riporta le date e gli importi così come escono, con le avvertenze.",
+      "name": "calcola_termine_impugnazione",
+      "parameters": {
+        "properties": {
+          "data": {
+            "description": "Data della notifica, della pubblicazione o della scoperta, AAAA-MM-GG.",
+            "format": "date",
+            "title": "Data",
+            "type": "string"
+          },
+          "data_inizio_giudizio": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Data in cui è iniziato il giudizio di primo grado (notifica della citazione o deposito del ricorso). Serve per il termine lungo: per i giudizi iniziati fino al 4/7/2009 è di un anno invece di sei mesi (art. 58 L. 69/2009).",
+            "title": "Data Inizio Giudizio"
+          },
+          "decorrenza": {
+            "description": "notifica: termine breve; pubblicazione: termine lungo; scoperta_vizi: revocazione straordinaria e opposizione di terzo revocatoria.",
+            "enum": [
+              "notifica",
+              "pubblicazione",
+              "scoperta_vizi"
+            ],
+            "title": "Decorrenza",
+            "type": "string"
+          },
+          "impugnazione": {
+            "enum": [
+              "appello",
+              "cassazione",
+              "revocazione",
+              "opposizione_terzo"
+            ],
+            "title": "Impugnazione",
+            "type": "string"
+          },
+          "processo": {
+            "enum": [
+              "civile",
+              "amministrativo",
+              "tributario"
+            ],
+            "title": "Processo",
+            "type": "string"
+          },
+          "sospensione_feriale": {
+            "default": true,
+            "title": "Sospensione Feriale",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "processo",
+          "impugnazione",
+          "decorrenza",
+          "data"
+        ],
+        "title": "CalculateAppealDeadlineArgs",
+        "type": "object"
+      }
+    },
+    {
+      "description": "Calcola i tre termini dell'art. 195 c.p.c. fissati dal giudice per la CTU: invio della bozza alle parti, osservazioni dei consulenti di parte, deposito della relazione definitiva, ciascuno dalla scadenza del precedente.\n\nIl calcolo è deterministico (codice verificato su norme e casi), non una stima: riporta le date e gli importi così come escono, con le avvertenze.",
+      "name": "calcola_termini_ctu",
+      "parameters": {
+        "properties": {
+          "data_decorrenza": {
+            "description": "Data da cui il giudice fa decorrere i termini dell'art. 195 c.p.c. (di solito l'udienza di giuramento o l'inizio delle operazioni), AAAA-MM-GG.",
+            "format": "date",
+            "title": "Data Decorrenza",
+            "type": "string"
+          },
+          "giorni_bozza": {
+            "description": "Giorni assegnati al CTU per inviare la bozza alle parti.",
+            "maximum": 3650,
+            "minimum": 1,
+            "title": "Giorni Bozza",
+            "type": "integer"
+          },
+          "giorni_deposito": {
+            "description": "Giorni, dopo le osservazioni, per il deposito della relazione definitiva.",
+            "maximum": 3650,
+            "minimum": 1,
+            "title": "Giorni Deposito",
+            "type": "integer"
+          },
+          "giorni_osservazioni": {
+            "description": "Giorni, dopo l'invio della bozza, per le osservazioni delle parti al CTU.",
+            "maximum": 3650,
+            "minimum": 1,
+            "title": "Giorni Osservazioni",
+            "type": "integer"
+          },
+          "prudenziale": {
+            "default": false,
+            "description": "True: ogni termine decorre dalla scadenza del precedente senza la proroga per sabato o festivo. False (default): dalla scadenza prorogata.",
+            "title": "Prudenziale",
+            "type": "boolean"
+          },
+          "sospensione_feriale": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Se applicare la sospensione feriale. Lascialo vuoto se il provvedimento non lo dice: si calcolano entrambe le serie di date.",
+            "title": "Sospensione Feriale"
+          }
+        },
+        "required": [
+          "data_decorrenza",
+          "giorni_bozza",
+          "giorni_osservazioni",
+          "giorni_deposito"
+        ],
+        "title": "CalculateExpertReportDeadlinesArgs",
+        "type": "object"
+      }
+    },
+    {
+      "description": "Calcola i termini di iscrizione a ruolo del pignoramento (mobiliare, immobiliare, presso terzi, autoveicoli), l'istanza di vendita (art. 497) e il deposito della documentazione ipocatastale (art. 567).\n\nIl calcolo è deterministico (codice verificato su norme e casi), non una stima: riporta le date e gli importi così come escono, con le avvertenze.",
+      "name": "calcola_termini_esecuzione",
+      "parameters": {
+        "properties": {
+          "data_compimento": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Mobiliare/immobiliare: data di compimento del pignoramento (notifica). Autoveicoli: data di iscrizione a ruolo. Non serve per il presso terzi.",
+            "title": "Data Compimento"
+          },
+          "data_consegna": {
+            "description": "Mobiliare/immobiliare/presso terzi: data in cui l'UNEP consegna l'atto o il verbale di pignoramento. Autoveicoli: comunicazione dell'IVG di presa in custodia.",
+            "format": "date",
+            "title": "Data Consegna",
+            "type": "string"
+          },
+          "sospensione_feriale": {
+            "default": true,
+            "title": "Sospensione Feriale",
+            "type": "boolean"
+          },
+          "tipo": {
+            "enum": [
+              "mobiliare",
+              "immobiliare",
+              "presso_terzi",
+              "autoveicoli"
+            ],
+            "title": "Tipo",
+            "type": "string"
+          }
+        },
+        "required": [
+          "tipo",
+          "data_consegna"
+        ],
+        "title": "CalculateEnforcementDeadlinesArgs",
+        "type": "object"
+      }
+    },
+    {
+      "description": "Per i procedimenti iniziati prima del 28/02/2023: le tre memorie dell'art. 183, sesto comma, c.p.c. (30, 30 e 20 giorni) e comparsa conclusionale e replica dell'art. 190 (60 e 20 giorni; se il giudice ha dato per la conclusionale un termine più breve, non inferiore a 20 giorni, indicalo in giorni_conclusionale).\n\nIl calcolo è deterministico (codice verificato su norme e casi), non una stima: riporta le date e gli importi così come escono, con le avvertenze.",
+      "name": "calcola_termini_rito_previgente",
+      "parameters": {
+        "properties": {
+          "articolo": {
+            "description": "183: le tre memorie dell'art. 183, sesto comma (30, 30 e 20 giorni in sequenza) dall'udienza in cui il giudice le concede; 190: comparsa conclusionale (60 giorni) e memoria di replica (20 giorni dopo) dalla rimessione della causa in decisione.",
+            "enum": [
+              "183",
+              "190"
+            ],
+            "title": "Articolo",
+            "type": "string"
+          },
+          "data_decorrenza": {
+            "description": "Data dell'udienza da cui decorrono i termini, AAAA-MM-GG.",
+            "format": "date",
+            "title": "Data Decorrenza",
+            "type": "string"
+          },
+          "giorni_conclusionale": {
+            "anyOf": [
+              {
+                "maximum": 60,
+                "minimum": 20,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Solo 190: i giorni assegnati dal giudice per la comparsa conclusionale, se più brevi dei 60 di legge (non meno di 20). Vuoto: 60 giorni.",
+            "title": "Giorni Conclusionale"
+          },
+          "prudenziale": {
+            "default": true,
+            "description": "True: ogni termine decorre dalla scadenza del precedente senza la proroga per sabato o festivo (più sicuro). False: dalla scadenza prorogata (Cass. 13201/2006).",
+            "title": "Prudenziale",
+            "type": "boolean"
+          },
+          "sospensione_feriale": {
+            "default": true,
+            "description": "False nelle materie escluse (lavoro, cautelari, ecc.).",
+            "title": "Sospensione Feriale",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "articolo",
+          "data_decorrenza"
+        ],
+        "title": "CalculatePreReformDeadlinesArgs",
+        "type": "object"
+      }
+    },
+    {
+      "description": "Calcola tutti i termini legati a un'udienza nel rito dopo la riforma Cartabia: memorie integrative 171-ter, note e comparse ex 189 e 275-bis, rito di famiglia 473-bis.17 e 473-bis.28, decisione in appello 352, termini del procedimento semplificato 281-duodecies. Negli artt. 189, 275-bis, 352 e 473-bis.28 la legge dà solo i massimi: se il giudice ha assegnato termini diversi, passali in giorni_assegnati.\n\nIl calcolo è deterministico (codice verificato su norme e casi), non una stima: riporta le date e gli importi così come escono, con le avvertenze.",
+      "name": "calcola_termini_udienza",
+      "parameters": {
+        "properties": {
+          "data_udienza": {
+            "description": "Data dell'udienza, formato AAAA-MM-GG.",
+            "format": "date",
+            "title": "Data Udienza",
+            "type": "string"
+          },
+          "giorni_assegnati": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "integer"
+                },
+                "maxItems": 3,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Solo 189, 275bis, 352, 473bis28: i giorni prima dell'udienza assegnati dal giudice, nell'ordine (es. [40, 20, 10]), se il provvedimento ne indica di diversi dai massimi di legge (60, 30, 15; nel 275bis 30, 15).",
+            "title": "Giorni Assegnati"
+          },
+          "primo_termine_giorni": {
+            "default": 20,
+            "description": "Solo 281duodecies: il primo termine concesso (max 20).",
+            "maximum": 20,
+            "minimum": 1,
+            "title": "Primo Termine Giorni",
+            "type": "integer"
+          },
+          "prudenziale": {
+            "default": true,
+            "description": "Solo 281duodecies. True (default): il secondo termine decorre dalla scadenza del primo senza la proroga per sabato o festivo, la data più sicura. False: dalla scadenza prorogata (Cass. 13201/2006).",
+            "title": "Prudenziale",
+            "type": "boolean"
+          },
+          "rito": {
+            "description": "171ter: memorie integrative prima della prima udienza; 189: note, comparsa e replica prima della rimessione in decisione; 275bis: discussione orale davanti al collegio; 473bis17: memorie nel rito di famiglia; 473bis28: decisione nel rito di famiglia; 352: decisione in appello; 281duodecies: termini concessi nel procedimento semplificato (decorrono dall'udienza in avanti).",
+            "enum": [
+              "171ter",
+              "189",
+              "275bis",
+              "473bis17",
+              "473bis28",
+              "352",
+              "281duodecies"
+            ],
+            "title": "Rito",
+            "type": "string"
+          },
+          "secondo_termine_giorni": {
+            "default": 10,
+            "description": "Solo 281duodecies: il secondo termine concesso (max 10).",
+            "maximum": 10,
+            "minimum": 1,
+            "title": "Secondo Termine Giorni",
+            "type": "integer"
+          },
+          "sospensione_feriale": {
+            "default": true,
+            "description": "False nelle materie escluse (lavoro, famiglia con minori urgente, ecc.).",
+            "title": "Sospensione Feriale",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "rito",
+          "data_udienza"
+        ],
+        "title": "CalculateHearingDeadlinesArgs",
+        "type": "object"
+      }
+    },
+    {
+      "description": "Trova un comune per nome, col codice ISTAT, la provincia, il distretto e il tribunale e il giudice di pace competenti (o le zone, se il comune è diviso).\n\nIl calcolo è deterministico (codice verificato su norme e casi), non una stima: riporta le date e gli importi così come escono, con le avvertenze.",
+      "name": "cerca_comune",
+      "parameters": {
+        "properties": {
+          "data": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Data a cui leggere gli uffici (Giudici di Pace chiusi); vuoto: oggi.",
+            "title": "Data"
+          },
+          "nome": {
+            "description": "Nome del comune.",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Nome",
+            "type": "string"
+          },
+          "sigla": {
+            "default": "",
+            "description": "Sigla della provincia, per restringere.",
+            "maxLength": 2,
+            "title": "Sigla",
+            "type": "string"
+          }
+        },
+        "required": [
+          "nome"
+        ],
+        "title": "FindComuneArgs",
+        "type": "object"
+      }
+    },
+    {
       "description": "Verifica lo stato dell'accesso MCP dell'utente e restituisce i moduli disponibili.\n\nUsa questo tool all'inizio della conversazione per verificare che l'utente\nabbia un accesso attivo e per conoscere i moduli di ricerca disponibili.",
       "name": "check_access",
       "parameters": {
         "properties": {},
+        "type": "object"
+      }
+    },
+    {
+      "description": "Conta i giorni di calendario fra due date (il primo escluso, l'ultimo compreso): per verificare quanto tempo è passato o se un atto è tempestivo. Non contarli a mente.\n\nIl calcolo è deterministico (codice verificato su norme e casi), non una stima: riporta le date e gli importi così come escono, con le avvertenze.",
+      "name": "conta_giorni_tra_date",
+      "parameters": {
+        "properties": {
+          "data_fine": {
+            "description": "Seconda data, AAAA-MM-GG, non anteriore alla prima.",
+            "format": "date",
+            "title": "Data Fine",
+            "type": "string"
+          },
+          "data_inizio": {
+            "description": "Prima data, AAAA-MM-GG.",
+            "format": "date",
+            "title": "Data Inizio",
+            "type": "string"
+          }
+        },
+        "required": [
+          "data_inizio",
+          "data_fine"
+        ],
+        "title": "CountDaysArgs",
+        "type": "object"
+      }
+    },
+    {
+      "description": "Ragguaglio fra pena pecuniaria e detentiva (art. 135 c.p.), pena pecuniaria sostitutiva (art. 56-quater L. 689/1981) e pene sostitutive ammesse per la durata della pena (art. 53).\n\nIl calcolo è deterministico (codice verificato su norme e casi), non una stima: riporta le date e gli importi così come escono, con le avvertenze.",
+      "name": "converti_pena",
+      "parameters": {
+        "$defs": {
+          "DurationArg": {
+            "properties": {
+              "anni": {
+                "default": 0,
+                "maximum": 100,
+                "minimum": 0,
+                "title": "Anni",
+                "type": "integer"
+              },
+              "giorni": {
+                "default": 0,
+                "maximum": 36500,
+                "minimum": 0,
+                "title": "Giorni",
+                "type": "integer"
+              },
+              "mesi": {
+                "default": 0,
+                "maximum": 1200,
+                "minimum": 0,
+                "title": "Mesi",
+                "type": "integer"
+              }
+            },
+            "title": "DurationArg",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "gia_scontata": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/DurationArg"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Solo detentiva_in_pecuniaria: la parte già scontata."
+          },
+          "operazione": {
+            "description": "pecuniaria_in_detentiva e detentiva_in_pecuniaria: ragguaglio dell'art. 135 c.p. (250 € o frazione per un giorno); pecuniaria_sostitutiva: art. 56-quater L. 689/1981, giorni per valore giornaliero; pene_sostitutive_ammesse: quali ammette la durata (art. 53 L. 689/1981).",
+            "enum": [
+              "pecuniaria_in_detentiva",
+              "detentiva_in_pecuniaria",
+              "pecuniaria_sostitutiva",
+              "pene_sostitutive_ammesse"
+            ],
+            "title": "Operazione",
+            "type": "string"
+          },
+          "pena_detentiva": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/DurationArg"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Per le altre operazioni; in pecuniaria_in_detentiva l'eventuale detentiva congiunta."
+          },
+          "pena_pecuniaria_euro": {
+            "anyOf": [
+              {
+                "maximum": 1000000000,
+                "minimum": 1,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Solo pecuniaria_in_detentiva.",
+            "title": "Pena Pecuniaria Euro"
+          },
+          "valore_giornaliero": {
+            "anyOf": [
+              {
+                "maximum": 2500,
+                "minimum": 1,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Solo pecuniaria_sostitutiva: euro al giorno scelti dal giudice (5-2.500).",
+            "title": "Valore Giornaliero"
+          }
+        },
+        "required": [
+          "operazione"
+        ],
+        "title": "ConvertPenaltyArgs",
+        "type": "object"
+      }
+    },
+    {
+      "description": "Il giudice civile competente per territorio e per valore: fori inderogabili, speciali, concorrenti, consumatore, clausola, foro erariale, sezioni impresa, con il criterio e la norma di ogni foro e che cosa deve contestare il convenuto. Le qualificazioni (tipo di causa, consumatore, credito liquido) le scegli tu. Ogni luogo è un comune: codice ISTAT o nome, con la sigla fra parentesi se il nome è ambiguo (es. «Livo (TN)»); compila solo i luoghi che servono al tipo di causa.\n\nIl calcolo è deterministico (codice verificato su norme e casi), non una stima: riporta le date e gli importi così come escono, con le avvertenze.",
+      "name": "determina_competenza_territoriale",
+      "parameters": {
+        "$defs": {
+          "ForumClauseArg": {
+            "properties": {
+              "comune": {
+                "description": "Comune: codice ISTAT o nome.",
+                "title": "Comune",
+                "type": "string"
+              },
+              "esclusiva": {
+                "default": false,
+                "description": "Foro esclusivo, o formula che non richiede interpretazione.",
+                "title": "Esclusiva",
+                "type": "boolean"
+              },
+              "trattativa_individuale": {
+                "default": false,
+                "description": "Solo contratti col consumatore: clausola oggetto di trattativa individuale (art. 34, c. 4, cod. consumo).",
+                "title": "Trattativa Individuale",
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "comune"
+            ],
+            "title": "ForumClauseArg",
+            "type": "object"
+          },
+          "PartyArg": {
+            "properties": {
+              "consumatore": {
+                "default": false,
+                "title": "Consumatore",
+                "type": "boolean"
+              },
+              "dimora": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Comune: codice ISTAT o nome.",
+                "title": "Dimora"
+              },
+              "domicilio": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Comune: codice ISTAT o nome.",
+                "title": "Domicilio"
+              },
+              "domicilio_eletto": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Domicilio eletto (art. 47 c.c., art. 30 c.p.c.).",
+                "title": "Domicilio Eletto"
+              },
+              "estero": {
+                "default": false,
+                "description": "Nessun collegamento in Italia (residenza, domicilio, dimora o sede).",
+                "title": "Estero",
+                "type": "boolean"
+              },
+              "firmatario_clausola": {
+                "default": true,
+                "description": "Se la parte ha sottoscritto la clausola sul foro.",
+                "title": "Firmatario Clausola",
+                "type": "boolean"
+              },
+              "magistrato_distretto": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Se la parte è un magistrato: il distretto in cui esercita (art. 30-bis), es. MILANO.",
+                "title": "Magistrato Distretto"
+              },
+              "residenza": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Comune: codice ISTAT o nome.",
+                "title": "Residenza"
+              },
+              "sede": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Comune: codice ISTAT o nome.",
+                "title": "Sede"
+              },
+              "stabilimenti": {
+                "description": "Sedi con un rappresentante autorizzato per l'oggetto della domanda (art. 19 c.p.c.).",
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 10,
+                "title": "Stabilimenti",
+                "type": "array"
+              },
+              "tesoreria_unica": {
+                "default": false,
+                "description": "Amministrazione dello Stato con un'unica tesoreria (es. Presidenza del Consiglio).",
+                "title": "Tesoreria Unica",
+                "type": "boolean"
+              },
+              "tipo": {
+                "default": "persona_fisica",
+                "enum": [
+                  "persona_fisica",
+                  "persona_giuridica",
+                  "ente_senza_personalita",
+                  "amministrazione_stato",
+                  "altra_pa"
+                ],
+                "title": "Tipo",
+                "type": "string"
+              }
+            },
+            "title": "PartyArg",
+            "type": "object"
+          },
+          "PlacesArg": {
+            "description": "I luoghi della causa: si compilano solo quelli che servono al tipo di causa.",
+            "properties": {
+              "adempimento_fare": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Adempimento Fare"
+              },
+              "apertura_successione": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Apertura Successione"
+              },
+              "azienda_dipendenza": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Lavoro: dove il lavoratore è o era addetto.",
+                "title": "Azienda Dipendenza"
+              },
+              "beni_comuni": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Beni Comuni"
+              },
+              "beni_esecuzione": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Beni Esecuzione"
+              },
+              "cosa_certa": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Luogo della cosa certa e determinata (art. 1182, secondo comma).",
+                "title": "Cosa Certa"
+              },
+              "credito_liquido": {
+                "default": false,
+                "description": "Somma fissata dal titolo o calcolabile senza discrezionalità.",
+                "title": "Credito Liquido",
+                "type": "boolean"
+              },
+              "credito_pecuniario": {
+                "default": false,
+                "title": "Credito Pecuniario",
+                "type": "boolean"
+              },
+              "domicilio_lavoratore": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Agenti e collaboratori: domicilio del lavoratore.",
+                "title": "Domicilio Lavoratore"
+              },
+              "fatto": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Azioni possessorie: dove è avvenuto il fatto.",
+                "title": "Fatto"
+              },
+              "immobile": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Immobile"
+              },
+              "luogo_esecuzione": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Esecuzione già iniziata.",
+                "title": "Luogo Esecuzione"
+              },
+              "luogo_tutela": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Luogo Tutela"
+              },
+              "notifica_precetto": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Precetto senza giudice dell'esecuzione né domicilio.",
+                "title": "Notifica Precetto"
+              },
+              "obbligazione_da_eseguire": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Dove va eseguita, solo se pattuito o desumibile (art. 1182, primo comma).",
+                "title": "Obbligazione Da Eseguire"
+              },
+              "obbligazione_sorta": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Dove è sorta l'obbligazione: conclusione del contratto o fatto illecito.",
+                "title": "Obbligazione Sorta"
+              },
+              "ordine_professionale": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Art. 637, terzo comma: sede del consiglio dell'ordine.",
+                "title": "Ordine Professionale"
+              },
+              "rapporto_sorto": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Lavoro: dove è sorto il rapporto.",
+                "title": "Rapporto Sorto"
+              },
+              "residenza_abituale_minore": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Residenza Abituale Minore"
+              },
+              "residenza_minore_precedente": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Trasferimento non autorizzato del minore da meno di un anno.",
+                "title": "Residenza Minore Precedente"
+              },
+              "sede_societa": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Sede Societa"
+              },
+              "ufficio_pa": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Lavoro pubblico: sede dell'ufficio di addetto.",
+                "title": "Ufficio Pa"
+              },
+              "ultima_residenza_italia": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Previdenza con attore all'estero.",
+                "title": "Ultima Residenza Italia"
+              },
+              "violazione": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Opposizioni a verbale e ordinanza-ingiunzione: luogo della violazione.",
+                "title": "Violazione"
+              }
+            },
+            "title": "PlacesArg",
+            "type": "object"
+          },
+          "ZoneArg": {
+            "properties": {
+              "comune": {
+                "description": "Comune: codice ISTAT o nome.",
+                "title": "Comune",
+                "type": "string"
+              },
+              "zona": {
+                "description": "La zona del comune diviso, come la dà cerca_comune.",
+                "title": "Zona",
+                "type": "string"
+              }
+            },
+            "required": [
+              "comune",
+              "zona"
+            ],
+            "title": "ZoneArg",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "attore": {
+            "$ref": "#/$defs/PartyArg"
+          },
+          "clausola": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ForumClauseArg"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "contratto_consumo": {
+            "default": false,
+            "title": "Contratto Consumo",
+            "type": "boolean"
+          },
+          "convenuti": {
+            "items": {
+              "$ref": "#/$defs/PartyArg"
+            },
+            "maxItems": 20,
+            "minItems": 1,
+            "title": "Convenuti",
+            "type": "array"
+          },
+          "data_domanda": {
+            "description": "Data della domanda (notifica della citazione o deposito del ricorso): decide le soglie dell'art. 7 c.p.c.",
+            "format": "date",
+            "title": "Data Domanda",
+            "type": "string"
+          },
+          "esecuzione_iniziata": {
+            "default": false,
+            "description": "Opposizione all'esecuzione dopo il pignoramento.",
+            "title": "Esecuzione Iniziata",
+            "type": "boolean"
+          },
+          "ingiunzione": {
+            "default": false,
+            "description": "Domanda di decreto ingiuntivo.",
+            "title": "Ingiunzione",
+            "type": "boolean"
+          },
+          "luoghi": {
+            "$ref": "#/$defs/PlacesArg"
+          },
+          "materia_valore": {
+            "anyOf": [
+              {
+                "enum": [
+                  "accessione",
+                  "acque",
+                  "apposizione_termini",
+                  "beni_mobili",
+                  "circolazione",
+                  "condominio",
+                  "delibere_comunione",
+                  "distanze",
+                  "enfiteusi",
+                  "immissioni",
+                  "interessi_previdenziali",
+                  "luci_vedute",
+                  "occupazione_invenzione",
+                  "possessore_restituzione",
+                  "riordino_proprieta_rurale",
+                  "servitu_prediali",
+                  "servizi_condominio",
+                  "specificazione_unione",
+                  "superficie",
+                  "usucapione"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Materia dell'art. 7 c.p.c. che decide fra giudice di pace e tribunale (beni_mobili, circolazione, condominio, immissioni...); vuoto se nessuna.",
+            "title": "Materia Valore"
+          },
+          "sanzione_al_tribunale": {
+            "default": false,
+            "description": "Opposizione a ordinanza-ingiunzione di competenza del tribunale (art. 6, c. 4-5, d.lgs. 150/2011).",
+            "title": "Sanzione Al Tribunale",
+            "type": "boolean"
+          },
+          "sezione_impresa": {
+            "anyOf": [
+              {
+                "enum": [
+                  "ordinaria",
+                  "societa_estera",
+                  "antitrust"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Causa di competenza della sezione specializzata in materia di impresa.",
+            "title": "Sezione Impresa"
+          },
+          "tipo_causa": {
+            "description": "obbligazione_contrattuale: diritti di obbligazione da contratto; obbligazione_extracontrattuale: risarcimento da fatto illecito e altre obbligazioni non contrattuali; diritti_reali_immobili: diritti reali su immobili, apposizione di termini, distanze per alberi e siepi (art. 21); locazione_comodato_immobile: locazione e comodato di immobili (artt. 21, 447-bis); affitto_azienda: affitto di azienda (artt. 21, 447-bis); possessoria: azioni possessorie, nuova opera e danno temuto (art. 21, secondo comma); ereditaria: cause ereditarie dell'art. 22; tra_soci: cause tra soci (art. 23); condominio: cause tra condomini o fra condomini e condominio (art. 23); gestione_tutelare: gestione di una tutela o amministrazione patrimoniale (art. 24); lavoro_subordinato: lavoro subordinato privato (art. 413, secondo comma); agenzia_collaborazione: agenzia, rappresentanza commerciale, collaborazioni dell'art. 409 n. 3; lavoro_pubblico: lavoro alle dipendenze di pubbliche amministrazioni (art. 413, quinto comma); previdenza: previdenza e assistenza obbligatorie (art. 444); famiglia_minori: procedimenti che riguardano minori (artt. 473-bis.11, 473-bis.47); separazione_divorzio_senza_minori: separazione, divorzio, unione civile senza figli minori (art. 473-bis.47); esecuzione_beni: esecuzione forzata su cose mobili o immobili (art. 26); esecuzione_autoveicoli: esecuzione su autoveicoli, motoveicoli, rimorchi (art. 26); esecuzione_obblighi_fare: esecuzione degli obblighi di fare o non fare (art. 26); espropriazione_crediti: pignoramento di crediti (art. 26-bis); opposizione_esecuzione: opposizione all'esecuzione o al precetto (artt. 27, 480, 615); opposizione_atti_esecutivi: opposizione agli atti esecutivi (art. 27); opposizione_decreto_ingiuntivo: opposizione a decreto ingiuntivo (art. 645); opposizione_verbale_cds: opposizione al verbale del codice della strada (art. 7 d.lgs. 150/2011); opposizione_ordinanza_ingiunzione: opposizione a ordinanza-ingiunzione (art. 6 d.lgs. 150/2011)",
+            "enum": [
+              "obbligazione_contrattuale",
+              "obbligazione_extracontrattuale",
+              "diritti_reali_immobili",
+              "locazione_comodato_immobile",
+              "affitto_azienda",
+              "possessoria",
+              "ereditaria",
+              "tra_soci",
+              "condominio",
+              "gestione_tutelare",
+              "lavoro_subordinato",
+              "agenzia_collaborazione",
+              "lavoro_pubblico",
+              "previdenza",
+              "famiglia_minori",
+              "separazione_divorzio_senza_minori",
+              "esecuzione_beni",
+              "esecuzione_autoveicoli",
+              "esecuzione_obblighi_fare",
+              "espropriazione_crediti",
+              "opposizione_esecuzione",
+              "opposizione_atti_esecutivi",
+              "opposizione_decreto_ingiuntivo",
+              "opposizione_verbale_cds",
+              "opposizione_ordinanza_ingiunzione"
+            ],
+            "title": "Tipo Causa",
+            "type": "string"
+          },
+          "ufficio_emittente": {
+            "default": "",
+            "description": "Opposizione a decreto ingiuntivo: l'ufficio che lo ha emesso.",
+            "maxLength": 200,
+            "title": "Ufficio Emittente",
+            "type": "string"
+          },
+          "valore": {
+            "anyOf": [
+              {
+                "maximum": 1000000000000,
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Valore della causa in euro; vuoto: indeterminabile.",
+            "title": "Valore"
+          },
+          "zone": {
+            "description": "Per i comuni divisi fra più uffici: la zona di ciascuno.",
+            "items": {
+              "$ref": "#/$defs/ZoneArg"
+            },
+            "maxItems": 10,
+            "title": "Zone",
+            "type": "array"
+          }
+        },
+        "required": [
+          "tipo_causa",
+          "data_domanda",
+          "attore",
+          "convenuti"
+        ],
+        "title": "TerritorialCompetenceArgs",
+        "type": "object"
+      }
+    },
+    {
+      "description": "Elenca le 28 tabelle dei parametri forensi (d.m. 55/2014 aggiornato dal d.m. 147/2022) con la chiave, le fasi e, per il penale, gli organi.\n\nIl calcolo è deterministico (codice verificato su norme e casi), non una stima: riporta le date e gli importi così come escono, con le avvertenze.",
+      "name": "elenca_parametri_forensi",
+      "parameters": {
+        "properties": {},
+        "title": "ListFeeTablesArgs",
+        "type": "object"
+      }
+    },
+    {
+      "description": "Elenca le voci del catalogo della prescrizione dei diritti (ordinaria, brevi, presuntive, decadenze) con l'id, il termine, la norma e la decorrenza. Usalo per trovare l'id da passare a calcola_prescrizione_diritto.\n\nIl calcolo è deterministico (codice verificato su norme e casi), non una stima: riporta le date e gli importi così come escono, con le avvertenze.",
+      "name": "elenca_prescrizioni_diritti",
+      "parameters": {
+        "properties": {
+          "categoria": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Filtra per categoria (es. Bancari, Lavoro, Condominio); vuoto: tutte le voci.",
+            "title": "Categoria"
+          }
+        },
+        "title": "ListRightsArgs",
+        "type": "object"
+      }
+    },
+    {
+      "description": "Elenca i termini processuali civili del catalogo (articolo, durata, direzione, default della sospensione feriale) con il loro id. Usalo per trovare l'id da passare a calcola_termine. Con rito=previgente elenca il catalogo del rito anteriore alla riforma Cartabia, per i procedimenti iniziati prima del 28/02/2023.\n\nIl calcolo è deterministico (codice verificato su norme e casi), non una stima: riporta le date e gli importi così come escono, con le avvertenze.",
+      "name": "elenca_termini_catalogo",
+      "parameters": {
+        "properties": {
+          "rito": {
+            "default": "vigente",
+            "description": "vigente: procedimenti iniziati dal 28/02/2023 (riforma Cartabia); previgente: procedimenti iniziati prima, che seguono il rito anteriore. Per il giudizio di cassazione il discrimine è diverso: il rito nuovo vale per i ricorsi notificati dal 1/1/2023 (art. 35, c. 5 e 6, d.lgs. 149/2022).",
+            "enum": [
+              "vigente",
+              "previgente"
+            ],
+            "title": "Rito",
+            "type": "string"
+          }
+        },
+        "title": "ListDeadlineCatalogArgs",
         "type": "object"
       }
     },
@@ -554,8 +3513,64 @@
         ],
         "type": "object"
       }
+    },
+    {
+      "description": "Dice se la sospensione feriale dei termini (1-31 agosto) si applica a una materia o a un procedimento (lavoro e previdenza, art. 92 ord. giud., opposizioni esecutive, cautelare amministrativo, penale con detenuti, CCII, tributario, termini sostanziali...), con la norma e la giurisprudenza. Senza materia elenca i casi. Le voci dubbie o non verificate non decidono: in quel caso dai entrambe le date.\n\nIl calcolo è deterministico (codice verificato su norme e casi), non una stima: riporta le date e gli importi così come escono, con le avvertenze.",
+      "name": "verifica_sospensione_feriale",
+      "parameters": {
+        "properties": {
+          "materia": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Id della materia. Se manca, si ottiene l'elenco delle materie con la risposta.",
+            "title": "Materia"
+          }
+        },
+        "title": "CheckSummerSuspensionArgs",
+        "type": "object"
+      }
     }
   ],
   "mancanti_attesi": [],
-  "extra_non_attesi": []
+  "extra_non_attesi": [
+    "calcola_compenso_avvocato",
+    "calcola_contributo_unificato",
+    "calcola_danno_micropermanente",
+    "calcola_danno_parentale",
+    "calcola_danno_tabella_unica",
+    "calcola_danno_tabelle_milano",
+    "calcola_diritti_copia",
+    "calcola_fine_pena",
+    "calcola_improcedibilita",
+    "calcola_interessi_legali",
+    "calcola_interessi_mora",
+    "calcola_pena",
+    "calcola_prescrizione_diritto",
+    "calcola_prescrizione_reato",
+    "calcola_rivalutazione",
+    "calcola_scadenza",
+    "calcola_scadenze_multa",
+    "calcola_spese_trasferta",
+    "calcola_termine",
+    "calcola_termine_impugnazione",
+    "calcola_termini_ctu",
+    "calcola_termini_esecuzione",
+    "calcola_termini_rito_previgente",
+    "calcola_termini_udienza",
+    "cerca_comune",
+    "conta_giorni_tra_date",
+    "converti_pena",
+    "determina_competenza_territoriale",
+    "elenca_parametri_forensi",
+    "elenca_prescrizioni_diritti",
+    "elenca_termini_catalogo",
+    "verifica_sospensione_feriale"
+  ]
 }
