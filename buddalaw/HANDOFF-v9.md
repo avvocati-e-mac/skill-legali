@@ -4,6 +4,68 @@
 **Branch:** `feat/buddalaw-v9` · **PR in bozza:** https://github.com/avvocati-e-mac/skill-legali/pull/1 (non unire a `main` senza l'ok del maintainer)
 **Piano di riferimento:** il piano «BuddaLaw v9.0: skill allineata al server reale, avviso di obsolescenza, test a tre livelli» (riassunto qui sotto)
 
+## Da leggere per riprendere
+
+**Handoff richiesto dal maintainer il 18 ottobre.** Questa sezione riassume
+lo stato finale e prevale sui dati storici riportati più sotto. Per prepararla
+non sono stati avviati nuovi test a pagamento.
+
+| Punto | Stato al passaggio di consegne |
+|---|---|
+| Rilascio | Beta; PR ancora in bozza, nessuna promozione stabile |
+| Controlli offline | **89/89 superati** |
+| Livello C | **12/12 superati**, in due tornate: 11 comportamenti e T74 schema |
+| Suite OpenCode completa | **13/124 registrate, 11 valide, 2 non valutabili**; interrotta durante Qwen |
+| Blocco da risolvere | Collegamento MCP intermittente nell'avvio effettivo di OpenCode |
+| Nuovo arresto automatico | Implementato e testato offline; manca la verifica live dopo la correzione |
+| Skill installabile | Sorgenti e `.skill` invariati durante il red teaming; copie installate non aggiornate |
+| Caso del chirurgo | Quattro risposte originali conservate; confronto concluso, distinto dalla suite generale |
+
+**Prima azione utile:** leggere `tests/README.md` e diagnosticare l'avvio MCP
+di OpenCode. Non attribuire a Qwen il fallimento B03 r2: la prova del guasto è
+in `tests/e2e/results/20261018-074418-850333/opencode__openrouter_qwen_qwen3.8-flash__v9/B03__r2.mcp.json`.
+Un precedente `mcp list` riuscito non dimostra che il processo successivo
+disponga dei tool. Non presumere che occorra rifare il login: OAuth era stato
+rinnovato con successo.
+
+Dopo aver risolto il collegamento, eseguire prima un controllo breve del
+runner aggiornato. Dalla root del repository:
+
+```bash
+bash buddalaw/tests/e2e/prepara_opencode.sh
+python3.14 buddalaw/tests/e2e/run.py --runtime opencode --config v9 --casi B00 --runs 1 --budget 0.10
+```
+
+Il controllo usa entrambi i modelli OpenRouter e resta una tornata separata.
+Se compare un nuovo guasto, fermarsi e conservarne le prove. Quando l'avvio
+è verificato, completare le tornate descritte in «Cosa resta da fare», dando
+priorità agli avvisi B12/B13/B23/B24. Non ripetere il livello C già superato
+senza nuove modifiche o indizi di cambiamento del servizio.
+
+**Materiali da preservare:**
+
+- Caso del chirurgo: `tests/e2e/results/20261017-caso-chirurgo/` e
+  `~/Downloads/Test_BuddaLaw_v9_Chirurgo_2026-10-17/`.
+- Red teaming e nuove risposte: le tre cartelle di risultati elencate nella
+  sezione del 18 ottobre e `~/Downloads/Test_BuddaLaw_v9_RedTeam_2026-10-18/`.
+  Quest'ultima contiene **16 nuove risposte**, indice con impronte, audit,
+  report, piano e copia di questo handoff. Le prove non valutabili sono indicate.
+- Non riscrivere gli originali; non pubblicare i trace grezzi ignorati da git.
+- Cartelle non tracciate preesistenti da lasciare intatte: `.claude/`, `logs/`,
+  `migliora-chiarezza-testi-legali/tests/blind/` e
+  `migliora-chiarezza-testi-legali/tests/runs/`.
+
+**Commit pubblicati da cui ripartire:**
+
+| Commit | Contenuto |
+|---|---|
+| `1ffb567` | Copertura, provenienza delle fonti e attacchi al valutatore |
+| `5e53e7d` | Configurazione OpenCode separata dalle skill globali |
+| `cc003ae` | ToolSearch esplicito per il controllo dello schema live |
+| `8f5ca78` | Riconoscimento delle citazioni con data completa |
+| `2e18c63` | Arresto sul guasto MCP all'avvio e classificazione delle prove |
+| `365ad68` | Piano di red teaming, report e stato del collaudo parziale |
+
 ## Dove siamo
 
 | Fatto | Commit |
