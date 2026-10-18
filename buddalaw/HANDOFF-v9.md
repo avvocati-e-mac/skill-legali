@@ -1,21 +1,28 @@
 # BuddaLaw v9.0 — Passaggio di consegne
 
 **Data:** 2026-10-18
-**Branch di collaudo:** `feat/buddalaw-v9` · **Rilascio:** beta su `main` · **PR:** https://github.com/avvocati-e-mac/skill-legali/pull/1
+**Branch corrente:** `main`, allineato a `origin/main` · **Rilascio:** beta
+**PR unita:** [#1](https://github.com/avvocati-e-mac/skill-legali/pull/1), il 18 ottobre 2026 alle 15:15:36 Europe/Rome
+**Commit di merge:** `82938b67a72ab48d8c420af549aae8f139effe42`
+**Branch di collaudo conservato:** `feat/buddalaw-v9`
 **Piano di riferimento:** il piano «BuddaLaw v9.0: skill allineata al server reale, avviso di obsolescenza, test a tre livelli» (riassunto qui sotto)
 
 
 ## Chiusura del 18 ottobre dopo il ripristino Pro
 
-Questa sezione prevale su tutti gli stati intermedi più sotto. Il maintainer
-ha già autorizzato il passaggio a `main`; non serve richiedere un nuovo consenso.
+Il lavoro «finire test skill e passare a main» è **concluso**: la PR è stata
+unita e il repository locale è già su `main`. Non restano prove da completare
+per questa campagna, attese della quota o operazioni di merge da ripetere.
 La versione rimane **beta**, con limiti espliciti nel README e nel rapporto.
+Questa sezione e le istruzioni di ripresa qui sotto prevalgono sulla cronologia
+archiviata, che conserva anche decisioni e comandi ormai superati.
 
 - **128/128 controlli offline**, archivio coerente con i sorgenti; 12 live saltati
   nel comando ordinario. Contratto live verificato in precedenza e inventario
   esteso ai 48 tool reali; calcolatori non collaudati.
 - C3: **62/62 prove previste tentate, 61 valide**. B04 r3 raggiunge il limite di
   otto turni; non viene trasformata in un successo né ripetuta per cambiare esito.
+  Modello della campagna e del confronto: `claude-haiku-4-5-20251001`.
 - Qualità: **16/24 casi valutabili**, critici **12/16 (75%)**. La soglia del 90%
   non è raggiunta. B12/B23 omettono l'avviso; B01/B19 hanno URL non fedeli;
   restano violazioni sui link normativi e sulla lingua. **Nessuna promozione stabile.**
@@ -40,14 +47,66 @@ ai difetti osservati richiedono una nuova candidata e una nuova valutazione,
 conservando questi risultati: non sono prove mancanti da ritentare per alzare
 il punteggio. Per gli esiti per caso vale `REPORT-test-v9.0.md`, in apertura.
 
+## Alla prossima ripresa
+
+L'aggiornamento di questo handoff non avvia nuovi collaudi né correzioni.
+Se il maintainer chiede di migliorare la beta:
+
+1. Leggere prima l'apertura di [REPORT-test-v9.0.md](REPORT-test-v9.0.md),
+   poi [tests/README.md](tests/README.md) e il
+   [piano di collaudo](PIANO-collaudo-v9-red-team.md). Le parti storiche del
+   piano non autorizzano OpenRouter o proxy API.
+2. Partire da `main` con un nuovo branch e una nuova candidata. Priorità:
+   fedeltà dei link B01/B19; avviso di aggiornamento B12/B23; link normativi
+   B07/B15/B20; risposta in italiano B11. In B01 r3 restano anche chiamate
+   con dominio errato e superamento del limite di letture.
+3. Conservare hash, risposte ed esiti C3. Ogni modifica della skill richiede
+   un nuovo hash, archivio `.skill` coerente e una nuova tornata identificata.
+   Non ripetere le risposte bocciate della candidata congelata per alzare il
+   punteggio. B04 resta non valutabile per il limite di otto turni.
+4. Usare esclusivamente Claude in abbonamento per eventuali nuovi test con
+   modelli, con le protezioni descritte sotto. Fermarsi alla quota esaurita o
+   al primo guasto, preservando lo `STOP`. Non cancellare i vecchi arresti.
+5. Non dichiarare collaudata l'intera suite C3 su Sonnet, Codex, Qwen o
+   DeepSeek: non è stata completata su quei modelli. I 32 nuovi calcolatori
+   sono censiti nell'inventario, ma non collaudati nel comportamento.
+
+**Prove da conservare**, sotto `buddalaw/tests/e2e/results/` (ignorate da Git):
+
+| Cartella | Contenuto |
+|---|---|
+| `20261018-123513-403307` | C3, B12: 0/3, tre prove valide |
+| `20261018-123724-623063` | C3, altri casi prima della quota: 58 registrazioni, 51 valide |
+| `20261018-150152-757858` | Ripresa delle sette prove mancanti: 7/7 valide |
+| `20261018-123806-605934` | Confronto v8.4/nessuna: 34 registrazioni, 33 valide |
+
+Per le valutazioni usare `rivalutazione.json` e i file `.esito.json` aggiornati;
+non i vecchi conteggi precedenti alle correzioni del valutatore. Le rivalutazioni
+non modificano risposte e tracce originali. I sei record esclusi per quota o
+arresto restano nella vecchia tornata; B04 r3 è invece una prova del modello
+fermata dal limite e non viene sostituita. Conservare anche
+`results/20261018-c3-claude-pro/STOP`.
+
+Le copie installate in `~/.claude/skills/`, `~/.codex/skills/` e quelle in
+Downloads non sono state aggiornate. Non aggiornarle in una semplice ripresa
+del collaudo. Lasciare intatte le cartelle non tracciate preesistenti `.claude/`,
+`logs/`, `migliora-chiarezza-testi-legali/tests/blind/` e
+`migliora-chiarezza-testi-legali/tests/runs/`. Non pubblicare tracce grezze né
+leggere file di credenziali.
+
+Ultimo controllo completo senza rete: **128 superati, 12 live saltati**:
+
+```bash
+UV_CACHE_DIR=/private/tmp/buddalaw-uv-cache uv run --offline --no-project --with pytest --python /opt/homebrew/bin/python3.14 python -m pytest -q buddalaw/tests
+```
+
 ## Vincolo del maintainer: solo abbonamento Claude
 
 Il 18 ottobre il maintainer ha precisato: «usa l'abbonamento di claude non
 sprecare i miei soldi su openrouter». Questa istruzione prevale sui comandi
 storici qui sotto: **non riprendere OpenRouter né i verificatori con proxy API**.
 Le tornate OpenRouter incomplete restano tali e non vanno presentate come
-verifica conclusa dei relativi modelli. Il passaggio a `main` è già autorizzato
-al termine del collaudo; non serve richiederlo.
+verifica conclusa dei relativi modelli. Il passaggio a `main` è già avvenuto.
 
 - Accesso della CLI verificato: `claude.ai`, `firstParty`, abbonamento `pro`;
   nessuna chiave API nell'ambiente. Il programma ora offre
@@ -58,6 +117,18 @@ al termine del collaudo; non serve richiederlo.
 - I valori USD dei test Claude sono stime dei token riportate dalla CLI,
   **non addebiti attestati**. Non sommarli ai costi OpenRouter come se fossero
   fatturazione aggiuntiva. Riferimento: [Anthropic](https://code.claude.com/docs/en/costs).
+
+## Cronologia archiviata — non è una lista di attività da eseguire
+
+Le note seguenti documentano le tappe precedenti alla chiusura e al merge.
+Le indicazioni di PR in bozza, prove mancanti, attese delle 15:00, decisioni
+pendenti e comandi OpenCode/OpenRouter sono superate. Anche le frasi interne
+che dichiarano una sezione prevalente si riferiscono al momento storico:
+per riprendere valgono esclusivamente lo stato conclusivo e i vincoli sopra.
+
+<details>
+<summary>Mostra le note storiche del 17–18 ottobre</summary>
+
 - Dopo «autorizzo», un controllo OpenCode nella sandbox originale è riuscito;
   il successivo preflight è fallito ancora con SSE 400, prima dei modelli
   (`20261018-121903-721116`). Claude accoppiato è stato fermato, zero prove
@@ -357,3 +428,5 @@ resta lo stop senza ritenti automatici al primo nuovo blocco o guasto:
 - **Schema:** rigenerare la fixture soltanto dopo aver verificato un cambio
   reale. Un'estrazione vuota è un errore del canale, non uno schema da salvare.
 - **GPT / Codex:** Astra e Luna collaudati come subagenti con MCP nativi in questa sessione. Non equivale a un collaudo della CLI Codex né a un aggiornamento della sua configurazione locale.
+
+</details>
