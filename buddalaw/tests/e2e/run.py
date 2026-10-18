@@ -83,6 +83,7 @@ MODELLI_OPENCODE = ["openrouter/qwen/qwen3.8-flash", "openrouter/deepseek/deepse
 CONFIG_VALIDE = ("v9", "v8.4", "nessuna", "v9-ridotta")
 # server MCP dell'utente da tenere fuori dalle prove con Claude Code
 MCP_VIETATI = [
+    "mcp__mindnode", "mcp__perplexity", "mcp__cloudflare",
     "mcp__bdm", "mcp__italgiure", "mcp__normattiva", "mcp__claude-in-chrome",
     "mcp__claude_ai_Claude_Docs", "mcp__claude_ai_Corpus_gestiolex", "mcp__claude_ai_Gmail",
     "mcp__claude_ai_Google_Calendar", "mcp__claude_ai_Google_Drive",
@@ -304,7 +305,7 @@ def esegui_claude(turni: list[str], config: str, modello: str | None, budget_run
             spf = lavoro / "skill-prompt.md"
             spf.write_text(prompt_di_sistema(skill), encoding="utf-8")
         cmd = comando_claude(turni[0] if len(turni) == 1 else None, modello, budget_run, spf)
-        env = dict(os.environ, CLAUDE_CODE_DISABLE_AUTO_MEMORY="1")
+        env = dict(os.environ, CLAUDE_CODE_DISABLE_AUTO_MEMORY="1", ENABLE_TOOL_SEARCH="true")
         error = ""
         try:
             code = _processo_su_file(cmd, lavoro, env, cartella, 900 if len(turni)>1 else 600,

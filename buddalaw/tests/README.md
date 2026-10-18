@@ -90,6 +90,10 @@ La skill installata sul computer **non** viene usata: il programma lavora in una
 cartella separata con la versione del repository, così il risultato non si
 confonde con una copia vecchia.
 
+In Claude la ricerca dei tool differiti è attivata esplicitamente; anche gli
+MCP MindNode, Perplexity e Cloudflare sono negati se presenti nella configurazione
+personale. La prova iniziale controlla che i loro strumenti non siano visibili.
+
 La preparazione usa una configurazione separata nella sandbox tramite
 `XDG_CONFIG_HOME`: le skill globali con lo stesso nome non possono sostituire
 quella in prova. I dati di autenticazione restano nella loro posizione e non
