@@ -138,6 +138,14 @@ con modelli differenti restano separati.
 Ogni tornata conserva una copia della skill e dei casi, le impronte dei file e
 la prova di isolamento. Una rivalutazione senza queste prove è incompleta.
 Due collaudi non possono usare contemporaneamente la stessa sandbox.
+Per lavorare in parallelo, assegna una cartella diversa a ogni processo con
+`BUDDALAW_SANDBOX` (usala anche con `prepara_opencode.sh`) e lo stesso percorso
+`BUDDALAW_STOP_FILE` a tutti. Al primo guasto il file viene creato e tutti i
+processi si fermano, conservando le tracce parziali. Un file di arresto già
+presente impedisce nuove esecuzioni: non viene cancellato automaticamente.
+Le richieste già inviate potrebbero completarsi; non vengono avviati ritenti.
+I tetti di spesa restano separati per modello. Il manifest registra sandbox
+e uso dell'arresto condiviso; i relativi controlli sono in `test_parallel_stop.py`.
 OpenCode dispone di 16 passi per quesito e legge soltanto la skill in prova e
 gli output MCP. Tutte le configurazioni usano gli stessi limiti.
 Anche il modello ausiliario usato da OpenCode per i titoli viene impostato su

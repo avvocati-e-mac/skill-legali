@@ -72,7 +72,7 @@ REPO = QUI.parents[2]
 SKILL_DIR = REPO / "buddalaw" / "buddalaw"
 CASI = QUI / "casi.json"
 RISULTATI = QUI / "results"
-SANDBOX = QUI / ".opencode-sandbox"
+SANDBOX = Path(os.environ.get("BUDDALAW_SANDBOX", str(QUI / ".opencode-sandbox"))).resolve()
 sys.path.insert(0, str(QUI.parent / "tools"))
 from valida_schema import errori_chiamata
 TAG_V84 = "buddalaw-v8.4"
@@ -114,6 +114,20 @@ class Salta(Exception):
 
 class LimiteSpesa(Exception):
     """Interrompe lo step successivo quando la spesa nota raggiunge il tetto."""
+
+
+def verifica_stop_condiviso():
+    path = os.environ.get("BUDDALAW_STOP_FILE")
+    if path and Path(path).exists():
+        raise Blocco("arresto condiviso: un altro collaudo ha segnalato un guasto; nessun ritento")
+
+
+def condividi_stop():
+    path = os.environ.get("BUDDALAW_STOP_FILE")
+    if path:
+        target = Path(path)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.touch(exist_ok=True)
 
 
 # --------------------------------------------------------------------------- utilità
@@ -313,7 +327,7 @@ def esegui_claude(turni: list[str], config: str, modello: str | None, budget_run
         except subprocess.TimeoutExpired:
             code, error = -1, "timeout; costo parziale noto conservato"
         except Blocco as exc:
-            exc.esecuzione = parsifica_claude(cartella.read_text().splitlines(),rileva_blocchi=False)
+            exc.esecuzione = parsifica_claude(cartella.read_text().splitlines() if cartella.exists() else [],rileva_blocchi=False)
             exc.esecuzione.errore = str(exc)
             meta["errore"] = str(exc)
             meta_path.write_text(json.dumps(meta,ensure_ascii=False,indent=2)+"\n")
@@ -363,6 +377,7 @@ def _pulisci(s: str) -> str:
 
 def preflight_opencode(oc: str) -> None:
     """Controlla sandbox, autenticazioni (senza leggere file di credenziali) e isolamento."""
+    verifica_stop_condiviso()
     if not (SANDBOX / "opencode.json").exists():
         raise Salta(f"cartella di prova assente: esegui bash {QUI / 'prepara_opencode.sh'}")
     env = env_opencode()
@@ -381,7 +396,10 @@ def preflight_opencode(oc: str) -> None:
     auth = _pulisci(subprocess.run([oc, "auth", "list"], cwd=SANDBOX, capture_output=True, text=True, env=env, timeout=60).stdout)
     if "openrouter" not in auth.lower():
         raise Salta("OpenRouter non autenticato in opencode: esegui `opencode auth login` e scegli OpenRouter")
-    mcp = _pulisci(subprocess.run([oc, "mcp", "list"], cwd=SANDBOX, capture_output=True, text=True, env=env, timeout=120).stdout)
+    try:
+        mcp = _pulisci(subprocess.run([oc, "mcp", "list"], cwd=SANDBOX, capture_output=True, text=True, env=env, timeout=120).stdout)
+    except subprocess.TimeoutExpired as exc:
+        raise Blocco("collegamento BuddaLaw non verificabile: timeout del controllo MCP") from exc
     riga = next((r for r in mcp.splitlines() if "buddalaw" in r.lower()), "")
     if not riga:
         raise Salta("server MCP buddalaw non configurato nella sandbox: rilancia prepara_opencode.sh")
@@ -393,7 +411,7 @@ def preflight_opencode(oc: str) -> None:
         pos = lines.index(riga)
         dettaglio = " ".join(lines[pos:pos + 3]).strip()
         controlla_blocco(dettaglio, True)
-        raise Salta(f"collegamento BuddaLaw non riuscito: {dettaglio}")
+        raise Blocco(f"collegamento BuddaLaw non riuscito: {dettaglio}")
 
 
 def verifica_skill_opencode(oc: str, config: str) -> list[str]:
@@ -469,6 +487,7 @@ def controlla_avvio_mcp(linea):
 
 def _processo_su_file(cmd, cwd, env, dest, timeout, callback=None, turni=None, callback_stderr=None):
     """NDJSON su file, controllo mentre arriva, timeout anche con stdout muto."""
+    verifica_stop_condiviso()
     err = dest.with_suffix(".stderr.txt")
     t0 = time.monotonic()
     with dest.open("w") as fo, err.open("w") as fe:
@@ -488,6 +507,7 @@ def _processo_su_file(cmd, cwd, env, dest, timeout, callback=None, turni=None, c
             with dest.open() as reader, err.open() as err_reader:
                 err_buffer = ""
                 while True:
+                    verifica_stop_condiviso()
                     err_buffer += err_reader.read()
                     while "\n" in err_buffer:
                         err_line, err_buffer = err_buffer.split("\n",1)
@@ -526,6 +546,9 @@ def _processo_su_file(cmd, cwd, env, dest, timeout, callback=None, turni=None, c
                     if time.monotonic() - t0 >= timeout:
                         raise subprocess.TimeoutExpired(cmd, timeout)
                     time.sleep(0.03)
+        except Blocco:
+            condividi_stop()
+            raise
         finally:
             ferma_processo(proc)
             if proc.stdin and not proc.stdin.closed:
@@ -1111,6 +1134,8 @@ def _main() -> int:
                 "schema_sha256":hashlib.sha256((QUI.parent/"fixtures/tool_schema.json").read_bytes()).hexdigest(),
                 "configs":configs,"modelli":obiettivi,"runs":a.runs,"runs_lampo":a.runs_lampo,
                 "budget_per_modello":a.budget,"piano":[]}
+    manifest["sandbox"] = str(SANDBOX)
+    manifest["stop_condiviso"] = bool(os.environ.get("BUDDALAW_STOP_FILE"))
     righe_esiti: list[dict] = []
     spesa: dict[str, float] = {}
     note: list[str] = []
@@ -1130,6 +1155,11 @@ def _main() -> int:
     for rt, modello in obiettivi:
         etichetta = f"{rt}:{modello or 'predefinito'}"
         spesa.setdefault(etichetta, 0.0)
+        try:
+            verifica_stop_condiviso()
+        except Blocco as e:
+            fermo = str(e)
+            break
         if rt == "opencode":
             if not oc:
                 note.append(f"{etichetta}: saltato, opencode non trovato (imposta OPENCODE_BIN)")
@@ -1141,6 +1171,7 @@ def _main() -> int:
                     note.append(f"{etichetta}: saltato, {e}")
                     print(f"[salto] {etichetta}: {e}")
                     if isinstance(e, Blocco):
+                        condividi_stop()
                         fermo = str(e)
                         break
                     continue
@@ -1178,6 +1209,7 @@ def _main() -> int:
                         else:
                             ex, probl = esegui_opencode(oc, turni_di(caso), cfg_eff, modello, file_ev, budget_run=a.budget-spesa[etichetta])
                     except Blocco as e:
+                        condividi_stop()
                         fermo = f"STOP: {etichetta} {caso['id']}: {e}"
                         print(fermo)
                         ex, probl = getattr(e, "esecuzione", Esecuzione(errore=str(e))), []

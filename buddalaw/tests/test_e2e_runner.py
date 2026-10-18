@@ -97,5 +97,5 @@ def test_guasto_connessione_non_viene_chiamato_login_mancante(runner, monkeypatc
         return subprocess.CompletedProcess(cmd, 0, out)
 
     monkeypatch.setattr(runner.subprocess, "run", fake_run)
-    with pytest.raises(runner.Salta, match="collegamento BuddaLaw non riuscito.*Connection closed"):
+    with pytest.raises(runner.Blocco, match="collegamento BuddaLaw non riuscito.*Connection closed"):
         runner.preflight_opencode("opencode")

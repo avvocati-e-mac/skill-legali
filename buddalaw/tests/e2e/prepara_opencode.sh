@@ -22,7 +22,7 @@
 # i test con «no such column»). run.py usa lo stesso file.
 set -euo pipefail
 QUI="$(cd "$(dirname "$0")" && pwd)"
-SANDBOX="$QUI/.opencode-sandbox"
+SANDBOX="${BUDDALAW_SANDBOX:-$QUI/.opencode-sandbox}"
 mkdir -p "$SANDBOX/.opencode/skills"
 export XDG_CONFIG_HOME="$SANDBOX/.isolated-config"
 cd "$SANDBOX"
