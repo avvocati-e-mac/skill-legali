@@ -1,13 +1,13 @@
 interface:
   display_name: "BuddaLaw"
-  short_description: "Ricerca legale italiana con fonti live"
-  default_prompt: "Usa $buddalaw per cercare giurisprudenza italiana aggiornata e citare le fonti con link verificabili."
+  short_description: "Sentenze italiane ed europee, norme vigenti, contratti e atti con fonti live"
+  default_prompt: "Usa $buddalaw per cercare giurisprudenza italiana o europea, casi simili di merito o il testo vigente di un articolo, citando le fonti con i link restituiti da BuddaLaw."
 
 dependencies:
   tools:
     - type: "mcp"
       value: "buddalaw"
-      description: "Server MCP BuddaLaw per giurisprudenza, normativa, contratti e atti processuali italiani."
+      description: "Server MCP BuddaLaw: Cassazione, merito, TAR e Consiglio di Stato, giustizia tributaria, Corte costituzionale, Corte di giustizia UE, Garante privacy, prassi, testo degli articoli da Normattiva, contratti e atti processuali."
 
 policy:
   allow_implicit_invocation: true
