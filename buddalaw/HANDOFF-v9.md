@@ -4,6 +4,60 @@
 **Branch:** `feat/buddalaw-v9` · **PR in bozza:** https://github.com/avvocati-e-mac/skill-legali/pull/1 (non unire a `main` senza l'ok del maintainer)
 **Piano di riferimento:** il piano «BuddaLaw v9.0: skill allineata al server reale, avviso di obsolescenza, test a tre livelli» (riassunto qui sotto)
 
+## Ripresa del 18 ottobre — verifica interrotta sul collegamento
+
+Il maintainer ha chiesto «riparti da handoff per finire test skill e passare a
+main»: il passaggio a `main` è quindi autorizzato al termine della verifica.
+Questa sezione prevale sul precedente passaggio di consegne. La PR resta
+in bozza: il collaudo della candidata seguente è stato interrotto dal nuovo
+guasto descritto qui sotto. Non è una promozione stabile.
+
+- Controlli offline: **104/104**, più 12 live saltati nel comando ordinario.
+- Il server espone **48 tool**, non più 16: 32 nuovi calcolatori/cataloghi;
+  i 16 di ricerca e lettura hanno parametri e descrizioni invariati.
+- T74 selezionava soltanto i nomi già noti e dava un falso verde. Ora scopre
+  l'intero server con `+BuddaLaw`: rosso con la vecchia fixture, verde dopo
+  l'aggiornamento a 48. I nomi coincidono anche con il MCP nativo Codex.
+- Inventario e `.skill` aggiornati. La candidata con hash
+  `87bde6f179b716b8fd748c0678860478abf3a0b4edb94ecd0a6a380ecc9205a3`
+  omette l'avviso B12 in 3/3 prove Qwen e 3/3 Haiku; Haiku omette anche B23.
+  B13 passa 3/3 e B24 passa dopo la correzione del valutatore descritta sotto.
+- Il valutatore scartava i file MCP persistiti da Claude. Ora ammette soltanto
+  il percorso esatto restituito dalla fonte e letto con successo; non legge
+  file aggiuntivi dietro le quinte. La rivalutazione di B24 non cambia la
+  risposta originale e rimuove il falso errore sui link.
+- Candidata attuale: hash
+  `5b470efdd3587b8e4107a0b8e23bf9dd3fb71ea956392eec88d2eee440872c3d`.
+  Scoperta esplicita del catalogo differito in Claude; inventario vicino alla
+  procedura. Sorgente e archivio coerenti; verifica live non conclusa.
+- I collaudi possono ora usare sandbox separate con `BUDDALAW_SANDBOX` e un
+  unico `BUDDALAW_STOP_FILE`: al primo guasto si fermano tutti. Il file resta
+  presente e non autorizza ritenti. Cinque prove offline proteggono lo stop.
+- Test positivo B12 della candidata attuale, tre prove previste per modello, in
+  `tests/e2e/results/20261018-112344-442115/` (Haiku),
+  `20261018-112345-576791/` (Qwen), `20261018-112345-939757/` (DeepSeek).
+  Sandbox sotto `.opencode-sandbox/validation-c2/`; stop condiviso in
+  `results/20261018-c2-validation/STOP`.
+- **Nuovo fermo:** entrambe le nuove sandbox OpenCode falliscono il preflight
+  con `SSE error: Non-200 status code (400)`, prima dei modelli (0/3 per
+  modello). Haiku è fermato dallo stop condiviso nella prima prova: 1/3
+  registrata, **zero prove valide**. La scoperta `+BuddaLaw` compare nella
+  traccia parziale, ma non dimostra che l'avviso corretto arrivi nella risposta.
+- Le configurazioni MCP delle nuove sandbox coincidono con quella precedente;
+  anche configurazione isolata e percorso degli output coincidono. Non sono
+  stati letti file di credenziali e non è provata la necessità di un nuovo login.
+- Nessun ritento dopo il fermo. Il file `STOP` è preservato. Per nuove chiamate
+  serve una nuova autorizzazione del maintainer secondo la regola di arresto
+  dell'handoff. Prima prova suggerita: un solo controllo del collegamento nella
+  sandbox originale già autorizzata; poi confronto con le nuove cartelle,
+  conservando il vecchio arresto e aprendo una nuova tornata solo se autorizzata.
+- Nessuna copia installata aggiornata; cartelle e risposte precedenti preservate.
+
+Commit pubblicati nella ripresa: `5353983` (schema e inventario), `6f7f28e`
+(isolamento Claude), `e851335` (fonti persistite), `78f92c2` (stop condiviso),
+`d1815d7` (catalogo differito e inventario vicino alla procedura).
+Attendere il completamento del test positivo prima di promuovere la candidata.
+
 ## Da leggere per riprendere
 
 **Handoff richiesto dal maintainer il 18 ottobre.** Questa sezione riassume

@@ -1,11 +1,11 @@
 # BuddaLaw — Report di collaudo v9.0
 
-**Data:** 2026-10-17
+**Data:** 2026-10-17, aggiornamenti del 18 ottobre
 **Versione collaudata:** 9.0 (branch `feat/buddalaw-v9`)
 **Confronto previsto:** v8.4 (tag `buddalaw-v8.4`) e nessuna skill
 **Metodo:** tre livelli. A = controlli sui file, senza rete. B = conversazioni vere con BuddaLaw. C = chiamate dirette al server.
 
-> **In una riga.** Nella prima tornata completa, con il server funzionante, la v9.0 con Haiku supera 24 casi su 26, e 17 su 18 fra quelli critici ⚡ (94%), senza nessun link inventato. Poi il server BuddaLaw ha smesso di rispondere («Circuit breaker aperto — backend temporaneamente non disponibile»). Le ripetizioni, il confronto con la v8.4 e il livello C sono quindi da rifare. Il collaudo ha trovato un difetto vero, l'avviso di aggiornamento che non compariva mai: è corretto nella skill, ma la correzione non è ancora stata provata dal vivo.
+> **Stato della ripresa del 18 ottobre.** 104 controlli offline superati; schema aggiornato e verificato sui 48 strumenti ora esposti dal server. La precedente candidata omette l'avviso nelle prove mirate: il collaudo della nuova correzione è stato interrotto da un errore di collegamento OpenCode HTTP 400. PR ancora in bozza, nessun passaggio a `main`. Le sezioni seguenti conservano i campioni storici; gli aggiornamenti in fondo prevalgono sullo stato iniziale. Nessuna promozione stabile basata sui soli dati del 17 ottobre.
 
 ## Ambiente e isolamento
 
@@ -279,3 +279,101 @@ aver verificato il collegamento nell'avvio effettivo; tre prove complessive
 per i casi critici, soprattutto B12/B13/B23/B24; confronto v8.4/nessuna nello
 stesso ambiente; nuova coorte Haiku esplicitamente identificata. Le soglie
 del piano storico non sono state dimostrate. PR sempre in bozza.
+
+
+## Ripresa del 18 ottobre: catalogo completo e confronto dell'avviso
+
+Il maintainer ha autorizzato il completamento dei test e il passaggio a `main`
+al termine della verifica. Le risposte originali sono conservate; non sono
+state aggiornate copie installate.
+
+### Schema e programma di prova
+
+- **104/104 controlli offline**, con 12 live saltati nell'esecuzione ordinaria.
+- **48 strumenti** nel catalogo, 32 aggiunti rispetto alla fixture del 17.
+  Parametri e descrizioni dei 16 strumenti di ricerca e lettura invariati.
+  Nessun calcolo eseguito o dichiarato collaudato.
+- T74 inizialmente dava un falso verde: `select:` caricava solo i 16 nomi già
+  noti. La scoperta ora usa `+BuddaLaw`, controlla i riferimenti restituiti
+  e rifiuta definizioni parziali o il limite dei risultati. T74 è diventato
+  rosso, poi verde con la fixture aggiornata. I 48 nomi coincidono anche con
+  quelli del server MCP nativo in Codex.
+- Claude: ToolSearch attivato esplicitamente e nuovi MCP personali esclusi
+  dai tool visibili. `--strict-mcp-config` con configurazione vuota è stato
+  scartato: esclude anche il connettore cloud necessario al collaudo.
+- I file MCP lunghi salvati dal runtime sono ammessi come fonti solo quando
+  il percorso è quello esatto restituito da BuddaLaw e la lettura è riuscita.
+  Questa correzione elimina un falso errore di fedeltà dei link in B24; i link
+  erano presenti nel file letto dal modello. Nessuna lettura aggiuntiva del
+  valutatore, nessuna modifica alla risposta originale.
+- Sandbox separate e arresto condiviso permettono prove indipendenti in
+  parallelo: al primo guasto si fermano anche i processi già attivi. Il file
+  di arresto non viene cancellato automaticamente. Le richieste già inviate
+  possono completarsi; nessun ritento automatico.
+
+### Tornate precedenti alla correzione del catalogo differito
+
+| Tornata locale | Candidata | Risultato | Costo noto |
+|---|---|---|---:|
+| `20261018-104844-616772` | v9 originale | B00 2/2, Qwen e DeepSeek isolati | 0,00965 $ |
+| `20261018-105044-367098` | inventario da 16 tool, server da 48 | Interrotta dopo la scoperta del cambio di catalogo; non usata per la promozione | 0,01941 $ sui tre B12 conclusi, esclusa l'interruzione |
+| `20261018-110402-539508` | inventario da 48 tool | Qwen B12 0/3; interrotta per confronto con Haiku | 0,03169 $ sui tre B12 conclusi, esclusa l'interruzione |
+| `20261018-111126-924546` | stessa candidata da 48 tool | Haiku: B12 0/3, B13 3/3, B23 0/1, B24 1/1 dopo rivalutazione | 0,86945 $ |
+
+La candidata da 48 tool di queste due ultime righe ha impronta
+`87bde6f179b716b8fd748c0678860478abf3a0b4edb94ecd0a6a380ecc9205a3`.
+La tornata Haiku è completa per i quattro casi selezionati (8/8 esecuzioni),
+non per l'intera suite. I tool BuddaLaw funzionavano: i fallimenti dell'avviso
+non sono attribuiti a un guasto MCP.
+
+Nelle tracce Haiku la ricerca dei tool caricava soltanto i due o tre strumenti
+utili al quesito. Non scopriva il catalogo completo: selezionare i nomi già
+noti non permette di scoprire le aggiunte. La nuova candidata impone una
+scoperta del catalogo differito per conversazione e avvicina l'inventario alla
+procedura. Impronta della candidata in verifica:
+`5b470efdd3587b8e4107a0b8e23bf9dd3fb71ea956392eec88d2eee440872c3d`.
+
+I costi della tabella sono parziali e separati: non comprendono tutte le
+diagnostiche, l'estrazione dello schema o eventuali ausiliari. Non sono un
+totale di fatturazione. Le tornate con istruzioni o inventari differenti non
+sono sommate per ricavare una percentuale generale di affidabilità.
+
+
+### Fermo della candidata con scoperta esplicita
+
+| Modello | Tornata locale | Esecuzione effettiva | Esito |
+|---|---|---|---|
+| Haiku 4.5 | `20261018-112344-442115` | 1/3 registrata, zero valide | Fermata dallo stop condiviso durante la prima prova |
+| Qwen 3.8 Flash | `20261018-112345-576791` | 0/3 | Preflight MCP fallito, modello non avviato |
+| DeepSeek V4.1 Flash | `20261018-112345-939757` | 0/3 | Preflight MCP fallito, modello non avviato |
+
+Le due nuove sandbox OpenCode riportano
+`SSE error: Non-200 status code (400)` durante il collegamento a BuddaLaw.
+Il primo guasto attiva `results/20261018-c2-validation/STOP`; anche il processo
+Haiku già attivo viene fermato. Le due verifiche MCP erano già in corso:
+nessun modello OpenCode è partito e non sono stati effettuati ritenti dopo
+il fermo. L'arresto condiviso è quindi verificato anche dal vivo.
+
+La configurazione MCP è identica a quella della sandbox precedente; le tre
+configurazioni isolate hanno lo stesso contenuto e usano la stessa cartella
+degli output MCP. Non sono stati letti file di credenziali. Questi controlli
+locali non provano né un guasto generale del servizio né la necessità di
+un nuovo login. Il collegamento delle nuove cartelle resta da diagnosticare.
+
+La traccia parziale di Haiku mostra `ToolSearch` con query `+BuddaLaw` e
+`max_results=100`, quindi la scoperta esplicita è stata eseguita; non c'è
+una risposta conclusa che provi la comparsa dell'avviso. I costi parziali di
+Haiku non sono disponibili: lo zero riportato dal runner non significa che
+non siano maturati costi. I modelli OpenCode non sono stati invocati.
+
+**Decisione: beta, PR in bozza.** La candidata e l'archivio sono pubblicati
+nel commit `d1815d7`; 104 controlli offline passano e lo schema completo è
+verificato. Restano da completare la prova dell'avviso, le suite generali,
+il confronto v8.4/nessuna e il modello predefinito. I dati non permettono
+una promozione stabile. Il passaggio a `main` richiesto dal maintainer resta
+in attesa del completamento del collaudo o di una sua decisione esplicita
+di pubblicare la beta con questi limiti.
+
+La regola dell'handoff ferma le nuove chiamate al primo nuovo blocco o
+guasto: nessun ritento automatico. Il file di arresto è conservato; per
+riprendere occorre una nuova autorizzazione del maintainer.
