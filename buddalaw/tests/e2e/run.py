@@ -914,18 +914,19 @@ def corpus_testi(ex: Esecuzione) -> str:
 def url_nel_testo(testo: str, tutti: bool = False) -> list[str]:
     out = []
     citazioni = {u for label, u in LINK_MD_RE.findall(testo)
-                 if re.search(r"(?i)\b(?:Cass\.?|CGT|Corte|Trib\.?|Tribunale|App\.?|TAR|CGUE|Garante|Agenzia|art\.)", label)}
+                 if re.search(r"(?i)\b(?:Cass\.?|CGT|Corte|Trib\.?|Tribunale|App\.?|TAR|CGUE|Garante|Agenzia|art\.)", label)
+                 or ESTREMI_RE.search(label)}
     for u in URL_RE.findall(testo):
         u = u.rstrip(".,;:!?*_>")
         parsed = urllib.parse.urlsplit(u)
         # Controllare solo domini noti lasciava passare URL inventati su altri
-        # host. Sono esclusi soltanto i collegamenti di supporto indicati dalla
-        # skill, se non sono usati come citazioni giuridiche.
+        # host. Un riferimento al repository o a una pagina iniziale di
+        # navigazione non è una citazione, salvo che l'etichetta lo presenti così.
         repo = (parsed.hostname == "github.com" and
                 (parsed.path == "/avvocati-e-mac/skill-legali" or
                  parsed.path.startswith("/avvocati-e-mac/skill-legali/")))
-        homepage = (parsed.hostname in ("buddalaw.it", "www.buddalaw.it")
-                    and parsed.path in ("", "/") and not parsed.query and not parsed.fragment)
+        homepage = (bool(parsed.hostname) and parsed.path in ("", "/")
+                    and not parsed.query and not parsed.fragment and not parsed.username and not parsed.password)
         if tutti or not (repo or homepage) or u in citazioni:
             out.append(u)
     return out

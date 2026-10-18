@@ -118,8 +118,10 @@ un refuso nel dominio non può sottrarsi al confronto con la fonte. Verifica
 anche che il collegamento sia completo e cliccabile. Una rivalutazione applica
 questi controlli alle risposte salvate senza nuove chiamate al modello.
 Sono controllati tutti gli URL, compresi quelli nudi su domini non previsti;
-sono esclusi solo il repository della skill e la pagina iniziale di BuddaLaw,
-quando non sono presentati come fonti giuridiche. I controlli sul contenuto
+I collegamenti di supporto al repository e le pagine iniziali di navigazione
+sono esclusi. Se il testo cliccabile cita un organo o gli estremi di una
+decisione, il collegamento resta controllato anche quando rimanda a una pagina
+iniziale. I controlli sul contenuto
 ignorano le maiuscole (per esempio «Corte Costituzionale»); gli URL si confrontano
 sempre carattere per carattere.
 Le risposte MCP lunghe possono essere salvate dal runtime in un file. La

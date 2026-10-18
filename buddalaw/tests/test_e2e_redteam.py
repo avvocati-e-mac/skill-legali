@@ -84,9 +84,12 @@ def test_url_inventato_su_host_diverso_e_senza_markdown_non_sfugge(runner):
 
 def test_collegamenti_di_supporto_non_diventano_fonti_giuridiche(runner):
     ex = run_ok(runner)
-    ex.testi = ['Aggiorna da https://github.com/avvocati-e-mac/skill-legali oppure apri https://buddalaw.it/']
+    ex.testi = ['Aggiorna da https://github.com/avvocati-e-mac/skill-legali oppure apri https://buddalaw.it/ '
+                'o consulta il portale https://www.cortedicassazione.it']
     assert all(ok for n, ok, _ in runner.controlli_generali(ex) if 'link' in n)
     ex.testi = ['[Cass. n. 1/2024](https://github.com/avvocati-e-mac/skill-legali)']
+    assert not runner.controlli_generali(ex)[0][1]
+    ex.testi = ['[Sentenza n. 1/2024](https://www.cortedicassazione.it)']
     assert not runner.controlli_generali(ex)[0][1]
 
 
