@@ -79,6 +79,7 @@ TAG_V84 = "buddalaw-v8.4"
 
 PREFISSI = ("mcp__claude_ai_BuddaLaw__", "mcp__buddalaw__", "buddalaw_")
 MODELLO_CLAUDE = os.environ.get("BUDDALAW_CLAUDE_MODEL", "claude-haiku-4-5-20251001")
+MAX_TURNI_CLAUDE = 16
 MODELLI_OPENCODE = ["openrouter/qwen/qwen3.8-flash", "openrouter/deepseek/deepseek-v4.1-flash"]
 CONFIG_VALIDE = ("v9", "v8.4", "nessuna", "v9-ridotta")
 # server MCP dell'utente da tenere fuori dalle prove con Claude Code
@@ -230,6 +231,8 @@ def prepara_skill(config: str, base: Path) -> Path | None:
 def prompt_di_sistema(skill: Path) -> str:
     testo = (skill / "SKILL.md").read_text(encoding="utf-8")
     testo = testo.replace("](references/", f"]({skill}/references/")
+    testo = testo.replace("](scripts/", f"]({skill}/scripts/")
+    testo = testo.replace("<cartella-skill>", str(skill))
     return (
         "# Skill attiva: buddalaw\n\n"
         f"Le istruzioni che seguono sono la skill `buddalaw`, installata nella cartella {skill}. "
@@ -244,7 +247,7 @@ def comando_claude(prompt: str | None, modello: str | None, budget_run: float, s
     """prompt=None: più turni, i messaggi arrivano da stdin (--input-format stream-json)."""
     cmd = ["claude", "-p"] + ([prompt] if prompt is not None else ["--input-format", "stream-json"])
     cmd += ["--output-format", "stream-json", "--verbose",
-           "--no-session-persistence", "--max-turns", "8", "--max-budget-usd", f"{budget_run:.2f}",
+           "--no-session-persistence", "--max-turns", str(MAX_TURNI_CLAUDE), "--max-budget-usd", f"{budget_run:.2f}",
            "--disable-slash-commands", "--tools", "Read,ToolSearch",
            "--allowedTools", "mcp__claude_ai_BuddaLaw__*,Read,ToolSearch",
            "--disallowedTools", ",".join(MCP_VIETATI)]
@@ -252,6 +255,12 @@ def comando_claude(prompt: str | None, modello: str | None, budget_run: float, s
         cmd += ["--model", modello]
     if spf:
         cmd += ["--append-system-prompt-file", str(spf)]
+        helper = spf.parent / "buddalaw" / "scripts" / "verifica_catalogo.py"
+        if helper.is_file():
+            cmd[cmd.index("--tools") + 1] = "Read,ToolSearch,Bash"
+            i = cmd.index("--allowedTools") + 1
+            cmd[i] += f",Bash(python3 {helper} *)"
+            cmd[i] += f',Bash(python3 "{helper}" *)'
     return cmd
 
 
@@ -1066,6 +1075,33 @@ def conta_lingua(testo: str) -> tuple[int, int]:
     return sum(p in _IT for p in parole), sum(p in _EN for p in parole)
 
 
+def controllo_shell_catalogo(ex: Esecuzione) -> list[tuple[str, bool, str]]:
+    """Un comando estraneo resta una violazione anche se il runtime lo rifiuta."""
+    calls = [c for c in ex.chiamate if c["tool"] == "Bash"]
+    if not calls:
+        return []
+    cwd = ex.init.get("cwd")
+    helper = (Path(cwd) / "buddalaw/scripts/verifica_catalogo.py").resolve() if cwd else None
+    visibili = {norm_tool(t) for t in list(ex.init.get("tools") or [])
+                + list(ex.init.get("tools_scoperti") or []) if e_buddalaw(t)}
+    estranei = []
+    for c in calls:
+        command = c.get("argomenti", {}).get("command", "")
+        try:
+            a = shlex.split(command)
+            ok = (len(a) >= 6 and a[0] == "python3" and helper is not None
+                  and Path(a[1]).is_absolute() and Path(a[1]).resolve() == helper
+                  and a[2] == "--totale" and a[4] == "--nomi")
+            if ok:
+                nomi = [norm_tool(n) for n in a[5:]]
+                ok = int(a[3]) == len(nomi) == len(set(nomi)) and set(nomi) == visibili
+        except (ValueError, OSError):
+            ok = False
+        if not ok:
+            estranei.append(command[:100])
+    return [("v9: shell solo per il catalogo osservato", not estranei, "; ".join(estranei[:3]))]
+
+
 def valuta(caso: dict, config: str, ex: Esecuzione, problemi_isolamento: list[str]) -> dict:
     duri = controlli_specifici(caso, ex)
     extra = (caso.get("per_config") or {}).get(config)
@@ -1073,6 +1109,7 @@ def valuta(caso: dict, config: str, ex: Esecuzione, problemi_isolamento: list[st
         duri += controlli_specifici({k: v for k, v in extra.items()}, ex)
     duri += controlli_generali(ex)
     if config == "v9":
+        duri += controllo_shell_catalogo(ex)
         turni = {c.get("turno", 1) for c in ex.chiamate}
         for turn in sorted(turni):
             calls = [c for c in ex.chiamate if c.get("turno", 1) == turn and e_buddalaw(c["nome_originale"])]
@@ -1207,6 +1244,7 @@ def _main() -> int:
                 "casi_sha256":hashlib.sha256(a.casi_file.read_bytes()).hexdigest(),
                 "schema_sha256":hashlib.sha256((QUI.parent/"fixtures/tool_schema.json").read_bytes()).hexdigest(),
                 "configs":configs,"modelli":obiettivi,"runs":a.runs,"runs_lampo":a.runs_lampo,
+                "max_turni_claude": MAX_TURNI_CLAUDE,
                 "budget_per_modello":a.budget,"piano":[]}
     manifest["sandbox"] = str(SANDBOX)
     manifest["stop_condiviso"] = bool(os.environ.get("BUDDALAW_STOP_FILE"))

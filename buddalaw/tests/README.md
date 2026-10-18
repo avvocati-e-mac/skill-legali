@@ -113,6 +113,12 @@ I relativi controlli offline si eseguono con
 `python3 -m pytest buddalaw/tests/test_e2e_runner.py`.
 Gli attacchi al valutatore sono in `test_e2e_redteam.py`: verificano, tra l'altro,
 che una suite vuota non passi e che un esempio nella skill non valga come fonte.
+La v9.1 include anche un piccolo script locale per confrontare il catalogo dei
+tool con l'inventario. Il runner Claude consente la sua esecuzione tramite
+Bash con il percorso della copia temporanea, anche tra virgolette; le altre
+configurazioni, prive dello script, mantengono soltanto Read e ToolSearch.
+Lo script non usa rete o credenziali e il suo risultato non vale come fonte
+giuridica. I controlli offline sono in `test_catalogo.py`.
 Il controllo dei link include domini scritti male e citazioni su altri siti:
 un refuso nel dominio non può sottrarsi al confronto con la fonte. Verifica
 anche che il collegamento sia completo e cliccabile. Una rivalutazione applica
@@ -182,6 +188,11 @@ I tetti di spesa restano separati per modello. Il manifest registra sandbox
 e uso dell'arresto condiviso; i relativi controlli sono in `test_parallel_stop.py`.
 OpenCode dispone di 16 passi per quesito e legge soltanto la skill in prova e
 gli output MCP. Tutte le configurazioni usano gli stessi limiti.
+Dal collaudo v9.1 anche Claude dispone di **16 turni per quesito**, registrati
+nel manifest, per tutte le configurazioni. La scoperta del catalogo e il suo
+confronto aggiungono passaggi prima della ricerca: le vecchie prove fermate
+al limite di otto turni restano conservate e non diventano successi. I
+campioni con limiti diversi non sono un confronto controllato di qualità.
 Anche il modello ausiliario usato da OpenCode per i titoli viene impostato su
 quello scelto per la prova, evitando chiamate ereditate a un altro modello.
 Il programma sorveglia inoltre gli errori di avvio MCP: OpenCode può proseguire

@@ -1,3 +1,68 @@
+# BuddaLaw — ripresa e candidata v9.1 beta
+
+**Data:** 18 ottobre 2026. **Branch:** `fix/buddalaw-v9-completamento`.
+**Stato:** revisione beta e collaudo mirato conclusi. Nessuna promozione stabile.
+Questa apertura prevale sulle note storiche della v9.0 archiviate sotto.
+
+La richiesta «riparti da handoff per ultimare la skill» ha avviato una nuova
+candidata, perché il lavoro precedente era già concluso e unito a main.
+La v9.0 C3 e le sue risposte restano congelate; non sono state ripetute per
+alzare il punteggio. Le copie installate non sono state aggiornate.
+
+Leggere prima [REPORT-test-v9.1.md](REPORT-test-v9.1.md), che contiene hash,
+prove, limiti e differenze dell'ambiente di test. La candidata C6 ha hash:
+`f55712536f17d3c809c6b1632bdaa6c7a59db1ed331e344468e39814e794fed5`.
+
+- **144 controlli offline superati**, 12 live saltati; sorgenti e `.skill`
+  coerenti. Nuovo script `buddalaw/scripts/verifica_catalogo.py`, senza rete
+  o credenziali, per confrontare il catalogo osservato con l'inventario locale.
+- Nuove istruzioni su avviso immediato, copia dei link, norme, lingua e anno
+  delle pronunce recenti. Il confronto manuale resta il fallback senza shell.
+- Solo abbonamento **Claude Pro**, nessuna API/OpenRouter. Nei nuovi eventi
+  osservati il consumo extra è disabilitato. Il limite Claude è 16 turni per
+  tutti i profili; non confrontare le percentuali con la vecchia C3 a otto.
+- C6 Haiku: **6/6 valide, 0/6 promosse**, B12 e B13 bocciati per comandi shell
+  estranei, anche se negati dal runtime. Gli avvisi risultano corretti.
+- C6 Sonnet: primo gruppo **4/4 valide, 3/4 promosse**. B12/B13/B24 passano;
+  B23 emette l'avviso una sola volta ma altera una cifra di un URL. **Non è
+  risolto il requisito di assenza di link alterati.**
+- Secondo gruppo Sonnet: **8/8 valide, 6/8 promosse**. Passano B07/B11/B15/
+  B19/B21/B22; B01 aggiunge un box finale e B20 salta la verifica degli estremi
+  nel formato prescritto. Totale Sonnet **9/12**. I risultati negativi sono
+  conservati e non sostituiti con nuovi tentativi.
+
+La revisione beta è chiusa con archivio rigenerato, report e controlli locali.
+Non restano test in corso né attese della quota. Le ulteriori correzioni per
+una versione stabile sono lavoro successivo su una nuova candidata: priorità
+alla verifica dei collegamenti prima dell'invio e all'uso esclusivo dei tool
+MCP per le ricerche. Non ripetere i casi bocciati di C6 per alzare il punteggio.
+
+## Prove da conservare
+
+Sotto `buddalaw/tests/e2e/results/` (ignorato da Git):
+
+| Cartella | Contenuto |
+|---|---|
+| `20261018-182214-129330` | C4, istruzioni soltanto: B12 0/3 |
+| `20261018-182552-973666` | C5, primo B12 con script: 1/1 |
+| `20261018-182744-292618` | C5, altre due prove: avviso presente, limite turni; non valutabili |
+| `20261018-183031-596856` | C6 Haiku, usare `rivalutazione.json`: 0/6 promosse |
+| `20261018-183329-097605` | C6 Sonnet, avvisi e conversazioni: 3/4 |
+| `20261018-184206-338009` | C6 Sonnet, otto controlli mirati: 6/8 |
+
+Arresto condiviso della nuova campagna:
+`tests/e2e/results/20261018-c6-claude-pro/STOP`.
+Al primo guasto o esaurimento della quota fermarsi senza ritenti; non
+cancellare gli arresti precedenti. Non pubblicare tracce grezze né leggere
+file di credenziali. Lasciare intatte le cartelle non tracciate preesistenti
+`.claude/`, `logs/`, `migliora-chiarezza-testi-legali/tests/blind/` e
+`migliora-chiarezza-testi-legali/tests/runs/`.
+
+## Cronologia v9.0 conclusa — non è la lista corrente di attività
+
+<details>
+<summary>Handoff storico della v9.0, già unita a main</summary>
+
 # BuddaLaw v9.0 — Passaggio di consegne
 
 **Data:** 2026-10-18
@@ -428,5 +493,7 @@ resta lo stop senza ritenti automatici al primo nuovo blocco o guasto:
 - **Schema:** rigenerare la fixture soltanto dopo aver verificato un cambio
   reale. Un'estrazione vuota è un errore del canale, non uno schema da salvare.
 - **GPT / Codex:** Astra e Luna collaudati come subagenti con MCP nativi in questa sessione. Non equivale a un collaudo della CLI Codex né a un aggiornamento della sua configurazione locale.
+
+</details>
 
 </details>
