@@ -5,7 +5,7 @@
 **Confronto previsto:** v8.4 (tag `buddalaw-v8.4`) e nessuna skill
 **Metodo:** tre livelli. A = controlli sui file, senza rete. B = conversazioni vere con BuddaLaw. C = chiamate dirette al server.
 
-> **Stato della ripresa del 18 ottobre.** 104 controlli offline superati; schema aggiornato e verificato sui 48 strumenti ora esposti dal server. La precedente candidata omette l'avviso nelle prove mirate: il collaudo della nuova correzione è stato interrotto da un errore di collegamento OpenCode HTTP 400. PR ancora in bozza, nessun passaggio a `main`. Le sezioni seguenti conservano i campioni storici; gli aggiornamenti in fondo prevalgono sullo stato iniziale. Nessuna promozione stabile basata sui soli dati del 17 ottobre.
+> **Stato della ripresa del 18 ottobre — solo abbonamento Claude.** 114 controlli offline superati; schema verificato sui 48 strumenti del server. Il maintainer ha escluso ulteriori chiamate OpenRouter: le relative tornate rimangono incomplete. L'avviso di aggiornamento è ancora omesso nei test Haiku; nessuna promozione stabile. I test della candidata C3 sono in corso su Claude Pro. Le sezioni seguenti conservano i campioni storici; gli aggiornamenti in fondo prevalgono sullo stato iniziale. I valori USD della CLI Claude sono stime dei token, non addebiti attestati.
 
 ## Ambiente e isolamento
 
@@ -377,3 +377,51 @@ di pubblicare la beta con questi limiti.
 La regola dell'handoff ferma le nuove chiamate al primo nuovo blocco o
 guasto: nessun ritento automatico. Il file di arresto è conservato; per
 riprendere occorre una nuova autorizzazione del maintainer.
+
+
+## Ripresa con il solo abbonamento Claude Pro
+
+Il maintainer ha chiesto di usare l'abbonamento Claude ed escludere altre
+spese OpenRouter. Accesso verificato con `claude auth status --json`:
+`authMethod=claude.ai`, `apiProvider=firstParty`, `subscriptionType=pro`;
+nessuna variabile API nell'ambiente. Il nuovo comando `--solo-abbonamento`
+ferma runtime diversi, variabili API e autenticazione non verificata prima
+dei modelli; conserva nel manifest soltanto il tipo di accesso, senza dati
+personali. Dieci test offline della protezione portano il totale a **114/114**.
+
+I valori USD delle tornate Claude, anche nelle sezioni storiche, sono valori
+di consumo stimati dalla CLI, **non fatture o addebiti aggiuntivi attestati**.
+La [documentazione Anthropic](https://code.claude.com/docs/en/costs) distingue
+le stime della sessione dall'uso incluso in Pro/Max. Non sono stati attivati
+crediti aggiuntivi né modificate impostazioni di fatturazione.
+
+Dopo l'autorizzazione del maintainer, un controllo OpenCode nella sandbox
+originale è riuscito; il successivo è fallito con SSE 400 prima dei modelli
+(`20261018-121903-721116`). La prova Claude accoppiata è stata fermata senza
+chiamate BuddaLaw (`20261018-121904-779603`). Le verifiche indipendenti Claude
+sono proseguite secondo il piano; OpenRouter resta escluso dal resto del
+collaudo per istruzione del maintainer.
+
+| Candidata / modello | Campione | Copertura ed esito |
+|---|---|---|
+| C2 / Haiku 4.5 | `20261018-122434-829842` | B12: 3/3 valide, **0/3** avvisi |
+| C2 / Sonnet 4.6 | `20261018-123248-635574` | B12: prima prova valida senza avviso; seconda fermata manualmente, esclusa. 1/8 esecuzioni valide previste: nessuna promozione della tornata |
+| C3 / Haiku 4.5 | `20261018-123513-403307` | B12: 3/3 valide, **0/3** avvisi |
+| C3 / Haiku 4.5 | `20261018-123724-623063` | Altri 25 casi: 59 esecuzioni previste, in corso |
+| v8.4 / nessuna, Haiku 4.5 | `20261018-123806-605934` | 34 esecuzioni di confronto previste, in corso |
+
+Due avvii Sonnet nella sandbox senza accesso di rete non hanno prodotto
+risposte o chiamate BuddaLaw (`20261018-122852-523710`,
+`20261018-123032-869731`): esclusi dalla valutazione della skill.
+L'arresto di C2 Sonnet dopo il primo difetto riprodotto è una scelta di
+collaudo, non un guasto del server. La dicitura generica di arresto condiviso
+nei riepiloghi originali va letta con questa precisazione.
+
+C3 (`bcc34e6`) rende l'inventario leggibile una voce per riga e richiede la
+differenza tra l'insieme dei nomi del server e il solo array JSON, inclusa la
+verifica del numero di nomi distinti. Hash della skill:
+`1ce58fd6d54a617eb7bd176df5a9b304e4f89a012c2646a6d2f2f46897f0647f`.
+Sorgenti e archivio `.skill` coincidono. La riscrittura **non risolve B12**
+nel campione Haiku; la documentazione pubblica indica esplicitamente questo
+limite e mantiene lo stato beta. Il controllo T74 per il maintainer resta
+separato dall'avviso comportamentale dell'assistente.

@@ -4,6 +4,47 @@
 **Branch:** `feat/buddalaw-v9` · **PR in bozza:** https://github.com/avvocati-e-mac/skill-legali/pull/1 (non unire a `main` senza l'ok del maintainer)
 **Piano di riferimento:** il piano «BuddaLaw v9.0: skill allineata al server reale, avviso di obsolescenza, test a tre livelli» (riassunto qui sotto)
 
+## Vincolo del maintainer: solo abbonamento Claude
+
+Il 18 ottobre il maintainer ha precisato: «usa l'abbonamento di claude non
+sprecare i miei soldi su openrouter». Questa istruzione prevale sui comandi
+storici qui sotto: **non riprendere OpenRouter né i verificatori con proxy API**.
+Le tornate OpenRouter incomplete restano tali e non vanno presentate come
+verifica conclusa dei relativi modelli. Il passaggio a `main` è già autorizzato
+al termine del collaudo; non serve richiederlo.
+
+- Accesso della CLI verificato: `claude.ai`, `firstParty`, abbonamento `pro`;
+  nessuna chiave API nell'ambiente. Il programma ora offre
+  `--runtime claude --solo-abbonamento --modello <modello Claude esplicito>`:
+  se non verifica l'abbonamento o trova variabili API, non avvia il modello.
+  Il manifest conserva solo questi tre dati, senza identificativi personali.
+- Controlli offline aggiornati: **114/114**, più 12 live saltati.
+- I valori USD dei test Claude sono stime dei token riportate dalla CLI,
+  **non addebiti attestati**. Non sommarli ai costi OpenRouter come se fossero
+  fatturazione aggiuntiva. Riferimento: [Anthropic](https://code.claude.com/docs/en/costs).
+- Dopo «autorizzo», un controllo OpenCode nella sandbox originale è riuscito;
+  il successivo preflight è fallito ancora con SSE 400, prima dei modelli
+  (`20261018-121903-721116`). Claude accoppiato è stato fermato, zero prove
+  valide (`20261018-121904-779603`). OpenCode resta escluso.
+- La candidata C2 omette B12 anche su Claude Pro indipendente: Haiku **0/3**
+  (`20261018-122434-829842`). Sonnet 4.6 omette l'avviso nella prima prova
+  valida (`20261018-123248-635574`); tornata fermata manualmente nella seconda,
+  senza guasto BuddaLaw. Due avvii precedenti nella sandbox senza rete non
+  hanno prodotto risposte né chiamate BuddaLaw: non sono fallimenti della skill
+  (`20261018-122852-523710`, `20261018-123032-869731`).
+- Nuova candidata C3, commit `bcc34e6`: inventario JSON una voce per riga;
+  confronto tra insiemi e numero di nomi, considerando solo l'array, distinto
+  dai nomi negli esempi. Sorgenti e archivio rigenerati, offline superato.
+  B12 Haiku concluso in `20261018-123513-403307`: **0/3**, avviso ancora
+  omesso. Hash C3:
+  `1ce58fd6d54a617eb7bd176df5a9b304e4f89a012c2646a6d2f2f46897f0647f`.
+- Completamento in corso, solo Claude Pro: altri 25 casi v9, 59 esecuzioni
+  previste (`20261018-123724-623063`); confronto v8.4/nessuna, 34 esecuzioni
+  (`20261018-123806-605934`). B13 v9 passa 3/3. Arresto condiviso separato in
+  `results/20261018-c3-claude-pro/STOP`, da conservare se creato.
+- Protezione dell'abbonamento pubblicata nel commit `ac05b18`.
+  Le copie installate non sono state aggiornate.
+
 ## Ripresa del 18 ottobre — verifica interrotta sul collegamento
 
 Il maintainer ha chiesto «riparti da handoff per finire test skill e passare a

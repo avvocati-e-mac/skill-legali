@@ -2,6 +2,14 @@
 
 Data: 17–18 ottobre 2026. Obiettivo: decidere se la skill sia pronta, distinguendo difetti delle istruzioni, limiti dei modelli ed errori del programma di prova. Il maintainer ha autorizzato test live e correzioni; restano invariati lo stop su blocchi/guasti, il tetto di spesa e il divieto di aggiornare copie installate o unire la PR senza autorizzazione.
 
+**Istruzione successiva del maintainer (18 ottobre):** completare il collaudo
+con l'abbonamento Claude, escludendo ulteriori chiamate OpenRouter. Usare
+`--solo-abbonamento`, che verifica l'accesso prima di avviare i modelli.
+Le soglie e le tornate Qwen/DeepSeek sotto riportate restano obiettivi storici
+non conclusi, senza promozione di quei modelli. Il passaggio a `main` al termine
+dei test è già autorizzato dalla richiesta di ripresa. Una pubblicazione beta
+deve indicare esplicitamente i controlli mancanti e i difetti ancora osservati.
+
 ## Critiche al piano precedente
 
 | Attacco al piano | Evidenza o rischio concreto | Correzione prima dei nuovi test |
