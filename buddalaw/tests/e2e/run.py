@@ -56,6 +56,7 @@ import os
 import re
 import shutil
 import signal
+import shlex
 import sqlite3
 import subprocess
 import sys
@@ -455,7 +456,17 @@ def ferma_processo(proc):
             proc.wait(timeout=2)
 
 
-def _processo_su_file(cmd, cwd, env, dest, timeout, callback=None, turni=None):
+def controlla_avvio_mcp(linea):
+    """OpenCode può proseguire col modello dopo un MCP fallito all'avvio."""
+    try:
+        campi = dict(p.split("=",1) for p in shlex.split(linea) if "=" in p)
+    except ValueError:
+        return
+    if campi.get("key") == "buddalaw" and campi.get("status") == "failed":
+        raise Blocco("collegamento MCP BuddaLaw fallito all'avvio; prova non valutabile")
+
+
+def _processo_su_file(cmd, cwd, env, dest, timeout, callback=None, turni=None, callback_stderr=None):
     """NDJSON su file, controllo mentre arriva, timeout anche con stdout muto."""
     err = dest.with_suffix(".stderr.txt")
     t0 = time.monotonic()
@@ -473,8 +484,14 @@ def _processo_su_file(cmd, cwd, env, dest, timeout, callback=None, turni=None):
             invia()
         buffer = ""
         try:
-            with dest.open() as reader:
+            with dest.open() as reader, err.open() as err_reader:
+                err_buffer = ""
                 while True:
+                    err_buffer += err_reader.read()
+                    while "\n" in err_buffer:
+                        err_line, err_buffer = err_buffer.split("\n",1)
+                        if callback_stderr:
+                            callback_stderr(err_line)
                     buffer += reader.read()
                     while "\n" in buffer:
                         line, buffer = buffer.split("\n", 1)
@@ -502,6 +519,8 @@ def _processo_su_file(cmd, cwd, env, dest, timeout, callback=None, turni=None):
                                 ev = None
                             if isinstance(ev, dict):
                                 callback(ev)
+                        if err_buffer.strip() and callback_stderr:
+                            callback_stderr(err_buffer)
                         return proc.returncode
                     if time.monotonic() - t0 >= timeout:
                         raise subprocess.TimeoutExpired(cmd, timeout)
@@ -523,7 +542,8 @@ def _stdout_su_file(cmd: list[str], timeout: int, salva: Path | None = None, con
     err = dest.with_suffix(".stderr.txt")
     try:
         codice = _processo_su_file(cmd, SANDBOX, env_opencode(), dest, timeout,
-                                  controllore_live(budget) if controlla else None)
+                                  controllore_live(budget) if controlla else None,
+                                  callback_stderr=controlla_avvio_mcp if controlla else None)
     except subprocess.TimeoutExpired as exc:
         exc.output = dest.read_text(encoding="utf-8")
         raise
@@ -597,6 +617,9 @@ def esegui_opencode(oc: str, turni: list[str], config: str, modello: str, cartel
     skill_permission = {"*":"deny"} if config == "nessuna" else {"*":"deny","buddalaw":"allow"}
     resolved.setdefault("permission", {})["skill"] = skill_permission
     resolved.setdefault("agent", {}).setdefault("build", {}).setdefault("permission", {})["skill"] = skill_permission
+    # OpenCode genera anche il titolo con un modello ausiliario: non ereditare
+    # un modello diverso da quello richiesto per questa prova.
+    resolved["small_model"] = modello
     config_path.write_text(json.dumps(resolved, ensure_ascii=False, indent=2) + "\n")
     problemi = verifica_skill_opencode(oc, config)
     meta_path = cartella.with_suffix(".meta.json")
@@ -610,7 +633,7 @@ def esegui_opencode(oc: str, turni: list[str], config: str, modello: str, cartel
     t0 = time.time()
     stdout, sessione, execution_error = "", None, ""
     for i, prompt in enumerate(turni):
-        cmd = [oc, "run", "--format", "json", "--dir", str(SANDBOX), "-m", modello]
+        cmd = [oc, "--print-logs", "--log-level", "WARN", "run", "--format", "json", "--dir", str(SANDBOX), "-m", modello]
         if sessione:
             cmd += ["--session", sessione]  # turni successivi nella stessa sessione
         file_turno = cartella.with_suffix(f".t{i + 1}.jsonl")
@@ -1278,6 +1301,11 @@ def rivaluta(cartella: Path) -> int:
         note.append(f"{len(esclusi)} esecuzioni escluse per blocco o guasto del server: " + "; ".join(e.split(":")[0] for e in esclusi))
     testo = componi_riepilogo(righe, spesa, note, "", cartella.name)
     (cartella / "riepilogo.txt").write_text(testo, encoding="utf-8")
+    (cartella / "rivalutazione.json").write_text(json.dumps({
+        "data":datetime.now().isoformat(),
+        "runner_sha256":hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+        "copertura_completa":completo, "esiti":righe,"spesa_nota":spesa,
+        "note":note},ensure_ascii=False,indent=2)+"\n")
     print(testo)
     return codice_uscita(righe, completo)
 
@@ -1294,9 +1322,11 @@ def componi_riepilogo(righe: list[dict], spesa: dict, note: list[str], fermo: st
     for rt in sorted({r["runtime"] for r in righe}):
         for cfg in sorted({r["config"] for r in righe if r["runtime"] == rt}):
             sel = [r for r in righe if r["runtime"] == rt and r["config"] == cfg and r["caso"] != "B00"]
-            lampo = [r for r in sel if r["lampo"]]
-            out.append(f"- {rt} {cfg}: {sum(r['promosso'] for r in sel)}/{len(sel)} promossi"
-                       + (f", ⚡ {sum(r['promosso'] for r in lampo)}/{len(lampo)}" if lampo else ""))
+            validi = [r for r in sel if r.get("valutabile",True)]
+            lampo = [r for r in validi if r["lampo"]]
+            out.append(f"- {rt} {cfg}: {sum(r['promosso'] for r in validi)}/{len(validi)} casi valutabili promossi"
+                       + (f", ⚡ {sum(r['promosso'] for r in lampo)}/{len(lampo)}" if lampo else "")
+                       + f"; {len(sel)-len(validi)} non valutabili")
     out.append("- spesa nota registrata: " + ", ".join(f"{k} {v:.3f} $" for k, v in spesa.items()) + f" · totale {sum(spesa.values()):.3f} $")
     out.append("- il punteggio comportamentale esclude B00 (isolamento); una prova interrotta può avere costi non ancora riportati dal provider.")
     for n in dict.fromkeys(note):

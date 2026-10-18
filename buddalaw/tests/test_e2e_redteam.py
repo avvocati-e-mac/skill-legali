@@ -125,6 +125,22 @@ def test_blocco_live_non_esegue_l_azione_successiva(runner,tmp_path):
     assert not marker.exists()
 
 
+def test_guasto_mcp_all_avvio_non_viene_scambiato_per_limite_del_modello(runner,tmp_path):
+    marker=tmp_path/'modello-non-deve-partire'
+    log='timestamp=2026-10-18T05:54:50.829Z level=WARN message="server unavailable" key=buddalaw type=remote status=failed'
+    script=('import sys,time;from pathlib import Path;'
+            f'print({log!r},file=sys.stderr,flush=True);'
+            f'time.sleep(1);Path({str(marker)!r}).write_text("modello")')
+    with pytest.raises(runner.Blocco,match='all.avvio'):
+        runner._stdout_su_file([sys.executable,'-u','-c',script],timeout=5,
+                              salva=tmp_path/'trace.jsonl',controlla=True)
+    assert not marker.exists()
+
+
+def test_guasto_di_altro_mcp_non_diventa_guasto_buddalaw(runner):
+    runner.controlla_avvio_mcp('message="server unavailable" key=altro status=failed')
+
+
 def test_suite_vuota_non_passa(runner):
     assert runner.codice_uscita([]) != 0
 

@@ -127,6 +127,11 @@ la prova di isolamento. Una rivalutazione senza queste prove è incompleta.
 Due collaudi non possono usare contemporaneamente la stessa sandbox.
 OpenCode dispone di 16 passi per quesito e legge soltanto la skill in prova e
 gli output MCP. Tutte le configurazioni usano gli stessi limiti.
+Anche il modello ausiliario usato da OpenCode per i titoli viene impostato su
+quello scelto per la prova, evitando chiamate ereditate a un altro modello.
+Il programma sorveglia inoltre gli errori di avvio MCP: OpenCode può proseguire
+col modello anche quando BuddaLaw non si è collegato. In quel caso la prova è
+non valutabile e la tornata si ferma, senza altre ricerche automatiche.
 
 **Costi.** Il costo varia con il quesito, il modello e la cache: consultare il
 riepilogo effettivo. Il programma interrompe nuove esecuzioni quando la spesa
@@ -140,7 +145,9 @@ nomi rimasti in chiaro nelle sentenze.
 
 Una copertura vuota o incompleta restituisce codice 2; i fallimenti di
 comportamento restituiscono 1. Gli errori di esecuzione sono distinti dai
-fallimenti della skill. Un URL delle fonti alterato impedisce l'esito positivo
+fallimenti della skill e sono esclusi dal denominatore dei casi valutabili;
+la copertura incompleta continua a impedire la promozione complessiva.
+Un URL delle fonti alterato impedisce l'esito positivo
 anche se le altre due ripetizioni sono passate. Questi controlli verificano
 comportamento e provenienza delle fonti, senza certificare il ragionamento giuridico.
 
