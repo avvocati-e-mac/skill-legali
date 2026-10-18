@@ -22,15 +22,18 @@ Uso da riga di comando (una chiamata, costo circa 0,01-0,03 $ con Haiku):
 from __future__ import annotations
 
 import json
+import importlib.util
 import os
 import re
 import subprocess
 import sys
 import tempfile
+from pathlib import Path
+from types import SimpleNamespace
 from dataclasses import dataclass, field
 
 PREFIX = "mcp__claude_ai_BuddaLaw__"
-MODELLO = "claude-haiku-5-5"
+MODELLO = os.environ.get("BUDDALAW_CLAUDE_MODEL", "claude-haiku-4-5-20251001")
 BUDGET_USD = "0.2"
 
 # Una voce per ogni chiamata eseguita (tool, costo): il conftest la riassume.
@@ -38,7 +41,7 @@ REGISTRO: list[dict] = []
 
 # Segnali di rifiuto o limitazione del servizio: chi li riceve si ferma.
 _BLOCCO = re.compile(
-    r"\b(403|429)\b|too many requests|rate.?limit|forbidden|quota|"
+    r"\b(403|429|500)\b|too many requests|rate.?limit|forbidden|quota|"
     r"troppe richieste|limite di (richieste|frequenza)|bloccat|sospes|"
     r"circuit breaker|backend temporaneamente non disponibile|momentaneamente disponibile",
     re.IGNORECASE,
@@ -110,8 +113,17 @@ def chiama(tool: str, argomenti: dict, timeout: int = 300) -> Esito:
     ]
     # Cartella vuota: niente CLAUDE.md di progetto nel contesto (meno token).
     with tempfile.TemporaryDirectory(prefix="buddalaw-c-") as cwd:
-        proc = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout,
-                              cwd=cwd, env=dict(os.environ))
+        spec = importlib.util.spec_from_file_location("buddalaw_live_runtime", Path(__file__).resolve().parents[1]/"e2e/run.py")
+        runtime = importlib.util.module_from_spec(spec)
+        sys.modules[spec.name] = runtime
+        spec.loader.exec_module(runtime)
+        dest = Path(cwd)/"trace.jsonl"
+        try:
+            code = runtime._processo_su_file(cmd, cwd, dict(os.environ), dest, timeout,
+                                            callback=runtime.controllore_live())
+        except runtime.Blocco as exc:
+            raise Bloccato(str(exc)) from exc
+        proc = SimpleNamespace(stdout=dest.read_text(),stderr=dest.with_suffix(".stderr.txt").read_text(),returncode=code)
 
     eventi, costo = [], 0.0
     for riga in proc.stdout.splitlines():

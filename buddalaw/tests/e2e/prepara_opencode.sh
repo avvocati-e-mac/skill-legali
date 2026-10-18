@@ -43,7 +43,7 @@ cat > opencode.json <<'JSON'
   },
   "agent": {
     "build": {
-      "steps": 8,
+      "steps": 16,
       "permission": { "task": "deny", "question": "deny" }
     }
   },
@@ -60,7 +60,7 @@ cat > opencode.json <<'JSON'
 }
 JSON
 echo "Cartella di prova pronta: $SANDBOX"
-OC="$(command -v opencode || ls /usr/local/Cellar/opencode/*/bin/opencode 2>/dev/null | tail -1 || true)"
+OC="${OPENCODE_BIN:-$(command -v opencode || ls /usr/local/Cellar/opencode/*/bin/opencode 2>/dev/null | tail -1 || true)}"
 if [ -z "$OC" ]; then
   echo "opencode non trovato nel PATH: installalo (brew install opencode) o imposta OPENCODE_BIN."
   exit 0
@@ -81,6 +81,17 @@ config = json.loads(path.read_text())
 for name in resolved.get("mcp", {}):
     if name != "buddalaw":
         config["mcp"][name] = {"enabled": False}
+# Il modello legge solo la skill in prova e gli output MCP, non gli attesi dei test.
+paths = subprocess.run([sys.argv[1], "debug", "paths"], capture_output=True,
+                       text=True, check=True, timeout=60).stdout
+data_line = next(line for line in paths.splitlines() if line.startswith("data "))
+data_dir = Path(data_line.split(None, 1)[1].strip())
+sandbox = Path.cwd().resolve()
+config["permission"]["read"] = {"*":"deny", str(sandbox / "**"):"allow",
+                                  str(data_dir / "tool-output" / "**"):"allow"}
+config["permission"]["external_directory"] = {"*":"deny", str(data_dir / "tool-output" / "**"):"allow"}
+config["permission"]["grep"] = "deny"
+config["permission"]["glob"] = "deny"
 path.write_text(json.dumps(config, ensure_ascii=False, indent=2) + "\n")
 print("Server MCP estranei esclusi dalla sandbox.")
 PY

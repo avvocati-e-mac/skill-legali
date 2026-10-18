@@ -60,7 +60,7 @@ ATTESI = [
     "list_processual_acts",
     "get_processual_act",
 ]
-MODELLO = "claude-haiku-5-5"
+MODELLO = os.environ.get("BUDDALAW_CLAUDE_MODEL", "claude-haiku-4-5-20251001")
 UPSTREAM = "https://api.anthropic.com"
 FIXTURE = Path(__file__).resolve().parents[1] / "fixtures" / "tool_schema.json"
 _ESCLUSI_REQ = {"host", "content-length", "accept-encoding", "connection"}
@@ -148,6 +148,8 @@ def lancia(timeout: int = 240) -> tuple[list[dict], set[str]]:
         raise RuntimeError(f"il proxy non ha visto richieste /v1/messages (exit {proc.returncode}): {proc.stderr[:400]}")
     # la richiesta con piu' tool BuddaLaw e' quella completa
     tools = max(raccolta, key=len)
+    if not tools:
+        raise RuntimeError("il canale proxy non ha esposto definizioni BuddaLaw: schema non verificabile; non è prova che il server abbia rimosso i tool")
     return tools, _nomi_tool_reference(proc.stdout)
 
 

@@ -46,12 +46,17 @@ BuddaLaw: nessun ritento.
 from __future__ import annotations
 
 import argparse
+import contextlib
+import fcntl
 import glob
+import hashlib
 import json
 import math
 import os
 import re
 import shutil
+import signal
+import sqlite3
 import subprocess
 import sys
 import tempfile
@@ -67,10 +72,12 @@ SKILL_DIR = REPO / "buddalaw" / "buddalaw"
 CASI = QUI / "casi.json"
 RISULTATI = QUI / "results"
 SANDBOX = QUI / ".opencode-sandbox"
+sys.path.insert(0, str(QUI.parent / "tools"))
+from valida_schema import errori_chiamata
 TAG_V84 = "buddalaw-v8.4"
 
 PREFISSI = ("mcp__claude_ai_BuddaLaw__", "mcp__buddalaw__", "buddalaw_")
-MODELLO_CLAUDE = "claude-haiku-5-5"
+MODELLO_CLAUDE = os.environ.get("BUDDALAW_CLAUDE_MODEL", "claude-haiku-4-5-20251001")
 MODELLI_OPENCODE = ["openrouter/qwen/qwen3.8-flash", "openrouter/deepseek/deepseek-v4.1-flash"]
 CONFIG_VALIDE = ("v9", "v8.4", "nessuna", "v9-ridotta")
 # server MCP dell'utente da tenere fuori dalle prove con Claude Code
@@ -81,7 +88,7 @@ MCP_VIETATI = [
 ]
 AVVISO_RE = re.compile(r"⚠️?\s*BuddaLaw è stato aggiornato")
 ESTREMI_RE = re.compile(r"\bn\.\s?(\d{1,5})/((?:19|20)\d{2})\b")
-VIRGOLETTATO_RE = re.compile(r"«([^»]{40,})»|\"([^\"]{40,})\"")
+VIRGOLETTATO_RE = re.compile(r'«([^»]+)»|“([^”]+)”|"([^"\n]+)"')
 LINK_MD_RE = re.compile(r"\[([^\]]+)\]\(<?(https?://[^)\s>]+)>?\)")
 URL_RE = re.compile(r"https?://[^\s<>()\[\]\"'`]+")
 DOMINI_LINK = ("platform.buddalaw.com", "normattiva.it")
@@ -101,6 +108,10 @@ class Blocco(Exception):
 
 class Salta(Exception):
     """Runtime non utilizzabile (es. autenticazione mancante): si salta e lo si dice."""
+
+
+class LimiteSpesa(Exception):
+    """Interrompe lo step successivo quando la spesa nota raggiunge il tetto."""
 
 
 # --------------------------------------------------------------------------- utilità
@@ -126,6 +137,7 @@ class Esecuzione:
     """Ciò che serve alla valutazione, indipendente dal runtime."""
     chiamate: list = field(default_factory=list)   # [{"tool", "nome_originale", "argomenti"}]
     risultati: list = field(default_factory=list)  # testi dei tool_result
+    fonti: list = field(default_factory=list)     # risultati con origine, argomenti e stato
     testi: list = field(default_factory=list)      # testi del modello, in ordine
     testo_finale: str = ""
     costo: float = 0.0
@@ -160,14 +172,18 @@ def prepara_skill(config: str, base: Path) -> Path | None:
     if config == "v9-ridotta":
         sk = dest / "SKILL.md"
         testo = sk.read_text(encoding="utf-8")
-        righe = testo.splitlines(keepends=True)
-        for i, r in enumerate(righe):
-            if "inventario_tool_buddalaw" in r:
-                nuova = r.replace(', "search_similar_cases"', "").replace('"search_similar_cases", ', "")
-                if nuova == r:
-                    raise RuntimeError("v9-ridotta: search_similar_cases non trovato nell'inventario")
-                righe[i] = nuova
-        sk.write_text("".join(righe), encoding="utf-8")
+        modificati = []
+        def riduci(m):
+            dati = json.loads(m.group(1))
+            if not isinstance(dati, dict) or "inventario_tool_buddalaw" not in dati:
+                return m.group(0)
+            dati["inventario_tool_buddalaw"].remove("search_similar_cases")
+            modificati.append(True)
+            return "```json\n" + json.dumps(dati, ensure_ascii=False) + "\n```"
+        testo = re.sub(r"```json\s*\n(.*?)\n```", riduci, testo, flags=re.S)
+        if len(modificati) != 1:
+            raise RuntimeError("v9-ridotta: atteso un solo inventario JSON")
+        sk.write_text(testo, encoding="utf-8")
     return dest
 
 
@@ -207,8 +223,10 @@ def testo_risultato(contenuto) -> str:
     return json.dumps(contenuto, ensure_ascii=False)
 
 
-def parsifica_claude(righe: list[str]) -> Esecuzione:
+def parsifica_claude(righe: list[str], rileva_blocchi: bool = True) -> Esecuzione:
     ex = Esecuzione()
+    turn = 1
+    tool_ids = {}
     for riga in righe:
         try:
             ev = json.loads(riga)
@@ -222,14 +240,20 @@ def parsifica_claude(righe: list[str]) -> Esecuzione:
                 if b.get("type") == "text":
                     ex.testi.append(b.get("text", ""))
                 elif b.get("type") == "tool_use":
-                    ex.chiamate.append({"tool": norm_tool(b.get("name", "")), "nome_originale": b.get("name", ""),
-                                        "argomenti": b.get("input") or {}, "id": b.get("id")})
+                    call = {"tool": norm_tool(b.get("name", "")), "nome_originale": b.get("name", ""),
+                            "argomenti": b.get("input") or {}, "id": b.get("id"), "turno": turn}
+                    ex.chiamate.append(call)
+                    tool_ids[b.get("id")] = call
         elif tipo == "user":
             for b in (ev.get("message") or {}).get("content") or []:
                 if isinstance(b, dict) and b.get("type") == "tool_result":
                     t = testo_risultato(b.get("content"))
                     ex.risultati.append(t)
-                    controlla_blocco(t, bool(b.get("is_error")))
+                    call = tool_ids.get(b.get("tool_use_id"), {})
+                    ex.fonti.append({"tool": call.get("tool", "sconosciuto"), "output": t,
+                                     "argomenti": call.get("argomenti", {}), "is_error": bool(b.get("is_error"))})
+                    if rileva_blocchi and e_buddalaw(call.get("nome_originale", "")):
+                        controlla_blocco(t, bool(b.get("is_error")))
         elif tipo == "result":
             ex.testo_finale = ev.get("result") or ""
             # con più turni c'è un result per turno e total_cost_usd è cumulativo (osservato)
@@ -239,6 +263,7 @@ def parsifica_claude(righe: list[str]) -> Esecuzione:
                 ex.errore = str(ev.get("subtype"))
             elif ev.get("is_error"):
                 ex.errore = ex.testo_finale[:200]
+            turn += 1
     if not ex.testo_finale and ex.testi:
         ex.testo_finale = ex.testi[-1]
     return ex
@@ -263,68 +288,47 @@ def verifica_init_claude(init: dict, config: str) -> list[str]:
     return problemi
 
 
-def _claude_piu_turni(cmd: list[str], turni: list[str], cwd: Path, env: dict) -> tuple[str, str, int]:
-    """Un messaggio per volta: il successivo parte solo dopo l'evento `result` del turno
-    precedente (se si scrivono tutti subito, Claude Code li fonde in un solo turno)."""
-    err = tempfile.TemporaryFile(mode="w+")
-    proc = subprocess.Popen(cmd, cwd=cwd, env=env, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                            stderr=err, text=True, bufsize=1)
-    righe: list[str] = []
-    scadenza = time.time() + 900
-
-    def invia(t: str) -> None:
-        proc.stdin.write(json.dumps({"type": "user", "message": {"role": "user", "content": t}}, ensure_ascii=False) + "\n")
-        proc.stdin.flush()
-
-    invia(turni[0])
-    da_inviare = list(turni[1:])
-    for riga in proc.stdout:
-        righe.append(riga)
-        if time.time() > scadenza:
-            proc.kill()
-            break
-        try:
-            ev = json.loads(riga)
-        except json.JSONDecodeError:
-            continue
-        if ev.get("type") == "result":
-            if ev.get("subtype") not in (None, "success") or not da_inviare:
-                proc.stdin.close()
-                da_inviare = []
-            else:
-                invia(da_inviare.pop(0))
-    proc.wait(timeout=60)
-    err.seek(0)
-    return "".join(righe), err.read(), proc.returncode
-
-
 def esegui_claude(turni: list[str], config: str, modello: str | None, budget_run: float, cartella: Path) -> tuple[Esecuzione, list[str]]:
     lavoro = Path(tempfile.mkdtemp(prefix="buddalaw-e2e-"))
+    t0 = time.time()
+    skill = prepara_skill(config, lavoro)
+    meta = {"runtime":"claude", "config":config, "modello_richiesto":modello,
+            "completata":False, "turni_previsti":len(turni),
+            "skill_sha256":hashlib.sha256((skill/"SKILL.md").read_bytes()).hexdigest() if skill else None}
+    meta_path = cartella.with_suffix(".meta.json")
+    meta_path.write_text(json.dumps(meta,ensure_ascii=False,indent=2)+"\n")
     try:
-        skill = prepara_skill(config, lavoro)
         spf = None
         if skill:
             spf = lavoro / "skill-prompt.md"
             spf.write_text(prompt_di_sistema(skill), encoding="utf-8")
         cmd = comando_claude(turni[0] if len(turni) == 1 else None, modello, budget_run, spf)
         env = dict(os.environ, CLAUDE_CODE_DISABLE_AUTO_MEMORY="1")
-        t0 = time.time()
-        if len(turni) == 1:
-            proc = subprocess.run(cmd, cwd=lavoro, capture_output=True, text=True, timeout=600, env=env)
-            stdout, stderr, codice = proc.stdout, proc.stderr, proc.returncode
-        else:
-            stdout, stderr, codice = _claude_piu_turni(cmd, turni, lavoro, env)
-        righe = stdout.splitlines()
-        cartella.write_text(stdout, encoding="utf-8")
-        if stderr.strip():
-            cartella.with_suffix(".stderr.txt").write_text(stderr, encoding="utf-8")
-        ex = parsifica_claude(righe)
-        ex.durata = time.time() - t0
-        if not righe:
-            ex.errore = f"nessun output (exit {codice}): {stderr[:300]}"
-        return ex, verifica_init_claude(ex.init, config) if ex.init else ["system/init assente"]
+        error = ""
+        try:
+            code = _processo_su_file(cmd, lavoro, env, cartella, 900 if len(turni)>1 else 600,
+                                    callback=controllore_live(), turni=turni if len(turni)>1 else None)
+        except subprocess.TimeoutExpired:
+            code, error = -1, "timeout; costo parziale noto conservato"
+        except Blocco as exc:
+            exc.esecuzione = parsifica_claude(cartella.read_text().splitlines(),rileva_blocchi=False)
+            exc.esecuzione.errore = str(exc)
+            meta["errore"] = str(exc)
+            meta_path.write_text(json.dumps(meta,ensure_ascii=False,indent=2)+"\n")
+            raise
+        ex = parsifica_claude(cartella.read_text().splitlines())
+        ex.durata = time.time()-t0
+        if error:
+            ex.errore = error
+        elif not ex.testi:
+            ex.errore = f"nessun testo del modello (exit {code})"
+        problems = verifica_init_claude(ex.init,config) if ex.init else ["system/init assente"]
+        meta.update({"completata":not bool(ex.errore),"errore":ex.errore,
+                     "problemi_isolamento":problems,"modello_effettivo":ex.init.get("model"),"costo_usd_noto":ex.costo})
+        meta_path.write_text(json.dumps(meta,ensure_ascii=False,indent=2)+"\n")
+        return ex, problems
     finally:
-        shutil.rmtree(lavoro, ignore_errors=True)
+        shutil.rmtree(lavoro,ignore_errors=True)
 
 
 # --------------------------------------------------------------------------- runtime opencode
@@ -401,39 +405,152 @@ def verifica_skill_opencode(oc: str, config: str) -> list[str]:
         if "/.claude/" in luogo or "/.agents/" in luogo:
             problemi.append(f"skill esterna caricata: {nome} da {luogo}")
     if config == "nessuna":
-        if "buddalaw" in luoghi:
-            problemi.append(f"config nessuna ma skill buddalaw presente: {luoghi['buddalaw']}")
+        # La copia globale può essere scoperta, ma deve essere nascosta dal modello.
+        cfg = json.loads((SANDBOX / "opencode.json").read_text())
+        perm = cfg.get("agent",{}).get("build",{}).get("permission",{}).get("skill",{})
+        if perm != {"*":"deny"}:
+            problemi.append("config nessuna senza divieto di caricamento delle skill")
     elif not luoghi.get("buddalaw", "").startswith(str(SANDBOX)):
         problemi.append(f"skill buddalaw non caricata dalla sandbox: {luoghi.get('buddalaw')}")
     return problemi
 
 
-def _stdout_su_file(cmd: list[str], timeout: int, salva: Path | None = None) -> str:
-    """opencode (bun) tronca lo stdout su pipe a 64 KB quando esce: si scrive su file."""
-    dest = salva or Path(tempfile.mkstemp(prefix="opencode-", suffix=".out")[1])
+def controllore_live(budget=None):
+    """Conserva gli ID Claude per controllare soltanto i risultati BuddaLaw."""
+    budda_ids = set()
+    costo = 0.0
+    def controlla(ev):
+        nonlocal costo
+        tipo = ev.get("type")
+        if tipo == "step_finish":
+            costo += float((ev.get("part") or {}).get("cost") or 0)
+            if budget is not None and costo >= budget:
+                raise LimiteSpesa(f"tetto di spesa raggiunto: costo noto {costo:.5f} $")
+        if tipo in ("tool_use", "error"):
+            parsifica_opencode([json.dumps(ev)])
+        elif tipo == "assistant":
+            for b in (ev.get("message") or {}).get("content") or []:
+                if b.get("type") == "tool_use" and e_buddalaw(b.get("name", "")):
+                    budda_ids.add(b.get("id"))
+        elif tipo == "user":
+            for b in (ev.get("message") or {}).get("content") or []:
+                if b.get("type") == "tool_result" and b.get("tool_use_id") in budda_ids:
+                    controlla_blocco(testo_risultato(b.get("content")), bool(b.get("is_error")))
+        elif tipo == "result" and ev.get("is_error"):
+            controlla_blocco(str(ev.get("result", "")), True)
+    return controlla
+
+
+def ferma_processo(proc):
+    if proc.poll() is None:
+        try:
+            os.killpg(proc.pid, signal.SIGTERM)
+        except ProcessLookupError:
+            pass
+        try:
+            proc.wait(timeout=2)
+        except subprocess.TimeoutExpired:
+            os.killpg(proc.pid, signal.SIGKILL)
+            proc.wait(timeout=2)
+
+
+def _processo_su_file(cmd, cwd, env, dest, timeout, callback=None, turni=None):
+    """NDJSON su file, controllo mentre arriva, timeout anche con stdout muto."""
     err = dest.with_suffix(".stderr.txt")
-    with open(dest, "w", encoding="utf-8") as fo, open(err, "w", encoding="utf-8") as fe:
-        subprocess.run(cmd, cwd=SANDBOX, stdout=fo, stderr=fe, text=True, timeout=timeout, env=env_opencode())
+    t0 = time.monotonic()
+    with dest.open("w") as fo, err.open("w") as fe:
+        proc = subprocess.Popen(cmd, cwd=cwd, env=env, stdout=fo, stderr=fe,
+                                stdin=subprocess.PIPE if turni else subprocess.DEVNULL,
+                                text=True, start_new_session=True)
+        pending = list(turni or [])
+        def invia():
+            if pending and proc.poll() is None:
+                prompt = pending.pop(0)
+                proc.stdin.write(json.dumps({"type":"user","message":{"role":"user","content":prompt}},ensure_ascii=False)+"\n")
+                proc.stdin.flush()
+        if pending:
+            invia()
+        buffer = ""
+        try:
+            with dest.open() as reader:
+                while True:
+                    buffer += reader.read()
+                    while "\n" in buffer:
+                        line, buffer = buffer.split("\n", 1)
+                        try:
+                            ev = json.loads(line)
+                        except ValueError:
+                            continue
+                        if callback:
+                            callback(ev)
+                        if turni and ev.get("type") == "result":
+                            if pending and ev.get("subtype") in (None, "success"):
+                                invia()
+                            elif proc.stdin and not proc.stdin.closed:
+                                proc.stdin.close()
+                    if proc.poll() is not None:
+                        # Un ultimo giro per leggere i byte scritti prima dell'uscita.
+                        last = reader.read()
+                        if last:
+                            buffer += last
+                            continue
+                        if buffer.strip() and callback:
+                            try:
+                                ev = json.loads(buffer)
+                            except ValueError:
+                                ev = None
+                            if isinstance(ev, dict):
+                                callback(ev)
+                        return proc.returncode
+                    if time.monotonic() - t0 >= timeout:
+                        raise subprocess.TimeoutExpired(cmd, timeout)
+                    time.sleep(0.03)
+        finally:
+            ferma_processo(proc)
+            if proc.stdin and not proc.stdin.closed:
+                proc.stdin.close()
+
+
+def _stdout_su_file(cmd: list[str], timeout: int, salva: Path | None = None, controlla: bool = False, budget=None) -> str:
+    """opencode (bun) tronca lo stdout su pipe a 64 KB quando esce: si scrive su file."""
+    if salva:
+        dest = salva
+    else:
+        fd, nome = tempfile.mkstemp(prefix="opencode-", suffix=".out")
+        os.close(fd)
+        dest = Path(nome)
+    err = dest.with_suffix(".stderr.txt")
+    try:
+        codice = _processo_su_file(cmd, SANDBOX, env_opencode(), dest, timeout,
+                                  controllore_live(budget) if controlla else None)
+    except subprocess.TimeoutExpired as exc:
+        exc.output = dest.read_text(encoding="utf-8")
+        raise
     testo = dest.read_text(encoding="utf-8")
     if not salva:
         dest.unlink(missing_ok=True)
     if not err.read_text(encoding="utf-8").strip() or not salva:
         err.unlink(missing_ok=True)
+    if codice and not testo.strip():
+        raise Salta(f"comando terminato con codice {codice}, senza output; vedi {err.name}")
     return testo
 
 
-def parsifica_opencode(righe: list[str]) -> Esecuzione:
+def parsifica_opencode(righe: list[str], rileva_blocchi: bool = True) -> Esecuzione:
     ex = Esecuzione()
     passo: list[str] = []
     ultimi: list[str] = []
     tok = {"input": 0, "output": 0, "reasoning": 0, "cache_read": 0}
+    turn = 1
     for riga in righe:
         try:
             ev = json.loads(riga)
         except json.JSONDecodeError:
             continue
         tipo, part = ev.get("type"), ev.get("part") or {}
-        if tipo == "step_start":
+        if tipo == "benchmark/turn_start":
+            turn = ev["turn"]
+        elif tipo == "step_start":
             passo = []
         elif tipo == "text":
             ex.testi.append(part.get("text", ""))
@@ -442,11 +559,13 @@ def parsifica_opencode(righe: list[str]) -> Esecuzione:
             st = part.get("state") or {}
             nome = part.get("tool", "")
             ex.chiamate.append({"tool": norm_tool(nome), "nome_originale": nome,
-                                "argomenti": st.get("input") or {}, "id": part.get("callID")})
+                                "argomenti": st.get("input") or {}, "id": part.get("callID"), "turno": turn})
             out = st.get("output") if st.get("status") == "completed" else (st.get("error") or "")
             t = out if isinstance(out, str) else json.dumps(out, ensure_ascii=False)
             ex.risultati.append(t)
-            if e_buddalaw(nome):
+            ex.fonti.append({"tool": norm_tool(nome), "output": t, "argomenti": st.get("input") or {},
+                             "is_error": st.get("status") == "error", "metadata": st.get("metadata") or {}})
+            if rileva_blocchi and e_buddalaw(nome):
                 controlla_blocco(t, st.get("status") == "error")
         elif tipo == "step_finish":
             ex.costo += float(part.get("cost") or 0)
@@ -459,51 +578,109 @@ def parsifica_opencode(righe: list[str]) -> Esecuzione:
         elif tipo == "error":
             dati = (ev.get("error") or {}).get("data") or {}
             ex.errore = f"{(ev.get('error') or {}).get('name')}: {dati.get('message')} ({dati.get('statusCode')})"
-            if dati.get("statusCode") in (403, 429):
+            if rileva_blocchi and dati.get("statusCode") in (403, 429, 500):
                 raise Blocco(f"opencode/provider: {ex.errore}")
     ex.token = tok
     ex.testo_finale = "\n\n".join(ultimi or passo)
     return ex
 
 
-def esegui_opencode(oc: str, turni: list[str], config: str, modello: str, cartella: Path) -> tuple[Esecuzione, list[str]]:
+def esegui_opencode(oc: str, turni: list[str], config: str, modello: str, cartella: Path, budget_run=None) -> tuple[Esecuzione, list[str]]:
     skills = SANDBOX / ".opencode" / "skills"
     skills.mkdir(parents=True, exist_ok=True)
     prepara_skill(config, skills)  # crea o sostituisce .opencode/skills/buddalaw
     if config == "nessuna" and (skills / "buddalaw").exists():
         shutil.rmtree(skills / "buddalaw")
+    config_path = SANDBOX / "opencode.json"
+    resolved = json.loads(config_path.read_text())
+    skill_permission = {"*":"deny"} if config == "nessuna" else {"*":"deny","buddalaw":"allow"}
+    resolved.setdefault("permission", {})["skill"] = skill_permission
+    resolved.setdefault("agent", {}).setdefault("build", {}).setdefault("permission", {})["skill"] = skill_permission
+    config_path.write_text(json.dumps(resolved, ensure_ascii=False, indent=2) + "\n")
     problemi = verifica_skill_opencode(oc, config)
+    meta_path = cartella.with_suffix(".meta.json")
+    meta = {"runtime":"opencode", "config":config, "modello_richiesto":modello,
+            "problemi_isolamento":problemi, "completata":False, "turni_previsti":len(turni),
+            "skill_sha256":hashlib.sha256((skills/"buddalaw/SKILL.md").read_bytes()).hexdigest() if config != "nessuna" else None,
+            "config_sha256":hashlib.sha256(config_path.read_bytes()).hexdigest()}
+    meta_path.write_text(json.dumps(meta,ensure_ascii=False,indent=2)+"\n")
     if problemi:
         return Esecuzione(errore="isolamento della skill non verificato"), problemi
     t0 = time.time()
-    stdout, sessione = "", None
+    stdout, sessione, execution_error = "", None, ""
     for i, prompt in enumerate(turni):
         cmd = [oc, "run", "--format", "json", "--dir", str(SANDBOX), "-m", modello]
         if sessione:
             cmd += ["--session", sessione]  # turni successivi nella stessa sessione
-        parziale = _stdout_su_file(cmd + [prompt], timeout=600,
-                                   salva=cartella if i == 0 else cartella.with_suffix(f".t{i + 1}.jsonl"))
-        stdout += parziale
+        file_turno = cartella.with_suffix(f".t{i + 1}.jsonl")
+        try:
+            residuo = budget_run-parsifica_opencode(stdout.splitlines()).costo if budget_run is not None else None
+            parziale = _stdout_su_file(cmd + [prompt], timeout=600, salva=file_turno, controlla=True, budget=residuo)
+        except LimiteSpesa as exc:
+            parziale = file_turno.read_text() if file_turno.exists() else ""
+            execution_error = str(exc)
+        except subprocess.TimeoutExpired as exc:
+            parziale = exc.output or ""
+            execution_error = "timeout 600 s; costo parziale noto conservato"
+        except Blocco as exc:
+            parziale = file_turno.read_text() if file_turno.exists() else ""
+            stdout += json.dumps({"type":"benchmark/turn_start","turn":i+1})+"\n"+parziale
+            cartella.write_text(stdout)
+            exc.esecuzione = parsifica_opencode(stdout.splitlines(), rileva_blocchi=False)
+            exc.esecuzione.errore = str(exc)
+            meta["errore"] = str(exc)
+            meta_path.write_text(json.dumps(meta,ensure_ascii=False,indent=2)+"\n")
+            raise
+        stdout += json.dumps({"type":"benchmark/turn_start","turn":i+1})+"\n"+parziale
+        cartella.write_text(stdout, encoding="utf-8")
+        if execution_error:
+            break
+        # Controllare il turno prima di inviare il successivo.
+        parsed_turn = parsifica_opencode(parziale.splitlines())
+        if parsed_turn.errore:
+            execution_error = parsed_turn.errore
+            break
         if sessione is None:
             m = re.search(r'"sessionID"\s*:\s*"([^"]+)"', parziale)
             sessione = m.group(1) if m else None
             if len(turni) > 1 and not sessione:
                 break
-    if len(turni) > 1:
-        cartella.write_text(stdout, encoding="utf-8")
     ex = parsifica_opencode(stdout.splitlines())
     ex.durata = time.time() - t0
     ex.init = {"skill_check": problemi}
     if not stdout.strip():
         ex.errore = f"nessun output: vedi {cartella.with_suffix('.stderr.txt').name}"
+    if execution_error:
+        ex.errore = execution_error
     nomi = {c["nome_originale"] for c in ex.chiamate}
     if any("non disponibil" in t.lower() and "tool" in t.lower() for t in ex.testi) and not any(e_buddalaw(n) for n in nomi):
         problemi.append("dichiara i tool non disponibili senza averli chiamati (prefisso buddalaw_?)")
+    meta.update({"completata":not bool(ex.errore),"errore":ex.errore,"costo_usd_noto":ex.costo})
+    if sessione:
+        try:
+            with sqlite3.connect(f"file:{SANDBOX / '.opencode-test.db'}?mode=ro",uri=True) as db:
+                # Soltanto identificativi del modello, mai contenuti di ragionamento o credenziali.
+                rows = db.execute("select distinct json_extract(data,'$.providerID'), json_extract(data,'$.modelID') from message where session_id=? and json_extract(data,'$.role')='assistant'",(sessione,)).fetchall()
+                meta["modelli_effettivi"] = [f"{provider}/{model}" for provider,model in rows if provider and model]
+        except sqlite3.Error:
+            meta["modelli_effettivi"] = None
+    meta_path.write_text(json.dumps(meta,ensure_ascii=False,indent=2)+"\n")
     return ex, problemi
 
 
 def controlla_blocco(testo: str, errore: bool) -> None:
-    if (errore or len(testo) < 3000) and BLOCCO_RE.search(testo):
+    messaggio = testo
+    strutturato = False
+    try:
+        dati = json.loads(testo)
+        if isinstance(dati, dict):
+            campi = [dati[k] for k in ("error", "detail", "message", "status", "statusCode") if k in dati]
+            if "error" in dati or "detail" in dati or dati.get("statusCode") in (403, 429, 500):
+                strutturato = True
+                messaggio = json.dumps(campi, ensure_ascii=False)
+    except (ValueError, TypeError):
+        pass
+    if (errore or strutturato or len(testo) < 3000) and BLOCCO_RE.search(messaggio):
         raise Blocco(f"risposta del server: {testo[:300]}")
 
 
@@ -568,10 +745,46 @@ def _stringhe(obj):
             yield from _stringhe(v)
 
 
+def fonti_probatorie(ex: Esecuzione) -> list[dict]:
+    fonti = [f for f in ex.fonti if f.get("tool") in {
+        "get_judgement", "get_law_article", "search_case_law", "search_similar_cases", "search_articles",
+        "get_contract", "get_contract_requirements", "get_processual_act",
+        "search_contracts", "search_processual_acts", "list_contracts", "list_processual_acts"}
+        and not f.get("is_error")]
+    # Un Read è una fonte solo quando legge un file esplicitamente restituito da BuddaLaw.
+    riferimenti = "\n".join(f.get("output", "") + json.dumps(f.get("metadata", {})) for f in fonti)
+    for f in ex.fonti:
+        path = (f.get("argomenti") or {}).get("filePath") or (f.get("argomenti") or {}).get("file_path")
+        if f.get("tool", "").lower() == "read" and path and str(path) in riferimenti and "/tool-output/" in str(path):
+            fonti.append(f)
+    return fonti
+
+
+def oggetti_fonte(ex: Esecuzione):
+    def visita(obj):
+        if isinstance(obj, str):
+            try:
+                dati = json.loads(obj)
+            except ValueError:
+                return
+            if dati != obj:
+                yield from visita(dati)
+        elif isinstance(obj, dict):
+            yield obj
+            for valore in obj.values():
+                yield from visita(valore)
+        elif isinstance(obj, list):
+            for valore in obj:
+                yield from visita(valore)
+    for f in fonti_probatorie(ex):
+        yield from visita(f["output"])
+
+
 def corpus_risultati(ex: Esecuzione) -> str:
     """Testo dei tool_result, grezzo e con le stringhe JSON decodificate (\\n, \\", \\u00e8...)."""
     parti = []
-    for r in ex.risultati:
+    for f in fonti_probatorie(ex):
+        r = f["output"]
         parti.append(r)
         try:
             parti.extend(_stringhe(json.loads(r)))
@@ -579,6 +792,23 @@ def corpus_risultati(ex: Esecuzione) -> str:
             pass
     grezzo = "\n".join(parti)
     return grezzo + "\n" + grezzo.replace("\\/", "/").replace("\\u0026", "&")
+
+
+def corpus_testi(ex: Esecuzione) -> str:
+    """Soltanto campi testuali della fonte, mai sintesi automatiche o skill."""
+    parti = []
+    for obj in oggetti_fonte(ex):
+        for k in ("testo", "text"):
+            valore = obj.get(k)
+            if not isinstance(valore, str):
+                continue
+            try:
+                contenuto = json.loads(valore)
+            except (ValueError, TypeError):
+                contenuto = None
+            if not isinstance(contenuto, (dict, list)):
+                parti.append(valore)
+    return "\n".join(parti)
 
 
 def url_nel_testo(testo: str) -> list[str]:
@@ -618,24 +848,31 @@ def controlli_specifici(caso: dict, ex: Esecuzione) -> list[tuple[str, bool, str
     testo = ex.testo_visibile
     corpus = None
     if caso.get("estremi_da_tool"):
-        corpus = corpus or corpus_risultati(ex)
         orfani = []
         for num, anno in ESTREMI_RE.findall(testo):
             n = num.lstrip("0")
-            if not (re.search(rf"(?<!\d)0*{n}(?!\d)", corpus) and anno in corpus):
+            associati = any(str(o.get("numero", "")).lstrip("0") == n and str(o.get("anno", "")) == anno
+                            for o in oggetti_fonte(ex))
+            citato = re.search(rf"(?<!\d)0*{n}\s*(?:/|del)\s*{anno}(?!\d)", corpus_testi(ex))
+            if not (associati or citato):
                 orfani.append(f"{num}/{anno}")
         esiti.append(("estremi citati presenti nei tool_result (niente memoria)", not orfani, ", ".join(orfani[:4])))
     if caso.get("virgolettati_fedeli"):
-        corpus = corpus or corpus_risultati(ex)
-        piatto = re.sub(r"\s+", " ", tipografia(corpus)).lower()
+        piatto = re.sub(r"\s+", " ", tipografia(corpus_testi(ex))).lower()
         falsi = []
+        citazioni = []
         for m in VIRGOLETTATO_RE.finditer(testo):
-            v = m.group(1) or m.group(2)
+            v = next(g for g in m.groups() if g is not None)
+            if len(v) < 25:
+                continue
+            citazioni.append(v)
             # i tagli «[…]» o «...» separano frammenti: ognuno deve essere letterale
             for pezzo in re.split(r"\[?(?:…|\.\.\.)\]?", v):
                 pezzo = re.sub(r"\s+", " ", tipografia(pezzo)).strip(" .,;:").lower()
                 if len(pezzo) >= 25 and pezzo not in piatto:
                     falsi.append(pezzo)
+        if caso.get("richiede_virgolettato", True):
+            esiti.append(("virgolettato richiesto presente", bool(citazioni), ""))
         esiti.append(("virgolettati letterali dai tool_result", not falsi, " | ".join(f[:60] for f in falsi[:2])))
     for rx in caso.get("deve_contenere") or []:
         esiti.append((f"testo contiene /{rx}/", bool(re.search(rx, testo)), ""))
@@ -651,9 +888,9 @@ def controlli_specifici(caso: dict, ex: Esecuzione) -> list[tuple[str, bool, str
 def controlli_generali(ex: Esecuzione) -> list[tuple[str, bool, str]]:
     esiti = []
     corpus = corpus_risultati(ex)
-    corpus_dec = urllib.parse.unquote(corpus)
+    noti = set(url_nel_testo(corpus))
     inventati = [u for u in url_nel_testo(ex.testo_visibile)
-                 if u not in corpus and urllib.parse.unquote(u) not in corpus_dec]
+                 if u not in noti]
     esiti.append(("fedeltà link (URL identici ai tool_result)", not inventati, " ".join(inventati[:3])))
     generici = [t for t, u in LINK_MD_RE.findall(ex.testo_visibile)
                 if any(d in urllib.parse.urlsplit(u).netloc for d in DOMINI_LINK) and not re.search(r"\d", t)]
@@ -668,6 +905,9 @@ def controlli_generali(ex: Esecuzione) -> list[tuple[str, bool, str]]:
     n_ca = sum(1 for c in ex.chiamate if c["tool"] == "check_access" and e_buddalaw(c["nome_originale"]))
     esiti.append(("check_access al massimo una volta", n_ca <= 1, f"{n_ca}"))
     esiti.append(("risposta presente, senza errore di esecuzione", bool(ex.testo_finale.strip()) and not ex.errore, ex.errore[:120]))
+    schema_errors = [e for c in ex.chiamate if e_buddalaw(c["nome_originale"])
+                     for e in errori_chiamata(c["tool"], c.get("argomenti") or {})]
+    esiti.append(("chiamate conformi allo schema reale", not schema_errors, "; ".join(schema_errors[:4])))
     return esiti
 
 
@@ -706,6 +946,17 @@ def valuta(caso: dict, config: str, ex: Esecuzione, problemi_isolamento: list[st
     if extra:
         duri += controlli_specifici({k: v for k, v in extra.items()}, ex)
     duri += controlli_generali(ex)
+    if config == "v9":
+        turni = {c.get("turno", 1) for c in ex.chiamate}
+        for turn in sorted(turni):
+            calls = [c for c in ex.chiamate if c.get("turno", 1) == turn and e_buddalaw(c["nome_originale"])]
+            searches = sum(c["tool"].startswith("search_") for c in calls)
+            judgements = sum(c["tool"] == "get_judgement" for c in calls)
+            duri += [(f"v9: ricerche turno {turn} ≤ 4", searches <= 4, str(searches)),
+                     (f"v9: get_judgement turno {turn} ≤ 2", judgements <= 2, str(judgements))]
+        norm_links = [u for u in url_nel_testo(ex.testo_visibile) if "normattiva.it" in urllib.parse.urlsplit(u).netloc]
+        # Questa suite isola BuddaLaw: non installa né carica Normattiva.
+        duri.append(("v9: nessun link normativo senza skill normattiva", not norm_links, " ".join(norm_links[:2])))
     if problemi_isolamento:
         duri.append(("isolamento (init e skill caricate)", False, "; ".join(problemi_isolamento)[:300]))
     morbidi = controlli_specifici(caso.get("morbidi") or {}, ex)
@@ -716,9 +967,12 @@ def valuta(caso: dict, config: str, ex: Esecuzione, problemi_isolamento: list[st
         "chiamate": [{"tool": c["tool"], "buddalaw": e_buddalaw(c["nome_originale"]), "argomenti": c["argomenti"]}
                      for c in ex.chiamate],
         "costo_usd": round(ex.costo, 5),
+        "costo_parziale": bool(ex.errore),
         "token": ex.token,
         "durata_s": round(ex.durata, 1),
         "errore": ex.errore,
+        "classe": "esecuzione" if ex.errore or problemi_isolamento else "comportamento",
+        "perimetro": "Controlli tecnici e di comportamento; non certificano la correttezza giuridica.",
         "testo_finale": ex.testo_finale,
     }
 
@@ -733,7 +987,28 @@ def soglia(n: int) -> int:
     return 1 if n == 1 else math.ceil(2 * n / 3)
 
 
+@contextlib.contextmanager
+def sandbox_lock():
+    SANDBOX.mkdir(parents=True, exist_ok=True)
+    with (SANDBOX/".benchmark.lock").open("w") as lock:
+        fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+        try:
+            yield
+        finally:
+            fcntl.flock(lock,fcntl.LOCK_UN)
+
+
 def main() -> int:
+    try:
+        with sandbox_lock():
+            return _main()
+    except BlockingIOError:
+        print("Sandbox già occupata da un collaudo: nessuna esecuzione avviata.")
+        return 2
+
+
+def _main() -> int:
+    global SKILL_DIR
     ap = argparse.ArgumentParser(description="Livello B end-to-end della skill buddalaw")
     ap.add_argument("--runtime", default="claude", help="claude, opencode o claude,opencode")
     ap.add_argument("--config", default="v9", help="v9, v8.4, nessuna (anche separate da virgola)")
@@ -741,8 +1016,10 @@ def main() -> int:
                     help=f"claude: id del modello (default {MODELLO_CLAUDE}) o 'default' = modello predefinito, solo casi ⚡; "
                          f"opencode: provider/modello (default {', '.join(MODELLI_OPENCODE)})")
     ap.add_argument("--casi", default=None, help="id separati da virgola, es. B00,B02")
+    ap.add_argument("--casi-file", type=Path, default=CASI, help="raccolta casi alternativa, copiata nel campione")
     ap.add_argument("--solo-lampo", action="store_true", help="solo i casi ⚡")
     ap.add_argument("--runs", type=int, default=1, help="esecuzioni per caso (con 3: promosso con almeno 2)")
+    ap.add_argument("--runs-lampo", type=int, default=None, help="ripetizioni complessive dei soli casi critici")
     ap.add_argument("--budget", type=float, default=5.0, help="tetto di spesa in $ per modello (default 5)")
     ap.add_argument("--budget-run", type=float, default=0.60, help="--max-budget-usd per singola esecuzione Claude")
     ap.add_argument("--prova", action="store_true", help="prepara e stampa i comandi senza eseguirli")
@@ -752,10 +1029,19 @@ def main() -> int:
     if a.rivaluta:
         return rivaluta(a.rivaluta)
 
-    casi = json.loads(CASI.read_text(encoding="utf-8"))["casi"]
+    if a.runs < 1 or (a.runs_lampo is not None and a.runs_lampo < 1):
+        ap.error("le ripetizioni devono essere positive")
+    casi = json.loads(a.casi_file.read_text(encoding="utf-8"))["casi"]
     if a.casi:
         voluti = [c.strip() for c in a.casi.split(",")]
+        sconosciuti = set(voluti) - {c["id"] for c in casi}
+        if sconosciuti:
+            ap.error(f"casi sconosciuti: {', '.join(sorted(sconosciuti))}")
         casi = [c for c in casi if c["id"] in voluti]
+    if a.solo_lampo:
+        casi = [c for c in casi if c.get("lampo")]
+    if not casi:
+        ap.error("nessun caso selezionato")
     configs = [c.strip() for c in a.config.split(",")]
     for c in configs:
         if c not in CONFIG_VALIDE:
@@ -773,14 +1059,34 @@ def main() -> int:
         else:
             ap.error(f"runtime sconosciuto: {rt}")
 
-    stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    stamp = datetime.now().strftime("%Y%m%d-%H%M%S-%f")
     base = RISULTATI / stamp
     base.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(a.casi_file, base / "casi.json")
+    snapshot = prepara_skill("v9", base / "snapshot-skill")
+    SKILL_DIR = snapshot
+    manifest = {"skill_sha256":hashlib.sha256((snapshot/"SKILL.md").read_bytes()).hexdigest(),
+                "file_skill_sha256":{str(p.relative_to(snapshot)):hashlib.sha256(p.read_bytes()).hexdigest()
+                                     for p in sorted(snapshot.rglob("*")) if p.is_file()},
+                "casi_sha256":hashlib.sha256(a.casi_file.read_bytes()).hexdigest(),
+                "schema_sha256":hashlib.sha256((QUI.parent/"fixtures/tool_schema.json").read_bytes()).hexdigest(),
+                "configs":configs,"modelli":obiettivi,"runs":a.runs,"runs_lampo":a.runs_lampo,
+                "budget_per_modello":a.budget,"piano":[]}
     righe_esiti: list[dict] = []
     spesa: dict[str, float] = {}
     note: list[str] = []
     fermo = ""
     oc = trova_opencode()
+    for rt, modello in obiettivi:
+        for config in configs:
+            for c in casi:
+                if c.get("solo_se_config") and config not in c["solo_se_config"]:
+                    continue
+                if rt == "claude" and modello is None and not a.casi and not c.get("lampo"):
+                    continue
+                n = a.runs_lampo if c.get("lampo") and a.runs_lampo is not None else a.runs
+                manifest["piano"].append({"runtime":rt,"modello":modello,"config":config,"caso":c["id"],"runs":n})
+    (base/"manifest.json").write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+"\n")
 
     for rt, modello in obiettivi:
         etichetta = f"{rt}:{modello or 'predefinito'}"
@@ -792,9 +1098,12 @@ def main() -> int:
             if not a.prova:
                 try:
                     preflight_opencode(oc)
-                except Salta as e:
+                except (Salta, Blocco) as e:
                     note.append(f"{etichetta}: saltato, {e}")
                     print(f"[salto] {etichetta}: {e}")
+                    if isinstance(e, Blocco):
+                        fermo = str(e)
+                        break
                     continue
         casi_rt = casi
         if rt == "claude" and modello is None and not a.casi:
@@ -810,7 +1119,8 @@ def main() -> int:
                 cartella.mkdir(exist_ok=True)
                 riuscite = 0
                 runs = []
-                for r in range(1, a.runs + 1):
+                n_runs = a.runs_lampo if caso.get("lampo") and a.runs_lampo is not None else a.runs
+                for r in range(1, n_runs + 1):
                     if spesa[etichetta] >= a.budget:
                         note.append(f"{etichetta}: tetto di {a.budget:.2f} $ raggiunto, esecuzioni interrotte")
                         break
@@ -821,19 +1131,21 @@ def main() -> int:
                         else:
                             print(f"{oc} run --format json --dir {SANDBOX} -m {modello} '{caso['prompt'][:40]}…'")
                         continue
-                    print(f"[{etichetta} {config}{'→' + cfg_eff if cfg_eff != config else ''}] {caso['id']} run {r}/{a.runs} …", flush=True)
+                    print(f"[{etichetta} {config}{'→' + cfg_eff if cfg_eff != config else ''}] {caso['id']} run {r}/{n_runs} …", flush=True)
                     try:
                         if rt == "claude":
-                            br = min(a.budget_run, max(0.05, a.budget - spesa[etichetta]))
+                            br = min(a.budget_run, a.budget - spesa[etichetta])
                             ex, probl = esegui_claude(turni_di(caso), cfg_eff, modello, br, file_ev)
                         else:
-                            ex, probl = esegui_opencode(oc, turni_di(caso), cfg_eff, modello, file_ev)
+                            ex, probl = esegui_opencode(oc, turni_di(caso), cfg_eff, modello, file_ev, budget_run=a.budget-spesa[etichetta])
                     except Blocco as e:
                         fermo = f"STOP: {etichetta} {caso['id']}: {e}"
                         print(fermo)
-                        break
+                        ex, probl = getattr(e, "esecuzione", Esecuzione(errore=str(e))), []
                     except subprocess.TimeoutExpired:
                         ex, probl = Esecuzione(errore="timeout 600 s"), []
+                    except Salta as e:
+                        ex, probl = Esecuzione(errore=str(e)), [str(e)]
                     spesa[etichetta] += ex.costo
                     valutazione = valuta(caso, config, ex, probl)
                     (cartella / f"{caso['id']}__r{r}.esito.json").write_text(
@@ -843,11 +1155,17 @@ def main() -> int:
                     falliti = [c["nome"] + (f" [{c['dettaglio']}]" if c["dettaglio"] else "") for c in valutazione["controlli"] if not c["ok"]]
                     print(f"    {'OK ' if valutazione['promosso'] else 'NO '} {ex.costo:.4f} $ · {len([c for c in ex.chiamate if e_buddalaw(c['nome_originale'])])} chiamate BuddaLaw"
                           + (f" · falliti: {'; '.join(falliti)}" if falliti else ""), flush=True)
+                    if fermo:
+                        break
                 if runs:
+                    validi = sum(x["classe"] != "esecuzione" for x in runs)
                     righe_esiti.append({
                         "runtime": etichetta, "config": config, "caso": caso["id"], "checklist": caso.get("checklist"),
                         "lampo": caso.get("lampo", False), "titolo": caso["titolo"], "runs": len(runs), "ok": riuscite,
-                        "promosso": riuscite >= soglia(len(runs)),
+                        "promosso": len(runs) == n_runs and validi == n_runs and riuscite >= soglia(n_runs),
+                        "validi": validi,
+                        "valutabile": validi == n_runs,
+                        "runs_previsti": n_runs,
                         "costo": sum(x["costo_usd"] for x in runs),
                         "chiamate_medie": sum(sum(c["buddalaw"] for c in x["chiamate"]) for x in runs) / len(runs),
                         "falliti": sorted({c["nome"] for x in runs for c in x["controlli"] if not c["ok"]}),
@@ -863,26 +1181,42 @@ def main() -> int:
     if a.prova:
         shutil.rmtree(base, ignore_errors=True)
         return 0
+    previsti = sum(p["runs"] for p in manifest["piano"])
+    eseguiti = sum(r["runs"] for r in righe_esiti)
+    validi = sum(r["validi"] for r in righe_esiti)
+    completo = previsti > 0 and eseguiti == previsti and validi == previsti
+    note.append(f"copertura: {eseguiti}/{previsti} esecuzioni, {validi} valide; {'completa' if completo else 'INCOMPLETA'}")
     riepilogo = componi_riepilogo(righe_esiti, spesa, note, fermo, stamp)
     (base / "esiti.json").write_text(json.dumps({"esiti": righe_esiti, "spesa": spesa, "note": note, "fermo": fermo},
                                                 ensure_ascii=False, indent=2), encoding="utf-8")
     (base / "riepilogo.txt").write_text(riepilogo, encoding="utf-8")
     print("\n" + riepilogo)
     print(f"Transcript ed esiti in {base}")
-    return 2 if fermo else (0 if all(r["promosso"] for r in righe_esiti) else 1)
+    return codice_uscita(righe_esiti, completo, fermo)
+
+
+def codice_uscita(righe, completo=True, fermo=""):
+    if fermo or not righe or not completo:
+        return 2
+    gravi = any("fedeltà link (URL identici ai tool_result)" in r.get("falliti", []) for r in righe)
+    return 0 if all(r["promosso"] for r in righe) and not gravi else 1
 
 
 def rivaluta(cartella: Path) -> int:
     """Rilegge i .jsonl salvati e riapplica i controlli attuali (nessuna chiamata ai modelli)."""
-    casi = {c["id"]: c for c in json.loads(CASI.read_text(encoding="utf-8"))["casi"]}
+    casi_file = cartella / "casi.json" if (cartella / "casi.json").exists() else CASI
+    casi = {c["id"]: c for c in json.loads(casi_file.read_text(encoding="utf-8"))["casi"]}
+    manifest = json.loads((cartella/"manifest.json").read_text()) if (cartella/"manifest.json").exists() else {}
     righe, spesa, esclusi = [], {}, []
     for sotto in sorted(p for p in cartella.iterdir() if p.is_dir()):
+        if len(sotto.name.split("__")) != 3:
+            continue
         rt, modello, config = sotto.name.split("__")
         etichetta = f"{rt}:{modello}"
         per_caso: dict[str, list] = {}
-        for f in sorted(sotto.glob("B*__r*.jsonl")):
+        for f in sorted(sotto.glob("*__r*.jsonl")):
             cid = f.name.split("__")[0]
-            if cid not in casi:
+            if cid not in casi or not re.fullmatch(re.escape(cid)+r"__r\d+\.jsonl", f.name):
                 continue
             caso = casi[cid]
             linee = f.read_text(encoding="utf-8").splitlines()
@@ -891,7 +1225,21 @@ def rivaluta(cartella: Path) -> int:
                     ex = parsifica_claude(linee)
                     probl = verifica_init_claude(ex.init, config) if ex.init else ["system/init assente"]
                 else:
-                    ex, probl = parsifica_opencode(linee), []
+                    ex = parsifica_opencode(linee)
+                    meta_path = f.with_suffix(".meta.json")
+                    meta = json.loads(meta_path.read_text()) if meta_path.exists() else {}
+                    probl = list(meta.get("problemi_isolamento") or [])
+                    if not meta:
+                        probl.append("prova di isolamento non conservata: esecuzione storica non verificabile")
+                    if not meta.get("completata", False):
+                        ex.errore = meta.get("errore") or "esecuzione non documentata come completa"
+                if rt == "claude":
+                    meta_path = f.with_suffix(".meta.json")
+                    if meta_path.exists():
+                        meta = json.loads(meta_path.read_text())
+                        probl.extend(p for p in meta.get("problemi_isolamento", []) if p not in probl)
+                        if not meta.get("completata", False):
+                            ex.errore = meta.get("errore") or "esecuzione non documentata come completa"
             except Blocco as e:
                 # esecuzione colpita da un blocco o guasto del server: non misura la skill
                 esclusi.append(f"{sotto.name}/{f.name}: {str(e)[:120]}")
@@ -903,19 +1251,30 @@ def rivaluta(cartella: Path) -> int:
         for cid, runs in per_caso.items():
             caso = casi[cid]
             ok = sum(x["promosso"] for x in runs)
+            expected = next((p["runs"] for p in manifest.get("piano", []) if p["runtime"]==rt
+                             and (p["modello"] or "predefinito").replace("/","_")==modello
+                             and p["config"]==config and p["caso"]==cid), len(runs))
+            validi = sum(x["classe"] != "esecuzione" for x in runs)
             righe.append({"runtime": etichetta, "config": config, "caso": cid, "checklist": caso.get("checklist"),
                           "lampo": caso.get("lampo", False), "titolo": caso["titolo"], "runs": len(runs), "ok": ok,
-                          "promosso": ok >= soglia(len(runs)), "costo": sum(x["costo_usd"] for x in runs),
+                          "runs_previsti":expected,
+                          "promosso": len(runs)==expected and validi==expected and ok >= soglia(expected),
+                          "validi":validi,"valutabile":validi==expected,
+                          "costo": sum(x["costo_usd"] for x in runs),
                           "chiamate_medie": sum(sum(c["buddalaw"] for c in x["chiamate"]) for x in runs) / len(runs),
                           "falliti": sorted({c["nome"] for x in runs for c in x["controlli"] if not c["ok"]}),
                           "morbidi_ko": sorted({c["nome"] for x in runs for c in x["morbidi"] if not c["ok"]})})
     note = ["rivalutazione dei transcript salvati, nessuna nuova chiamata"]
+    previsti = sum(p["runs"] for p in manifest.get("piano", []))
+    eseguiti = sum(r["runs"] for r in righe)
+    completo = bool(previsti) and eseguiti == previsti and all(r["valutabile"] for r in righe)
+    note.append(f"copertura: {eseguiti}/{previsti or 'non documentato'}; {'completa' if completo else 'INCOMPLETA'}")
     if esclusi:
         note.append(f"{len(esclusi)} esecuzioni escluse per blocco o guasto del server: " + "; ".join(e.split(":")[0] for e in esclusi))
     testo = componi_riepilogo(righe, spesa, note, "", cartella.name)
     (cartella / "riepilogo.txt").write_text(testo, encoding="utf-8")
     print(testo)
-    return 0 if all(r["promosso"] for r in righe) else 1
+    return codice_uscita(righe, completo)
 
 
 def componi_riepilogo(righe: list[dict], spesa: dict, note: list[str], fermo: str, stamp: str) -> str:
@@ -924,16 +1283,17 @@ def componi_riepilogo(righe: list[dict], spesa: dict, note: list[str], fermo: st
            "|---|---|---|---|---|---|---|---|---|---|---|"]
     for r in righe:
         out.append(f"| {r['runtime']} | {r['config']} | {r['caso']} {r['titolo']} | {'⚡' if r['lampo'] else ''} | {r['checklist'] or ''} | "
-                   f"{'promosso' if r['promosso'] else 'BOCCIATO'} | {r['ok']}/{r['runs']} | {r['chiamate_medie']:.1f} | {r['costo']:.3f} | "
+                   f"{'promosso' if r['promosso'] else 'BOCCIATO' if r.get('valutabile',True) else 'NON VALUTABILE'} | {r['ok']}/{r['runs']} | {r['chiamate_medie']:.1f} | {r['costo']:.3f} | "
                    f"{'; '.join(r['falliti'])} | {'; '.join(r['morbidi_ko'])} |")
     out.append("")
     for rt in sorted({r["runtime"] for r in righe}):
         for cfg in sorted({r["config"] for r in righe if r["runtime"] == rt}):
-            sel = [r for r in righe if r["runtime"] == rt and r["config"] == cfg]
+            sel = [r for r in righe if r["runtime"] == rt and r["config"] == cfg and r["caso"] != "B00"]
             lampo = [r for r in sel if r["lampo"]]
             out.append(f"- {rt} {cfg}: {sum(r['promosso'] for r in sel)}/{len(sel)} promossi"
                        + (f", ⚡ {sum(r['promosso'] for r in lampo)}/{len(lampo)}" if lampo else ""))
-    out.append("- spesa: " + ", ".join(f"{k} {v:.3f} $" for k, v in spesa.items()) + f" · totale {sum(spesa.values()):.3f} $")
+    out.append("- spesa nota registrata: " + ", ".join(f"{k} {v:.3f} $" for k, v in spesa.items()) + f" · totale {sum(spesa.values()):.3f} $")
+    out.append("- il punteggio comportamentale esclude B00 (isolamento); una prova interrotta può avere costi non ancora riportati dal provider.")
     for n in dict.fromkeys(note):
         out.append(f"- nota: {n}")
     if fermo:

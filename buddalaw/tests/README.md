@@ -20,7 +20,8 @@ tests/
 │   └── risposte_ridotte.json  ← esempi di risposte reali, accorciati e senza nomi
 ├── tools/
 │   ├── estrai_schema.py ← legge dal servizio l'elenco aggiornato degli strumenti
-│   └── chiama_mcp.py    ← fa una singola domanda a BuddaLaw e ne restituisce la risposta
+│   ├── chiama_mcp.py    ← fa una singola domanda a BuddaLaw e ne restituisce la risposta
+│   └── valida_schema.py ← controlli comuni sui parametri delle chiamate
 └── e2e/                 ← Livello B: conversazioni complete con un modello
 ```
 
@@ -95,23 +96,50 @@ questa esclusione prima di collegarsi: se trova un altro server abilitato,
 chiede di ripetere la preparazione e non avvia le conversazioni.
 I relativi controlli offline si eseguono con
 `python3 -m pytest buddalaw/tests/test_e2e_runner.py`.
+Gli attacchi al valutatore sono in `test_e2e_redteam.py`: verificano, tra l'altro,
+che una suite vuota non passi e che un esempio nella skill non valga come fonte.
 Sono escluse anche le deleghe interne di OpenCode e le domande interattive:
 ogni prova deve essere eseguita dal modello scelto e concludersi senza
 attendere una risposta nella finestra di OpenCode.
 
 ```bash
-python3 buddalaw/tests/e2e/run.py --runtime claude --config v9            # tutti i casi, 1 volta
-python3 buddalaw/tests/e2e/run.py --runtime claude --config v9 --solo-lampo --runs 3
+python3 buddalaw/tests/e2e/run.py --runtime claude --config v9 --runs 1 --runs-lampo 3
 python3 buddalaw/tests/e2e/run.py --runtime claude --config v8.4,nessuna --solo-lampo   # confronto
-python3 buddalaw/tests/e2e/run.py --runtime opencode --config v9          # Qwen e DeepSeek
+python3 buddalaw/tests/e2e/run.py --runtime opencode --config v9 --runs 1 --runs-lampo 3
 python3 buddalaw/tests/e2e/run.py --rivaluta buddalaw/tests/e2e/results/<data>   # ricontrolla senza spendere
 ```
 
-**Costi.** Con Haiku un caso costa circa 1 centesimo; con Qwen e DeepSeek ancora
-meno. Il programma si ferma da solo quando la spesa supera il tetto (`--budget`,
-5 $ per ogni modello). Le conversazioni registrate finiscono in
+`--runs-lampo 3` indica tre prove **complessive** per ogni caso critico: non va
+aggiunta una seconda tornata di tre. Per quesiti aggiuntivi si può passare un
+file con la stessa struttura di `casi.json` mediante `--casi-file percorso.json`.
+Gli ID sconosciuti e le selezioni vuote fermano il programma prima delle chiamate.
+
+Il modello Claude predefinito è `claude-haiku-4-5-20251001`, compatibile con la
+CLI verificata sul Mac. Si cambia con `--modello` o `BUDDALAW_CLAUDE_MODEL`;
+quest'ultima variabile vale anche per i controlli del livello C. Campioni ottenuti
+con modelli differenti restano separati.
+
+Ogni tornata conserva una copia della skill e dei casi, le impronte dei file e
+la prova di isolamento. Una rivalutazione senza queste prove è incompleta.
+Due collaudi non possono usare contemporaneamente la stessa sandbox.
+OpenCode dispone di 16 passi per quesito e legge soltanto la skill in prova e
+gli output MCP. Tutte le configurazioni usano gli stessi limiti.
+
+**Costi.** Il costo varia con il quesito, il modello e la cache: consultare il
+riepilogo effettivo. Il programma interrompe nuove esecuzioni quando la spesa
+nota raggiunge il tetto (`--budget`, 5 $ per ogni modello e invocazione).
+Per OpenCode lo stop usa i costi comunicati a fine passo: non è un limite di
+fatturazione garantito dal fornitore e le richieste già partite possono maturare
+altri costi. Dopo un'interruzione il costo noto è indicato come parziale.
+Le conversazioni registrate finiscono in
 `e2e/results/`, che non viene mai pubblicata su GitHub perché può contenere
 nomi rimasti in chiaro nelle sentenze.
+
+Una copertura vuota o incompleta restituisce codice 2; i fallimenti di
+comportamento restituiscono 1. Gli errori di esecuzione sono distinti dai
+fallimenti della skill. Un URL delle fonti alterato impedisce l'esito positivo
+anche se le altre due ripetizioni sono passate. Questi controlli verificano
+comportamento e provenienza delle fonti, senza certificare il ragionamento giuridico.
 
 ---
 
@@ -130,12 +158,14 @@ connettore BuddaLaw attivo e l'abbonamento valido. Non serve nessuna chiave da
 copiare: le domande passano da Claude Code (`claude -p`, modello Haiku), che usa
 il collegamento già fatto.
 
-**Quanto costa:** il 17 ottobre 2026 una prova completa ha fatto 13 domande a
-BuddaLaw e una lettura dell'elenco degli strumenti, per circa **0,07 $** in
-tutto. A fine prova il costo viene stampato. Ogni domanda ha un tetto di 0,20 $.
+**Quanto costa:** la ripresa del 17 ottobre con Haiku 4.5 ha effettuato 13
+chiamate nei test di comportamento per **0,4923 $**, esclusa la diagnostica dello
+schema. A fine prova il costo noto viene stampato. Ogni domanda ha un tetto di 0,20 $.
 
 **Se BuddaLaw rifiuta o limita le richieste** (errore 403, 429 o messaggi di
-blocco) la prova si ferma subito e non riprova da sola. La decisione di
+blocco, HTTP 500 o circuit breaker) la prova si ferma e non riprova da sola.
+Gli eventi sono controllati mentre arrivano; le richieste già inviate al
+servizio non possono essere annullate con certezza. La decisione di
 riprovare è di chi la lancia.
 
 ### Il controllo di obsolescenza (primo test)
@@ -149,6 +179,11 @@ BuddaLaw è cambiato: tool nuovi, spariti o con parametri cambiati.
   - tool NUOVO: search_dottrina
   - search_case_law: parametro nuovo 'sezione'
 ```
+
+Se invece il canale non espone alcuna definizione, il controllo è **non
+verificabile**: non è prova che il server abbia eliminato gli strumenti.
+In questo caso non rigenerare una fixture vuota. È il limite incontrato nella
+ripresa del 17 ottobre; gli altri 11 controlli live sono passati separatamente.
 
 Cosa fare in quel caso:
 
