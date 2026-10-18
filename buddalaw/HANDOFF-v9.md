@@ -1,8 +1,44 @@
 # BuddaLaw v9.0 — Passaggio di consegne
 
 **Data:** 2026-10-18
-**Branch:** `feat/buddalaw-v9` · **PR in bozza:** https://github.com/avvocati-e-mac/skill-legali/pull/1 (non unire a `main` senza l'ok del maintainer)
+**Branch di collaudo:** `feat/buddalaw-v9` · **Rilascio:** beta su `main` · **PR:** https://github.com/avvocati-e-mac/skill-legali/pull/1
 **Piano di riferimento:** il piano «BuddaLaw v9.0: skill allineata al server reale, avviso di obsolescenza, test a tre livelli» (riassunto qui sotto)
+
+
+## Chiusura del 18 ottobre dopo il ripristino Pro
+
+Questa sezione prevale su tutti gli stati intermedi più sotto. Il maintainer
+ha già autorizzato il passaggio a `main`; non serve richiedere un nuovo consenso.
+La versione rimane **beta**, con limiti espliciti nel README e nel rapporto.
+
+- **128/128 controlli offline**, archivio coerente con i sorgenti; 12 live saltati
+  nel comando ordinario. Contratto live verificato in precedenza e inventario
+  esteso ai 48 tool reali; calcolatori non collaudati.
+- C3: **62/62 prove previste tentate, 61 valide**. B04 r3 raggiunge il limite di
+  otto turni; non viene trasformata in un successo né ripetuta per cambiare esito.
+- Qualità: **16/24 casi valutabili**, critici **12/16 (75%)**. La soglia del 90%
+  non è raggiunta. B12/B23 omettono l'avviso; B01/B19 hanno URL non fedeli;
+  restano violazioni sui link normativi e sulla lingua. **Nessuna promozione stabile.**
+- B21 ×3, B22 ×3 e B25 ×1 sono concluse dopo le 15:00 in
+  `20261018-150152-757858`, **7/7 valide**: casi promossi rispettivamente 2/3,
+  3/3 e 1/1. I virgolettati B22 corrispondono ai campi testuali delle fonti.
+- Le sei registrazioni B21/B22 senza prova valida della vecchia tornata sono
+  conservate e sostituite solo nel conteggio delle prove previste: 68 registrazioni
+  grezze, 62 prove, 61 valide. Nessun tentativo comportamentale bocciato è ripetuto.
+- Confronto v8.4/nessuna: **34/34 registrate, 33 valide**; qualità **11/16** e
+  **5/15**. B22 senza skill è non valutabile per limite di turni. Non confrontare
+  queste percentuali come garanzie statistiche o con i vecchi campioni.
+- Solo **Claude Pro**, nessuna API/OpenRouter sostitutiva o attivazione di crediti
+  extra. Ripristino della quota confermato dagli eventi nativi. La scelta originale
+  di completare le prove prima di main è stata mantenuta, attendendo il ripristino.
+- Hash C3 invariato:
+  `1ce58fd6d54a617eb7bd176df5a9b304e4f89a012c2646a6d2f2f46897f0647f`.
+  Le copie installate e le cartelle di lavoro preesistenti non sono state aggiornate.
+
+Il collaudo richiesto è chiuso e documentato. Le eventuali correzioni successive
+ai difetti osservati richiedono una nuova candidata e una nuova valutazione,
+conservando questi risultati: non sono prove mancanti da ritentare per alzare
+il punteggio. Per gli esiti per caso vale `REPORT-test-v9.0.md`, in apertura.
 
 ## Vincolo del maintainer: solo abbonamento Claude
 

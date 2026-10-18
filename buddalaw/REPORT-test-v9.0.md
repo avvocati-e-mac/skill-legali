@@ -5,7 +5,90 @@
 **Confronto previsto:** v8.4 (tag `buddalaw-v8.4`) e nessuna skill
 **Metodo:** tre livelli. A = controlli sui file, senza rete. B = conversazioni vere con BuddaLaw. C = chiamate dirette al server.
 
-> **Stato della ripresa del 18 ottobre — solo abbonamento Claude.** 128 controlli offline superati; schema verificato sui 48 strumenti del server. Il maintainer ha escluso ulteriori chiamate OpenRouter: le relative tornate rimangono incomplete. L'avviso di aggiornamento è ancora omesso nei test Haiku; nessuna promozione stabile. Il test C3 è fermo sul limite Claude Pro, con ripristino indicato alle 15:00 del 18 ottobre; nessun cambio di provider. Le sezioni seguenti conservano i campioni storici; gli aggiornamenti in fondo prevalgono sullo stato iniziale. I valori USD della CLI Claude sono stime dei token, non addebiti attestati.
+> **Esito conclusivo del 18 ottobre — rilascio beta su main.** **128 controlli offline superati**. Le 62 esecuzioni previste della candidata C3 sono state tentate con Claude Pro: **61 valide**, una fermata dal limite di turni. Le sette prove bloccate dalla quota sono state completate dopo il ripristino delle 15:00, senza API o OpenRouter. **16/24 casi di qualità valutabili promossi; 12/16 critici**. Restano errori nei link e nell'avviso: **criteri per il rilascio stabile non superati**. Le sezioni storiche non sostituiscono questo risultato.
+
+
+## Risultati conclusivi della candidata C3
+
+| Controllo | Esito |
+|---|---|
+| Livello A, senza rete | **128/128**, archivio e sorgenti coerenti; 12 live saltati nel comando ordinario |
+| Contratto del server | 11 comportamenti verificati e T74 separato; catalogo aggiornato a **48 tool**; calcolatori non collaudati |
+| C3, copertura delle prove previste | **62/62 tentate, 61 valide**; B04 r3 raggiunge il limite di otto turni |
+| C3, qualità escluso B00 | **16/24 casi valutabili**; un caso non valutabile (B04) |
+| C3, casi critici escluso B00 | **12/16 valutabili (75%)**; soglia descrittiva del 90% non raggiunta |
+| Confronto v8.4 / nessuna skill | **11/16** e **5/15**; 34 prove, 33 valide; B22 senza skill raggiunge il limite di turni |
+| Avviso aggiornamento | B12 **0/3**, B23 **0/1**; nessun falso avviso in B13 **3/3**, B24 **1/1** |
+| URL non fedeli nella v9 | Due prove: B01 r1 e B19 r1; il criterio di assenza di link alterati non è superato |
+| Canale dei nuovi collaudi conclusivi | **Claude Pro**, crediti extra disabilitati negli eventi osservati; nessuna chiamata OpenRouter sostitutiva |
+| Decisione | **Beta**: test conclusi e limiti documentati; nessuna promozione stabile né dei modelli OpenRouter |
+
+La quota Pro si è ripristinata come indicato dalla CLI. La tornata
+`20261018-150152-757858` completa **7/7 prove valide** sullo stesso hash e sugli
+stessi quesiti: B21 **2/3**, B22 **3/3**, B25 **1/1**. Non ripete risposte già
+bocciate per comportamento: sostituisce soltanto le sei registrazioni senza
+prova valida per quota/arresto, e avvia B25 che mancava. Gli originali restano
+conservati. Si contano così **68 registrazioni grezze per 62 prove previste**,
+senza usare le sei interruzioni come risposte del modello o come tentativi utili
+per raggiungere la maggioranza.
+
+Il controllo aggiuntivo dei tre B22 conferma che i frammenti citati compaiono
+nei campi `testo`/`text` delle fonti lette, separati dalle sintesi automatiche.
+Questo verifica la letteralità del campione, non la qualità giuridica generale.
+B21 supera il caso con 2 risposte su 3: l'errore di formato della prima rimane
+nel rapporto e non viene riscritto.
+
+Il confronto usa i medesimi casi critici dove applicabili, ma la v9 ha tre prove
+per caso critico e controlli aggiuntivi su budget e link normativi; v8.4 e nessuna
+skill hanno una prova per caso. Le percentuali non sono una misura statistica
+comparabile di affidabilità generale. B00 è solo isolamento ed è escluso dai
+punteggi di qualità. Non vengono dichiarati esiti per Sonnet corrente, Codex o
+altri modelli sulla suite completa C3.
+
+Consumo riportato dalla CLI: **7,750 USD di token stimati per C3**, più circa
+**2,145 USD** per il confronto. Sono stime, non addebiti aggiuntivi attestati;
+le tornate usano l'abbonamento con consumo extra disabilitato. I costi storici
+OpenRouter rimangono distinti.
+
+### Esiti per caso
+
+Il numeratore indica le prove promosse, il denominatore le prove previste.
+«Non valutabile» e l'asterisco indicano un limite di esecuzione: non sono
+promozioni. «—» indica che il confronto non prevedeva quel caso.
+
+| Caso | v9 C3 | v8.4 | Nessuna skill |
+|---|---|---|---|
+| B00 | 3/3 ✓ | 1/1 | 1/1 |
+| B01 | 1/3 ✗ | 0/1 | 0/1 |
+| B02 | 3/3 ✓ | 1/1 | 0/1 |
+| B03 | 3/3 ✓ | 1/1 | 0/1 |
+| B04 | 1/3 — non valutabile | 1/1 | 0/1 |
+| B05 | 3/3 ✓ | 0/1 | 0/1 |
+| B06 | 3/3 ✓ | 1/1 | 1/1 |
+| B07 | 0/3 ✗ | 0/1 | 1/1 |
+| B08 | 1/1 ✓ | — | — |
+| B09 | 3/3 ✓ | 0/1 | 0/1 |
+| B10 | 1/1 ✓ | — | — |
+| B11 | 0/1 ✗ | — | — |
+| B12 | 0/3 ✗ | — | — |
+| B13 | 3/3 ✓ | 1/1 | 0/1 |
+| B14 | 3/3 ✓ | 1/1 | 1/1 |
+| B15 | 0/1 ✗ | — | — |
+| B16 | 3/3 ✓ | 1/1 | 0/1 |
+| B17 | 3/3 ✓ | 1/1 | 1/1 |
+| B18 | 3/3 ✓ | 1/1 | 0/1 |
+| B19 | 1/3 ✗ | 0/1 | 0/1 |
+| B20 | 0/1 ✗ | — | — |
+| B21 | 2/3 ✓ | 1/1 | 1/1 |
+| B22 | 3/3 ✓ | 1/1 | 0/1 * |
+| B23 | 0/1 ✗ | — | — |
+| B24 | 1/1 ✓ | — | — |
+| B25 | 1/1 ✓ | — | — |
+
+C3 resta congelata sull'hash
+`1ce58fd6d54a617eb7bd176df5a9b304e4f89a012c2646a6d2f2f46897f0647f`.
+La conclusione usa il valutatore corretto e conserva risposte, impronte e
+metadati originali. Le cronologie seguenti documentano le tappe precedenti.
 
 ## Ambiente e isolamento
 
@@ -519,3 +602,14 @@ B21 ×3, B22 ×3 e B25 ×1. Gli originali si conservano; nessuna risposta già
 bocciata per comportamento viene ripetuta per cercare un esito favorevole.
 La PR resta in bozza in attesa della scelta sulla tempistica; l'istruzione
 originale autorizza main al termine del collaudo.
+
+
+### Chiusura dopo il ripristino Pro
+
+Le prove mancanti sono concluse nella tornata `20261018-150152-757858`,
+7/7 valide, con la stessa candidata e lo stesso file dei quesiti congelati.
+L'arresto precedente è preservato; la nuova tornata usa un percorso di arresto
+separato. L'accesso verificato resta `claude.ai` / `firstParty` / `pro` e gli
+eventi d'uso riportano quota disponibile, `isUsingOverage=false` e crediti extra
+disabilitati. La sintesi conclusiva in apertura prevale sulle note intermedie
+«in attesa» di questa cronologia.
