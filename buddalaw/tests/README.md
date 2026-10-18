@@ -125,6 +125,18 @@ python3 buddalaw/tests/e2e/run.py --runtime opencode --config v9 --runs 1 --runs
 python3 buddalaw/tests/e2e/run.py --rivaluta buddalaw/tests/e2e/results/<data>   # ricontrolla senza spendere
 ```
 
+Per usare **soltanto l'abbonamento Claude**, senza OpenRouter o chiavi API:
+
+```bash
+python3 buddalaw/tests/e2e/run.py --runtime claude --modello claude-sonnet-4-6 --solo-abbonamento --config v9
+```
+
+`--solo-abbonamento` controlla l'accesso `claude.ai` prima delle conversazioni,
+rifiuta altri runtime, variabili API e modelli predefiniti non determinati.
+Nel manifest conserva solo il tipo di accesso e di abbonamento, senza email o
+identificativi dell'account. Se non riesce a verificarlo, non avvia il modello.
+I controlli offline di questa protezione sono in `test_subscription.py`.
+
 `--runs-lampo 3` indica tre prove **complessive** per ogni caso critico: non va
 aggiunta una seconda tornata di tre. Per quesiti aggiuntivi si può passare un
 file con la stessa struttura di `casi.json` mediante `--casi-file percorso.json`.
@@ -157,6 +169,12 @@ non valutabile e la tornata si ferma, senza altre ricerche automatiche.
 **Costi.** Il costo varia con il quesito, il modello e la cache: consultare il
 riepilogo effettivo. Il programma interrompe nuove esecuzioni quando la spesa
 nota raggiunge il tetto (`--budget`, 5 $ per ogni modello e invocazione).
+Con Claude Pro/Max i valori USD della CLI rappresentano una stima dei token,
+non una prova di addebito aggiuntivo: il consumo è incluso nell'abbonamento
+entro i suoi limiti, come spiega la [documentazione Anthropic](https://code.claude.com/docs/en/costs).
+Il programma non abilita crediti aggiuntivi e non modifica le impostazioni di
+fatturazione. La modalità `--solo-abbonamento` indica questa distinzione anche
+nel riepilogo.
 Per OpenCode lo stop usa i costi comunicati a fine passo: non è un limite di
 fatturazione garantito dal fornitore e le richieste già partite possono maturare
 altri costi. Dopo un'interruzione il costo noto è indicato come parziale.

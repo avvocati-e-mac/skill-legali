@@ -116,6 +116,31 @@ class LimiteSpesa(Exception):
     """Interrompe lo step successivo quando la spesa nota raggiunge il tetto."""
 
 
+def verifica_abbonamento_claude(runtimes: list[str], modello: str | None) -> dict:
+    """Modalità esplicita che esclude API e OpenRouter prima di avviare i modelli."""
+    if runtimes != ["claude"]:
+        raise ValueError("--solo-abbonamento consente soltanto --runtime claude")
+    if not modello or not (modello.startswith("claude-") or modello in ("haiku", "sonnet", "opus")):
+        raise ValueError("--solo-abbonamento richiede un modello Claude esplicito, non 'default'")
+    api_env = ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN", "ANTHROPIC_BASE_URL",
+               "CLAUDE_CODE_OAUTH_TOKEN", "CLAUDE_CODE_USE_BEDROCK",
+               "CLAUDE_CODE_USE_VERTEX", "CLAUDE_CODE_USE_FOUNDRY")
+    if any(os.environ.get(k) for k in api_env):
+        raise ValueError("--solo-abbonamento: presente una variabile API o di un altro provider; nessun modello avviato")
+    try:
+        out = subprocess.run(["claude", "auth", "status", "--json"],
+                             capture_output=True, text=True, check=True, timeout=20)
+        auth = json.loads(out.stdout)
+    except (OSError, subprocess.SubprocessError, ValueError):
+        raise ValueError("Impossibile verificare l'abbonamento Claude; nessun modello avviato") from None
+    if not (isinstance(auth, dict) and auth.get("loggedIn") is True
+            and auth.get("authMethod") == "claude.ai" and auth.get("apiProvider") == "firstParty"
+            and auth.get("subscriptionType") in ("pro", "max", "team", "enterprise")):
+        raise ValueError("Abbonamento Claude non verificato; nessun modello avviato")
+    # Non salvare email, identificativi personali o altri dettagli dell'account.
+    return {k: auth[k] for k in ("authMethod", "apiProvider", "subscriptionType")}
+
+
 def verifica_stop_condiviso():
     path = os.environ.get("BUDDALAW_STOP_FILE")
     if path and Path(path).exists():
@@ -1083,6 +1108,8 @@ def _main() -> int:
     ap.add_argument("--runs-lampo", type=int, default=None, help="ripetizioni complessive dei soli casi critici")
     ap.add_argument("--budget", type=float, default=5.0, help="tetto di spesa in $ per modello (default 5)")
     ap.add_argument("--budget-run", type=float, default=0.60, help="--max-budget-usd per singola esecuzione Claude")
+    ap.add_argument("--solo-abbonamento", action="store_true",
+                    help="solo Claude con accesso claude.ai verificato; esclude API e OpenRouter")
     ap.add_argument("--prova", action="store_true", help="prepara e stampa i comandi senza eseguirli")
     ap.add_argument("--rivaluta", type=Path, default=None,
                     help="rivaluta i transcript già salvati in results/<data> senza nuove chiamate")
@@ -1120,6 +1147,13 @@ def _main() -> int:
         else:
             ap.error(f"runtime sconosciuto: {rt}")
 
+    autenticazione = None
+    if a.solo_abbonamento:
+        try:
+            autenticazione = verifica_abbonamento_claude(runtimes, obiettivi[0][1])
+        except ValueError as e:
+            ap.error(str(e))
+
     stamp = datetime.now().strftime("%Y%m%d-%H%M%S-%f")
     base = RISULTATI / stamp
     base.mkdir(parents=True, exist_ok=True)
@@ -1136,9 +1170,13 @@ def _main() -> int:
                 "budget_per_modello":a.budget,"piano":[]}
     manifest["sandbox"] = str(SANDBOX)
     manifest["stop_condiviso"] = bool(os.environ.get("BUDDALAW_STOP_FILE"))
+    if autenticazione:
+        manifest["autenticazione_abbonamento"] = autenticazione
     righe_esiti: list[dict] = []
     spesa: dict[str, float] = {}
     note: list[str] = []
+    if autenticazione:
+        note.append("Accesso con abbonamento Claude verificato. I valori USD sono stime dei token della CLI, non addebiti attestati; OpenRouter escluso.")
     fermo = ""
     oc = trova_opencode()
     for rt, modello in obiettivi:
