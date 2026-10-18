@@ -185,8 +185,12 @@ BuddaLaw è cambiato: tool nuovi, spariti o con parametri cambiati.
 
 Se invece il canale non espone alcuna definizione, il controllo è **non
 verificabile**: non è prova che il server abbia eliminato gli strumenti.
-In questo caso non rigenerare una fixture vuota. È il limite incontrato nella
-ripresa del 17 ottobre; gli altri 11 controlli live sono passati separatamente.
+In questo caso non rigenerare una fixture vuota. È successo nella ripresa del
+17 ottobre: il problema del canale è stato risolto attivando esplicitamente
+ToolSearch per il proxy locale, come indicato nella
+[documentazione Claude Code](https://code.claude.com/docs/en/mcp#configure-tool-search).
+Il nuovo confronto ha restituito «schema invariato»; gli altri 11 controlli
+live sono passati separatamente.
 
 Cosa fare in quel caso:
 

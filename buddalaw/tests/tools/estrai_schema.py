@@ -130,7 +130,11 @@ def lancia(timeout: int = 240) -> tuple[list[dict], set[str]]:
         f'Esegui una sola volta il tool ToolSearch con query esattamente "{query}" '
         f"e max_results {len(ATTESI) + 4}. Non chiamare altri tool. Poi rispondi solo: FATTO."
     )
-    env = dict(os.environ, ANTHROPIC_BASE_URL=f"http://127.0.0.1:{srv.server_address[1]}")
+    # Claude disabilita la ricerca differita con un proxy non first-party,
+    # salvo richiesta esplicita. Senza, ToolSearch non espone le definizioni.
+    # https://code.claude.com/docs/en/mcp#configure-tool-search
+    env = dict(os.environ, ANTHROPIC_BASE_URL=f"http://127.0.0.1:{srv.server_address[1]}",
+               ENABLE_TOOL_SEARCH="true")
     cmd = [
         "claude", "-p", prompt,
         "--output-format", "stream-json", "--verbose",
