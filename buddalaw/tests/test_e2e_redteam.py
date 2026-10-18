@@ -76,6 +76,31 @@ def test_link_con_parentesi_finale_mancante_non_e_cliccabile(runner):
     assert all(ok for n, ok, _ in runner.controlli_generali(ex) if 'link' in n)
 
 
+def test_url_inventato_su_host_diverso_e_senza_markdown_non_sfugge(runner):
+    ex = run_ok(runner)
+    ex.testi = ['Corte Costituzionale: https://www.buddalaw.it/sentenza/ECLI:IT:COST:2024:1']
+    assert not runner.controlli_generali(ex)[0][1]
+
+
+def test_collegamenti_di_supporto_non_diventano_fonti_giuridiche(runner):
+    ex = run_ok(runner)
+    ex.testi = ['Aggiorna da https://github.com/avvocati-e-mac/skill-legali oppure apri https://buddalaw.it/']
+    assert all(ok for n, ok, _ in runner.controlli_generali(ex) if 'link' in n)
+    ex.testi = ['[Cass. n. 1/2024](https://github.com/avvocati-e-mac/skill-legali)']
+    assert not runner.controlli_generali(ex)[0][1]
+
+
+def test_maiuscole_dell_organo_non_cambiano_il_contenuto_ma_url_resta_esatto(runner):
+    ex = run_ok(runner)
+    ex.testi = ['La Corte Costituzionale ha deciso.']
+    assert all(ok for _, ok, _ in runner.controlli_specifici({'deve_contenere':['Corte cost']},ex))
+    assert not all(ok for _, ok, _ in runner.controlli_specifici({'non_deve_contenere':['Corte cost']},ex))
+    url = 'https://platform.buddalaw.com/full-documents/civile/ABC'
+    ex.fonti = [source(runner,'get_judgement',{'public_url':url})]
+    ex.testi = ['[Cass. n. 1/2024]('+url.lower()+')']
+    assert not runner.controlli_generali(ex)[0][1]
+
+
 def test_virgolette_brevi_non_catturano_prosa_intermedia(runner):
     ex = run_ok(runner)
     ex.testi = ['Scrivo "titolo" e poi un lungo paragrafo di analisi che non è una citazione e termina con la parola "fine".']

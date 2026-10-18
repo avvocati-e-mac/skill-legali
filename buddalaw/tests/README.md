@@ -117,6 +117,11 @@ Il controllo dei link include domini scritti male e citazioni su altri siti:
 un refuso nel dominio non può sottrarsi al confronto con la fonte. Verifica
 anche che il collegamento sia completo e cliccabile. Una rivalutazione applica
 questi controlli alle risposte salvate senza nuove chiamate al modello.
+Sono controllati tutti gli URL, compresi quelli nudi su domini non previsti;
+sono esclusi solo il repository della skill e la pagina iniziale di BuddaLaw,
+quando non sono presentati come fonti giuridiche. I controlli sul contenuto
+ignorano le maiuscole (per esempio «Corte Costituzionale»); gli URL si confrontano
+sempre carattere per carattere.
 Le risposte MCP lunghe possono essere salvate dal runtime in un file. La
 lettura di quel file vale come fonte soltanto se il percorso coincide
 esattamente con quello restituito da BuddaLaw e la lettura è riuscita.

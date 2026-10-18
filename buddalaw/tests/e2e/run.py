@@ -93,7 +93,6 @@ ESTREMI_RE = re.compile(r"\bn\.\s?(\d{1,5})/((?:19|20)\d{2})\b")
 VIRGOLETTATO_RE = re.compile(r'«([^»]+)»|“([^”]+)”|"([^"\n]+)"')
 LINK_MD_RE = re.compile(r"\[([^\]]+)\]\(<?(https?://[^)\s>]+)>?\)")
 URL_RE = re.compile(r"https?://[^\s<>()\[\]\"'`]+")
-DOMINI_LINK = ("platform.buddalaw.com", "normattiva.it")
 # blocco del server: solo su risultati di errore o brevi, per non scambiare un
 # «art. 403» in una sentenza per un codice HTTP
 BLOCCO_RE = re.compile(
@@ -919,8 +918,15 @@ def url_nel_testo(testo: str, tutti: bool = False) -> list[str]:
     for u in URL_RE.findall(testo):
         u = u.rstrip(".,;:!?*_>")
         parsed = urllib.parse.urlsplit(u)
-        if (tutti or any(d in parsed.netloc for d in DOMINI_LINK)
-                or "/full-documents/" in parsed.path or u in citazioni):
+        # Controllare solo domini noti lasciava passare URL inventati su altri
+        # host. Sono esclusi soltanto i collegamenti di supporto indicati dalla
+        # skill, se non sono usati come citazioni giuridiche.
+        repo = (parsed.hostname == "github.com" and
+                (parsed.path == "/avvocati-e-mac/skill-legali" or
+                 parsed.path.startswith("/avvocati-e-mac/skill-legali/")))
+        homepage = (parsed.hostname in ("buddalaw.it", "www.buddalaw.it")
+                    and parsed.path in ("", "/") and not parsed.query and not parsed.fragment)
+        if tutti or not (repo or homepage) or u in citazioni:
             out.append(u)
     return out
 
@@ -983,9 +989,9 @@ def controlli_specifici(caso: dict, ex: Esecuzione) -> list[tuple[str, bool, str
             esiti.append(("virgolettato richiesto presente", bool(citazioni), ""))
         esiti.append(("virgolettati letterali dai tool_result", not falsi, " | ".join(f[:60] for f in falsi[:2])))
     for rx in caso.get("deve_contenere") or []:
-        esiti.append((f"testo contiene /{rx}/", bool(re.search(rx, testo)), ""))
+        esiti.append((f"testo contiene /{rx}/", bool(re.search(rx, testo, re.I)), ""))
     for rx in caso.get("non_deve_contenere") or []:
-        m = re.search(rx, testo)
+        m = re.search(rx, testo, re.I)
         esiti.append((f"testo non contiene /{rx}/", not m, m.group(0)[:120] if m else ""))
     if "avviso" in caso:
         n = len(AVVISO_RE.findall(testo))
