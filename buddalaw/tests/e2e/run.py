@@ -269,6 +269,7 @@ def parsifica_claude(righe: list[str], rileva_blocchi: bool = True) -> Esecuzion
     turn = 1
     tool_ids = {}
     tools_scoperti = set()
+    accesso_provato = False
     for riga in righe:
         try:
             ev = json.loads(riga)
@@ -292,6 +293,13 @@ def parsifica_claude(righe: list[str], rileva_blocchi: bool = True) -> Esecuzion
                     t = testo_risultato(b.get("content"))
                     ex.risultati.append(t)
                     call = tool_ids.get(b.get("tool_use_id"), {})
+                    if (call.get("tool") == "check_access" and e_buddalaw(call.get("nome_originale", ""))
+                            and not b.get("is_error")):
+                        try:
+                            accesso = json.loads(t)
+                            accesso_provato |= isinstance(accesso, dict) and accesso.get("has_access") is True
+                        except ValueError:
+                            pass
                     if (call.get("tool") == "ToolSearch" and not b.get("is_error")
                             and isinstance(b.get("content"), list)):
                         tools_scoperti.update(c["tool_name"] for c in b["content"]
@@ -315,13 +323,15 @@ def parsifica_claude(righe: list[str], rileva_blocchi: bool = True) -> Esecuzion
         ex.testo_finale = ex.testi[-1]
     if ex.init and tools_scoperti:
         ex.init["tools_scoperti"] = sorted(tools_scoperti)
+    if ex.init and accesso_provato:
+        ex.init["buddalaw_accesso_provato"] = True
     return ex
 
 
 def verifica_init_claude(init: dict, config: str) -> list[str]:
     problemi = []
     tools = list(init.get("tools") or []) + list(init.get("tools_scoperti") or [])
-    if not any(t.startswith("mcp__claude_ai_BuddaLaw__") for t in tools):
+    if not any(t.startswith("mcp__claude_ai_BuddaLaw__") for t in tools) and not init.get("buddalaw_accesso_provato"):
         stato = [s for s in init.get("mcp_servers") or [] if "BuddaLaw" in str(s.get("name"))]
         # «pending»: il connettore si sta ancora collegando (osservato in B00 v8.4, 2026-10-17);
         # non è un difetto di isolamento, e se poi i tool servono lo dicono gli altri controlli
@@ -1365,8 +1375,8 @@ def rivaluta(cartella: Path) -> int:
                     meta_path = f.with_suffix(".meta.json")
                     if meta_path.exists():
                         meta = json.loads(meta_path.read_text())
-                        scoperta_budda = any(t.startswith("mcp__claude_ai_BuddaLaw__")
-                                             for t in ex.init.get("tools_scoperti", []))
+                        scoperta_budda = ex.init.get("buddalaw_accesso_provato") or any(
+                            t.startswith("mcp__claude_ai_BuddaLaw__") for t in ex.init.get("tools_scoperti", []))
                         probl.extend(p for p in meta.get("problemi_isolamento", []) if p not in probl
                                      and not (scoperta_budda and p.startswith("tool BuddaLaw assenti in claude -p")))
                         if not meta.get("completata", False):

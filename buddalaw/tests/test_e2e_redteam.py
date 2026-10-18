@@ -146,6 +146,21 @@ def test_tool_estraneo_scoperto_dopo_init_viola_isolamento(runner):
     assert any('estranei' in p for p in runner.verifica_init_claude(init,'v9'))
 
 
+@pytest.mark.parametrize('response,expected', [({'has_access':True},True),
+                                            ({'has_access':False},False),
+                                            ('has_access true',False)])
+def test_risposta_reale_check_access_prova_disponibilita(runner,response,expected):
+    events = [
+        {'type':'system','subtype':'init','tools':['Read','ToolSearch'],'skills':[]},
+        {'type':'assistant','message':{'content':[{'type':'tool_use',
+          'name':'mcp__claude_ai_BuddaLaw__check_access','id':'a','input':{}}]}},
+        {'type':'user','message':{'content':[{'type':'tool_result','tool_use_id':'a',
+          'content':json.dumps(response)}]}},
+    ]
+    ex = runner.parsifica_claude([json.dumps(e) for e in events])
+    assert (not runner.verifica_init_claude(ex.init,'v9')) == expected
+
+
 def test_rivalutazione_corregge_solo_il_falso_errore_del_catalogo_differito(runner,tmp_path):
     folder = tmp_path/'results'/'claude__haiku__v9'
     folder.mkdir(parents=True)

@@ -97,6 +97,10 @@ Se BuddaLaw appare soltanto dopo l'avvio, i riferimenti strutturati restituiti
 da `ToolSearch` provano la presenza dei suoi strumenti. Una dichiarazione in
 prosa non basta; anche gli strumenti estranei scoperti in seguito fanno fallire
 l'isolamento. Le prove originali restano conservate nella traccia.
+Anche una risposta nativa di `check_access` con `has_access=true` prova il
+collegamento, quando l'elenco iniziale omette BuddaLaw. La sola chiamata o una
+frase del modello non lo provano. Questa correzione non elimina eventuali altri
+errori di isolamento conservati nei metadati originali.
 
 La preparazione usa una configurazione separata nella sandbox tramite
 `XDG_CONFIG_HOME`: le skill globali con lo stesso nome non possono sostituire
