@@ -268,6 +268,7 @@ def parsifica_claude(righe: list[str], rileva_blocchi: bool = True) -> Esecuzion
     ex = Esecuzione()
     turn = 1
     tool_ids = {}
+    tools_scoperti = set()
     for riga in righe:
         try:
             ev = json.loads(riga)
@@ -291,6 +292,11 @@ def parsifica_claude(righe: list[str], rileva_blocchi: bool = True) -> Esecuzion
                     t = testo_risultato(b.get("content"))
                     ex.risultati.append(t)
                     call = tool_ids.get(b.get("tool_use_id"), {})
+                    if (call.get("tool") == "ToolSearch" and not b.get("is_error")
+                            and isinstance(b.get("content"), list)):
+                        tools_scoperti.update(c["tool_name"] for c in b["content"]
+                                              if isinstance(c, dict) and c.get("type") == "tool_reference"
+                                              and isinstance(c.get("tool_name"), str))
                     ex.fonti.append({"tool": call.get("tool", "sconosciuto"), "output": t,
                                      "argomenti": call.get("argomenti", {}), "is_error": bool(b.get("is_error"))})
                     if rileva_blocchi and e_buddalaw(call.get("nome_originale", "")):
@@ -307,12 +313,14 @@ def parsifica_claude(righe: list[str], rileva_blocchi: bool = True) -> Esecuzion
             turn += 1
     if not ex.testo_finale and ex.testi:
         ex.testo_finale = ex.testi[-1]
+    if ex.init and tools_scoperti:
+        ex.init["tools_scoperti"] = sorted(tools_scoperti)
     return ex
 
 
 def verifica_init_claude(init: dict, config: str) -> list[str]:
     problemi = []
-    tools = init.get("tools") or []
+    tools = list(init.get("tools") or []) + list(init.get("tools_scoperti") or [])
     if not any(t.startswith("mcp__claude_ai_BuddaLaw__") for t in tools):
         stato = [s for s in init.get("mcp_servers") or [] if "BuddaLaw" in str(s.get("name"))]
         # «pending»: il connettore si sta ancora collegando (osservato in B00 v8.4, 2026-10-17);
@@ -894,11 +902,15 @@ def corpus_testi(ex: Esecuzione) -> str:
     return "\n".join(parti)
 
 
-def url_nel_testo(testo: str) -> list[str]:
+def url_nel_testo(testo: str, tutti: bool = False) -> list[str]:
     out = []
+    citazioni = {u for label, u in LINK_MD_RE.findall(testo)
+                 if re.search(r"(?i)\b(?:Cass\.?|CGT|Corte|Trib\.?|Tribunale|App\.?|TAR|CGUE|Garante|Agenzia|art\.)", label)}
     for u in URL_RE.findall(testo):
         u = u.rstrip(".,;:!?*_>")
-        if any(d in urllib.parse.urlsplit(u).netloc for d in DOMINI_LINK):
+        parsed = urllib.parse.urlsplit(u)
+        if (tutti or any(d in parsed.netloc for d in DOMINI_LINK)
+                or "/full-documents/" in parsed.path or u in citazioni):
             out.append(u)
     return out
 
@@ -974,13 +986,20 @@ def controlli_specifici(caso: dict, ex: Esecuzione) -> list[tuple[str, bool, str
 def controlli_generali(ex: Esecuzione) -> list[tuple[str, bool, str]]:
     esiti = []
     corpus = corpus_risultati(ex)
-    noti = set(url_nel_testo(corpus))
-    inventati = [u for u in url_nel_testo(ex.testo_visibile)
+    noti = set(url_nel_testo(corpus, tutti=True))
+    url_risposta = url_nel_testo(ex.testo_visibile)
+    inventati = [u for u in url_risposta
                  if u not in noti]
     esiti.append(("fedeltà link (URL identici ai tool_result)", not inventati, " ".join(inventati[:3])))
     generici = [t for t, u in LINK_MD_RE.findall(ex.testo_visibile)
-                if any(d in urllib.parse.urlsplit(u).netloc for d in DOMINI_LINK) and not re.search(r"\d", t)]
+                if u in url_risposta and not re.search(r"\d", t)]
     esiti.append(("link sugli estremi (non su «qui», «link»…)", not generici, " | ".join(generici[:3])))
+    md_spans = [m.span() for m in LINK_MD_RE.finditer(ex.testo_visibile)]
+    fonti_url = set(url_risposta)
+    non_cliccabili = [m.group(0) for m in URL_RE.finditer(ex.testo_visibile)
+                     if m.group(0).rstrip(".,;:!?*_>") in fonti_url
+                     and not any(a <= m.start() < b for a, b in md_spans)]
+    esiti.append(("citazioni con link Markdown completo", not non_cliccabili, " ".join(non_cliccabili[:3])))
     esiti.append(("nessun box finale di avvertenze", not box_finale(ex.testo_finale), box_finale(ex.testo_finale)[:120]))
     # gli URL non contano (il «.it» di normattiva.it era letto come la parola inglese «it»)
     # e una risposta di meno di 3 parole riconoscibili (es. un solo link) non si giudica
@@ -1346,7 +1365,10 @@ def rivaluta(cartella: Path) -> int:
                     meta_path = f.with_suffix(".meta.json")
                     if meta_path.exists():
                         meta = json.loads(meta_path.read_text())
-                        probl.extend(p for p in meta.get("problemi_isolamento", []) if p not in probl)
+                        scoperta_budda = any(t.startswith("mcp__claude_ai_BuddaLaw__")
+                                             for t in ex.init.get("tools_scoperti", []))
+                        probl.extend(p for p in meta.get("problemi_isolamento", []) if p not in probl
+                                     and not (scoperta_budda and p.startswith("tool BuddaLaw assenti in claude -p")))
                         if not meta.get("completata", False):
                             ex.errore = meta.get("errore") or "esecuzione non documentata come completa"
             except Blocco as e:
@@ -1374,6 +1396,8 @@ def rivaluta(cartella: Path) -> int:
                           "falliti": sorted({c["nome"] for x in runs for c in x["controlli"] if not c["ok"]}),
                           "morbidi_ko": sorted({c["nome"] for x in runs for c in x["morbidi"] if not c["ok"]})})
     note = ["rivalutazione dei transcript salvati, nessuna nuova chiamata"]
+    if manifest.get("autenticazione_abbonamento"):
+        note.append("Accesso con abbonamento Claude verificato. I valori USD sono stime dei token della CLI, non addebiti attestati; OpenRouter escluso.")
     previsti = sum(p["runs"] for p in manifest.get("piano", []))
     eseguiti = sum(r["runs"] for r in righe)
     completo = bool(previsti) and eseguiti == previsti and all(r["valutabile"] for r in righe)

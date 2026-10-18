@@ -93,6 +93,10 @@ confonde con una copia vecchia.
 In Claude la ricerca dei tool differiti è attivata esplicitamente; anche gli
 MCP MindNode, Perplexity e Cloudflare sono negati se presenti nella configurazione
 personale. La prova iniziale controlla che i loro strumenti non siano visibili.
+Se BuddaLaw appare soltanto dopo l'avvio, i riferimenti strutturati restituiti
+da `ToolSearch` provano la presenza dei suoi strumenti. Una dichiarazione in
+prosa non basta; anche gli strumenti estranei scoperti in seguito fanno fallire
+l'isolamento. Le prove originali restano conservate nella traccia.
 
 La preparazione usa una configurazione separata nella sandbox tramite
 `XDG_CONFIG_HOME`: le skill globali con lo stesso nome non possono sostituire
@@ -105,6 +109,10 @@ I relativi controlli offline si eseguono con
 `python3 -m pytest buddalaw/tests/test_e2e_runner.py`.
 Gli attacchi al valutatore sono in `test_e2e_redteam.py`: verificano, tra l'altro,
 che una suite vuota non passi e che un esempio nella skill non valga come fonte.
+Il controllo dei link include domini scritti male e citazioni su altri siti:
+un refuso nel dominio non può sottrarsi al confronto con la fonte. Verifica
+anche che il collegamento sia completo e cliccabile. Una rivalutazione applica
+questi controlli alle risposte salvate senza nuove chiamate al modello.
 Le risposte MCP lunghe possono essere salvate dal runtime in un file. La
 lettura di quel file vale come fonte soltanto se il percorso coincide
 esattamente con quello restituito da BuddaLaw e la lettura è riuscita.

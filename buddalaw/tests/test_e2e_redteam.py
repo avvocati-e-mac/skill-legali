@@ -47,6 +47,35 @@ def test_url_non_puo_passare_come_prefisso_di_un_altro(runner):
     assert not runner.controlli_generali(ex)[0][1]
 
 
+def test_refuso_nel_dominio_non_elude_il_controllo_dei_link(runner):
+    original = 'https://platform.buddalaw.com/full-documents/tributario/{ESEMPIO}'
+    ex = run_ok(runner)
+    ex.fonti = [source(runner, 'search_case_law', {'public_url': original})]
+    ex.testi = ['[CGT II grado, sent. n. 1/2024]('+original.replace('buddalaw', 'buddaslaw')+')']
+    assert not runner.controlli_generali(ex)[0][1]
+
+
+def test_citazione_su_dominio_estraneo_deve_comunque_avere_fonte(runner):
+    ex = run_ok(runner)
+    url = 'https://esempio.invalid/pronuncia/123'
+    ex.testi = ['[Cass. n. 123/2024]('+url+')']
+    assert not runner.controlli_generali(ex)[0][1]
+    ex.fonti = [source(runner, 'get_judgement', {'public_url': url})]
+    assert runner.controlli_generali(ex)[0][1]
+
+
+def test_link_con_parentesi_finale_mancante_non_e_cliccabile(runner):
+    ex = run_ok(runner)
+    url = 'https://platform.buddalaw.com/full-documents/civile/ESEMPIO'
+    ex.fonti = [source(runner, 'get_judgement', {'public_url': url})]
+    ex.testi = ['[Cass. n. 123/2024]('+url]
+    checks = {n: ok for n, ok, _ in runner.controlli_generali(ex)}
+    assert checks['fedeltà link (URL identici ai tool_result)']
+    assert not checks['citazioni con link Markdown completo']
+    ex.testi = ['[Cass. n. 123/2024]('+url+')']
+    assert all(ok for n, ok, _ in runner.controlli_generali(ex) if 'link' in n)
+
+
 def test_virgolette_brevi_non_catturano_prosa_intermedia(runner):
     ex = run_ok(runner)
     ex.testi = ['Scrivo "titolo" e poi un lungo paragrafo di analisi che non è una citazione e termina con la parola "fine".']
@@ -91,6 +120,56 @@ def test_schema_errato_non_passa_i_controlli_generali(runner):
     ex.chiamate = [{'tool':'search_case_law','nome_originale':'buddalaw_search_case_law',
                     'argomenti':{'query':'tema','search_category':'civile','anno':'2025'}}]
     assert not runner.valuta({'id':'X'},'v9',ex,[])['promosso']
+
+
+def test_catalogo_differito_prova_disponibilita_anche_dopo_init(runner):
+    name = 'mcp__claude_ai_BuddaLaw__check_access'
+    events = [
+        {'type':'system','subtype':'init','tools':['Read','ToolSearch'],'skills':[]},
+        {'type':'assistant','message':{'content':[{'type':'tool_use','name':'ToolSearch','id':'search','input':{}}]}},
+        {'type':'user','message':{'content':[{'type':'tool_result','tool_use_id':'search',
+          'content':[{'type':'tool_reference','tool_name':name}]}]}},
+    ]
+    ex = runner.parsifica_claude([json.dumps(e) for e in events])
+    assert ex.init['tools'] == ['Read','ToolSearch']
+    assert ex.init['tools_scoperti'] == [name]
+    assert not runner.verifica_init_claude(ex.init,'v9')
+    # Una dichiarazione in prosa non vale come prova del catalogo.
+    events[-1]['message']['content'][0]['content'] = [{'type':'text','text':name}]
+    ex = runner.parsifica_claude([json.dumps(e) for e in events])
+    assert runner.verifica_init_claude(ex.init,'v9')
+
+
+def test_tool_estraneo_scoperto_dopo_init_viola_isolamento(runner):
+    init = {'tools':['mcp__claude_ai_BuddaLaw__check_access'],'skills':[],
+            'tools_scoperti':['mcp__perplexity__ricerca']}
+    assert any('estranei' in p for p in runner.verifica_init_claude(init,'v9'))
+
+
+def test_rivalutazione_corregge_solo_il_falso_errore_del_catalogo_differito(runner,tmp_path):
+    folder = tmp_path/'results'/'claude__haiku__v9'
+    folder.mkdir(parents=True)
+    trace = folder/'B00__r1.jsonl'
+    events = [
+        {'type':'system','subtype':'init','tools':['Read','ToolSearch'],'skills':[]},
+        {'type':'assistant','message':{'content':[{'type':'tool_use','name':'ToolSearch','id':'s','input':{}}]}},
+        {'type':'user','message':{'content':[{'type':'tool_result','tool_use_id':'s','content':[
+            {'type':'tool_reference','tool_name':'mcp__claude_ai_BuddaLaw__check_access'}]}]}},
+        {'type':'assistant','message':{'content':[{'type':'text','text':'Skill BuddaLaw 9.0.'}]}},
+        {'type':'result','subtype':'success','result':'Skill BuddaLaw 9.0.'},
+    ]
+    trace.write_text(''.join(json.dumps(e)+'\n' for e in events))
+    meta = {'completata':True,'problemi_isolamento':[
+        'tool BuddaLaw assenti in claude -p (connettore claude.ai: non elencato)']}
+    trace.with_suffix('.meta.json').write_text(json.dumps(meta))
+    runner.rivaluta(folder.parent)
+    assert json.loads(trace.with_suffix('.esito.json').read_text())['promosso']
+    meta['problemi_isolamento'].append('tool MCP estranei visibili: altro')
+    trace.with_suffix('.meta.json').write_text(json.dumps(meta))
+    runner.rivaluta(folder.parent)
+    audit = json.loads(trace.with_suffix('.esito.json').read_text())
+    assert not audit['promosso']
+    assert any('altro' in c['dettaglio'] for c in audit['controlli'] if not c['ok'])
 
 
 def test_limite_ricerche_si_controlla_anche_senza_regola_del_caso(runner):
