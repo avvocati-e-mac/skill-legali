@@ -68,4 +68,3 @@ def errori_chiamata(tool: str, argomenti: dict) -> list[str]:
                 if tipo_el and not all(_TIPI[tipo_el](x) for x in valore):
                     errori.append(f"{tool}.{nome}: elementi non di tipo {tipo_el}")
     return errori
-
