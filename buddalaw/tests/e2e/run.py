@@ -346,6 +346,7 @@ def trova_opencode() -> str | None:
 
 def env_opencode() -> dict:
     return dict(os.environ,
+                XDG_CONFIG_HOME=str(SANDBOX / ".isolated-config"),
                 OPENCODE_DB=str(SANDBOX / ".opencode-test.db"),
                 OPENCODE_DISABLE_EXTERNAL_SKILLS="1",
                 OPENCODE_DISABLE_CLAUDE_CODE="1",
@@ -410,7 +411,7 @@ def verifica_skill_opencode(oc: str, config: str) -> list[str]:
         perm = cfg.get("agent",{}).get("build",{}).get("permission",{}).get("skill",{})
         if perm != {"*":"deny"}:
             problemi.append("config nessuna senza divieto di caricamento delle skill")
-    elif not luoghi.get("buddalaw", "").startswith(str(SANDBOX)):
+    elif Path(luoghi.get("buddalaw", "")).resolve() != (SANDBOX / ".opencode/skills/buddalaw/SKILL.md").resolve():
         problemi.append(f"skill buddalaw non caricata dalla sandbox: {luoghi.get('buddalaw')}")
     return problemi
 
@@ -1066,6 +1067,7 @@ def _main() -> int:
     snapshot = prepara_skill("v9", base / "snapshot-skill")
     SKILL_DIR = snapshot
     manifest = {"skill_sha256":hashlib.sha256((snapshot/"SKILL.md").read_bytes()).hexdigest(),
+                "runner_sha256":hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
                 "file_skill_sha256":{str(p.relative_to(snapshot)):hashlib.sha256(p.read_bytes()).hexdigest()
                                      for p in sorted(snapshot.rglob("*")) if p.is_file()},
                 "casi_sha256":hashlib.sha256(a.casi_file.read_bytes()).hexdigest(),

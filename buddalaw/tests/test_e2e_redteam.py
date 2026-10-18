@@ -171,6 +171,20 @@ def test_testo_che_inizia_con_omissis_resta_citabile(runner):
     assert quote in runner.corpus_testi(ex)
 
 
+def test_configurazione_opencode_separata_senza_spostare_credenziali(runner,monkeypatch):
+    monkeypatch.setenv('XDG_DATA_HOME','/dati-originali')
+    env=runner.env_opencode()
+    assert env['XDG_CONFIG_HOME']==str(runner.SANDBOX/'.isolated-config')
+    assert env['XDG_DATA_HOME']=='/dati-originali'
+
+
+def test_prefisso_di_percorso_non_e_la_sandbox(runner,monkeypatch):
+    location=str(runner.SANDBOX)+'-altra/.opencode/skills/buddalaw/SKILL.md'
+    monkeypatch.setattr(runner,'_stdout_su_file',lambda *a,**k: json.dumps([
+        {'name':'buddalaw','location':location}]))
+    assert runner.verifica_skill_opencode('opencode','v9')
+
+
 def test_timeout_claude_non_scompare_nella_rivalutazione(runner,tmp_path,monkeypatch):
     folder=tmp_path/'results'/'claude__haiku__v9';folder.mkdir(parents=True)
     trace=folder/'B00__r1.jsonl'

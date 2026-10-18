@@ -84,14 +84,17 @@ Si prova la skill in tre modi:
 | Dove | Modello | Prima volta |
 |---|---|---|
 | Claude Code | Haiku (economico) o il modello predefinito | niente: usa il collegamento a BuddaLaw di claude.ai |
-| opencode + OpenRouter | Qwen 3.8 Flash (Flash-Next), DeepSeek V4.1 Flash | `opencode auth login` (scegli OpenRouter), poi `bash buddalaw/tests/e2e/prepara_opencode.sh` e, se BuddaLaw non è già collegato, nella cartella `e2e/.opencode-sandbox`, `OPENCODE_DB="$PWD/.opencode-test.db" opencode mcp auth buddalaw` |
+| opencode + OpenRouter | Qwen 3.8 Flash (Flash-Next), DeepSeek V4.1 Flash | `opencode auth login` (scegli OpenRouter), poi `bash buddalaw/tests/e2e/prepara_opencode.sh` e, se BuddaLaw non è già collegato, usare il comando di autorizzazione stampato dallo script |
 
 La skill installata sul computer **non** viene usata: il programma lavora in una
 cartella separata con la versione del repository, così il risultato non si
 confonde con una copia vecchia.
 
-La preparazione di OpenCode disabilita nella sola cartella di prova tutti gli
-altri server MCP ereditati dalle impostazioni globali. Il runner ricontrolla
+La preparazione usa una configurazione separata nella sandbox tramite
+`XDG_CONFIG_HOME`: le skill globali con lo stesso nome non possono sostituire
+quella in prova. I dati di autenticazione restano nella loro posizione e non
+vengono letti né copiati dal programma di test. Gli altri server MCP sono
+esclusi dalla cartella di prova. Il runner ricontrolla
 questa esclusione prima di collegarsi: se trova un altro server abilitato,
 chiede di ripetere la preparazione e non avvia le conversazioni.
 I relativi controlli offline si eseguono con

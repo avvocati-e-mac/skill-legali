@@ -24,6 +24,7 @@ set -euo pipefail
 QUI="$(cd "$(dirname "$0")" && pwd)"
 SANDBOX="$QUI/.opencode-sandbox"
 mkdir -p "$SANDBOX/.opencode/skills"
+export XDG_CONFIG_HOME="$SANDBOX/.isolated-config"
 cd "$SANDBOX"
 [ -d .git ] || git init -q .
 cat > opencode.json <<'JSON'
@@ -96,6 +97,6 @@ path.write_text(json.dumps(config, ensure_ascii=False, indent=2) + "\n")
 print("Server MCP estranei esclusi dalla sandbox.")
 PY
 echo "Ora esegui una volta:"
-echo "  cd \"$SANDBOX\" && OPENCODE_DB=\"$SANDBOX/.opencode-test.db\" $OC mcp auth buddalaw"
+echo "  cd \"$SANDBOX\" && XDG_CONFIG_HOME=\"$SANDBOX/.isolated-config\" OPENCODE_DB=\"$SANDBOX/.opencode-test.db\" $OC mcp auth buddalaw"
 echo "e controlla con:"
-echo "  cd \"$SANDBOX\" && OPENCODE_DB=\"$SANDBOX/.opencode-test.db\" OPENCODE_DISABLE_EXTERNAL_SKILLS=1 $OC mcp list"
+echo "  cd \"$SANDBOX\" && XDG_CONFIG_HOME=\"$SANDBOX/.isolated-config\" OPENCODE_DB=\"$SANDBOX/.opencode-test.db\" OPENCODE_DISABLE_EXTERNAL_SKILLS=1 $OC mcp list"
