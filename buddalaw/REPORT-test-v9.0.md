@@ -177,3 +177,105 @@ cartella Downloads richiesta dal maintainer. Nessuna copia installata della
 skill è stata aggiornata. Rimangono da completare la suite generale, le tre
 ripetizioni critiche e il confronto v8.4/nessuna; il vecchio canale di livello C
 ha inoltre rifiutato l'ID Haiku configurato, senza effettuare chiamate BuddaLaw.
+
+## Revisione critica e nuova ripresa del 17–18 ottobre
+
+**Decisione attuale: beta utilizzabile, collaudo per il rilascio stabile ancora
+incompleto.** Il piano rivisto è in
+[`PIANO-collaudo-v9-red-team.md`](PIANO-collaudo-v9-red-team.md).
+Le istruzioni della skill e l'archivio installabile non sono stati modificati.
+L'impronta di `SKILL.md` resta
+`094c811dee02e6f0468b07aed6b48136aa8c70ae34a1b45c624234343810ffd1`.
+
+| Controllo | Risultato verificato | Limite |
+|---|---|---|
+| Offline, struttura e attacchi al programma di prova | **89/89** | Non misura la qualità giuridica delle risposte |
+| C, comportamenti del servizio | **11/11**, 13 chiamate con Haiku 4.5 | Tornata separata dal controllo di schema |
+| C, schema T74 | **1/1**, schema invariato | Superato dopo la correzione del canale proxy; fixture non riscritta |
+| OpenCode, controllo breve B00 v9/nessuna | 4 esecuzioni valide; versioni isolate correttamente | DeepSeek senza skill risponde in inglese e fallisce il controllo della lingua |
+| Nuova suite OpenCode v9 | **13/124 esecuzioni registrate, 11 valide** | Interrotta durante Qwen; DeepSeek non ancora raggiunto in questa tornata |
+
+La CLI Claude installata rifiutava l'ID Haiku 5.5. È stato usato il modello
+esplicito `claude-haiku-4-5-20251001`, senza aggiornare software o configurazioni
+globali. I suoi risultati restano separati dal vecchio campione dichiarato
+Haiku 5.5. Il proxy disattivava automaticamente ToolSearch: l'attivazione
+esplicita, prevista dalla
+[documentazione Claude Code](https://code.claude.com/docs/en/mcp#configure-tool-search),
+ha reso nuovamente verificabile lo schema. Un'estrazione vuota ora produce
+un errore del canale, senza suggerire che siano spariti tutti i tool.
+
+### Esiti della suite interrotta
+
+| Caso Qwen v9 | Esecuzioni | Esito |
+|---|---:|---|
+| B00, isolamento | 3/3 riuscite | Escluso dal punteggio comportamentale |
+| B01, tributario | 2/3 riuscite | Un fallimento reale: avvertenze in fondo anziché accanto alla voce interessata |
+| B02, Cassazione nota | 3/3 riuscite | Promosso nel campione osservato |
+| B03, Corte costituzionale | 2 riuscite, 1 non valutabile | Il log della sessione non valutabile conferma il collegamento MCP fallito |
+| B04, Corte di giustizia UE | 1 interrotta | Non valutabile; costo parziale noto conservato |
+
+Per B03 r2 il modello dichiarava assenti i tool. Il log ufficiale OpenCode
+della stessa sessione riporta `server unavailable`, `key=buddalaw`,
+`status=failed`: **non è un errore della skill o del modello**. La diagnosi è
+arrivata dopo altre due esecuzioni; la tornata è stata quindi fermata e
+rivalutata senza nuove chiamate. Il controllo iniziale `mcp list` era riuscito,
+ma non provava il collegamento delle conversazioni successive.
+
+Il nuovo programma controlla anche gli errori MCP all'avvio mentre arrivano
+e ferma la tornata, prima che prosegua col modello. La prova offline usa un
+processo che segnala il guasto e tenterebbe poi un'altra azione: viene fermato
+prima di quell'azione. Il controllo aggiornato non è stato presentato come
+superato da una nuova suite live: la ricerca non è stata ritentata dopo lo stop.
+I risultati non valutabili sono esclusi dal denominatore comportamentale,
+ma impediscono comunque la promozione complessiva per copertura incompleta.
+
+### Correzioni giustificate dal red teaming
+
+- Casi vuoti, ID sconosciuti, prove tutte saltate o ripetizioni incomplete
+  non possono produrre un esito positivo.
+- Solo risultati di ricerca identificati come tali possono provare un link
+  o una citazione; gli esempi della skill e la ricerca dei tool sono esclusi.
+- I link sono confrontati per uguaglianza. Anche un solo URL alterato impedisce
+  la promozione, senza essere nascosto dalle altre due ripetizioni riuscite.
+- Le chiamate sono verificate contro lo schema e i limiti v9 sono controllati
+  per quesito; la distinzione tra integrali richiesti e ottenuti resta necessaria.
+- Corrette le virgolette che catturavano prosa intermedia e le citazioni con
+  data completa: una fonte «n. … del 31/07/2024» prova il relativo numero/anno.
+- Corretto il profilo con inventario ridotto: modifica soltanto il JSON e può
+  finalmente arrivare al modello. Gli avvisi B12/B23 restano da provare dal vivo.
+- La configurazione OpenCode ora è separata da quella globale. Prima una copia
+  omonima installata poteva prevalere; il controllo ha bloccato quel tentativo
+  prima del modello. Nessuna copia installata è stata modificata.
+- Modello ausiliario per i titoli impostato sul modello richiesto: il log
+  aveva mostrato chiamate ereditate a un altro modello. Non riguardavano la
+  risposta principale, ma rendono incompleti i soli costi degli step.
+- Conservate copie dei casi e della skill, impronte dei file, modello effettivo,
+  isolamento, costi noti, interruzioni e versione del valutatore usato nella
+  rivalutazione. Una sola tornata può usare la stessa sandbox.
+
+La rivalutazione offline del quesito sanitario conferma i fallimenti già
+descritti: DeepSeek supera il tetto e usa link normativi senza Normattiva;
+Qwen supera il tetto, sbaglia quattro input e altera un URL. Un primo sospetto
+aggiuntivo sugli estremi era invece un falso positivo sulle date complete ed
+è stato corretto. Le risposte originali non sono state riscritte.
+
+**Costi noti separati:** test C di comportamento **0,4923 $**; controllo breve
+OpenCode **0,01102 $**; suite interrotta **0,07019 $**, inclusi costi parziali
+noti. Sono esclusi accesso, diagnostica, estrazioni dello schema e possibili
+chiamate ausiliarie: non è una fatturazione complessiva. Una diagnostica OpenCode
+che non ha intercettato gli schemi è stata scartata; non è conteggiata come
+prova gratuita o riuscita. Nessuna percentuale generale di affidabilità è
+ricavabile da questa tornata incompleta.
+
+Tracce e prove locali: `tests/e2e/results/redteam-20261017/`,
+`tests/e2e/results/20261018-074007-371138/` e
+`tests/e2e/results/20261018-074418-850333/`, escluse da git.
+Le nuove risposte e gli audit sono salvati anche in
+`Downloads/Test_BuddaLaw_v9_RedTeam_2026-10-18/`; i quattro originali del caso
+del chirurgo restano nella loro cartella del 17 ottobre.
+
+**Ancora aperti:** completamento delle suite sui due modelli OpenCode dopo
+aver verificato il collegamento nell'avvio effettivo; tre prove complessive
+per i casi critici, soprattutto B12/B13/B23/B24; confronto v8.4/nessuna nello
+stesso ambiente; nuova coorte Haiku esplicitamente identificata. Le soglie
+del piano storico non sono state dimostrate. PR sempre in bozza.
