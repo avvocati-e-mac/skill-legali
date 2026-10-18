@@ -5,7 +5,7 @@
 **Confronto previsto:** v8.4 (tag `buddalaw-v8.4`) e nessuna skill
 **Metodo:** tre livelli. A = controlli sui file, senza rete. B = conversazioni vere con BuddaLaw. C = chiamate dirette al server.
 
-> **Stato della ripresa del 18 ottobre — solo abbonamento Claude.** 114 controlli offline superati; schema verificato sui 48 strumenti del server. Il maintainer ha escluso ulteriori chiamate OpenRouter: le relative tornate rimangono incomplete. L'avviso di aggiornamento è ancora omesso nei test Haiku; nessuna promozione stabile. I test della candidata C3 sono in corso su Claude Pro. Le sezioni seguenti conservano i campioni storici; gli aggiornamenti in fondo prevalgono sullo stato iniziale. I valori USD della CLI Claude sono stime dei token, non addebiti attestati.
+> **Stato della ripresa del 18 ottobre — solo abbonamento Claude.** 128 controlli offline superati; schema verificato sui 48 strumenti del server. Il maintainer ha escluso ulteriori chiamate OpenRouter: le relative tornate rimangono incomplete. L'avviso di aggiornamento è ancora omesso nei test Haiku; nessuna promozione stabile. Il test C3 è fermo sul limite Claude Pro, con ripristino indicato alle 15:00 del 18 ottobre; nessun cambio di provider. Le sezioni seguenti conservano i campioni storici; gli aggiornamenti in fondo prevalgono sullo stato iniziale. I valori USD della CLI Claude sono stime dei token, non addebiti attestati.
 
 ## Ambiente e isolamento
 
@@ -86,7 +86,7 @@ Formato: esecuzioni promosse / esecuzioni valide. «—» = nessuna esecuzione v
 | Livello C verde o fermo dichiarato | verde poco prima del guasto (S3, 12/12); da rifare dopo le correzioni |
 | ≥ 90% dei casi ⚡ con Haiku (2 su 3) | sì sui dati validi (94%); le 3 ripetizioni complete non sono state possibili |
 | ≥ 80% con Qwen e DeepSeek | non verificato sull'intera suite; accesso OpenCode risolto e confronto mirato completato, con violazioni rilevate in entrambi i modelli |
-| Zero link inventati | sì: 114 esecuzioni su 114 |
+| Zero link inventati | Il vecchio valutatore segnalava zero su 114; dato storico non ricertificato dal controllo attuale |
 | Costo dichiarato | sì, ≈ 0,94 $ |
 | v9 ≥ v8.4, migliore sui divari G1–G8 | non verificato (guasto); pari sui 3 casi validi |
 | Avviso presente quando serve, assente quando non serve | assente quando non serve: sì (B13, B24). Presente quando serve: **no** (B12, B23) → corretto, da riprovare |
@@ -407,8 +407,8 @@ collaudo per istruzione del maintainer.
 | C2 / Haiku 4.5 | `20261018-122434-829842` | B12: 3/3 valide, **0/3** avvisi |
 | C2 / Sonnet 4.6 | `20261018-123248-635574` | B12: prima prova valida senza avviso; seconda fermata manualmente, esclusa. 1/8 esecuzioni valide previste: nessuna promozione della tornata |
 | C3 / Haiku 4.5 | `20261018-123513-403307` | B12: 3/3 valide, **0/3** avvisi |
-| C3 / Haiku 4.5 | `20261018-123724-623063` | Altri 25 casi: 59 esecuzioni previste, in corso |
-| v8.4 / nessuna, Haiku 4.5 | `20261018-123806-605934` | 34 esecuzioni di confronto previste, in corso |
+| C3 / Haiku 4.5 | `20261018-123724-623063` | **58/59 registrate, 51 valide** dopo rivalutazione offline; interrotta sulla quota Pro, B25 non avviata |
+| v8.4 / nessuna, Haiku 4.5 | `20261018-123806-605934` | **34/34 eseguite, 33 valide**. B22 senza skill non valutabile per limite di turni; esiti di qualità finali: **11/16** v8.4, **5/15** senza skill |
 
 Due avvii Sonnet nella sandbox senza accesso di rete non hanno prodotto
 risposte o chiamate BuddaLaw (`20261018-122852-523710`,
@@ -425,3 +425,97 @@ Sorgenti e archivio `.skill` coincidono. La riscrittura **non risolve B12**
 nel campione Haiku; la documentazione pubblica indica esplicitamente questo
 limite e mantiene lo stato beta. Il controllo T74 per il maintainer resta
 separato dall'avviso comportamentale dell'assistente.
+
+
+### Correzioni del valutatore osservate durante C3
+
+La skill e i quesiti restano congelati; cambia soltanto il controllo delle
+tracce, nei commit `a89ce62` e `a0e2859`. Totale offline: **123/123**.
+Le risposte originali non vengono modificate e non si ripetono le chiamate
+per correggere un punteggio del programma.
+
+- **B01 r1 v9:** URL con dominio `buddaslaw.com` e parentesi Markdown finale
+  mancante. Il vecchio controllo esaminava solo domini già noti: il caso
+  falliva il vincolo specifico, ma sfuggiva alla categoria grave «fedeltà
+  link». Ora il confronto comprende anche URL di documenti su domini diversi
+  e citazioni riconoscibili su altri siti; verifica anche il Markdown completo.
+- **B01 r3 v9:** l'elenco iniziale omette BuddaLaw, ma la chiamata nativa
+  `check_access` restituisce `has_access=true`. È prova di collegamento,
+  indipendente da una dichiarazione del modello. Il falso errore di isolamento
+  viene rimosso in rivalutazione; restano gli errori reali: quattro chiamate
+  `get_judgement` con `dominio="tribunario"` e superamento del tetto di letture.
+- Anche i riferimenti strutturati di ToolSearch possono provare la scoperta
+  dei tool dopo l'avvio. Le citazioni in prosa non bastano. La correzione
+  conserva tutti gli altri errori di isolamento originali.
+- **B04 r3 v9:** `error_max_turns`, prova non valutabile per il limite di otto
+  turni del canale Claude. Non va trasformata in un successo comportamentale.
+  Le tornate avviate vengono concluse senza nuove ripetizioni di questo caso.
+
+Nei primi **68 eventi d'uso C3** controllati, la CLI riporta sempre
+`isUsingOverage=false` e `overageDisabledReason=org_level_disabled`.
+Le risposte riportano il modello effettivo `claude-haiku-4-5-20251001`.
+Questa è prova osservata del consumo nell'abbonamento per quel campione,
+non un conteggio di addebiti OpenRouter.
+
+
+### Controllo degli URL su ogni dominio e del testo delle citazioni
+
+I commit `7012164` e `b4455fe` portano il totale offline a **126/126**.
+Il controllo delle citazioni non dipende più da un elenco di siti ammessi:
+confronta ogni URL di riferimento con le risposte dei tool, compresi indirizzi
+nudi e domini sconosciuti. Per esempio, B03 senza skill costruisce due indirizzi
+`www.buddalaw.it/sentenza/...` che non compaiono nei risultati: ora vengono
+rilevati, senza attribuire il problema al nome dell'organo scritto con maiuscole.
+
+Le pagine iniziali offerte come navigazione (Cassazione, Italgiure, BuddaLaw)
+e il repository della skill non sono collegamenti a decisioni. Se l'etichetta
+cita invece un organo o gli estremi, anche una pagina iniziale deve essere
+controllata come citazione. Questo evita falsi errori sui suggerimenti di
+navigazione, mantenendo il confronto esatto dei link alle fonti.
+
+I controlli testuali ignorano le maiuscole: «Corte Costituzionale» soddisfa
+«Corte cost». Il confronto degli URL rimane esatto e non cambia le maiuscole
+nei percorsi. La rivalutazione finale del confronto, senza nuove chiamate,
+conferma **11/16** casi di qualità v8.4 e **5/15** senza skill, con una prova
+non valutabile (B22 senza skill, limite di turni). B00 supera entrambe le
+configurazioni ma resta fuori dal punteggio di qualità.
+
+Le vecchie dichiarazioni di assenza di URL inventati sono risultati del
+valutatore storico: non sono una certificazione secondo il controllo attuale.
+Le tre cartelle citate per le prime 114 esecuzioni non sono presenti tra le
+tracce locali disponibili di questa ripresa. I campioni correnti vengono
+valutati separatamente, senza attribuire loro i vecchi esiti.
+
+
+### Arresto sulla quota Claude Pro del 18 ottobre
+
+La CLI riporta «You've hit your session limit · resets 3pm (Europe/Rome)»
+alle 13:23 locali. Nessuna chiamata API o OpenRouter sostitutiva. La quota
+non è un guasto BuddaLaw né un errore di ricerca della skill.
+
+| C3, campioni sullo stesso hash | Stato prima del ripristino |
+|---|---|
+| B12 separato | 3/3 eseguite e valide, 0/3 promosse |
+| Altri 25 casi | 58/59 registrate, 51 valide |
+| Totale v9 C3 | **61/62 registrate, 54 valide** |
+| Qualità, senza B00 | **13/21** casi valutabili promossi; B04/B21/B22 non valutabili; B25 non avviato |
+| Link non fedeli nella v9 | B01 e B19: criterio di rilascio stabile non superato |
+
+B21 r1–r3 e B22 r1–r2 sono risposte sintetiche della CLI per quota esaurita,
+con costo e token zero, senza chiamate BuddaLaw. B22 r3 viene fermata prima
+della risposta; B25 non viene avviata. Le risposte non contano nel denominatore
+comportamentale. La dicitura generica di guasto nel vecchio arresto condiviso
+non descrive un guasto del servizio in questo caso.
+
+La vecchia versione del programma passava al caso successivo dopo il rifiuto
+della quota. Il commit `3a52716` riconosce l'evento nativo
+`rate_limit_event.status=rejected` e pubblica subito lo stop. I due nuovi test
+verificano che nessuna azione successiva parta e che il solo rifiuto dei crediti
+extra, con quota ordinaria ancora disponibile, non provochi un falso arresto.
+Totale offline: **128/128**, con 12 live saltati nel comando ordinario.
+
+Per terminare le prove bloccate dalla quota restano sette esecuzioni previste:
+B21 ×3, B22 ×3 e B25 ×1. Gli originali si conservano; nessuna risposta già
+bocciata per comportamento viene ripetuta per cercare un esito favorevole.
+La PR resta in bozza in attesa della scelta sulla tempistica; l'istruzione
+originale autorizza main al termine del collaudo.

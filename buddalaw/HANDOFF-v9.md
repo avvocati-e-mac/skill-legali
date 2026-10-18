@@ -18,7 +18,7 @@ al termine del collaudo; non serve richiederlo.
   `--runtime claude --solo-abbonamento --modello <modello Claude esplicito>`:
   se non verifica l'abbonamento o trova variabili API, non avvia il modello.
   Il manifest conserva solo questi tre dati, senza identificativi personali.
-- Controlli offline aggiornati: **114/114**, più 12 live saltati.
+- Controlli offline aggiornati: **128/128**, più 12 live saltati.
 - I valori USD dei test Claude sono stime dei token riportate dalla CLI,
   **non addebiti attestati**. Non sommarli ai costi OpenRouter come se fossero
   fatturazione aggiuntiva. Riferimento: [Anthropic](https://code.claude.com/docs/en/costs).
@@ -38,10 +38,40 @@ al termine del collaudo; non serve richiederlo.
   B12 Haiku concluso in `20261018-123513-403307`: **0/3**, avviso ancora
   omesso. Hash C3:
   `1ce58fd6d54a617eb7bd176df5a9b304e4f89a012c2646a6d2f2f46897f0647f`.
-- Completamento in corso, solo Claude Pro: altri 25 casi v9, 59 esecuzioni
-  previste (`20261018-123724-623063`); confronto v8.4/nessuna, 34 esecuzioni
-  (`20261018-123806-605934`). B13 v9 passa 3/3. Arresto condiviso separato in
+- Tornata fermata sulla quota Claude Pro del 18 ottobre (ripristino alle **15:00 Europe/Rome**): altri 25 casi v9, 59 esecuzioni
+  previste (`20261018-123724-623063`): **58 registrate, 51 valide** dopo la
+  rivalutazione offline; confronto v8.4/nessuna concluso: 34/34 esecuzioni, 33 valide
+  (`20261018-123806-605934`). In rivalutazione finale: v8.4 **11/16** casi
+  di qualità; nessuna skill **5/15**, con B22 non valutabile per limite di turni. B13 v9 passa 3/3. Arresto condiviso separato in
   `results/20261018-c3-claude-pro/STOP`, da conservare se creato.
+- Valutatore corretto nei commit `a89ce62` e `a0e2859`: riconosce domini
+  alterati e Markdown incompleto, e la presenza dei tool anche dopo l'avvio
+  tramite riferimenti nativi ToolSearch o `check_access` riuscito. Rimuove
+  soltanto il vecchio falso errore «tool BuddaLaw assenti», conservando gli
+  altri errori di isolamento. Rivalutare le tracce senza nuove chiamate.
+- In C3 B01 r1 il modello scrive `buddaslaw.com` e omette la parentesi finale
+  del link; r3 ripete quattro volte il dominio errato `tribunario`. Sono
+  difetti della risposta, da conservare. Il falso errore di isolamento r3
+  viene corretto dalla prova nativa di accesso; la risposta resta bocciata.
+- B04 r3 termina con `error_max_turns`: limite del canale, non prova valida.
+  Non ripetere le risposte comportamentali fallite. Per completare le prove
+  bloccate dalla quota restano B21 ×3, B22 ×3 e B25 ×1; usare una nuova tornata
+  solo dopo il ripristino, preservando gli originali e il vecchio STOP.
+- Nei primi 68 eventi d'uso C3 controllati, `isUsingOverage=false` e
+  `overageDisabledReason=org_level_disabled`: nessun consumo extra attivo.
+- Quota: tre tentativi B21 e due B22 sono stati rifiutati prima del modello,
+  senza chiamate BuddaLaw né consumo extra. B22 r3 è fermata manualmente,
+  B25 non è avviata. La vecchia tornata non riconosceva la quota nativa prima
+  del caso successivo; `3a52716` corregge lo stop, con due prove offline.
+  Un evento `rate_limit_event.status=rejected` ferma ora subito la tornata;
+  `overageStatus=rejected` con quota ancora disponibile non la ferma.
+- Bilancio C3 parziale (incluso il B12 separato): **61/62 registrate, 54 valide**.
+  Qualità: **13/21** casi valutabili; B04/B21/B22 non valutabili, B25 mancante.
+  Due casi v9 contengono URL non fedeli (B01 e B19): nessuna promozione stabile.
+- Decisione di tempistica richiesta al maintainer: attendere il ripristino delle
+  15:00 per completare, oppure portare subito la beta su main con test incompleti
+  dichiarati. Nessuna risposta ricevuta al momento di questo aggiornamento;
+  l'istruzione originale resta completare i test prima del passaggio a main.
 - Protezione dell'abbonamento pubblicata nel commit `ac05b18`.
   Le copie installate non sono state aggiornate.
 
@@ -172,7 +202,8 @@ senza nuove modifiche o indizi di cambiamento del servizio.
 | README e CLAUDE.md/AGENTS.md allineati | `a0c39ee`, `aa6e9ca` |
 
 Prima tornata (dati storici): livello A 52/52; Haiku v9 24/26 casi, ⚡ 17/18,
-zero link inventati su 114 esecuzioni, ≈ 0,94 $. Non sommare questi dati alle
+il vecchio valutatore segnalava zero link inventati su 114 esecuzioni
+(dato non ricertificato dal controllo attuale), ≈ 0,94 $ di token stimati. Non sommare questi dati alle
 coorti successive. Dettagli in `REPORT-test-v9.0.md`.
 
 ## Aggiornamento dopo la ripresa del 17 ottobre
