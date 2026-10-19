@@ -1,4 +1,4 @@
-# BuddaLaw v9.1 — Checklist dei casi di prova
+# BuddaLaw v9.2 — Checklist dei casi di prova
 
 Ogni caso ha un **ID stabile** (T01, T02…): i test automatici lo citano, quindi
 non va rinumerato. Un caso superato si aggiorna nella stessa riga; un caso nuovo

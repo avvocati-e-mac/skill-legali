@@ -261,6 +261,11 @@ def comando_claude(prompt: str | None, modello: str | None, budget_run: float, s
             i = cmd.index("--allowedTools") + 1
             cmd[i] += f",Bash(python3 {helper} *)"
             cmd[i] += f',Bash(python3 "{helper}" *)'
+        link_helper = spf.parent / "buddalaw" / "scripts" / "verifica_link.py"
+        if link_helper.is_file():
+            i = cmd.index("--allowedTools") + 1
+            cmd[i] += f",Bash(python3 {link_helper} *)"
+            cmd[i] += f',Bash(python3 "{link_helper}" *)'
     return cmd
 
 
@@ -1046,6 +1051,42 @@ def controlli_generali(ex: Esecuzione) -> list[tuple[str, bool, str]]:
     return esiti
 
 
+def controlli_associazione_fonti(ex: Esecuzione) -> list[tuple[str, bool, str]]:
+    """Un URL nel corpo della sentenza non è il collegamento di quella fonte."""
+    def visita(obj):
+        if isinstance(obj, str):
+            try:
+                yield from visita(json.loads(obj))
+            except ValueError:
+                pass
+        elif isinstance(obj, list):
+            for v in obj:
+                yield from visita(v)
+        elif isinstance(obj, dict):
+            if isinstance(obj.get("public_url"), str):
+                yield obj
+            if obj.get("type") == "text":
+                yield from visita(obj.get("text"))
+            for k, v in obj.items():
+                if k not in ("testo", "text", "sintesi", "instructions", "warning"):
+                    yield from visita(v)
+
+    records = [r for f in fonti_probatorie(ex) for r in visita(f["output"])]
+    urls = {r["public_url"] for r in records}
+    assenti = [u for u in url_nel_testo(ex.testo_visibile) if u not in urls]
+    discordanti = []
+    for label, url in LINK_MD_RE.findall(ex.testo_visibile):
+        if url not in urls:
+            continue
+        for numero, anno in ESTREMI_RE.findall(label):
+            if not any(str(r.get("numero", "")).lstrip("0") == numero.lstrip("0")
+                       and str(r.get("anno", "")) == anno
+                       for r in records if r["public_url"] == url):
+                discordanti.append(f"{numero}/{anno}: {url}")
+    return [("v9: link da public_url, non dal testo della fonte", not assenti, "; ".join(assenti[:3])),
+            ("v9: numero e anno dello stesso oggetto del link", not discordanti, "; ".join(discordanti[:3]))]
+
+
 _BOX = re.compile(
     # «il tool non ha segnalato avvertenze», «senza avvertenze del server»: parla del campo
     # warning di get_law_article, non è un riquadro di avvertenze (B07, 2026-10-17)
@@ -1082,6 +1123,9 @@ def controllo_shell_catalogo(ex: Esecuzione) -> list[tuple[str, bool, str]]:
         return []
     cwd = ex.init.get("cwd")
     helper = (Path(cwd) / "buddalaw/scripts/verifica_catalogo.py").resolve() if cwd else None
+    link_helper = (Path(cwd) / "buddalaw/scripts/verifica_link.py").resolve() if cwd else None
+    percorsi_mcp = {p.strip() for f in fonti_probatorie(ex)
+                    for p in re.findall(r"Full output saved to:[ \t]*(/[^\r\n]+)", f.get("output", ""))}
     visibili = {norm_tool(t) for t in list(ex.init.get("tools") or [])
                 + list(ex.init.get("tools_scoperti") or []) if e_buddalaw(t)}
     estranei = []
@@ -1089,27 +1133,51 @@ def controllo_shell_catalogo(ex: Esecuzione) -> list[tuple[str, bool, str]]:
         command = c.get("argomenti", {}).get("command", "")
         try:
             a = shlex.split(command)
+            # Unire stderr a stdout non aggiunge comandi e non cambia i nomi
+            # passati allo script. Non ammettere altre redirezioni o pipeline.
+            if a and a[-1] == "2>&1":
+                a = a[:-1]
             ok = (len(a) >= 6 and a[0] == "python3" and helper is not None
                   and Path(a[1]).is_absolute() and Path(a[1]).resolve() == helper
                   and a[2] == "--totale" and a[4] == "--nomi")
             if ok:
                 nomi = [norm_tool(n) for n in a[5:]]
                 ok = int(a[3]) == len(nomi) == len(set(nomi)) and set(nomi) == visibili
+            elif (len(a) >= 6 and a[0] == "python3" and link_helper is not None
+                    and Path(a[1]).is_absolute() and Path(a[1]).resolve() == link_helper):
+                # Nessun file copiato dal modello vale come fonte MCP. Lo script
+                # resta facoltativo quando il runtime restituisce solo dati inline.
+                fonti = a[5::2]
+                ok = (a[2] == "--bozza" and Path(a[3]).is_absolute()
+                      and re.fullmatch(r"[/A-Za-z0-9_. -]+", a[3]) is not None
+                      and a[4::2] == ["--fonte"] * len(fonti) and len(a) % 2 == 0
+                      and bool(fonti) and all(p in percorsi_mcp for p in fonti))
         except (ValueError, OSError):
             ok = False
         if not ok:
             estranei.append(command[:100])
-    return [("v9: shell solo per il catalogo osservato", not estranei, "; ".join(estranei[:3]))]
+    return [("v9: shell solo per verifiche locali con dati osservati", not estranei, "; ".join(estranei[:3]))]
 
 
-def valuta(caso: dict, config: str, ex: Esecuzione, problemi_isolamento: list[str]) -> dict:
+def versione_di(skill_md: Path) -> str:
+    m = re.search(r'^version:\s*["\x27]?([0-9.]+)', skill_md.read_text(), re.M)
+    if not m:
+        raise ValueError("versione assente nella skill del campione")
+    return m[1]
+
+
+def valuta(caso: dict, config: str, ex: Esecuzione, problemi_isolamento: list[str],
+           versione_attesa: str | None = None) -> dict:
     duri = controlli_specifici(caso, ex)
     extra = (caso.get("per_config") or {}).get(config)
+    if caso.get("id") == "B00" and config == "v9" and versione_attesa:
+        extra = {"deve_contenere": [re.escape(versione_attesa)]}
     if extra:
         duri += controlli_specifici({k: v for k, v in extra.items()}, ex)
     duri += controlli_generali(ex)
     if config == "v9":
         duri += controllo_shell_catalogo(ex)
+        duri += controlli_associazione_fonti(ex)
         turni = {c.get("turno", 1) for c in ex.chiamate}
         for turn in sorted(turni):
             calls = [c for c in ex.chiamate if c.get("turno", 1) == turn and e_buddalaw(c["nome_originale"])]
@@ -1334,7 +1402,7 @@ def _main() -> int:
                     except Salta as e:
                         ex, probl = Esecuzione(errore=str(e)), [str(e)]
                     spesa[etichetta] += ex.costo
-                    valutazione = valuta(caso, config, ex, probl)
+                    valutazione = valuta(caso, config, ex, probl, versione_di(SKILL_DIR / "SKILL.md"))
                     (cartella / f"{caso['id']}__r{r}.esito.json").write_text(
                         json.dumps(valutazione, ensure_ascii=False, indent=2), encoding="utf-8")
                     riuscite += valutazione["promosso"]
@@ -1394,6 +1462,8 @@ def rivaluta(cartella: Path) -> int:
     casi_file = cartella / "casi.json" if (cartella / "casi.json").exists() else CASI
     casi = {c["id"]: c for c in json.loads(casi_file.read_text(encoding="utf-8"))["casi"]}
     manifest = json.loads((cartella/"manifest.json").read_text()) if (cartella/"manifest.json").exists() else {}
+    snapshot_md = cartella / "snapshot-skill/buddalaw/SKILL.md"
+    versione_attesa = versione_di(snapshot_md) if snapshot_md.is_file() else None
     righe, spesa, esclusi = [], {}, []
     for sotto in sorted(p for p in cartella.iterdir() if p.is_dir()):
         if len(sotto.name.split("__")) != 3:
@@ -1434,7 +1504,7 @@ def rivaluta(cartella: Path) -> int:
                 # esecuzione colpita da un blocco o guasto del server: non misura la skill
                 esclusi.append(f"{sotto.name}/{f.name}: {str(e)[:120]}")
                 continue
-            v = valuta(caso, config, ex, probl)
+            v = valuta(caso, config, ex, probl, versione_attesa)
             (f.with_name(f.name.replace(".jsonl", ".esito.json"))).write_text(json.dumps(v, ensure_ascii=False, indent=2), encoding="utf-8")
             per_caso.setdefault(cid, []).append(v)
             spesa[etichetta] = spesa.get(etichetta, 0.0) + ex.costo

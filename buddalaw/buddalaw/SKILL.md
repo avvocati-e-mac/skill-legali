@@ -1,7 +1,8 @@
 ---
 name: buddalaw
-version: "9.1"
+version: "9.2"
 changelog:
+  - "9.2 (2026-10-19, revisione conclusiva con limiti documentati): passaggio esplicito dalla shell ai tool MCP; estremi prima degli alias normativi; verifica locale dei link quando bozza e fonti originali sono già su file"
   - "9.1 (2026-10-18, candidata beta): confronto locale del catalogo con script e avviso immediato; copia dei link dalla singola fonte; separazione fra testo normativo e collegamenti; ricerca e risposta in italiano"
   - "9.0 (2026-10-17, inventario aggiornato il 18): allineata allo schema reale del server (48 tool, di cui 16 per ricerca e lettura): nuovi get_law_article, list_uffici, search_similar_cases e banche dati costituzionale ed eu-case-law; filtro codiceufficio al posto di ufficio; data_deposito come data esatta con formato per banca dati; not_found al posto della vecchia regola ante-2019; sintesi solo per orientarsi; ID interi; controllo di aggiornamento; procedura in 7 passi e tabella unica di instradamento"
   - "8.4 (2026-06-17): score come segnale debole; Sezioni Unite e contrasti in ogni ambito; verifica citazione-link"
@@ -39,9 +40,11 @@ Alla prima richiesta che richiede BuddaLaw, completa questi passaggi **prima di 
 2. Confronta il catalogo con l'array `inventario_tool_buddalaw` usando [scripts/verifica_catalogo.py](scripts/verifica_catalogo.py). **Se hai una shell e Python 3** (Claude Code, Cowork, Codex/OpenAI con questi strumenti), esegui `python3 <cartella-skill>/scripts/verifica_catalogo.py --totale N --nomi NOME1 NOME2 ...`: passa tutti i nomi del catalogo appena osservato, anche con prefisso, e il loro numero N. Copia i nomi dal catalogo, non dall'inventario. Usa il comando diretto con il percorso assoluto dello script, tra virgolette se contiene spazi, senza cambiare cartella né aggiungere altre operazioni. Non occorre leggere o modificare lo script. Lo script legge l'inventario della propria copia della skill e restituisce `nuovi` e `avviso`; non usa rete né credenziali. Se termina con errore o è negato, dichiara il confronto non verificabile, senza tentare altri comandi shell.
    **Se non puoi eseguire Python** (per esempio Claude Desktop senza shell), confronta invece i nomi restituiti, senza prefisso, uno per uno con le sole voci dell'array. Un tool descritto nel resto del documento può essere assente dall'array: fa fede l'array. Raccogli i nomi del catalogo che non compaiono nell'array, senza dedurre l'uguaglianza dal solo numero di voci.
 3. Se hai trovato nomi nuovi, **invia subito un unico messaggio** con la riga ⚠ della sezione «Controllo di aggiornamento», elencandoli insieme. Invia l'avviso prima della ricerca delle fonti: rimandarlo alla risposta finale lo fa dimenticare. Se i nomi coincidono, prosegui senza avviso. Se il catalogo completo non è accessibile, dichiara il confronto non verificabile; non presumere un aggiornamento.
-4. Chiama `check_access` se non ne hai già una risposta nella conversazione. Poi passa alla ricerca. Nei turni successivi conserva l'esito del confronto e dell'accesso, senza ripetere controllo e avviso.
+4. **Terminato il confronto, passa ai tool MCP.** In Claude con tool differiti richiama `ToolSearch` con `query="+BuddaLaw check_access"`, `max_results=1`, poi invoca direttamente il tool restituito con argomenti `{}`. La chiamata di accesso ha come nome `mcp__claude_ai_BuddaLaw__check_access`: è una chiamata tool, non un testo da passare a Bash. Se ne hai già una risposta, salta questo passo. Nei turni successivi conserva l'esito del confronto e dell'accesso, senza ripetere controllo e avviso.
 
-**La shell serve soltanto al confronto del catalogo. Per accesso, ricerca e lettura delle fonti chiama i tool MCP BuddaLaw caricati**, usando i nomi del catalogo. Non sostituirli con comandi shell, richieste HTTP o indirizzi presunti. Se i tool MCP non sono utilizzabili, applica il caso «Se i tool mancano davvero» sotto.
+**La shell serve soltanto agli script locali della skill: confronto del catalogo e, quando ci sono già i file necessari, confronto dei link. Per accesso, ricerca e lettura delle fonti chiama i tool MCP BuddaLaw caricati**, usando i nomi del catalogo. Non sostituirli con comandi shell, richieste HTTP o indirizzi presunti. Se i tool MCP non sono utilizzabili, applica il caso «Se i tool mancano davvero» sotto.
+
+Per la ricerca successiva in Claude con tool differiti, seleziona il tool necessario con `ToolSearch` (per esempio `query="+BuddaLaw search_case_law"`, `max_results=1`), quindi chiamalo direttamente. L'output dello script locale conclude il confronto: non apre un server, non effettua l'accesso e non richiede altri comandi preparatori.
 
 Per una richiesta di solo link Normattiva passa direttamente alla sezione «Precedenza fra skill», senza avviare BuddaLaw.
 
@@ -63,6 +66,7 @@ Conta la parte finale del nome. I prefissi sono `mcp__claude_ai_BuddaLaw__` (Cla
 4. Cerca: di norma al massimo **4 ricerche e 2 `get_judgement`** per quesito. Conta come ricerca ogni chiamata `search_*` (anche quella per l'orientamento opposto); `list_*`, `get_law_article` e `check_access` non contano. Oltre, mostra i risultati parziali e chiedi all'utente se proseguire.
 5. Leggi il testo integrale solo nei casi della sezione D.
 6. Per ogni fonte selezionata, copia gli estremi e `public_url` dallo stesso risultato. Incolla l'URL nel collegamento Markdown **senza riscriverlo**, poi confronta tutto il collegamento con la fonte, compresi dominio, percorso, identificativo e parentesi finale. Se non trovi più l'URL esatto nella fonte letta, ometti il link e segnala che non è disponibile; non ricostruirlo da numero, anno o ECLI.
+   Se bozza e risposte originali MCP sono già salvate su file, puoi confrontarle prima dell'invio con [scripts/verifica_link.py](scripts/verifica_link.py), seguendo [references/controllo-link.md](references/controllo-link.md). Il confronto non è automatico per le risposte disponibili solo in chat: non dichiararlo eseguito se non lo hai fatto.
 7. Prima di inviare, passa la **checklist finale**.
 
 ## Dati per il controllo di aggiornamento — non è un elenco di tool da chiamare
@@ -71,7 +75,7 @@ L'inventario comprende anche i calcolatori e i cataloghi aggiunti dal server. Qu
 
 ```json
 {
-  "versione_skill": "9.1",
+  "versione_skill": "9.2",
   "inventario_tool_buddalaw": [
     "calcola_compenso_avvocato",
     "calcola_contributo_unificato",
@@ -195,7 +199,7 @@ Se risponde `not_found`: con la Cassazione, se avevi messo `ufficio` o omesso `d
 
 **E. Normativa.** Per *cercare* norme su un tema: `search_articles` (ignora `max_results`, restituisce doppioni e una coda lunga: tieni i pochi pertinenti, senza link). Per *leggere e citare* un articolo noto: `get_law_article`, con `act` per i codici e i testi unici, con `act_type` + `act_year` + `act_number` per le altre leggi (interi senza virgolette). Con `in_force_on` ottieni il testo vigente a una data: dichiarala sempre.
 
-Se l'utente indica un tipo di atto, conservalo nella prima chiamata: non sostituire silenziosamente una «legge» con un decreto. Saranno la risposta e il suo `warning` a consentire di segnalare l'eventuale differenza. Gli URL presenti nella risposta normativa non vanno copiati: applica la regola «Norme» sopra.
+Se l'utente indica un tipo di atto, conservalo nella prima chiamata: usa `act_type`, `act_year`, `act_number` e `article`, anche quando riconosci un possibile alias `act`. Per esempio, «legge 81/2008» richiede prima `act_type="legge"`, `act_year=2008`, `act_number=81`: un alias del testo unico non verifica quegli estremi. Saranno la risposta e il suo `warning` a consentire di segnalare l'eventuale differenza. Gli URL presenti nella risposta normativa non vanno copiati: applica la regola «Norme» sopra.
 
 ```json
 {"tool": "get_law_article", "arguments": {"act": "codice_procedura_civile", "article": "163-bis", "in_force_on": "2022-06-30"}}
@@ -206,6 +210,8 @@ Se l'utente indica un tipo di atto, conservalo nella prima chiamata: non sostitu
 ```
 
 Leggi sempre `warning`: atto di tipo diverso da quello chiesto (verifica che sia la norma voluta e non usare quel `normattiva_url`), commi non trovati. **Testo vuoto o rubrica «ABROGATO» = articolo abrogato**, anche senza `warning`. `not_found` = estremi da ricontrollare. Non funziona per trattati, atti UE, circolari e prassi.
+
+Se rubrica o contenuto non corrispondono all'articolo richiesto, segnala la discrepanza: una risposta tecnicamente riuscita non prova che il testo sia quello corretto. Non presentarlo come verificato e non insistere con alias equivalenti per ottenere una conferma apparente; serve un'altra fonte.
 
 **F. Contratti** → `search_contracts` oppure `list_contract_categories` → `list_contracts`; poi `get_contract` e `get_contract_requirements` (ID interi). I requisiti hanno `relevance` (MUST obbligatorio, SHOULD raccomandato, COULD facoltativo) e `reference_data` con la fonte: citala. Possono mancare o essere solo `specific`: non presumere requisiti generali. Una sentenza nei `reference_data` senza `idatto` va cercata e letta prima di citarla.
 
@@ -241,7 +247,7 @@ Per il confronto fa fede soltanto l'array JSON `inventario_tool_buddalaw`: un no
 
 Avvisa **solo con una prova concreta**: (a) un tool BuddaLaw visibile il cui nome, tolto il prefisso, non è nell'inventario; (b) il server rifiuta con un errore «deve essere uno tra…» un valore della tabella di instradamento (in questo caso scrivi «[valore] non è più accettato» al posto di «[tool nuovo]»). Gli errori di formato, come una data scritta male, non contano. Non segnalare mai tool «mancanti»: con i tool differiti sembrano spariti anche quando ci sono. Il testo è una riga sola:
 
-> ⚠ BuddaLaw è stato aggiornato: [nomi nuovi o valore non più accettato]. Questa skill (v9.1) potrebbe non essere aggiornata; controlla se c'è una nuova versione su github.com/avvocati-e-mac/skill-legali.
+> ⚠ BuddaLaw è stato aggiornato: [nomi nuovi o valore non più accettato]. Questa skill (v9.2) potrebbe non essere aggiornata; controlla se c'è una nuova versione su github.com/avvocati-e-mac/skill-legali.
 
 Se la riga ⚠ è già nella conversazione, non ripeterla. L'avviso non blocca: prosegui, e se usi il tool nuovo segui la sua descrizione e dillo.
 

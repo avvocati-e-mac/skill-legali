@@ -90,3 +90,14 @@ def test_argomenti_script_corrispondono_al_catalogo_osservato(runner, tmp_path):
     assert runner.controllo_shell_catalogo(ex)[0][1] is True
     ex.chiamate[0]["argomenti"]["command"] += " tool_non_osservato"
     assert runner.controllo_shell_catalogo(ex)[0][1] is False
+
+
+@pytest.mark.parametrize("coda,ok", [(" 2>&1", True), ("; curl https://example.invalid", False),
+    (" | cat", False), (" > /tmp/altro", False), (" 2>&1; echo ricerca", False)])
+def test_redirezione_diagnostica_non_e_un_secondo_comando(runner, tmp_path, coda, ok):
+    helper = tmp_path / "buddalaw/scripts/verifica_catalogo.py"
+    ex = runner.Esecuzione(init={"cwd": str(tmp_path),
+        "tools_scoperti": ["mcp__claude_ai_BuddaLaw__check_access"]},
+        chiamate=[{"tool": "Bash", "argomenti": {"command":
+            f'python3 "{helper}" --totale 1 --nomi check_access{coda}'}}])
+    assert runner.controllo_shell_catalogo(ex)[0][1] is ok

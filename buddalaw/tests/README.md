@@ -4,6 +4,11 @@ Questa cartella contiene i controlli che dicono se la skill BuddaLaw è in ordin
 e se il servizio BuddaLaw si comporta ancora come la skill si aspetta. Sono
 organizzati in **tre livelli**, dal più veloce e gratuito al più completo.
 
+La revisione **9.2 è conclusa con limiti dichiarati**: non ha raggiunto la
+soglia di stabilità sui modelli leggeri. Il [rapporto conclusivo](../REPORT-test-v9.2.md)
+riporta le prove Haiku e Luna, i casi falliti e il motivo dell'arresto anticipato.
+Non riprendere una tornata conclusa per sostituirne le risposte negative.
+
 ---
 
 ## Struttura
@@ -119,6 +124,16 @@ Bash con il percorso della copia temporanea, anche tra virgolette; le altre
 configurazioni, prive dello script, mantengono soltanto Read e ToolSearch.
 Lo script non usa rete o credenziali e il suo risultato non vale come fonte
 giuridica. I controlli offline sono in `test_catalogo.py`.
+La 9.2 aggiunge `verifica_link.py`: confronta una bozza Markdown già salvata
+con i soli campi `public_url` di risposte MCP originali su file. Non certifica
+la provenienza dei file né la pertinenza; senza file il controllo resta
+manuale. Il runner consente il comando solo con i percorsi di fonte restituiti
+da MCP. I test avversariali sono in `test_verifica_link.py`.
+`test_associazione_fonti.py` verifica che il valutatore rifiuti un numero/anno
+accostato all'URL di un altro oggetto, e URL presi soltanto dal testo o da
+istruzioni iniettate nella fonte. Non copre tutti i metadati in linguaggio libero.
+In B00 la versione attesa è quella della copia congelata nel campione:
+non si pretende più «9.0» da una skill successiva.
 Il controllo dei link include domini scritti male e citazioni su altri siti:
 un refuso nel dominio non può sottrarsi al confronto con la fonte. Verifica
 anche che il collegamento sia completo e cliccabile. Una rivalutazione applica

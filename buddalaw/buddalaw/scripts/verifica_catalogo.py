@@ -45,7 +45,8 @@ def confronta(nomi: list[str], totale: int, dati: dict) -> dict:
                   "controlla se c'è una nuova versione su github.com/avvocati-e-mac/skill-legali.")
     return {"totale_server": totale, "totale_inventario": len(attesi),
             "nuovi": nuovi, "non_visibili": sorted(set(attesi) - set(normalizzati)),
-            "avviso": avviso}
+            "avviso": avviso,
+            "passo_successivo": "Confronto concluso. Chiama direttamente il tool MCP check_access con {} se manca il suo esito, poi il tool MCP di ricerca. In Claude con tool differiti seleziona prima il nome con ToolSearch. Nessun altro comando shell per accesso o ricerca."}
 
 
 def main() -> int:
