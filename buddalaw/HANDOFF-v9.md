@@ -7,6 +7,14 @@ su tutta la cronologia sottostante.
 
 ## Stato conclusivo
 
+- **Pubblicazione:** commit del pacchetto `c7c27d1ba49d01127426b8a20d097d9caf829f78`,
+  [PR #2](https://github.com/avvocati-e-mac/skill-legali/pull/2) pronta per la
+  revisione, non unita. Il tentativo di merge del 19 ottobre è stato rifiutato
+  dal controllo automatico: manca un'autorizzazione sufficientemente esplicita
+  a integrare in `main` una revisione che non raggiunge la soglia stabile.
+  È stata chiesta conferma al maintainer. Non aggirare il rifiuto o ritentare
+  il merge senza una sua risposta esplicita. La revisione della skill è conclusa;
+  l'eventuale integrazione è un passaggio distinto.
 - **Versione 9.2 definitiva con limiti documentati. Non promossa a stabile sui
   modelli leggeri.** Nessun test in corso, nessuna attesa di quota, nessun
   lavoro da riprendere automaticamente per questa campagna.

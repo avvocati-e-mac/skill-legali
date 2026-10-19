@@ -186,3 +186,10 @@ congelati. Nessuna risposta o fonte del collaudo è stata riscritta.
 - Archivio installabile: `1c1e664910c729879601b8dddfc7881115d4bc7ae5d5fc69a4bda8100b6f51e7`.
 - Verifica finale: **177 controlli offline superati**, 12 live saltati;
   `CLAUDE.md` e `AGENTS.md` equivalenti, archivio coerente con i sorgenti.
+
+
+Il pacchetto è pubblicato nella [PR #2](https://github.com/avvocati-e-mac/skill-legali/pull/2),
+pronta per revisione. Il merge in `main` non è stato eseguito: il controllo
+automatico richiede un'autorizzazione esplicita del maintainer per integrare
+una versione che non ha raggiunto la soglia stabile. Conferma richiesta;
+nessun aggiramento del blocco. Il pacchetto disponibile nella PR è definitivo.
