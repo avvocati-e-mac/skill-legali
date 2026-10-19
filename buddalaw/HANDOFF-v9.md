@@ -1,3 +1,212 @@
+# BuddaLaw v9.2 — revisione conclusa con limiti
+
+**Aggiornato:** 19 ottobre 2026. **Branch di revisione:** `fix/buddalaw-v9-completamento`.
+La richiesta «riparti da handoff … arrivare alla versione stabile … test con
+Luna usando questo abbonamento» è stata eseguita. Questa apertura prevale
+su tutta la cronologia sottostante.
+
+## Stato conclusivo
+
+- **Pubblicazione:** commit del pacchetto `c7c27d1ba49d01127426b8a20d097d9caf829f78`,
+  [PR #2](https://github.com/avvocati-e-mac/skill-legali/pull/2) pronta per la
+  revisione, non unita. Il tentativo di merge del 19 ottobre è stato rifiutato
+  dal controllo automatico: manca un'autorizzazione sufficientemente esplicita
+  a integrare in `main` una revisione che non raggiunge la soglia stabile.
+  È stata chiesta conferma al maintainer. Non aggirare il rifiuto o ritentare
+  il merge senza una sua risposta esplicita. La revisione della skill è conclusa;
+  l'eventuale integrazione è un passaggio distinto.
+- **Versione 9.2 definitiva con limiti documentati. Non promossa a stabile sui
+  modelli leggeri.** Nessun test in corso, nessuna attesa di quota, nessun
+  lavoro da riprendere automaticamente per questa campagna.
+- [Rapporto completo](REPORT-test-v9.2.md): piano, due candidate C7/C8,
+  risultati avversariali, motivazione dell'arresto e limiti per modello.
+- Migliorie: selezione esplicita dei tool dopo il confronto del catalogo;
+  estremi normativi prima degli alias; controllo di link su file originali
+  già disponibili. Il verificatore rileva l'errore reale C6 senza correggere
+  o sostituire la vecchia risposta.
+- **177 controlli offline superati**, 12 live saltati. Nessuna nuova
+  certificazione completa dello schema o dei 32 calcolatori.
+- Haiku C7: **6 valide, 5 promosse** (B12 3/3, B13 2/3). Rimane un tentativo
+  di usare la shell per preparare una ricerca.
+- Haiku C8: **4/26 avviate, 3 valide**. B00 promosso dopo correzione
+  dell'attesa di versione; B01/B02 bocciati, B03 interrotta e non valutabile.
+  B02 non effettua alcuna ricerca MCP. Due critici bocciati su 17 rendono
+  impossibile il 90% nella tornata (massimo 15/17): stop deciso dal coordinatore,
+  non guasto del servizio. Suite incompleta dichiarata, senza ritenti.
+- Luna `gpt-6-luna`, `high`, subagenti nativi di questo abbonamento su richiesta
+  esplicita: **sei risposte**, 17 chiamate MCP, **13 link fedeli**. Non è una
+  promozione completa: confronto catalogo manuale anziché script, data di
+  deposito fuori dai link di merito e conteggio avvisi non attestabile da
+  una traccia nativa. Un ulteriore test locale del verificatore rileva l'URL
+  sbagliato nella risposta C6. Audit e limiti nel rapporto.
+- Solo Claude Pro nei test CLI, nessun OpenRouter o proxy API. I 21 eventi
+  nativi controllati indicano consumo extra disabilitato. Costi stimati noti
+  1,51547 USD, escluso B03 interrotto; non sono fatturazione aggiuntiva.
+
+## Pacchetto finale e controlli
+
+- SHA-256 `SKILL.md` finale:
+  `6be2bea52b49b84cdd7828941d1cb59cacf327b79e562d17255acaca90c80b2f`.
+- SHA-256 archivio `buddalaw.skill`:
+  `1c1e664910c729879601b8dddfc7881115d4bc7ae5d5fc69a4bda8100b6f51e7`.
+- Rispetto alla C8 provata cambia soltanto l'etichetta di stato nel changelog
+  del frontmatter; corpo delle istruzioni e tutte le risorse sono identici.
+- Il valutatore ammette il solo suffisso diagnostico `2>&1`, senza comandi
+  aggiuntivi; controlla `public_url` e numero/anno dello stesso oggetto e la
+  versione della skill congelata in B00. Rivalutazioni senza nuove chiamate.
+- Le copie installate in Claude/Codex non sono state aggiornate.
+
+```bash
+UV_CACHE_DIR=/private/tmp/buddalaw-uv-cache uv run --offline --no-project --with pytest --python /opt/homebrew/bin/python3.14 python -m pytest -q buddalaw/tests
+```
+
+## Prove da preservare e limiti aperti
+
+Sotto `tests/e2e/results/` (ignorato da Git):
+
+| Cartella | Contenuto |
+|---|---|
+| `20261019-071357-946829` | C7 Haiku, sei prove, esiti rivalutati |
+| `20261019-072050-161495` | C8 Haiku, tornata fermata per soglia irraggiungibile |
+| `20261019-luna-c7` | Audit Luna, note d'ambiente, copie C7/C8 e confronto locale |
+| `20261019-c7/STOP` | Arresto conclusivo; conservarlo senza cancellarlo |
+
+Non dichiarare impossibile qualsiasi miglioramento futuro: i test mostrano
+che queste due candidate non raggiungono la soglia richiesta. Ulteriore
+robustezza richiede soprattutto controlli nel programma che esegue il modello,
+non altre promesse nelle istruzioni. Il controllo dei link è facoltativo e
+condizionato alla disponibilità dei file; non assicura la provenienza MCP,
+la pertinenza o l'identità del messaggio dopo l'invio. Nessuna nuova promozione
+per Sonnet, calcolatori, modelli OpenRouter o ambienti senza shell.
+
+Una nuova richiesta può aprire una campagna distinta; non rilanciare questa
+per cancellare gli esiti negativi. Lasciare intatti risultati storici e cartelle
+preesistenti `.claude/`, `logs/`, `migliora-chiarezza-testi-legali/tests/blind/`
+e `migliora-chiarezza-testi-legali/tests/runs/`. Non pubblicare audit grezzi.
+
+## Cronologia conservata
+
+<details>
+<summary>Handoff v9.1 e cronologia v9.0, superati dall'apertura v9.2</summary>
+
+# BuddaLaw — ripresa e candidata v9.1 beta
+
+**Handoff aggiornato:** 19 ottobre 2026. **Collaudo concluso:** 18 ottobre 2026.
+**Branch:** `fix/buddalaw-v9-completamento`, pubblicato su `origin`.
+**Stato:** revisione beta e collaudo mirato conclusi. Nessuna promozione stabile.
+Questa apertura prevale sulle note storiche della v9.0 archiviate sotto.
+
+## Pubblicazione e stato verificato il 19 ottobre
+
+- Commit della revisione: [`1805a46`](https://github.com/avvocati-e-mac/skill-legali/commit/1805a462b3ab1dcc3ac69447966fc47f8dc23744).
+- [PR #2](https://github.com/avvocati-e-mac/skill-legali/pull/2): **aperta, in bozza**, base `main`, non unita. La verifica del 19 ottobre conferma questi dati.
+- La v9.1 è disponibile nel branch e nell'archivio locale
+  `buddalaw/buddalaw.skill`; `main` conserva la precedente v9.0 beta.
+- La richiesta corrente è soltanto preparare questo handoff: non sono stati
+  avviati nuovi test, modifiche della skill, installazioni o operazioni di merge.
+
+La richiesta «riparti da handoff per ultimare la skill» ha avviato una nuova
+candidata, perché il lavoro precedente era già concluso e unito a main.
+La v9.0 C3 e le sue risposte restano congelate; non sono state ripetute per
+alzare il punteggio. Le copie installate non sono state aggiornate.
+
+Leggere prima [REPORT-test-v9.1.md](REPORT-test-v9.1.md), che contiene hash,
+prove, limiti e differenze dell'ambiente di test. Il file `SKILL.md` della candidata C6 ha hash:
+`f55712536f17d3c809c6b1632bdaa6c7a59db1ed331e344468e39814e794fed5`.
+Le impronte delle altre risorse sono nei manifest delle tornate: il solo hash
+di `SKILL.md` non identifica tutti i file del pacchetto.
+SHA-256 dell'archivio installabile, verificato il 19 ottobre:
+`ff795e0836fcc0ea69411fcc82c1e7b402126d1e39d26fa3b9d6d74ee95bcc39`.
+
+- **144 controlli offline superati**, 12 live saltati; sorgenti e `.skill`
+  coerenti. Nuovo script `buddalaw/scripts/verifica_catalogo.py`, senza rete
+  o credenziali, per confrontare il catalogo osservato con l'inventario locale.
+- Nuove istruzioni su avviso immediato, copia dei link, norme, lingua e anno
+  delle pronunce recenti. Il confronto manuale resta il fallback senza shell.
+- Solo abbonamento **Claude Pro**, nessuna API/OpenRouter. Nei nuovi eventi
+  osservati il consumo extra è disabilitato. Il limite Claude è 16 turni per
+  tutti i profili; non confrontare le percentuali con la vecchia C3 a otto.
+- C6 Haiku: **6/6 valide, 0/6 promosse**, B12 e B13 bocciati per comandi shell
+  estranei, anche se negati dal runtime. Gli avvisi risultano corretti.
+- C6 Sonnet: primo gruppo **4/4 valide, 3/4 promosse**. B12/B13/B24 passano;
+  B23 emette l'avviso una sola volta ma altera una cifra di un URL. **Non è
+  risolto il requisito di assenza di link alterati.**
+- Secondo gruppo Sonnet: **8/8 valide, 6/8 promosse**. Passano B07/B11/B15/
+  B19/B21/B22; B01 aggiunge un box finale e B20 salta la verifica degli estremi
+  nel formato prescritto. Totale Sonnet **9/12**. I risultati negativi sono
+  conservati e non sostituiti con nuovi tentativi.
+
+La revisione beta è chiusa con archivio rigenerato, report e controlli locali.
+Non restano test in corso né attese della quota. Le ulteriori correzioni per
+una versione stabile sono lavoro successivo su una nuova candidata: priorità
+alla verifica dei collegamenti prima dell'invio e all'uso esclusivo dei tool
+MCP per le ricerche. Non ripetere i casi bocciati di C6 per alzare il punteggio.
+
+## Prima azione alla prossima ripresa
+
+Leggere il rapporto v9.1 e questa apertura, prima della cronologia archiviata.
+La domanda facoltativa «proseguire verso una stabile oppure chiudere la beta?»
+non ha ricevuto risposta nella sessione precedente; l'assistente ha dichiarato
+di chiudere la revisione beta, coerentemente con l'handoff. Non trasformare
+questa scelta operativa in una richiesta dell'utente di promozione stabile.
+
+Se viene richiesto di arrivare alla stabile, partire da una **nuova candidata**
+senza alterare le risposte C6. Priorità concrete:
+
+1. B23 Sonnet: la fonte restituisce un URL che termina in `66194858`, mentre
+   la risposta termina in `66194758`. Valutare un controllo automatico della
+   bozza contro le fonti **prima dell'invio**: è un'ipotesi di lavoro, non una
+   funzione già implementata. Il controllo attuale dei link opera nel runner
+   dopo la risposta, e non previene l'errore nell'uso ordinario della skill.
+2. Haiku B12/B13: l'avviso funziona, ma tutti e sei i tentativi violano il
+   vincolo sulla shell; uno omette anche la ricerca MCP. Le autorizzazioni
+   bloccano i comandi estranei, ma questo non rende corretto il comportamento.
+3. B01 Sonnet: box finale vietato. B20 Sonnet: sostituzione del tipo di atto
+   con un alias senza la verifica richiesta. Conservare questi esiti come
+   difetti distinti dalla fedeltà degli URL.
+
+Per nuovi test con modelli, mantenere **solo l'abbonamento Claude**,
+`--solo-abbonamento` e un modello esplicito; tetto predefinito di 5 USD stimati
+per modello/invocazione. Le stime CLI non sono addebiti attestati. Non usare
+OpenRouter, proxy API o crediti extra come sostituti. Censimento dei 32
+calcolatori, fallback manuale senza shell e suite completa su altri modelli
+restano non collaudati.
+
+Controllo locale disponibile, senza chiamate a modelli o al servizio:
+
+```bash
+UV_CACHE_DIR=/private/tmp/buddalaw-uv-cache uv run --offline --no-project --with pytest --python /opt/homebrew/bin/python3.14 python -m pytest -q buddalaw/tests
+```
+
+Ultima esecuzione del 18 ottobre: **144 superati, 12 live saltati**. Non è
+stata ripetuta per questo aggiornamento esclusivamente documentale.
+
+## Prove da conservare
+
+Sotto `buddalaw/tests/e2e/results/` (ignorato da Git):
+
+| Cartella | Contenuto |
+|---|---|
+| `20261018-182214-129330` | C4, istruzioni soltanto: B12 0/3 |
+| `20261018-182552-973666` | C5, primo B12 con script: 1/1 |
+| `20261018-182744-292618` | C5, altre due prove: avviso presente, limite turni; non valutabili |
+| `20261018-183031-596856` | C6 Haiku, usare `rivalutazione.json`: 0/6 promosse |
+| `20261018-183329-097605` | C6 Sonnet, avvisi e conversazioni: 3/4 |
+| `20261018-184206-338009` | C6 Sonnet, otto controlli mirati: 6/8 |
+
+Arresto condiviso della nuova campagna:
+`tests/e2e/results/20261018-c6-claude-pro/STOP`.
+Al primo guasto o esaurimento della quota fermarsi senza ritenti; non
+cancellare gli arresti precedenti. Non pubblicare tracce grezze né leggere
+file di credenziali. Lasciare intatte le cartelle non tracciate preesistenti
+`.claude/`, `logs/`, `migliora-chiarezza-testi-legali/tests/blind/` e
+`migliora-chiarezza-testi-legali/tests/runs/`.
+
+## Cronologia v9.0 conclusa — non è la lista corrente di attività
+
+<details>
+<summary>Handoff storico della v9.0, già unita a main</summary>
+
 # BuddaLaw v9.0 — Passaggio di consegne
 
 **Data:** 2026-10-18
@@ -428,5 +637,9 @@ resta lo stop senza ritenti automatici al primo nuovo blocco o guasto:
 - **Schema:** rigenerare la fixture soltanto dopo aver verificato un cambio
   reale. Un'estrazione vuota è un errore del canale, non uno schema da salvare.
 - **GPT / Codex:** Astra e Luna collaudati come subagenti con MCP nativi in questa sessione. Non equivale a un collaudo della CLI Codex né a un aggiornamento della sua configurazione locale.
+
+</details>
+
+</details>
 
 </details>
