@@ -1,8 +1,18 @@
 # BuddaLaw — ripresa e candidata v9.1 beta
 
-**Data:** 18 ottobre 2026. **Branch:** `fix/buddalaw-v9-completamento`.
+**Handoff aggiornato:** 19 ottobre 2026. **Collaudo concluso:** 18 ottobre 2026.
+**Branch:** `fix/buddalaw-v9-completamento`, pubblicato su `origin`.
 **Stato:** revisione beta e collaudo mirato conclusi. Nessuna promozione stabile.
 Questa apertura prevale sulle note storiche della v9.0 archiviate sotto.
+
+## Pubblicazione e stato verificato il 19 ottobre
+
+- Commit della revisione: [`1805a46`](https://github.com/avvocati-e-mac/skill-legali/commit/1805a462b3ab1dcc3ac69447966fc47f8dc23744).
+- [PR #2](https://github.com/avvocati-e-mac/skill-legali/pull/2): **aperta, in bozza**, base `main`, non unita. La verifica del 19 ottobre conferma questi dati.
+- La v9.1 è disponibile nel branch e nell'archivio locale
+  `buddalaw/buddalaw.skill`; `main` conserva la precedente v9.0 beta.
+- La richiesta corrente è soltanto preparare questo handoff: non sono stati
+  avviati nuovi test, modifiche della skill, installazioni o operazioni di merge.
 
 La richiesta «riparti da handoff per ultimare la skill» ha avviato una nuova
 candidata, perché il lavoro precedente era già concluso e unito a main.
@@ -10,8 +20,12 @@ La v9.0 C3 e le sue risposte restano congelate; non sono state ripetute per
 alzare il punteggio. Le copie installate non sono state aggiornate.
 
 Leggere prima [REPORT-test-v9.1.md](REPORT-test-v9.1.md), che contiene hash,
-prove, limiti e differenze dell'ambiente di test. La candidata C6 ha hash:
+prove, limiti e differenze dell'ambiente di test. Il file `SKILL.md` della candidata C6 ha hash:
 `f55712536f17d3c809c6b1632bdaa6c7a59db1ed331e344468e39814e794fed5`.
+Le impronte delle altre risorse sono nei manifest delle tornate: il solo hash
+di `SKILL.md` non identifica tutti i file del pacchetto.
+SHA-256 dell'archivio installabile, verificato il 19 ottobre:
+`ff795e0836fcc0ea69411fcc82c1e7b402126d1e39d26fa3b9d6d74ee95bcc39`.
 
 - **144 controlli offline superati**, 12 live saltati; sorgenti e `.skill`
   coerenti. Nuovo script `buddalaw/scripts/verifica_catalogo.py`, senza rete
@@ -36,6 +50,45 @@ Non restano test in corso né attese della quota. Le ulteriori correzioni per
 una versione stabile sono lavoro successivo su una nuova candidata: priorità
 alla verifica dei collegamenti prima dell'invio e all'uso esclusivo dei tool
 MCP per le ricerche. Non ripetere i casi bocciati di C6 per alzare il punteggio.
+
+## Prima azione alla prossima ripresa
+
+Leggere il rapporto v9.1 e questa apertura, prima della cronologia archiviata.
+La domanda facoltativa «proseguire verso una stabile oppure chiudere la beta?»
+non ha ricevuto risposta nella sessione precedente; l'assistente ha dichiarato
+di chiudere la revisione beta, coerentemente con l'handoff. Non trasformare
+questa scelta operativa in una richiesta dell'utente di promozione stabile.
+
+Se viene richiesto di arrivare alla stabile, partire da una **nuova candidata**
+senza alterare le risposte C6. Priorità concrete:
+
+1. B23 Sonnet: la fonte restituisce un URL che termina in `66194858`, mentre
+   la risposta termina in `66194758`. Valutare un controllo automatico della
+   bozza contro le fonti **prima dell'invio**: è un'ipotesi di lavoro, non una
+   funzione già implementata. Il controllo attuale dei link opera nel runner
+   dopo la risposta, e non previene l'errore nell'uso ordinario della skill.
+2. Haiku B12/B13: l'avviso funziona, ma tutti e sei i tentativi violano il
+   vincolo sulla shell; uno omette anche la ricerca MCP. Le autorizzazioni
+   bloccano i comandi estranei, ma questo non rende corretto il comportamento.
+3. B01 Sonnet: box finale vietato. B20 Sonnet: sostituzione del tipo di atto
+   con un alias senza la verifica richiesta. Conservare questi esiti come
+   difetti distinti dalla fedeltà degli URL.
+
+Per nuovi test con modelli, mantenere **solo l'abbonamento Claude**,
+`--solo-abbonamento` e un modello esplicito; tetto predefinito di 5 USD stimati
+per modello/invocazione. Le stime CLI non sono addebiti attestati. Non usare
+OpenRouter, proxy API o crediti extra come sostituti. Censimento dei 32
+calcolatori, fallback manuale senza shell e suite completa su altri modelli
+restano non collaudati.
+
+Controllo locale disponibile, senza chiamate a modelli o al servizio:
+
+```bash
+UV_CACHE_DIR=/private/tmp/buddalaw-uv-cache uv run --offline --no-project --with pytest --python /opt/homebrew/bin/python3.14 python -m pytest -q buddalaw/tests
+```
+
+Ultima esecuzione del 18 ottobre: **144 superati, 12 live saltati**. Non è
+stata ripetuta per questo aggiornamento esclusivamente documentale.
 
 ## Prove da conservare
 
