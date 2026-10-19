@@ -188,8 +188,10 @@ congelati. Nessuna risposta o fonte del collaudo è stata riscritta.
   `CLAUDE.md` e `AGENTS.md` equivalenti, archivio coerente con i sorgenti.
 
 
-Il pacchetto è pubblicato nella [PR #2](https://github.com/avvocati-e-mac/skill-legali/pull/2),
-pronta per revisione. Il merge in `main` non è stato eseguito: il controllo
-automatico richiede un'autorizzazione esplicita del maintainer per integrare
-una versione che non ha raggiunto la soglia stabile. Conferma richiesta;
-nessun aggiramento del blocco. Il pacchetto disponibile nella PR è definitivo.
+La [PR #2](https://github.com/avvocati-e-mac/skill-legali/pull/2) è stata unita
+in `main` il 19 ottobre 2026 alle 07:31:34 Europe/Rome, con commit
+`f9b3d2e45a83dfedb190527d96506ef65b4cad1e`. Il primo tentativo era stato
+rifiutato dal controllo automatico; il maintainer ha poi autorizzato
+esplicitamente: «ok fai commit, merge con main». Pubblicazione conclusa,
+limiti e mancata promozione stabile invariati. Nessun ulteriore test live
+è stato avviato per il merge.
