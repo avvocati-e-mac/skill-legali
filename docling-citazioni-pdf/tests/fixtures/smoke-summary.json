@@ -1,0 +1,62 @@
+{
+  "passed": true,
+  "pdf_sha256": "5c31835b48e2e5067e68128db18a1e5824cbe78eee8fe0431754a597db2c2bec",
+  "json_sha256": "844736e4664d92d800210f793c158058be9f2e4caae752a8e8843236a71ca64e",
+  "page_count": 3,
+  "source_unchanged": true,
+  "tools": [
+    "check_document_in_local_cache",
+    "remove_document_from_local_cache",
+    "convert_document_into_docling_document",
+    "convert_directory_files_into_docling_document",
+    "list_cached_documents",
+    "create_new_docling_document",
+    "export_docling_document_to_markdown",
+    "save_docling_document",
+    "get_page_thumbnail",
+    "add_title_to_docling_document",
+    "add_section_heading_to_docling_document",
+    "add_paragraph_to_docling_document",
+    "open_list_in_docling_document",
+    "close_list_in_docling_document",
+    "add_list_items_to_list_in_docling_document",
+    "add_table_in_html_format_to_docling_document",
+    "get_overview_of_document_anchors",
+    "search_for_text_in_document_anchors",
+    "get_text_of_document_item_at_anchor",
+    "update_text_of_document_item_at_anchor",
+    "delete_document_items_at_anchors"
+  ],
+  "cases": [
+    {
+      "quote": "Il fornitore dichiara: consegna avvenuta il 12 marzo 2026.",
+      "selected_physical_pages": [
+        2
+      ],
+      "status": "text_match_found"
+    },
+    {
+      "quote": "La perizia non accerta il completamento del collaudo.",
+      "selected_physical_pages": [
+        3
+      ],
+      "status": "text_match_found"
+    },
+    {
+      "quote": "Documento dimostrativo",
+      "selected_physical_pages": [],
+      "status": "ambiguous_text_match"
+    }
+  ],
+  "versions": {
+    "docling": null,
+    "docling-mcp": "3.4.0",
+    "docling-slim": "2.143.1",
+    "docling-core": "2.105.0",
+    "mcp": "2.3.0",
+    "pypdfium2": "5.14.0"
+  },
+  "cli_preservation_checks": 3,
+  "client_scope": "direct_MCP_SDK_not_product_UI",
+  "visual_check": "not_performed_by_script"
+}
