@@ -65,7 +65,8 @@ def check_pdf(path, pages, quote):
     if len(set(pages)) != len(pages):
         raise ValueError('duplicate_pages_not_allowed')
     texts = {}
-    with pdfium.PdfDocument(str(path)) as pdf:
+    pdf = pdfium.PdfDocument(str(path))
+    try:
         count = len(pdf)
         if any(page > count for page in pages):
             raise ValueError('physical_page_out_of_range')
@@ -79,6 +80,8 @@ def check_pdf(path, pages, quote):
                     text.close()
             finally:
                 page.close()
+    finally:
+        pdf.close()
     after = hashlib.sha256(path.read_bytes()).hexdigest()
     if after != before:
         raise ValueError('source_changed_during_verification')

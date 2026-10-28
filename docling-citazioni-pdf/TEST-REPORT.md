@@ -1,4 +1,128 @@
-# Prove della prima release — 28 ottobre 2026
+# Revisione: istruzioni progressive, contesto e avvisi — 28 ottobre 2026
+
+Esito: **71 test superati** nel Python 3.12 con `pypdfium2 5.14.0` già presente.
+La stessa suite è stata eseguita anche nel Python 3.9 con `pypdfium2 4.30`.
+Sono i 57 controlli iniziali più 10 controlli del nuovo rilevatore di indizi
+PDF e 4 prove sul PDF sintetico con testo, immagine, livello OCR e pagina bianca.
+Nel Python senza `pypdfium2` i quattro test di integrazione vengono saltati,
+non dichiarati riusciti. Nessuna installazione o modifica delle configurazioni
+MCP dell'utente.
+
+## Progressive disclosure e citazioni
+
+Il file principale passa da **1.291 a 914 parole** (conteggio per spazi,
+circa **29% in meno**), pur includendo le nuove regole. Il dato non
+è una misura dei token di un particolare modello o del costo di una sessione.
+I dettagli di conversione sono in `references/estrazione.md`; contesto,
+scansioni e prestazioni hanno guide condizionali. Installazione e intervalli
+avanzati restano fuori dal flusso ordinario. Non si richiede di leggere il
+codice degli helper per usarli. I riferimenti ai precedenti ambienti di origine
+sono stati eliminati dai sorgenti e dall'archivio della skill.
+
+Default: `(p. 1)` con un PDF; (p. 1 del documento `pippo.pdf`) con più PDF;
+preferenza esplicita dell'utente prioritaria. Numeri fisici distinti da stampati,
+fonti riconoscibili e incertezze conservate anche con un formato personale.
+I documenti devono entrare integralmente nel contesto quando la capienza lo
+consente: lettura progressiva delle guide e selezione delle fonti sono due
+cose diverse. Avviso prima di estratti, sintesi, ricerca o lotti. Un file
+salvato non è automaticamente nel prompt; i lotti non aumentano un budget
+totale o la capienza simultanea.
+
+## Ulteriore verifica dell'installazione standard
+
+La guida è stata confrontata direttamente con il README corrente del pacchetto
+ufficiale: [Docling MCP](https://github.com/docling-project/docling-mcp/blob/main/README.md).
+Percorso principale uvx, extra locale `[local]`, variabile di modalità `local`
+e trasporto `stdio`; alternativa pip/venv standard. Nessun wrapper, sandbox,
+cache dedicata, limite personalizzato di documenti o dispositivo imposto.
+Gli esempi client usano lo stesso comando e i default di strumenti/pipeline.
+Le condizioni isolate dei vecchi smoke test sono condizioni di prova, non la
+procedura di installazione proposta all'utente.
+
+Il sito generale Docling consultato riportava variabili precedenti e un default
+di modalità diverso dal README corrente del pacchetto: per questa guida è stato
+seguito il README specifico del server e il suo prefisso `DOCLING_MCP_`, senza
+mescolare esempi di versioni diverse. Configurazioni JSON/TOML e comandi client
+sono controllati per sintassi e corrispondenza degli argomenti; non è stata
+eseguita una nuova installazione pulita o alterata quella dell'utente.
+
+## Ricerche delegate
+
+Tre subagenti hanno usato la skill Perplexity, con una query `standard`
+ciascuno e controllo diretto delle fonti primarie. Rapporti pubblicabili:
+[convenzioni italiane e giuridiche](tests/ricerca-citazioni.md),
+[CPU/GPU](tests/ricerca-prestazioni.md),
+[scansioni e OCR](tests/ricerca-scansioni.md).
+
+`p./pag.` e `pp./pagg.` sono ammesse: le convenzioni editoriali giuridiche
+variano. I numeri CPU/GPU sono benchmark circoscritti con condizioni e fonti,
+non previsioni per il PC dell'utente. L'origine digitale o da scansione non
+può essere certificata dal solo livello testo; l'OCR effettivo dipende dalle
+opzioni del server. Le guide riportano avvisi preventivi appropriati.
+
+## Nuovo helper di ispezione
+
+`pypdfium2` è la libreria Python che usa il motore PDFium per leggere/renderizzare
+i PDF; 4.30 e 5.14 qui indicano versioni della libreria, non di Docling o del
+motore PDFium. È una dipendenza tecnica degli helper, non un diverso server
+MCP o un nuovo programma che questa revisione richieda di installare.
+
+`inspect_pdf.py` non avvia OCR, non usa rete e non certifica l'origine del PDF.
+Conserva copertura del campione, indizi, soglie e limiti geometrici. Il PDF
+`tests/fixtures/tipi-pdf.pdf` ha quattro pagine: testo senza immagine dominante,
+immagine senza testo, immagine con livello OCR sintetico volutamente errato,
+pagina bianca. Il controllo su tutte le pagine distingue i quattro indizi;
+il campionamento predefinito dichiara di non avere letto la pagina 3.
+Il helper non corregge il livello testo o attribuisce un tipo certo alle pagine
+non esaminate. Errori e file non leggibili restano errori, non «scansioni».
+
+Il controllo nell'altro Python presente ha rilevato differenze reali di API
+in `pypdfium2 4.30`: assenza del context manager e metodo `get_pos()` invece di
+`get_bounds()`. I due helper PDF sono stati adattati con chiusura esplicita
+ed accesso alle coordinate secondo l'API effettivamente presente, verificata
+sul codice ufficiale installato. I quattro casi strutturali passano sia con
+`pypdfium2 4.30` sia con `pypdfium2 5.14`; non è richiesto aggiornare l'installazione per questo motivo.
+
+Testate anche assenza di sovrascrittura dell'originale/report e gestione di un
+file non PDF. Immagine e testo discordano intenzionalmente a p. 3: immagine
+1.200,00 euro, livello testo 12.000,00 euro. L'immagine è stata effettivamente
+osservata dall'autore e dal revisore; il JSON del helper mantiene correttamente
+`visual_verification_performed: false` perché lo script non svolge quel controllo.
+Generatori e fixture sono pubblici, senza dati di pratiche reali.
+
+## Revisione dei flussi e limiti
+
+Un subagente ha svolto tre casi senza ricevere la risposta attesa:
+[un PDF](tests/revisione-caso-A-risposta.md),
+[più PDF e stile personale](tests/revisione-caso-B-risposta.md),
+[simulazione di contesto insufficiente](tests/revisione-caso-C-risposta.md).
+Ha letto inizialmente solo l'entrypoint, poi le guide necessarie; ha confrontato
+il testo con tutte e sette le immagini originali e rilevato la discordanza OCR.
+[Metodo e limiti](tests/revisione-metodo-e-limiti.md).
+
+È emerso un caricamento evitabile della guida di installazione anche con
+conversione già fornita: il routing è stato corretto e la
+[regressione mirata](tests/revisione-addendum-regressione-routing.md) conferma
+che non serve aprirla. Non è una nuova prova end-to-end. Il revisore ha anche
+caricato inutilmente il JSON tecnico intero: è una deviazione osservata rispetto
+alla guida, non una garanzia che ogni agente rispetterà il risparmio di contesto.
+Gli avvisi preventivi sono stati prodotti come **bozze**: questo test verifica
+contenuti e strategia, non dimostra l'invio reale dell'avviso in una conversazione
+separata prima della lettura. Il caso di 40 PDF è simulato, non un carico reale.
+
+Non sono stati ripetuti il benchmark GPU o una conversione OCR end-to-end del
+nuovo PDF: le misure di prestazioni sono pubblicate dagli autori; il test locale
+nuovo riguarda l'ispezione strutturale e il confronto con le immagini. Le
+precedenti prove MCP restano quelle della prima release. Nessun collaudo nuovo
+delle interfacce Codex/Claude Code/Cowork o installazione da zero.
+
+Le prove iniziali, con esiti riferiti alla versione di allora, sono conservate
+qui sotto; i vecchi esempi di citazione documentano quell'esecuzione e non
+sostituiscono il formato corrente.
+
+---
+
+# Prove iniziali della prima release — 28 ottobre 2026
 
 Esito: **57 test automatici superati**, prova reale con Docling MCP locale
 riuscita, revisione indipendente su PDF sintetico completata senza difetti

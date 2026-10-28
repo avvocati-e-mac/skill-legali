@@ -21,13 +21,15 @@ class DistributionTests(unittest.TestCase):
     def test_archive_contains_exact_sources_without_runtime_artifacts(self):
         expected = {str(path.relative_to(ROOT)): path.read_bytes()
                     for path in SKILL.rglob('*') if path.is_file()
-                    and '__pycache__' not in path.parts and path.suffix != '.pyc'}
+                    and not {'__pycache__', '__MACOSX', '.DS_Store'}.intersection(path.parts)
+                    and path.suffix != '.pyc'}
         with zipfile.ZipFile(ROOT/'docling-citazioni-pdf.skill') as archive:
             names = archive.namelist()
             self.assertEqual(len(names), len(set(names)))
             self.assertEqual(set(names), set(expected))
             for name in names:
                 self.assertNotIn('..', Path(name).parts)
+                self.assertFalse({'__pycache__', '__MACOSX', '.DS_Store'}.intersection(Path(name).parts))
                 self.assertEqual(archive.read(name), expected[name])
 
     def test_local_resource_links_resolve(self):

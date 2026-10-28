@@ -4,7 +4,7 @@ Usa questo metodo solo quando occorre mappare automaticamente un intervallo
 negli anchor Docling. Per localizzare una frase leggendo direttamente il PDF
 non serve creare un profilo.
 
-`citation_provenance.py` deriva dal sistema Hermes e usa solo Python standard.
+`citation_provenance.py` usa solo Python standard.
 Verifica dichiarazioni e corrispondenza degli hash; **non autentica le prove
 inserite nel profilo**, non controlla la versione del convertitore in esecuzione
 e non legge il testo del PDF. `origin.binary_hash` non sostituisce SHA-256.

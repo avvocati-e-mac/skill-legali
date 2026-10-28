@@ -1,5 +1,45 @@
 # Dal JSON alla citazione controllabile
 
+## Stile delle citazioni e fonte riconoscibile
+
+Applica la preferenza già espressa dall'utente, anche tramite un esempio:
+`pagina 1`, `pag. 1`, `p. 1`, note, parentesi, ordine o modello personale.
+Mantienila nel lavoro, senza chiedere ogni volta uno stile o introdurre etichette
+tecniche non richieste. Una nuova preferenza modifica la forma delle citazioni,
+non la pagina verificata o la qualità dell'evidenza.
+
+Default in assenza di preferenze:
+
+- un PDF: `(p. 1)`, senza nome del file, percorso o ID ripetuto;
+- più PDF nel lavoro: (p. 1 del documento `pippo.pdf`);
+- intervallo continuo: `(pp. 1–3)`; pagine separate: `(pp. 1, 3, 7)`;
+- più PDF e pagine separate: (pp. 1, 3 del documento `pippo.pdf`).
+
+Con `pag.` usa di regola `pagg.` al plurale; con `pagina` usa `pagine`.
+Inserisci uno spazio fra abbreviazione e numero. Non trasformare pagine non
+consecutive in un intervallo. Se lo stile personale vuole un riferimento
+all'allegato anche con un solo PDF, seguilo; gli esempi sopra sono default.
+Con più fonti conserva una corrispondenza univoca anche quando l'utente preferisce
+numeri di allegato o note invece del nome file. Due file omonimi richiedono un
+riferimento distintivo breve, coerente con i nomi/ID dello studio.
+
+Spiega una volta che la numerazione predefinita conta le pagine fisiche del PDF
+partendo da 1, senza ripetere `PDF` in ogni citazione. Se l'utente preferisce i
+numeri stampati, usali solo dopo averli osservati, distinguendoli dai numeri
+fisici conservati nel registro. Preferenza tipografica e certezza del riscontro
+restano separate: «p. candidata 3, non verificata» non deve diventare «p. 3»
+soltanto per rendere uniforme il testo. Link alla pagina sono facoltativi se il
+lettore li supporta; non promettere che `#page=N` funzioni in tutte le app.
+
+`p./pag.` e `pp./pagg.` sono varianti ammesse, anche nelle guide giuridiche;
+non esiste un unico stile editoriale valido per ogni sede. Per una pubblicazione
+seguine le norme specifiche se richiesto. La formula col nome del PDF è una
+scelta pratica di disambiguazione, non una prescrizione processuale universale.
+Fonti: [Treccani](https://www.treccani.it/vocabolario/p-p/),
+[Sapienza, Biblioteca di Scienze Giuridiche, abbreviazioni, p. 3](https://bisg.web.uniroma1.it/sites/default/files/download/Principali%20Abbreviazioni%20Bibliografiche_0.pdf),
+[norme di Diritto in Corsia](https://www.dirittoincorsia.it/rivista-diritto-in-corsia/norme-redazionali/) e
+[norme della Rivista italiana di diritto del turismo, § 8](https://static.francoangeli.it/fa-contenuti/riviste/nr/dt-norme.pdf).
+
 ## Dossier e metodo ordinario
 
 Nella cartella di lavoro della pratica conserva gli originali o il riferimento
@@ -75,15 +115,20 @@ del controllo ed eventuali passi contrari. Per più fonti associa alla stessa
 affermazione più record documento/passo/pagine/metodo, senza riusare hash o
 numerazioni fra documenti. Nel testo finale scrivi, ad esempio:
 
-> Il fornitore dichiara che la consegna è avvenuta il 12 marzo (doc. D01,
-> lettera.pdf, p. PDF 2; riscontro sul livello testo).
+> Il fornitore dichiara che la consegna è avvenuta il 12 marzo (p. 2).
+
+Con più PDF: «Il fornitore dichiara la consegna il 12 marzo (p. 2 del documento
+`lettera.pdf`)». Indica a parte il metodo di riscontro, senza appesantire ogni
+citazione. Il registro conserva comunque nome e hash del documento.
 
 Non convertire la frase in «La consegna è provata». Un'inferenza va etichettata
 e deve citare tutti i suoi presupposti. Per una scadenza calcolata distingui
 data documentata, regola giuridica verificata altrove e calcolo dell'assistente.
 Se due fonti si contraddicono, cita entrambe senza risolvere il conflitto per
-ordine di acquisizione. Non riportare interi fascicoli nella chat se bastano
-gli estratti pertinenti.
+ordine di acquisizione. Inserisci il contenuto integrale delle fonti nel
+contesto se la capienza lo permette, come richiesto nel file principale;
+prima di letture selettive avvisa l'utente. Non confondere questa regola con
+la risposta finale, in cui bastano le citazioni e gli estratti utili.
 
 ## Metodo avanzato: intervalli Docling
 

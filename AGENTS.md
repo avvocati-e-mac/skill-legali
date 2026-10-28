@@ -44,8 +44,8 @@ Quando una procedura dipende dal runtime, differenzia sempre in modo esplicito:
 
 - **Cartella:** `docling-citazioni-pdf/`; skill interna e archivio `.skill` omonimi.
 - **Scopo:** citazioni puntuali dei PDF della pratica tramite Docling MCP, con registro affermazione–fonte–pagina e controllo sull’originale.
-- **Requisiti:** distingue motore Docling (anche `docling-slim`), pacchetto server, connessione alla chat e accessibilità dei file; guida di installazione con `docling-mcp[local]` e modalità locale esplicita.
-- **Invarianti:** pagine candidate non sono citazioni verificate; numeri stampati separati da pagine fisiche; niente attribuzione multipagina alla prima provenienza o promozione automatica dei profili degli indici. Il riscontro testuale non certifica supporto semantico o controllo visivo.
+- **Requisiti:** distingue motore Docling (anche `docling-slim`), pacchetto server, connessione alla chat e accessibilità dei file; guida di installazione con `docling-mcp[local]` e modalità locale esplicita. Avvio ufficiale con uvx, oppure pip/venv; nessun launcher o profilo personale.
+- **Invarianti:** pagine candidate non sono citazioni verificate; numeri stampati separati da pagine fisiche; niente attribuzione multipagina alla prima provenienza o promozione automatica dei profili degli indici. Il riscontro testuale non certifica supporto semantico o controllo visivo. Citazioni semplici con un solo PDF, fonte riconoscibile con più PDF e preferenza utente prioritaria. Documenti integrali nel contesto quando possibile; avviso prima di selezioni/lotti, OCR e CPU. Istruzioni dettagliate solo nelle guide pertinenti.
 - **Test:** `python3 -B -m unittest discover -s docling-citazioni-pdf/tests -v`; prova MCP locale opzionale con `tests/mcp_smoke.py` e PDF sintetico da `tests/make_fixture.py`. Esiti e limiti in `docling-citazioni-pdf/TEST-REPORT.md`; rigenerare `.skill` dopo ogni modifica ai sorgenti.
 - **Compatibilità:** istruzioni per Codex, Claude Code, Cowork/Desktop; nessuna garanzia di MCP locale disponibile in tutti i client. Non modificare le copie installate senza richiesta.
 

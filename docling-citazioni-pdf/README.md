@@ -31,8 +31,10 @@ script e le guide. I test rimangono fuori dall'archivio installabile.
 
 **Installare la skill non installa Docling.** Se il server manca o non è
 collegato, la skill guida la diagnosi e prepara i comandi adatti. Nelle versioni
-attuali serve `docling-mcp[local]` per convertire sul computer. Non modifica
-automaticamente configurazioni esistenti. La [guida ai requisiti](docling-citazioni-pdf/references/installazione.md)
+attuali la guida usa l'avvio standard ufficiale con `uvx`, pacchetto
+`docling-mcp[local]` e modalità locale esplicita; pip/venv è l'alternativa.
+Non richiede launcher o configurazioni personali e non modifica automaticamente
+configurazioni esistenti. La [guida ai requisiti](docling-citazioni-pdf/references/installazione.md)
 contiene i passaggi separati per Codex, Claude Code, Desktop e Cowork.
 
 ## Nel lavoro dello studio
@@ -43,9 +45,12 @@ documento, passo e controllo svolto. Gli hash riconoscono la versione del file:
 se il PDF cambia, i riferimenti vanno ricontrollati. Puoi riutilizzare il registro
 per scrivere in Word, Markdown o LaTeX senza cambiare il tuo gestionale.
 
-Una frase può diventare: «Il fornitore dichiara la consegna il 12 marzo
-(doc. D01, lettera.pdf, p. PDF 2)». La skill deve distinguere questa dichiarazione
-da una consegna effettivamente provata. Per verificare giurisprudenza o norme
+Con un solo PDF scrive, ad esempio: «Il fornitore dichiara la consegna il
+12 marzo (p. 2)». Con più PDF aggiunge la fonte: (p. 2 del documento
+`lettera.pdf`). Puoi indicare il tuo stile, ad esempio «usa pag. e il numero
+dell'allegato»: la skill lo mantiene. La numerazione predefinita conta le pagine
+fisiche del PDF; eventuali numeri stampati vengono distinti. La skill deve
+distinguere una dichiarazione da un fatto effettivamente provato. Per verificare giurisprudenza o norme
 aggiornate serve il successivo lavoro sulle banche dati, con le skill pertinenti.
 
 ## Limiti e riservatezza
@@ -61,13 +66,35 @@ Compatibilità delle istruzioni e pacchetto verificata; disponibilità degli
 strumenti soggetta al client. Consulta [TEST-REPORT.md](TEST-REPORT.md) per le
 prove effettivamente eseguite e quelle non coperte.
 
-## Origine e manutenzione
+## Istruzioni progressive e documenti completi
 
-Deriva dalle skill `docling-local` di Hermes e `docling-unsloth` nel progetto
-Hermes integrazione dell'autore, comprese le correzioni sui blocchi multipagina.
-Riusa e collauda gli script di provenienza e di esportazione per pagina; aggiunge
-diagnostica portabile e riscontro sul livello testo PDF. Non richiede quelle
-skill installate, né usa percorsi o modelli personali dell'autore.
+Il file principale contiene il flusso essenziale. Le guide su installazione,
+estrazione, contesto, scansioni, prestazioni e intervalli si aprono solo quando
+servono: non vengono caricate tutte per una risposta semplice.
+
+Questo risparmio sulle istruzioni non riduce le fonti: **i documenti entrano
+integralmente nel prompt/contesto di analisi quando c'è spazio**. Prima di usare
+estratti, riassunti, ricerca o lotti, la skill informa l'utente di cosa non
+entrerà e del metodo previsto. Un file salvato non equivale a un file presente
+nel contesto. I documenti già inclusi per intero non vengono duplicati.
+
+## Scansioni, OCR e tempi
+
+La skill controlla gli indizi delle pagine prima della conversione. Distingue
+scansioni probabili, testo presente e pagine miste, dichiarando la copertura
+controllata. Una scansione può già avere testo da OCR: la selezionabilità non
+ne prova l'origine digitale. Per scansioni e OCR attivo avvisa prima che nomi,
+date, importi e altri passaggi potrebbero essere riconosciuti male e richiedere
+controllo sulle immagini. Se le opzioni del server non sono note, lo dice.
+
+Docling funziona anche senza GPU; su sola CPU può richiedere più tempo. Nei
+confronti ufficiali consultati il vantaggio delle GPU è consistente ma dipende
+da macchina, pipeline e documento: nessun moltiplicatore fisso per il tuo PC.
+La [guida alle prestazioni](docling-citazioni-pdf/references/prestazioni.md)
+riporta numeri, condizioni e fonti. Il dispositivo va verificato sul server
+MCP: avere una GPU sul computer non significa usarla per la conversione.
+
+## Manutenzione
 
 Per i manutentori:
 
