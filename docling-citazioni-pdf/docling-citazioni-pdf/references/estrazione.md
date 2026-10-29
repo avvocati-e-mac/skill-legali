@@ -4,6 +4,10 @@ Apri questa guida prima di una nuova conversione, per problemi di accesso fra
 host o per rileggere i limiti di export/cache. Per una risposta su documenti
 già convertiti e disponibili non ripetere preparazione e conversione inutili.
 
+Per un server su un altro computer raggiunto via VPN, apri
+[server-remoto.md](server-remoto.md): stabilisci sia l'accesso al PDF sia il
+recupero dei risultati. Un URL MCP non rende condivisi i filesystem.
+
 ## Fonte e accesso
 
 Usa soltanto PDF indicati dall'utente o necessari alla richiesta. Conserva

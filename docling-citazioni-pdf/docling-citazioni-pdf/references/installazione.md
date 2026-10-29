@@ -10,6 +10,11 @@ il 28 ottobre 2026. Usa il server pubblicato dal progetto e le sue opzioni
 ordinarie: nessun launcher, sandbox o cartella di cache personalizzati. La skill
 non contiene il server né lo installa da sola caricando il file `.skill`.
 
+Se l'utente vuole usare un computer diverso per la conversione, segui invece
+[la modalità remota opzionale](server-remoto.md): sul server resta il pacchetto
+standard, mentre il client usa il collegamento HTTP verificato. Non applicare
+al client gli esempi di installazione locale di questa guida.
+
 ## Capire cosa manca
 
 | Riscontro | Conseguenza |
@@ -160,8 +165,10 @@ Verifica catalogo e una vera conversione MCP su PDF sintetico di due pagine,
 con una frase diversa per pagina e numeri stampati diversi dai fisici. Salva
 MD/JSON, leggi davvero i file e genera i riferimenti. Una frase sulla seconda
 pagina resta p. 2 anche se il piè di pagina dice 41. Registra host, versioni,
-strumento, chiave, hash e file. Senza JSON accessibile le citazioni non sono
-pronte, anche se la conversione è riuscita.
+strumento, chiave, hash e file. Senza JSON accessibile non puoi generare gli
+indici Docling o dichiarare completo il dossier, anche se la conversione è
+riuscita. Un riscontro diretto sul PDF accessibile resta un metodo distinto
+di verifica, da dichiarare senza inventare provenienze Docling.
 
 Gli helper di ispezione/confronto PDF richiedono `pypdfium2`, spesso già presente
 nell'ambiente locale. Se manca, usa un lettore disponibile o predisponi quella

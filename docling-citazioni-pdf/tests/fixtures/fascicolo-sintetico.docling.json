@@ -274,8 +274,8 @@
       "content_layer": "furniture",
       "label": "text",
       "prov": [],
-      "orig": "source: /Users/filippostrozzi/Documents/ChatGPT/Hermes integrazione/output/docling-citazioni-pdf-validation/fascicolo-sintetico.pdf",
-      "text": "source: /Users/filippostrozzi/Documents/ChatGPT/Hermes integrazione/output/docling-citazioni-pdf-validation/fascicolo-sintetico.pdf"
+      "orig": "source: fascicolo-sintetico.pdf",
+      "text": "source: fascicolo-sintetico.pdf"
     }
   ],
   "pictures": [],

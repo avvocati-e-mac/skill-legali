@@ -1,7 +1,7 @@
 {
   "passed": true,
   "pdf_sha256": "5c31835b48e2e5067e68128db18a1e5824cbe78eee8fe0431754a597db2c2bec",
-  "json_sha256": "844736e4664d92d800210f793c158058be9f2e4caae752a8e8843236a71ca64e",
+  "json_sha256": "6928bb7353303fd572306f974f824e55d05c60c320c609894798196661e74dfe",
   "page_count": 3,
   "source_unchanged": true,
   "tools": [
@@ -58,5 +58,14 @@
   },
   "cli_preservation_checks": 3,
   "client_scope": "direct_MCP_SDK_not_product_UI",
-  "visual_check": "not_performed_by_script"
+  "visual_check": "not_performed_by_script",
+  "fixture_sanitization": {
+    "original_json_sha256": "844736e4664d92d800210f793c158058be9f2e4caae752a8e8843236a71ca64e",
+    "changed_fields": [
+      "texts[7].orig",
+      "texts[7].text"
+    ],
+    "reason": "Removed an absolute source path from an unprovenanced metadata paragraph.",
+    "cited_text_and_provenance_unchanged": true
+  }
 }

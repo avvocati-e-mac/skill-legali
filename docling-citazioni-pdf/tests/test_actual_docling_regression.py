@@ -1,4 +1,4 @@
-"""Regression on the archived real MCP output of a wholly synthetic PDF."""
+"""Regression on a sanitized copy of real MCP output from a synthetic PDF."""
 from pathlib import Path
 import hashlib
 import json

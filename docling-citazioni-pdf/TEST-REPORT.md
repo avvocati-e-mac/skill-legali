@@ -1,3 +1,70 @@
+# Modalità remota opzionale e verifica del pacchetto — 29 ottobre 2026
+
+Esito: **74 test superati**. I 71 controlli precedenti sono conservati; tre
+nuovi controlli verificano rilevamento di identificativi sintetici, ammissibilità
+dei soli esempi generici e assenza di identificativi di postazione nel testo
+pubblicabile e nelle risorse testuali dell'archivio.
+
+## Ambito della revisione
+
+Il flusso predefinito resta Docling sullo stesso computer. L'entrypoint contiene
+solo un rimando alla guida `references/server-remoto.md`, da leggere quando
+l'utente chiede o utilizza già un server su un altro computer tramite rete
+privata. La guida usa il server standard e distingue collegamento HTTP del
+client da conversione `local` sul server. Non importa configurazioni personali
+né configura effettivamente una VPN o un servizio.
+
+README e indice spiegano l'opzione con l'esempio della fotocopiatrice centrale.
+Sono espliciti: accesso del server ai PDF, recupero degli export, provenienza
+delle copie, test dal client e permanenza dell'invio dei contenuti all'IA online.
+L'installazione locale standard resta valida e predefinita.
+
+## Controlli e limiti
+
+- Archivio rigenerato e confrontato byte per byte con le risorse sorgenti;
+  verifica del frontmatter, limite della description, link locali e assenza
+  di artefatti del sistema operativo.
+- Esempi HTTP verificati con l'help dei client; configurazione TOML analizzata
+  ed endpoint coerente con i comandi. Gli esempi usano un dominio riservato
+  `.example` e segnaposto, non una rete realmente configurata.
+- [Revisione indipendente](tests/revisione-remoto.md) su cinque simulazioni:
+  uso locale, PDF solo sul client, export irrecuperabili, connettore cloud
+  fuori dalla VPN e sola diagnosi di raggiungibilità. Nessuna rete o conversione
+  eseguita dal revisore. I primi messaggi sono esempi di risposta, non prova
+  dell'invio reale in una seconda conversazione.
+- Una contraddizione preesistente nella guida di installazione è stata corretta:
+  senza JSON non sono pronti indici e dossier Docling; rimane distinto il
+  riscontro diretto di un passo sul PDF accessibile. Il revisore ha confermato
+  la correzione con un ricontrollo mirato, senza ripetere tutte le simulazioni.
+- Nessun collaudo end-to-end di una VPN, di un servizio remoto, di regole di
+  accesso o di avvio automatico. Non sono state modificate configurazioni
+  dell'utente o copie installate delle skill. I vecchi risultati MCP riguardano
+  le prove iniziali, non questa nuova topologia di rete.
+
+## Rimozione di un percorso da una vecchia fixture
+
+Il nuovo controllo ha rilevato un percorso locale nel paragrafo tecnico
+`source:` di una fixture già presente. La copia pubblicabile è stata sanificata
+nei soli campi `texts[7].orig` e `texts[7].text`, privi di provenienze; tutti i
+testi citati, gli anchor e i record `prov` sono invariati. Il controllo di
+regressione continua a usare il vero caso di blocco multipagina.
+
+La modifica è documentata in [sanitizzazione.md](tests/fixtures/sanitizzazione.md)
+e nel riepilogo della prova. SHA-256 della copia corrente:
+`6928bb7353303fd572306f974f824e55d05c60c320c609894798196661e74dfe`.
+I digest dei vecchi rapporti si riferiscono alla risposta originale ricevuta
+allora; la fixture corrente non viene dichiarata una copia byte per byte di
+quella risposta. PDF e dati della pratica di prova restano interamente sintetici.
+
+Il controllo automatico cerca percorsi di home, nomi concreti di tailnet,
+indirizzi privati, email e indirizzi fisici di rete. È una protezione mirata,
+non una certificazione forense. La pulizia riguarda i file correnti e il
+pacchetto: la cronologia Git precedente non è stata riscritta.
+
+I rapporti delle revisioni precedenti sono conservati qui sotto come storico.
+
+---
+
 # Revisione: istruzioni progressive, contesto e avvisi — 28 ottobre 2026
 
 Esito: **71 test superati** nel Python 3.12 con `pypdfium2 5.14.0` già presente.

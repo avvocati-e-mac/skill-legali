@@ -12,7 +12,8 @@ Esempio di richiesta:
 > e ciò che non riesci a verificare.
 
 **Prima di usare documenti riservati:** Docling può estrarne il contenuto sul
-tuo computer. Se poi usi Claude o ChatGPT per analizzarlo, il contenuto che
+tuo computer, oppure su un computer dello studio scelto per la modalità
+remota opzionale. Se poi usi Claude o ChatGPT per analizzarlo, il contenuto che
 l'assistente legge viene inviato ai server del rispettivo fornitore:
 **Anthropic per Claude, OpenAI per ChatGPT**. Questo vale anche quando il PDF
 originale resta nella cartella della pratica e l'app è installata sul computer.
@@ -38,8 +39,9 @@ risultati al servizio IA online.
 
 ## Riservatezza: quali informazioni escono dal computer
 
-**Docling locale significa estrazione locale. Non significa che anche
-l'analisi di Claude o ChatGPT avvenga sul tuo computer.**
+**Docling locale significa che la conversione avviene sul computer che lo
+esegue: può essere il tuo o un altro computer autorizzato dello studio.
+L'analisi di Claude o ChatGPT continua invece a usare il servizio online.**
 
 Per esempio, `contratto.pdf` contiene nome del cliente, indirizzo e codice
 fiscale. Docling ne ricava il testo sul computer. Quando quel testo viene
@@ -167,6 +169,51 @@ Il registro conserva anche un'impronta digitale del file: un codice che cambia
 se cambia il contenuto. È come il numero identificativo di una particolare
 copia del fascicolo. Se sostituisci un PDF con una versione diversa, le sue
 citazioni devono essere ricontrollate.
+
+## Opzione avanzata: una fotocopiatrice centrale per più computer
+
+La scelta predefinita resta Docling sul computer da cui lavori. Se preferisci,
+puoi far eseguire la conversione a **un altro computer autorizzato dello studio**,
+collegato tramite Tailscale o un'altra rete privata VPN. È come avere una
+fotocopiatrice centrale: lavori dal portatile, ma il lavoro più impegnativo
+viene svolto dalla macchina dedicata.
+
+| Scelta | Dove lavora Docling | Che cosa serve |
+|---|---|---|
+| Sullo stesso computer, predefinita | Sul computer da cui usi l'assistente | Installazione locale e collegamento funzionante |
+| Su un altro computer, opzionale | Sul computer scelto per la conversione | Collegamento privato, PDF leggibili da quel computer e recupero dei risultati |
+
+Esempio di richiesta:
+
+> Vorrei usare Docling sul computer dedicato dello studio e lavorare dal
+> portatile. I due computer sono collegati con una VPN privata. Verifica se
+> il collegamento è utilizzabile e come mettere a disposizione i PDF e
+> recuperare i risultati, prima di proporre modifiche.
+
+L'assistente chiederà solo ciò che manca: quale rete collega i computer,
+quale macchina farà il lavoro, le sue caratteristiche e se Docling funziona
+già. Un computer senza accelerazione grafica può comunque essere utilizzabile;
+per capire i tempi può essere utile una piccola prova rappresentativa.
+
+**La VPN è il corridoio, non l'archivio condiviso:** collegare due computer non
+fa comparire automaticamente le rispettive cartelle. Il computer che converte
+deve poter leggere i PDF; sul portatile devono tornare il testo, i riferimenti
+e le immagini necessarie per controllare le citazioni. Il salvataggio riuscito
+sul server non significa che quei file siano già disponibili sul portatile.
+
+La rete privata riguarda questo corridoio fra i computer. **Non impedisce
+l'invio del contenuto a Claude o ChatGPT quando li usi per l'analisi online.**
+Inoltre, un collegamento avviato dal computer e uno avviato dai server del
+fornitore non hanno automaticamente gli stessi accessi: un indirizzo VPN non
+può essere dato per raggiungibile da qualunque applicazione.
+
+La [guida alla modalità remota](docling-citazioni-pdf/references/server-remoto.md)
+si consulta soltanto quando serve. Mantiene l'installazione standard di Docling
+e distingue accesso diretto tramite VPN e proxy privato, come Tailscale Serve.
+L'esposizione pubblica con Funnel non fa parte di questa opzione. Le modifiche
+alla rete e all'avvio dei programmi vengono presentate per l'autorizzazione
+necessaria, senza alterare configurazioni funzionanti come conseguenza della
+semplice richiesta di leggere un PDF.
 
 ## Che cosa serve e come si installa
 
