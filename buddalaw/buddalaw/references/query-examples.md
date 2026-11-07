@@ -1,8 +1,13 @@
-# BuddaLaw — Esempi di query ottimali per materia
+# BuddaLaw — esempi di query per materia
 
-Usare questi esempi come punto di partenza. Adattare al caso concreto mantenendo
-il linguaggio naturale giuridico. Le query più efficaci sono frasi complete,
-non keyword isolate.
+Punti di partenza da adattare al caso concreto. Le query più efficaci sono frasi complete in linguaggio giuridico italiano, non parole isolate. Per i filtri (ufficio, giudice, anno) vedi [filtri-e-uffici.md](filtri-e-uffici.md).
+
+## Indice
+
+- Giurisprudenza: civile, lavoro, penale, tributario, prassi, merito, amministrativo, privacy, Corte costituzionale, Unione europea
+- Casi simili (`search_similar_cases`)
+- Lettura di un articolo (`get_law_article`)
+- Contratti e atti processuali
 
 ---
 
@@ -22,6 +27,8 @@ non keyword isolate.
 ---
 
 ## Diritto del lavoro (`search_category="civile"`)
+
+La Cassazione lavoro sta in `civile` (non esiste `search_category="lavoro"`); per i tribunali usa `merito`.
 
 | Quesito tipo | Query efficace |
 |---|---|
@@ -74,6 +81,8 @@ non keyword isolate.
 
 ## Merito (`search_category="merito"`)
 
+Per un tribunale preciso: `list_uffici` con `dominio="merito"`, poi `codiceufficio`. Cita con ufficio e data di deposito.
+
 | Quesito tipo | Query efficace |
 |---|---|
 | Locazione commerciale | `"risoluzione contratto locazione commerciale morosità grave inadempimento"` |
@@ -108,6 +117,69 @@ non keyword isolate.
 
 ---
 
+## Corte costituzionale (`search_category="costituzionale"`)
+
+| Quesito tipo | Query efficace |
+|---|---|
+| Illegittimità di una norma | `"questione di legittimità costituzionale indennità licenziamento illegittimo tutele crescenti"` |
+| Principio di uguaglianza fiscale | `"capacità contributiva principio di progressività imposta illegittimità"` |
+| Diritti in materia di famiglia | `"attribuzione del cognome ai figli illegittimità costituzionale"` |
+
+Lettura: `get_judgement` con `dominio="costituzionale"` e l'`idatto` del risultato (ECLI, es. `ECLI:IT:COST:2025:83`). Con il solo numero serve anche `ufficio`: meglio cercare prima. Citazione: `[Corte cost., sent. n. NUMERO/ANNO](public_url)`, `ord. n.` per le ordinanze.
+
+---
+
+## Unione europea (`search_category="eu-case-law"`)
+
+| Quesito tipo | Query efficace |
+|---|---|
+| Clausole abusive | `"clausole abusive contratti stipulati con i consumatori rilievo d'ufficio giudice nazionale"` |
+| Rinvio pregiudiziale | `"rinvio pregiudiziale interpretazione direttiva effetto diretto"` |
+| Trasferimento dati | `"trasferimento dati personali paesi terzi adeguatezza garanzie"` |
+
+Il campo `numero` è il progressivo dell'ECLI, non il numero di causa: ricava C-…/… o T-…/… da `parti` o da `celex` (`62011CJ0397` → C-397/11). Citazione: `[CGUE, sent. 30 maggio 2013, C-397/11](url)`; per il Tribunale `[Trib. UE, sent. …, T-…/…](url)`. Lettura: `dominio="eu-case-law"` con l'`idatto`.
+
+---
+
+## Casi simili (`search_similar_cases`, solo merito)
+
+Descrivi il fatto, non il principio:
+
+| Situazione | Query efficace |
+|---|---|
+| Comporto | `"lavoratore licenziato per superamento del periodo di comporto con assenze per malattia professionale"` |
+| Infiltrazioni | `"infiltrazioni d'acqua dal lastrico solare danni all'appartamento sottostante responsabilità del condominio"` |
+| Sinistro stradale | `"pedone investito sulle strisce pedonali concorso di colpa"` |
+
+```json
+{"tool": "search_similar_cases", "arguments": {"query": "lavoratore licenziato per superamento del periodo di comporto con assenze per malattia professionale", "dominio": "merito", "max_results": 10}}
+```
+
+Restringi con `codiceufficio` (da `list_uffici`) o `anno`. Di' quante decisioni hai letto: una sola non fa un orientamento.
+
+---
+
+## Lettura di un articolo (`get_law_article`)
+
+| Richiesta | Chiamata |
+|---|---|
+| art. 2043 c.c. vigente | `{"act": "codice_civile", "article": "2043"}` |
+| art. 163-bis c.p.c. nel 2022 | `{"act": "codice_procedura_civile", "article": "163-bis", "in_force_on": "2022-06-30"}` |
+| art. 14 L. 689/1981 | `{"act_type": "legge", "act_year": 1981, "act_number": 689, "article": "14"}` |
+| art. 2 d.lgs. 81/2008 | `{"act_type": "decreto_legislativo", "act_year": 2008, "act_number": 81, "article": "2"}` |
+| art. 4 d.m. 55/2014 | `{"act_type": "decreto_ministeriale", "act_year": 2014, "act_number": 55, "article": "4"}` |
+| art. 18 Statuto dei lavoratori | `{"act_type": "legge", "act_year": 1970, "act_number": 300, "article": "18"}` |
+
+```json
+{"tool": "get_law_article", "arguments": {"act": "testo_unico_sicurezza_lavoro", "article": "2", "paragraphs": ["1"]}}
+```
+
+`paragraphs` serve solo per articoli lunghi con commi numerati: nei codici storici i commi spesso non sono numerati e il server restituisce l'articolo intero con un `warning`.
+
+Testo vuoto o «ABROGATO» = abrogato. Con `in_force_on` dichiara la data a cui il testo è vigente. Per cercare norme su un tema senza conoscere l'articolo usa `search_articles`.
+
+---
+
 ## Contratti (`search_contracts`)
 
 | Tipo contratto | Query efficace |
@@ -125,9 +197,25 @@ non keyword isolate.
 
 | Tipo atto | Query efficace |
 |---|---|
-| Decreto ingiuntivo | `"ricorso per decreto ingiuntivo credito liquido esigibile"` |
+| Decreto ingiuntivo | `"ricorso per decreto ingiuntivo credito liquido esigibile"` (se non lo trova, naviga con `list_processual_act_categories` → `list_processual_acts`) |
 | Opposizione a DI | `"atto di citazione opposizione decreto ingiuntivo"` |
 | Ricorso rito lavoro | `"ricorso impugnazione licenziamento rito lavoro"` |
 | Ricorso TAR | `"ricorso TAR annullamento provvedimento amministrativo"` |
 | ATP | `"accertamento tecnico preventivo consulenza tecnica preventiva"` |
 | Mediazione | `"domanda di mediazione obbligatoria materie civili commerciali"` |
+
+---
+
+## Normativa (`search_articles`): quale `domain`
+
+| Materia | `domain` |
+|---|---|
+| Contratti, obbligazioni, famiglia, proprietà, successioni | `civil_code` |
+| Processo civile ordinario | `civil_procedure` |
+| Leggi speciali civili (locazioni, consumatori, lavoro) | `special_civil` |
+| Riti speciali (decreto ingiuntivo, ATP, procedimenti cautelari) | `special_civil_procedure` |
+| Codice penale e processo penale | `criminal` |
+| IVA, imposte dirette, accertamento | `tax` |
+| GDPR e Codice privacy | `privacy` |
+
+Per un articolo di una legge speciale già noto (es. L. 689/1981) usa `get_law_article` con `act_type`: `search_articles` non contiene tutte le leggi speciali.

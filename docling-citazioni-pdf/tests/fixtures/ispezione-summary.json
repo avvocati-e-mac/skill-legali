@@ -1,0 +1,67 @@
+{
+  "format_version": 1,
+  "pdf_path": "tipi-pdf.pdf",
+  "pdf_sha256": "ef012b52cb83fa1524f3bb84d07915c5e436d34475e6a31f64223b551b397721",
+  "physical_page_count": 4,
+  "pages_examined": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "pages_not_examined": 0,
+  "scope": "all_pages",
+  "pages": [
+    {
+      "physical_page": 1,
+      "characters_reported": 72,
+      "non_whitespace_characters": 64,
+      "image_objects_seen": 0,
+      "largest_image_bbox_fraction": 0.0,
+      "clue": "text_layer_present_origin_unknown"
+    },
+    {
+      "physical_page": 2,
+      "characters_reported": 0,
+      "non_whitespace_characters": 0,
+      "image_objects_seen": 1,
+      "largest_image_bbox_fraction": 1.0,
+      "clue": "probable_scan_sparse_or_no_text"
+    },
+    {
+      "physical_page": 3,
+      "characters_reported": 79,
+      "non_whitespace_characters": 70,
+      "image_objects_seen": 1,
+      "largest_image_bbox_fraction": 1.0,
+      "clue": "dominant_image_and_text_possible_previous_ocr"
+    },
+    {
+      "physical_page": 4,
+      "characters_reported": 0,
+      "non_whitespace_characters": 0,
+      "image_objects_seen": 0,
+      "largest_image_bbox_fraction": 0.0,
+      "clue": "no_text_origin_unknown"
+    }
+  ],
+  "sample_has_different_clues": true,
+  "document_origin_certified": false,
+  "visual_verification_performed": false,
+  "ocr_execution_checked": false,
+  "ocr_performed_by_helper": false,
+  "heuristics": {
+    "dominant_image_bbox_fraction": 0.75,
+    "sparse_text_below_non_whitespace_characters": 40
+  },
+  "limitations": [
+    "Text can be a previous OCR layer; no origin is certified.",
+    "Largest image bbox is approximate; tiles, clipping, rotation, nested forms and overlaps can hide or overstate coverage.",
+    "Blank pages, outlined text and vector graphics can have no extracted text.",
+    "Sampled pages do not establish the type of unexamined pages."
+  ],
+  "reader": {
+    "name": "pypdfium2",
+    "version": "5.14.0"
+  }
+}

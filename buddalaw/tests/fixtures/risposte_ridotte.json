@@ -1,0 +1,352 @@
+{
+  "_nota": "Risposte reali BuddaLaw MCP 1.30.0 del 2026-10-17, ridotte: testi troncati a circa 200 caratteri ('…'), nomi di persone sostituiti con [NOME], indirizzi rimossi, campi lunghi omessi. Le risposte complete sono solo in tests/.live/ (esclusa da git). Servono ai test offline per forma dei campi, tipi e messaggi di errore, non come esempi da mostrare all'utente.",
+  "check_access": {
+    "has_access": true,
+    "expires_at": "2030-04-30",
+    "days_remaining": 1291,
+    "modules_available": [],
+    "user_category": "avvocato"
+  },
+  "search_case_law": {
+    "civile": {
+      "idatto": "ECLI:IT:CASS:2022:3285CIV",
+      "numero": "03285",
+      "anno": 2022,
+      "data_deposito": "2022-02-03",
+      "categoria": "Responsabilità extracontrattuale",
+      "tipologia": "Ordinanza",
+      "testo": "Orbene, anche nel contesto di un sistema, qual è quello della responsabilità civile, \"retto\", quanto all'apprezzamento della sussistenza del nesso causale, dal principio del \"più probabile che non\"…",
+      "ufficio": "Corte di Cassazione",
+      "codiceufficio": "80417740588",
+      "search_score": 1,
+      "sintesi": "La Corte di Cassazione ha accolto il ricorso della società attrice, contestando la valutazione del nesso causale da parte della Corte di Appello, e ha rinviato il caso…",
+      "caso_concreto": "Contenzioso relativo alla responsabilità per inquinamento ambientale e risarcimento danni…",
+      "sezione": "terza",
+      "classificazione_provvedimento": "CIVILE",
+      "public_url": "https://platform.buddalaw.com/full-documents/civile/ECLI:IT:CASS:2022:3285CIV"
+    },
+    "penale": {
+      "idatto": "ECLI:IT:CASS:2019:28054PEN",
+      "numero": "28054",
+      "anno": 2019,
+      "data_deposito": "2019-06-26",
+      "categoria": "Penale",
+      "tipologia": "Sentenza",
+      "ufficio": "Corte di Cassazione",
+      "codiceufficio": "80417740588",
+      "sezione": "quinta",
+      "classificazione_provvedimento": "PENALE",
+      "public_url": "https://platform.buddalaw.com/full-documents/penale/ECLI:IT:CASS:2019:28054PEN"
+    },
+    "tributari": {
+      "idatto": "{33A73249-F471-4628-9929-4E5B3143BEB5}",
+      "numero": "304",
+      "anno": 2022,
+      "descrizione_esito": null,
+      "data_deposito": "24/01/2022",
+      "categoria": "Accertamento imposte_Iva",
+      "tipologia": "Sentenza",
+      "testo": "Va ribadito (Sez. 5 -, Ordinanza n. 15369 del 20/07/2020 (Rv. 658429 - 01) che l'operazione soggettivamente inesistente si configura, invero, sia quando l'emittente della fattura non sia un soggetto passivo…",
+      "ufficio": "Corte di Giustizia di 2° grado di Lazio",
+      "search_score": 0.7,
+      "public_url": "https://platform.buddalaw.com/full-documents/tributario/{33A73249-F471-4628-9929-4E5B3143BEB5}"
+    },
+    "prassi": {
+      "idatto": "Risposta_584_14.09.2021",
+      "numero": "584",
+      "anno": 2021,
+      "data_deposito": "14/09/2021",
+      "tipologia": "interpelli",
+      "ufficio": "Agenzia delle Entrate",
+      "public_url": "https://platform.buddalaw.com/full-documents/tributario-prassi/Risposta_584_14.09.2021"
+    },
+    "merito": {
+      "idatto": "c495f3f5f35c1dc81dc9f0b5469ac96f50023f7ef09c0a348beefce67db00bd2",
+      "numero": "2384",
+      "anno": 2026,
+      "data_deposito": "06/07/2026",
+      "ufficio": "TRIBUNALE DI MILANO",
+      "codiceufficio": "0151460094",
+      "sezione": null,
+      "giudice": "[NOME]",
+      "categoria": "Lavoro",
+      "oggetto": "LAVORO DIPENDENTE DA PRIVATO",
+      "tipologia": "Sentenza",
+      "grado": 1,
+      "page": 12,
+      "public_url": "https://platform.buddalaw.com/full-documents/merito/c495f3f5f35c1dc81dc9f0b5469ac96f50023f7ef09c0a348beefce67db00bd2"
+    },
+    "merito_idatto_numerico": {
+      "idatto": "103385212",
+      "numero": "391",
+      "anno": 2020,
+      "data_deposito": "17/02/2020",
+      "ufficio": "Tribunale Ordinario di Milano",
+      "codiceufficio": "0151460094",
+      "giudice": "[NOME]",
+      "public_url": "https://platform.buddalaw.com/full-documents/merito/103385212"
+    },
+    "merito_anno_diverso_da_deposito": {
+      "idatto": "510bd1fc14cacbaace7df1507c61fc6df00649419755eeca51dcc66c5e2bd120",
+      "numero": "200",
+      "anno": 2025,
+      "data_deposito": "02/01/2026",
+      "ufficio": "CORTE DI APPELLO DI CALTANISSETTA",
+      "codiceufficio": "0850040065",
+      "giudice": "[NOME]",
+      "grado": 2,
+      "public_url": "https://platform.buddalaw.com/full-documents/merito/510bd1fc14cacbaace7df1507c61fc6df00649419755eeca51dcc66c5e2bd120"
+    },
+    "privacy": {
+      "idchunk": "10196164_26",
+      "idatto": "10196164",
+      "numero": "10196164",
+      "anno": 2025,
+      "data_deposito": "2025-10-23",
+      "titolo": "Provvedimento del 23 ottobre 2025 [10196164]",
+      "tipologia": "Provvedimento",
+      "ufficio": "Garante per la Protezione dei Dati Personali",
+      "codiceufficio": "Gpdp",
+      "categoria": "Privacy",
+      "url": "https://www.garanteprivacy.it/web/guest/home/docweb/-/docweb-display/docweb/10196164",
+      "page": 26,
+      "public_url": "https://platform.buddalaw.com/full-documents/data-protection-authority/10196164"
+    },
+    "amministrativo": {
+      "idatto": "ECLI:IT:TARLAZ:2024:8799SENT",
+      "numero": "08799",
+      "anno": 2024,
+      "data_deposito": "03/05/2024",
+      "ufficio": "ROMA",
+      "codiceufficio": "tar_rm",
+      "sezione": "SEZIONE 2Q",
+      "categoria": "Diritto Amministrativo",
+      "tipologia": "SENTENZA",
+      "grado": 1,
+      "page": 2,
+      "public_url": "https://platform.buddalaw.com/full-documents/amministrativo/ECLI:IT:TARLAZ:2024:8799SENT"
+    },
+    "costituzionale": {
+      "idatto": "ECLI:IT:COST:2025:83",
+      "numero": "83",
+      "anno": 2025,
+      "data_deposito": "20/06/2025",
+      "tipologia": "Sentenza",
+      "categoria": "Costituzionale",
+      "page": 21,
+      "public_url": "https://platform.buddalaw.com/full-documents/costituzionale/ECLI:IT:COST:2025:83"
+    },
+    "eu-case-law": {
+      "idatto": "ECLI:EU:C:2013:340",
+      "celex": "62011CJ0397",
+      "numero": "340",
+      "anno": 2013,
+      "data_deposito": "30/05/2013",
+      "tipologia": "Sentenza",
+      "organo": "Corte di Giustizia UE",
+      "categoria": "Diritto civile",
+      "materia": "Direttiva 93/13/CEE — Clausole abusive contenute nei contratti stipulati con i consumatori — Esame d’ufficio…",
+      "parti": "Nella causa C-397/11, avente ad oggetto la domanda di pronuncia pregiudiziale proposta alla Corte, ai sensi dell’articolo 267 TFUE, dal Fővárosi Bíróság (Ungheria)… nel procedimento [NOME] contro [NOME]",
+      "lingua_processuale": "ungherese",
+      "page": 15,
+      "public_url": "https://platform.buddalaw.com/full-documents/eu-case-law/ECLI:EU:C:2013:340"
+    },
+    "vuoto": {"total_results": 0, "results": []},
+    "errore_search_category": {"error": "Il parametro 'search_category' deve essere uno tra: tributari, prassi, penale, civile, merito, privacy, amministrativo, costituzionale, eu-case-law"},
+    "errore_data_formato_sbagliato": "Error calling tool 'search_case_law': RetryError[<Future at 0x... state=finished returned Response>]"
+  },
+  "search_similar_cases": {
+    "risultato": {
+      "total_results": 40,
+      "results": [
+        {
+          "idatto": "85465993",
+          "numero": "106",
+          "anno": 2019,
+          "data_deposito": "13/02/2019",
+          "ufficio": "Tribunale Ordinario di Milano",
+          "codiceufficio": "0151460094",
+          "giudice": "[NOME]",
+          "categoria": "Fallimento e procedure concorsuali",
+          "caso_concreto": "Controversia relativa alla legittimità del licenziamento per giustificato motivo soggettivo di una dipendente per superamento del periodo di comporto.",
+          "sintesi": "Il tribunale ha giudicato legittimo il licenziamento di una dipendente per superamento del periodo di comporto…",
+          "struttura_logica": "### Svolgimento del Processo \nIl ricorrente ha citato in giudizio il resistente per contestare la legittimità del licenziamento…",
+          "search_score": 0.76020575,
+          "public_url": "https://platform.buddalaw.com/full-documents/merito/85465993"
+        }
+      ]
+    },
+    "errore_dominio": {"error": "Dominio non supportato: 'amministrativo'. Al momento è disponibile solo: merito."}
+  },
+  "get_judgement": {
+    "cassazione": {
+      "numero": "03285",
+      "anno": 2022,
+      "ufficio": "Corte di Cassazione",
+      "text": "O___ ricorso 8033-2019 proposto da: … - ricorrente - contro … - controricorrente - Avverso la sentenza n. 2486 /2018 della CORTE DI A___ di V___, depositata il 7/09/2018…",
+      "data_pubblicazione": "2022-02-03",
+      "category": "Responsabilità extracontrattuale",
+      "tipologia": "Ordinanza",
+      "index_key": "cassazione",
+      "idatto": "ECLI:IT:CASS:2022:3285CIV",
+      "public_url": "https://platform.buddalaw.com/full-documents/civile/ECLI:IT:CASS:2022:3285CIV"
+    },
+    "tributario": {
+      "numero": "304",
+      "anno": 2022,
+      "ufficio": "Z18",
+      "text": "Sentenza n. 304/2022 Depositato il 24/01/2022 REPUBBLICA ITALIANA IN NOME DEL POPOLO ITALIANO La Commissione Tributaria Regionale per il LAZIO Sezione 09, riunita in udienza il 13/01/2022… composizione collegiale: [NOME], Presidente e Relatore…",
+      "data_pubblicazione": "2022-01-24",
+      "category": "tributario",
+      "tipologia": "sentenza",
+      "index_key": "tributario",
+      "idatto": "{33A73249-F471-4628-9929-4E5B3143BEB5}",
+      "public_url": "https://platform.buddalaw.com/full-documents/tributario/{33A73249-F471-4628-9929-4E5B3143BEB5}"
+    },
+    "costituzionale": {
+      "numero": "83",
+      "anno": 2025,
+      "ufficio": "Corte Costituzionale",
+      "text": "SENTENZA N. 83\nANNO 2025\nREPUBBLICA ITALIANA\nIN NOME DEL POPOLO ITALIANO\nLA CORTE COSTITUZIONALE\ncomposta da: Presidente: [NOME]; Giudici : [NOME]…",
+      "data_pubblicazione": "20/06/2025",
+      "index_key": "costituzionale",
+      "idatto": "ECLI:IT:COST:2025:83",
+      "public_url": "https://platform.buddalaw.com/full-documents/costituzionale/ECLI:IT:COST:2025:83"
+    },
+    "not_found": {"not_found": true, "message": "Il provvedimento richiesto non è presente nella banca dati BuddaLaw. Non è un errore tecnico: l'archivio non copre integralmente tutte le annate. Riferirlo all'utente come provvedimento non disponibile, non come malfunzionamento."},
+    "errore_dominio_sbagliato": {"error": "Errore dal servizio esterno: 400"},
+    "errore_parametri_insufficienti": {"error": "Parametri insufficienti: fornire 'idatto' oppure 'numero', 'anno' e 'ufficio' (per la Cassazione, con dominio 'civile' o 'penale', bastano 'numero' e 'anno')"}
+  },
+  "get_law_article": {
+    "ok_con_warning_commi": {
+      "found": true,
+      "article": "2043",
+      "heading": "Risarcimento per fatto illecito",
+      "text": "Qualunque fatto doloso o colposo, che cagiona ad altri un danno ingiusto, obbliga colui che ha commesso il fatto a risarcire il danno.",
+      "act_name": "Codice Civile",
+      "requested_urn": "urn:nir:stato:regio.decreto:1942-03-16;262",
+      "returned_urn": "urn:nir:stato:regio.decreto:1942-03-16;262",
+      "returned_title": "Approvazione del testo del Codice civile. (042U0262)",
+      "warning": "Commi 1 non trovati: riportato l'articolo intero.",
+      "normattiva_url": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1942-03-16;262~art2043",
+      "in_force_on": null
+    },
+    "in_force_on": {
+      "found": true,
+      "article": "163-bis",
+      "heading": "Termini per comparire",
+      "text": "Tra il giorno della notificazione della citazione e quello dell'udienza di comparizione debbono intercorrere termini liberi non minori di ((novanta giorni)) se il luogo della notificazione si trova in Italia…",
+      "act_name": "Codice di Procedura Civile",
+      "requested_urn": "urn:nir:stato:regio.decreto:1940-10-28;1443!vig=2022-01-01",
+      "returned_urn": "urn:nir:stato:regio.decreto:1940-10-28;1443",
+      "normattiva_url": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1940-10-28;1443~art163bis!vig=2022-01-01",
+      "in_force_on": "2022-01-01"
+    },
+    "decreto_ministeriale_urn_diversi": {
+      "found": true,
+      "article": "4",
+      "heading": "Parametri generali per la determinazione dei compensi in sede giudiziale",
+      "act_name": "Decreto Ministeriale 55/2014",
+      "requested_urn": "urn:nir:stato:decreto.ministeriale:2014;55",
+      "returned_urn": "urn:nir:ministero.giustizia:decreto:2014-03-10;55",
+      "normattiva_url": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.ministeriale:2014;55~art4",
+      "in_force_on": null
+    },
+    "abrogato_senza_warning": {
+      "found": true,
+      "article": "594",
+      "heading": "ARTICOLO ABROGATO DAL D.LGS. 15 GENNAIO 2016, N. 7",
+      "text": "",
+      "act_name": "Codice Penale",
+      "requested_urn": "urn:nir:stato:regio.decreto:1930-10-19;1398",
+      "returned_urn": "urn:nir:stato:regio.decreto:1930-10-19;1398",
+      "normattiva_url": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:regio.decreto:1930-10-19;1398~art594",
+      "in_force_on": null
+    },
+    "tipo_diverso": {
+      "found": true,
+      "article": "2",
+      "heading": "Definizioni",
+      "act_name": "Decreto Legislativo 81/2008",
+      "requested_urn": "urn:nir:stato:legge:2008;81",
+      "returned_urn": "urn:nir:stato:decreto.legislativo:2008-04-09;81",
+      "warning": "Normattiva ha aperto Decreto Legislativo 81/2008 (Attuazione dell'articolo 1 della legge 3 agosto 2007, n. 123, in), di tipo diverso da Legge 81/2008: verifica che sia la norma intesa prima di citarla.",
+      "normattiva_url": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:legge:2008;81~art2",
+      "in_force_on": null
+    },
+    "not_found": {"not_found": true, "message": "articolo 2999 non trovato nell'atto (3219 articoli letti). Controlla tipo, anno e numero dell'atto e il numero dell'articolo; non è un malfunzionamento."},
+    "errore_act": {"error": "act «statuto_lavoratori» non riconosciuto. Valori ammessi: codice_ambiente, codice_amministrazione_digitale, codice_assicurazioni_private, codice_beni_culturali, codice_civile, codice_contratti_pubblici, codice_crisi_impresa, codice_del_consumo, codice_della_strada, codice_penale, codice_privacy, codice_procedura_civile, codice_procedura_penale, costituzione, disposizioni_attuazione_cc, disposizioni_attuazione_cpc, disposizioni_attuazione_cpp, testo_unico_bancario, testo_unico_edilizia, testo_unico_enti_locali, testo_unico_finanza, testo_unico_immigrazione, testo_unico_sicurezza_lavoro. Per le altre leggi usa act_type, act_year e act_number."}
+  },
+  "list_uffici": {
+    "amministrativo_estratto": {
+      "uffici": [
+        {"label": "Tutte le sedi", "value": null, "codice": null},
+        {"label": "Consiglio di Stato", "value": "Consiglio di Stato", "codice": "cds"},
+        {"label": "Tribunale Amministrativo Regionale sede di Roma", "value": "Roma", "codice": "tar_rm"}
+      ],
+      "count": 32
+    },
+    "tributario_estratto": {
+      "uffici": [
+        {"label": "Tutte le Corti di Giustizia", "value": null, "codice": null},
+        {"label": "Corte di Giustizia di 1° grado di Milano", "value": "Corte di Giustizia di 1° grado di Milano", "codice": "U24"},
+        {"label": "Corte di Giustizia di 2° grado di Lazio", "value": "Corte di Giustizia di 2° grado di Lazio", "codice": "Z18"}
+      ],
+      "count": 125
+    },
+    "merito_estratto": {
+      "uffici": [
+        {"label": "Tutti i Tribunali e le Corti di Appello", "value": null, "codice": null},
+        {"label": "Corte D’Appello di Caltanissetta", "value": "0850040065", "codice": "0850040065"},
+        {"label": "Tribunale Ordinario di Milano", "value": "0151460094", "codice": "0151460094"}
+      ],
+      "count": 170
+    }
+  },
+  "search_articles": {
+    "risultato": {
+      "results": [
+        {"titolo": "Risarcimento per fatto illecito", "numero": "2043", "fonte_normativa": "Codice Civile", "tassonomia": "DELLE OBBLIGAZIONI > DEI FATTI ILLECITI", "text": "Qualunque fatto doloso o colposo, che cagiona ad altri un danno ingiusto, obbliga colui che ha commesso il fatto a risarcire il danno."}
+      ],
+      "count": 16,
+      "domain": "civil_code",
+      "_nota": "richiesti max_results 12, restituiti 16"
+    },
+    "errore_domain": {"error": "Domain non valido. Valori: ['civil_code', 'civil_procedure', 'criminal', 'privacy', 'special_civil', 'special_civil_procedure', 'tax']"}
+  },
+  "list_contract_categories": {"categories": [{"id": 1, "name": "Lavoro"}, {"id": 8, "name": "Immobiliare"}], "count": 8},
+  "list_contracts": {"contracts": [{"id": 46, "name": "Conferimento incarico stragiudiziale", "description": "", "category": "Avvocati", "module": "civil"}], "count": 8},
+  "search_contracts": {"results": [{"id": 36, "name": "Contratto di locazione ad uso abitativo", "description": ""}, {"id": 81, "name": "Locazione commerciale", "description": "Modello di contratto di locazione commerciale"}], "count": 2},
+  "get_contract": {"not_found": {"not_found": true, "message": "Nessun contratto corrisponde all'identificativo indicato."}},
+  "get_contract_requirements": {
+    "requisito_normativo": {
+      "id": 7,
+      "title": "Limite massimo deposito cauzionale a tre mensilità",
+      "scope": "specific",
+      "relevance": "MUST",
+      "requirement_type": "normativo",
+      "content": "Il deposito cauzionale non può essere superiore a tre mensilità del canone di locazione…",
+      "reference_data": {"anno": "1978", "comma": null, "legge": "Disciplina delle locazioni di immobili urbani", "fonte_normativa": "Legge 392/1978", "numero_articolo": "11"},
+      "notes": "Nullità parziale ex art. 1419 c.c. limitata all'eccedenza…"
+    },
+    "requisito_giurisprudenziale": {
+      "id": 14,
+      "title": "Divieto di clausole risolutive automatiche per morosità inferiore a due mensilità",
+      "scope": "specific",
+      "relevance": "MUST",
+      "requirement_type": "giurisprudenziale",
+      "reference_data": {"anno": "2019", "idatto": null, "numero": "24681", "dominio": "civile", "ufficio": "Corte di Cassazione", "categoria": "Contratti e obbligazioni varie", "tipologia": "sentenza"}
+    },
+    "vuoto": {"requirements": [], "count": 0}
+  },
+  "list_processual_act_categories": {"categories": [{"id": 4, "title": "Procedimento di ingiunzione", "description": "", "sector_id": 1, "sector": "Civile"}, {"id": 31, "title": "Tributario", "description": "Atti del processo tributario…", "sector_id": 4, "sector": "Tributario"}], "count": 27},
+  "search_processual_acts": {"results": [{"id": 399, "title": "Istanza per la dichiarazione di esecutorietà del decreto ingiuntivo non opposto (art. 647 c.p.c.)", "description": "Istanza del creditore al giudice che ha pronunciato il decreto ingiuntivo perché lo dichiari esecutivo…", "category": "Procedimento di ingiunzione"}], "count": 2},
+  "get_processual_act": {
+    "id": 399,
+    "title": "Istanza per la dichiarazione di esecutorietà del decreto ingiuntivo non opposto (art. 647 c.p.c.)",
+    "category": "Procedimento di ingiunzione",
+    "template": "<h1 align=\"center\">TRIBUNALE DI <...></h1>\n(variante decreto del giudice di pace: «GIUDICE DI PACE DI <...>»)…",
+    "instructions": "Per la redazione dell'istanza per la dichiarazione di esecutorietà del decreto ingiuntivo non opposto (art. 647 c.p.c.) devi osservare le seguenti regole.\n\nA) CHE COSA È QUESTO ATTO, E CHE COSA NON È…",
+    "form_schema": null
+  }
+}

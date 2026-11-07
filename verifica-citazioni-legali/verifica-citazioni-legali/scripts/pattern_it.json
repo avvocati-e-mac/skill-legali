@@ -1,0 +1,56 @@
+{
+  "_nota": "Pattern per diritto italiano e UE. W = spazio o tilde LaTeX. Per estendere ad altri ordinamenti, copiare il file e passarlo con --pattern. Le regex sono Python, flag IGNORECASE dove indicato.",
+  "spazio": "[\\s~]",
+  "ancore_giurisprudenza": [
+    "\\bCass(?:azione)?\\.?(?=[\\s~,]|$)",
+    "\\bCorte[\\s~]+(?:Suprema[\\s~]+)?di[\\s~]+[Cc]assazione",
+    "\\bS(?:ez)?\\.?[\\s~]*U(?:n)?\\.?(?=[\\s~,])",
+    "\\bSS\\.?[\\s~]*UU\\.?",
+    "\\bSezioni[\\s~]+Unite",
+    "\\bCorte[\\s~]+cost(?:ituzionale)?\\.?",
+    "\\bC\\.[\\s~]*cost\\.",
+    "\\bTrib(?:unale)?\\.?[\\s~]+(?:di[\\s~]+)?[A-Z][a-zà-ù'’]+",
+    "\\bApp(?:ello)?\\.?[\\s~]+[A-Z][a-zà-ù'’]+",
+    "\\bCorte[\\s~]+d['’][\\s~]*[Aa]ppello",
+    "\\bT\\.?A\\.?R\\.?[\\s~]",
+    "\\bCons(?:iglio)?\\.?[\\s~]+(?:di[\\s~]+)?Stato",
+    "\\bCGUE\\b|\\bCorte[\\s~]+(?:di[\\s~]+)?giust(?:izia)?\\.?|\\bC\\.[\\s~]*giust\\.",
+    "\\bCorte[\\s~]+EDU\\b|\\bC(?:orte)?\\.?[\\s~]*e\\.?d\\.?u\\.",
+    "\\bECLI:[A-Z]{2}:[A-Z0-9]+:\\d{4}:[A-Z0-9.]+"
+  ],
+  "estremi": {
+    "numero_anno_barra": "\\b(\\d{1,6})[\\s~]*/[\\s~]*((?:19|20)\\d{2}|\\d{2})\\b",
+    "numero": "\\bn(?:\\.|ro|um\\.)?[\\s~]*(\\d{1,6})\\b",
+    "anno_del": "\\bdel(?:l['’])?[\\s~]+((?:19|20)\\d{2})\\b",
+    "data": "\\b(\\d{1,2})[./-](\\d{1,2})[./-]((?:19|20)\\d{2})\\b",
+    "data_estesa": "\\b(\\d{1,2})[\\s~]+(gennaio|febbraio|marzo|aprile|maggio|giugno|luglio|agosto|settembre|ottobre|novembre|dicembre)[\\s~]+((?:19|20)\\d{2})\\b",
+    "sezione": "\\b[Ss]ez(?:ione)?\\.?[\\s~]*(Un(?:ite)?\\.?|U\\.|[IVX]{1,4}|\\d|lav(?:oro)?\\.?|trib\\.?|6-\\d|VI-\\d)",
+    "tipo": "\\b(sent(?:enza)?|ord(?:inanza)?|decr(?:eto)?)\\.?(?=[\\s~,])",
+    "rv": "\\bRv\\.?[\\s~]*(\\d{6})(?:[\\s~]*-[\\s~]*(\\d{2}))?",
+    "ecli": "\\b(ECLI:[A-Z]{2}:[A-Z0-9]+:\\d{4}:[A-Z0-9.]+)",
+    "rg": "\\bR\\.?[\\s~]*G\\.?[\\s~]*(?:n\\.?[\\s~]*)?(\\d{1,8})[\\s~]*/[\\s~]*(\\d{2,4})"
+  },
+  "fine_citazione": "[;)\\]}»–]|\\\\href|https?://|\\n[ \\t]*\\n|\\.[\\s~]+(?=[A-ZÀ-Ú][a-zà-ù]{2,}[\\s~]+[a-zà-ù])",
+  "ultimo_estremo": "(?:ECLI:[A-Z0-9:.]+|Rv\\.?[\\s~]*\\d{6}(?:[\\s~]*-[\\s~]*\\d{2})?|\\d+(?:[./-]\\d+)*)",
+  "lunghezza_massima_citazione": 220,
+  "norme": {
+    "ancora": "\\bart(?:t)?\\.[\\s~]*\\d+(?:[\\s~-]*(?:bis|ter|quater|quinquies|sexies|septies|octies|novies|decies))?",
+    "fonti": "(c\\.[\\s~]*c\\.|c\\.[\\s~]*p\\.[\\s~]*c\\.|c\\.[\\s~]*p\\.[\\s~]*p\\.|c\\.[\\s~]*p\\.(?![\\s~]*[cp]\\.)|cod\\.[\\s~]*(?:civ|proc|pen)\\.[^,;)]{0,12}|Cost(?:ituzione)?\\.?|d\\.?[\\s~]*lgs\\.?|D\\.?[\\s~]*Lgs\\.?|decreto[\\s~]+legislativo|d\\.?[\\s~]*l\\.(?=[\\s~]*(?:n\\.|\\d))|D\\.?[\\s~]*L\\.(?=[\\s~]*(?:n\\.|\\d))|d\\.?[\\s~]*P\\.?[\\s~]*R\\.?|D\\.?[\\s~]*P\\.?[\\s~]*R\\.?|DPR|r\\.?[\\s~]*d\\.(?=[\\s~]*(?:n\\.|\\d))|R\\.?[\\s~]*D\\.|d\\.?[\\s~]*m\\.(?=[\\s~]*(?:n\\.|\\d))|D\\.?[\\s~]*M\\.|\\bl(?:egge)?\\.?[\\s~]+(?:n\\.[\\s~]*)?\\d+|\\bL\\.[\\s~]*(?:n\\.[\\s~]*)?\\d+|disp\\.?[\\s~]*att\\.|preleggi|TUE|TFUE|Reg(?:olamento)?\\.?[\\s~]*\\(?UE\\)?|[Dd]ir(?:ettiva)?\\.?[\\s~]*\\(?UE\\)?|[Ss]tatuto)",
+    "finestra_fonte": 90
+  },
+  "virgolettati": [
+    "«([^»]{4,})»",
+    "“([^”]{4,})”",
+    "``(.{4,}?)''",
+    "<<(.{4,}?)>>",
+    "(?<![=\\w\\\\])\"([^\"\\n{}]{12,})\""
+  ],
+  "link": [
+    "https?://(?:www\\.)?normattiva\\.it/uri-res/N2Ls\\?[^\\s}\\)\\]\"']+",
+    "https?://(?:www\\.)?eur-lex\\.europa\\.eu/[^\\s}\\)\\]\"']+",
+    "https?://(?:www\\.)?cortecostituzionale\\.it/[^\\s}\\)\\]\"']+",
+    "https?://(?:www\\.)?italgiure\\.giustizia\\.it/[^\\s}\\)\\]\"']+"
+  ],
+  "documenti": "\\bdoc(?:c|umento|umenti)?\\.?(?:ti)?[\\s~]*(?:n\\.[\\s~]*)?\\d+(?:[\\s~]*(?:,|e|-)[\\s~]*\\d+)*(?:[^.;)\\n]{0,40}?\\b(?:pag|p|pp)\\.?[\\s~]*\\d+(?:[\\s~]*[-,][\\s~]*\\d+)*)?",
+  "affermazioni_senza_fonte": "(giurisprudenza[\\s~]+(?:costante|consolidata|pacifica|maggioritaria|prevalente|granitica|univoca)|(?:costante|consolidato|pacifico)[\\s~]+orientamento|orientamento[\\s~]+(?:costante|consolidato|pacifico)|(?:la[\\s~]+)?(?:Suprema[\\s~]+Corte|Cassazione)[\\s~]+(?:ha[\\s~]+)?(?:più[\\s~]+volte|costantemente|ripetutamente|da[\\s~]+tempo)|è[\\s~]+(?:ormai[\\s~]+)?pacifico[\\s~]+che|come[\\s~]+(?:noto|è[\\s~]+noto))"
+}

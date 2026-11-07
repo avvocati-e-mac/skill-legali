@@ -1,0 +1,7 @@
+interface:
+  display_name: "Verifica citazioni legali"
+  short_description: "Controlla sentenze, norme e virgolettati di un atto sulla fonte e produce un report con le correzioni"
+  default_prompt: "Usa $verifica-citazioni-legali per verificare le citazioni del mio atto: esistenza ed estremi delle pronunce, verbatim, pertinenza del principio e norme citate."
+
+policy:
+  allow_implicit_invocation: true

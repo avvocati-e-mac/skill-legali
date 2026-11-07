@@ -1,0 +1,270 @@
+{
+  "version": 1,
+  "updated_at": "2026-07-07T17:31:34+00:00",
+  "reviews": {
+    "C002": {
+      "final_status": "expert_review_only",
+      "notes": "nulla da eccepire",
+      "models": {
+        "opus": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "ok",
+          "decision": "usable",
+          "notes": ""
+        },
+        "glm52": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "ok",
+          "decision": "usable",
+          "notes": ""
+        }
+      }
+    },
+    "C003": {
+      "final_status": "expert_review_only",
+      "notes": "",
+      "models": {
+        "opus": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "ok",
+          "decision": "usable",
+          "notes": ""
+        },
+        "glm52": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "ok",
+          "decision": "usable",
+          "notes": ""
+        }
+      }
+    },
+    "C007": {
+      "final_status": "expert_review_only",
+      "notes": "opus non va bene",
+      "models": {
+        "opus": {
+          "legal_meaning": "problem",
+          "no_new_facts": "ok",
+          "clarity": "problem",
+          "format": "ok",
+          "decision": "reject",
+          "notes": "la riformulazione è ripetitiva: ad esempio  **Erronea valutazione delle risultanze istruttorie.** Il Tribunale ha interpretato in modo errato le prove acquisite."
+        },
+        "glm52": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "ok",
+          "decision": "usable",
+          "notes": "ok"
+        }
+      }
+    },
+    "C009": {
+      "final_status": "expert_review_only",
+      "notes": "opus mi lascia sempre perplesso",
+      "models": {
+        "opus": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "problem",
+          "format": "problem",
+          "decision": "reject",
+          "notes": "non mi piace la risposta, troppo gergale"
+        },
+        "glm52": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "ok",
+          "decision": "usable",
+          "notes": ""
+        }
+      }
+    },
+    "C010": {
+      "final_status": "expert_review_only",
+      "notes": "sempre meglio GLM",
+      "models": {
+        "opus": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "ok",
+          "decision": "minor_issue",
+          "notes": "molto legalese Comunque: già rassegnate."
+        },
+        "glm52": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "problem",
+          "decision": "usable",
+          "notes": "c’è la citazione che non va bene ma per il resto meglio di opus"
+        }
+      }
+    },
+    "C011": {
+      "final_status": "expert_review_only",
+      "notes": "Opus qui è meglio",
+      "models": {
+        "opus": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "ok",
+          "decision": "usable",
+          "notes": "unico difetto sposta il problema ad un elenco a parte"
+        },
+        "glm52": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "ok",
+          "decision": "minor_issue",
+          "notes": "manca la parte per iscritto delle diverse pattuizioni"
+        }
+      }
+    },
+    "C012": {
+      "final_status": "expert_review_only",
+      "notes": "",
+      "models": {
+        "opus": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "ok",
+          "decision": "usable",
+          "notes": ""
+        },
+        "glm52": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "ok",
+          "decision": "usable",
+          "notes": "non mi piace"
+        }
+      }
+    },
+    "C001": {
+      "final_status": "expert_review_only",
+      "notes": "meglio opus",
+      "models": {
+        "opus": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "ok",
+          "decision": "usable",
+          "notes": "ha inserito il caso fortuito e forza maggiore ok"
+        },
+        "glm52": {
+          "legal_meaning": "problem",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "ok",
+          "decision": "reject",
+          "notes": ""
+        }
+      }
+    },
+    "C004": {
+      "final_status": "expert_review_only",
+      "notes": "",
+      "models": {
+        "opus": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "ok",
+          "decision": "usable",
+          "notes": ""
+        },
+        "glm52": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "ok",
+          "decision": "usable",
+          "notes": ""
+        }
+      }
+    },
+    "C005": {
+      "final_status": "expert_review_only",
+      "notes": "",
+      "models": {
+        "opus": {
+          "legal_meaning": "problem",
+          "no_new_facts": "problem",
+          "clarity": "problem",
+          "format": "ok",
+          "decision": "reject",
+          "notes": "sbaglia il soggetto è nostra non vostra"
+        },
+        "glm52": {
+          "legal_meaning": "problem",
+          "no_new_facts": "problem",
+          "clarity": "problem",
+          "format": "ok",
+          "decision": "reject",
+          "notes": "sbaglia il soggetto è nostra non vostra"
+        }
+      }
+    },
+    "C006": {
+      "final_status": "expert_review_only",
+      "notes": "",
+      "models": {
+        "opus": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "ok",
+          "decision": "usable",
+          "notes": ""
+        },
+        "glm52": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "ok",
+          "decision": "usable",
+          "notes": ""
+        }
+      }
+    },
+    "C008": {
+      "final_status": "expert_review_only",
+      "notes": "",
+      "models": {
+        "opus": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "problem",
+          "decision": "minor_issue",
+          "notes": "non so se voluto ma ha aggiunto del testo inutile: (pulizia lessicale, senza aggiungere fatti — sempre applicabile):"
+        },
+        "glm52": {
+          "legal_meaning": "ok",
+          "no_new_facts": "ok",
+          "clarity": "ok",
+          "format": "ok",
+          "decision": "usable",
+          "notes": ""
+        }
+      }
+    }
+  }
+}

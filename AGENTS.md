@@ -40,14 +40,30 @@ Quando una procedura dipende dal runtime, differenzia sempre in modo esplicito:
 
 ## Skill presenti
 
+### docling-citazioni-pdf
+
+- **Cartella:** `docling-citazioni-pdf/`; skill interna e archivio `.skill` omonimi.
+- **Scopo:** citazioni puntuali dei PDF della pratica tramite Docling MCP, con registro affermazione–fonte–pagina e controllo sull’originale.
+- **Requisiti:** distingue motore Docling (anche `docling-slim`), pacchetto server, connessione alla chat e accessibilità dei file; guida di installazione con `docling-mcp[local]` e modalità locale esplicita. Avvio ufficiale con uvx, oppure pip/venv; nessun launcher o profilo personale. Modalità sullo stesso computer predefinita; server su altro host via VPN soltanto come opzione esplicita, in `references/server-remoto.md`. Il parametro di conversione resta `local` sul server.
+- **Invarianti:** pagine candidate non sono citazioni verificate; numeri stampati separati da pagine fisiche; niente attribuzione multipagina alla prima provenienza o promozione automatica dei profili degli indici. Il riscontro testuale non certifica supporto semantico o controllo visivo. Citazioni semplici con un solo PDF, fonte riconoscibile con più PDF e preferenza utente prioritaria. Documenti integrali nel contesto quando possibile; avviso prima di selezioni/lotti, OCR e CPU. Istruzioni dettagliate solo nelle guide pertinenti.
+- **Test:** `python3 -B -m unittest discover -s docling-citazioni-pdf/tests -v`; prova MCP locale opzionale con `tests/mcp_smoke.py` e PDF sintetico da `tests/make_fixture.py`. Esiti e limiti in `docling-citazioni-pdf/TEST-REPORT.md`; rigenerare `.skill` dopo ogni modifica ai sorgenti.
+- **Compatibilità:** istruzioni per Codex, Claude Code, Cowork/Desktop; nessuna garanzia di MCP locale disponibile in tutti i client. Non modificare le copie installate senza richiesta.
+
 ### normattiva
 
 - **Cartella:** `normattiva/`
 - **Scopo:** genera link cliccabili verso [Normattiva.it](https://www.normattiva.it) per ogni riferimento normativo italiano nel testo, usando il formato URN-NIR
 - **Trigger:** qualsiasi risposta che contiene citazioni normative (art. X c.c., d.lgs., legge n., r.d., d.p.r., Cost., ecc.)
 - **Comportamento:** l'assistente non produce riferimenti normativi "nudi": ogni citazione diventa un link inline
-- **File chiave:** `normattiva/normattiva/SKILL.md`, `normattiva/normattiva/references/lookup-extended.md`
+- **File chiave:** `normattiva/normattiva/SKILL.md`, `normattiva/normattiva/references/atti.md` (tabella di 167 atti), `references/versioni-e-portale.md`, `references/verifica.md`, `references/api-e-verifica.md`, `scripts/verifica.py`
 - **File installazione Claude:** `normattiva/normattiva.skill`
+- **Versione 3 (convegno di Ravenna, 7 ottobre 2026)**, sviluppata in Cowork come `demora-normattiva` e adottata qui il 2026-10-17. Il 2026-10-17 tutte le righe di `atti.md` sono state verificate: le 157 righe `urn:nir:stato:` con l'API, i 10 d.m./D.P.C.M. e 4 casi che l'API non sa leggere sul portale con `scripts/verifica.py`.
+- **L'API non è l'unico oracolo:** rifiuta d.m. e D.P.C.M. (`urn:nir:ministero...`, codice 1003) anche quando il link è giusto. Per quelli vale solo `scripts/verifica.py`, che apre il portale e confronta atto, allegato, articolo e versione.
+- **Prima di modificare `atti.md`**, esegui il livello C dei test:
+  `NORMATTIVA_LIVE=1 pytest normattiva/tests/test_api_live.py` (si ferma su 403/429,
+  nessun ritento) e, per le righe non `stato`, lo script sul portale. I test
+  strutturali da soli non possono accorgersi di un URN formalmente perfetto che
+  punta al nulla: e' cosi' che due errori sono sopravvissuti fino al 2026-08-06.
 
 ### buddalaw
 
@@ -55,8 +71,14 @@ Quando una procedura dipende dal runtime, differenzia sempre in modo esplicito:
 - **Scopo:** ricerca live di sentenze, normativa, contratti e atti processuali italiani tramite MCP BuddaLaw
 - **Trigger:** quesiti che richiedono sentenze italiane, verifica giurisprudenziale, contratti, atti processuali, prassi tributaria o provvedimenti del Garante Privacy
 - **Comportamento:** l'assistente non cita sentenze specifiche dalla memoria interna; ogni riferimento deve provenire da ricerca live
-- **File chiave:** `buddalaw/buddalaw/SKILL.md`, `buddalaw/buddalaw/references/`
+- **File chiave:** `buddalaw/buddalaw/SKILL.md`, `buddalaw/buddalaw/references/`, `buddalaw/REPORT-sondaggio-v9.md` (comportamenti reali del server), `buddalaw/tests/` (README, CHECKLIST, fixture dello schema)
 - **File installazione Claude:** `buddalaw/buddalaw.skill`
+- **Versione 9.2, revisione conclusiva con limiti (2026-10-19):** conserva l’inventario dei 48 tool del server MCP 1.30.0 e il confronto locale del catalogo. Rende esplicito il passaggio ai tool MCP e aggiunge `scripts/verifica_link.py`, utilizzabile prima dell’invio soltanto con bozza e risposte MCP originali già su file. Non certifica origine dei file, estremi o pertinenza e non blocca tecnicamente l’invio. Esiti in `buddalaw/REPORT-test-v9.2.md`, ripresa in `buddalaw/HANDOFF-v9.md`.
+- **Decisione:** revisione chiusa, non promossa a stabile sui modelli leggeri. C7 Haiku 5/6 risposte promosse; C8 fermata dopo due bocciature critiche (B01/B02): massimo residuo 15/17, sotto il 90%. B02 omette la ricerca MCP. Nessuna impossibilità assoluta dichiarata, nessun ritento sulla stessa candidata per cancellare gli errori.
+- **Test:** `python3 -m pytest buddalaw/tests` (177 controlli offline; 12 live saltati senza `BUDDALAW_LIVE`). La rivalutazione verifica anche che numero/anno e `public_url` provengano dallo stesso oggetto, e usa la versione della copia congelata per B00. Livello C invariato: `BUDDALAW_LIVE=1 python3 -m pytest buddalaw/tests/test_mcp_live.py`; estrae l’intero catalogo, non una selezione di nomi noti.
+- **Runtime e risorse:** 16 turni Claude per ogni profilo. Per nuovi test con modelli usare solo l’abbonamento Claude, `--runtime claude --solo-abbonamento` e un modello esplicito; niente OpenRouter o proxy API senza nuova istruzione. I valori USD sono stime dei token, non fatturazione attestata. I test Luna del 19 ottobre usano subagenti nativi dell’abbonamento OpenAI su richiesta esplicita: sei risposte e un controllo locale, non una suite completa. Nessuna copia installata aggiornata.
+- **Prove e arresto:** risultati C3/C6/C7/C8 conservati; `tests/e2e/results/20261019-c7/STOP` registra la chiusura per soglia irraggiungibile, non un guasto o esaurimento quota. Non cancellarlo o riavviare la campagna già conclusa come lavoro rimasto in sospeso.
+- **Prima di modificare la skill:** se il livello C segnala un cambio di schema, rigenera la fixture con `python3 buddalaw/tests/tools/estrai_schema.py` e aggiorna l'inventario di `SKILL.md`. Dopo ogni modifica rigenera `buddalaw.skill`, altrimenti il livello A resta rosso.
 
 ### GestioLex Corpus
 
@@ -66,6 +88,24 @@ Quando una procedura dipende dal runtime, differenzia sempre in modo esplicito:
 - **Comportamento:** l'assistente sceglie il percorso piu preciso tra lettura esatta dell'articolo, ricerca normativa e ricerca giurisprudenziale, evitando ricerche parallele non necessarie
 - **File chiave:** `Gestiolex Corpus/gestiolex-corpus/SKILL.md`, `Gestiolex Corpus/gestiolex-corpus/references/query-patterns.md`
 - **File installazione Claude:** `Gestiolex Corpus/gestiolex-corpus.skill`
+
+### memo-legale-strutturato
+
+- **Cartella:** `memo-legale-strutturato/`
+- **Scopo:** redige memo legali italiani chiari, sintetici e operativi per uso interno dell'avvocato o dello studio
+- **Trigger:** memo legale, memorandum, parere interno, nota per avvocato, case assessment, legal risk assessment, strategia precontenziosa/processuale o trasformazione di ricerche/fonti in memo operativo
+- **Comportamento:** usa progressive disclosure per consumare pochi token, sceglie tra memo rapido/standard/complesso, adatta i modelli di legal memo al diritto italiano e verifica BuddaLaw/Perplexity quando disponibili
+- **File chiave:** `memo-legale-strutturato/memo-legale-strutturato/SKILL.md`, `memo-legale-strutturato/memo-legale-strutturato/references/`
+- **File installazione Claude:** `memo-legale-strutturato/memo-legale-strutturato.skill`
+
+### chiarisci-e-agisci
+
+- **Cartella:** `chiarisci-e-agisci/`
+- **Scopo:** accompagna l'avvocato dall'incertezza alla prima azione concreta mediante domande maieutiche, scomposizione e checkpoint
+- **Trigger:** difficoltà a iniziare o organizzare un lavoro, preparazione dei prodromi alla redazione, scelta delle priorità per urgenza e importanza
+- **Comportamento:** durante il chiarimento pone domande mirate, segnala lacune e contraddizioni, distingue dati forniti/inferiti/mancanti e non modifica file o workflow senza approvazione
+- **File chiave:** `chiarisci-e-agisci/chiarisci-e-agisci/SKILL.md`, `chiarisci-e-agisci/chiarisci-e-agisci/references/`
+- **File installazione Claude:** `chiarisci-e-agisci/chiarisci-e-agisci.skill`
 
 ### ricerca-web-searXNG
 
@@ -102,6 +142,16 @@ Quando una procedura dipende dal runtime, differenzia sempre in modo esplicito:
 - **Comportamento:** restituisce SOLO il prompt migliorato (meno di 750 parole), eventualmente dopo domande di chiarimento; non risponde al quesito e non inventa norme o sentenze; lavora offline di default e propone la ricerca online (ricerca-web-searXNG → perplexity-web-mcp → web nativo) solo per colmare lacune utili al prompt e dopo conferma dell'utente
 - **File chiave:** `miglioratore-prompt-legale/miglioratore-prompt-legale/SKILL.md`, `miglioratore-prompt-legale/miglioratore-prompt-legale/references/`
 - **File installazione Claude:** `miglioratore-prompt-legale/miglioratore-prompt-legale.skill`
+
+### verifica-citazioni-legali
+
+- **Cartella:** `verifica-citazioni-legali/`
+- **Scopo:** verifica le citazioni di un atto, parere, memoria o contratto già scritto (specie se generato o rivisto con IA): esistenza ed estremi delle pronunce, verbatim, natura e pertinenza del passo, passi contrari, norme e vigenza
+- **Trigger:** richieste di verificare, controllare o revisionare citazioni, sentenze, massime, riferimenti normativi o virgolettati; «esiste questa sentenza?», «controlla l'atto prima del deposito», ricerca di allucinazioni in testi scritti con IA
+- **Comportamento:** verifica solo sulla fonte letta, mai a memoria; non dichiara «inesistente» senza prova positiva; chiede all'utente quali banche dati usare; produce un report con tabella delle azioni e testo da incollare; non modifica mai l'atto originale e applica solo le correzioni scelte, su una copia
+- **File chiave:** `verifica-citazioni-legali/verifica-citazioni-legali/SKILL.md`, `references/`, `scripts/estrai_citazioni.py`, `scripts/confronta_verbatim.py`, `assets/test/` (atto di collaudo con verdetti attesi)
+- **File installazione Claude:** `verifica-citazioni-legali/verifica-citazioni-legali.skill`
+- **Riservatezza:** gli esempi e l'atto di collaudo non contengono dati di parti o pratiche reali; mantenerli così
 
 ---
 

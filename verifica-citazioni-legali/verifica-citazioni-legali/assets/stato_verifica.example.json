@@ -1,0 +1,19 @@
+{
+  "atto": "/percorso/atto.docx",
+  "modalita": "completa",
+  "strumenti": {
+    "legittimita": ["italgiure", "buddalaw"],
+    "merito": ["bdm"],
+    "norme": ["normattiva"],
+    "web": false,
+    "subagenti": true
+  },
+  "riservatezza": {"nomi_esclusi": ["<cognome parte>", "<denominazione società>"], "caricamento_esterno": false},
+  "collaudo": {"italgiure": "ok", "buddalaw": "ok", "bdm": "sessione scaduta: login dell'utente", "normattiva": "ok 1/30"},
+  "voci": [
+    {"id": "C01", "priorita": "decisiva", "stato": "verificata", "verdetto": "VERIFICATA", "gravita": null},
+    {"id": "C02", "priorita": "decisiva", "stato": "in corso", "verdetto": null, "gravita": null},
+    {"id": "C03", "priorita": "secondaria", "stato": "limite", "verdetto": "NON REPERITA", "gravita": null, "nota": "assente da BuddaLaw; Italgiure da provare"}
+  ],
+  "aggiornato": "AAAA-MM-GGThh:mm"
+}

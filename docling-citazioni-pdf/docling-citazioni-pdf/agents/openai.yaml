@@ -1,0 +1,4 @@
+interface:
+  display_name: "Docling: citazioni dai PDF"
+  short_description: "Affermazioni e pagine PDF verificabili per lo studio"
+  default_prompt: "Usa $docling-citazioni-pdf per analizzare questi PDF e collegare ogni affermazione alla pagina originale, segnalando i riscontri mancanti."

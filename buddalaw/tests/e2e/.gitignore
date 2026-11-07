@@ -1,0 +1,4 @@
+# esiti, transcript e cartella di prova di opencode: restano in locale
+results/
+.opencode-sandbox/
+__pycache__/
