@@ -70,9 +70,9 @@ Coerenza: se `ruolo_del_tema` è `obiter` o `marginale`, il tema non può essere
 ## Regole di estrazione (per il subagente)
 
 1. Apri il provvedimento una sola volta. Verifica subito la pertinenza: se non affronta il TEMA nella motivazione, non compilare la scheda, aggiungi una riga a `lavoro/scartati.csv` (`id,titolo,motivo`) e passa oltre.
-2. Leggi il testo INTEGRALE, a blocchi se è lungo. Se nel browser il PDF appare vuoto, estrai il testo con pdf.js caricato da cdnjs tramite `javascript_tool` (verifica prima che la versione scelta esista). Se è una scansione senza testo: niente OCR, `testo_letto = "no"`.
+2. Leggi il testo INTEGRALE, a blocchi se è lungo. Se nel browser il PDF appare vuoto, estrai il testo con pdf.js caricato da cdnjs tramite `javascript_tool` (verifica prima che la versione scelta esista). Con Claude in Chrome prova prima `get_page_text`; il metodo pdf.js in Chrome è da verificare al primo uso (`references/ambienti.md`). Se è una scansione senza testo: niente OCR, `testo_letto = "no"`.
 3. Salva in `lavoro/testi/<id>.txt` SOLO: intestazione (prime 1.500 battute), i passaggi sul TEMA con 300 battute prima e dopo e il numero di pagina (riga `[pag. N]`), il dispositivo (ultime 2.000 battute). Non ricopiare tutto il testo. Togli gli spazi spuri dentro le parole prodotti dall'estrazione.
 4. Copia le citazioni dal file `testi/<id>.txt` appena salvato (rileggilo), non dalla memoria.
 5. Compila `lavoro/schede/<id>.json` secondo lo schema. Tieni separato ciò che il testo dice da ciò che deduci.
-6. Con il browser: una scheda (tab) per subagente, da chiudere alla fine. Non digitare credenziali, non aggirare login, captcha o robots.
+6. Con il browser integrato: una scheda (tab) per subagente, da chiudere alla fine. Con Claude in Chrome o un browser di Codex: estrae solo l'orchestratore, in schede nuove create apposta e chiuse alla fine, mai quelle dell'utente. Non digitare credenziali, non aggirare login, captcha o robots.
 7. Restituisci max 150 parole: id elaborati, id scartati, problemi.
