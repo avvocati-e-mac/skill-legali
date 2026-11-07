@@ -24,14 +24,6 @@ TESTO_LETTO = ["integrale", "parziale", "no"]
 CHI = ["avvocato", "parte", "giudice", "ctu", "altro"]
 TEMA_CAUSA = ["si", "no", "non chiaro"]
 RUOLO = ["decisivo", "concorrente", "obiter", "marginale"]
-CONSEGUENZE = [
-    "condanna art. 96 co. 3",
-    "condanna art. 96 co. 4",
-    "trasmissione atti all'Ordine",
-    "spese",
-    "nessuna",
-    "altro",
-]
 ESTREMI = ["ufficio", "sezione", "grado", "tipo", "data_decisione",
            "data_deposito", "numero", "rg", "giudice"]
 CAMPI_STRINGA = ["url_scheda", "url_file", "come_emerge", "fatti",
@@ -179,16 +171,18 @@ def valida_scheda(d, id_file):
 
     if "conseguenze_legate_al_tema" in d:
         c = d["conseguenze_legate_al_tema"]
-        ammessi_norm = {norm(x): x for x in CONSEGUENZE}
         if not isinstance(c, list) or not c:
-            err.append("conseguenze_legate_al_tema deve essere una lista non vuota")
+            err.append("conseguenze_legate_al_tema deve essere una lista non vuota (usa [\"nessuna\"] se non ce ne sono)")
         else:
             for x in c:
-                if not isinstance(x, str) or norm(x) not in ammessi_norm:
-                    err.append("conseguenze_legate_al_tema: valore non ammesso %r (ammessi: %s)"
-                               % (x, " | ".join(CONSEGUENZE)))
-            if "nessuna" in c and len(c) > 1:
-                err.append("conseguenze_legate_al_tema: 'nessuna' non può stare con altri valori")
+                if not isinstance(x, str) or not x.strip():
+                    err.append("conseguenze_legate_al_tema: ogni voce deve essere una frase non vuota, trovato %r" % (x,))
+                elif parole(x) > 12:
+                    err.append("conseguenze_legate_al_tema: %d parole in %r (limite 12)" % (parole(x), x))
+            if any(isinstance(x, str) and norm(x).strip().lower() == "nessuna" for x in c) and len(c) > 1:
+                err.append("conseguenze_legate_al_tema: 'nessuna' non può stare con altre voci")
+            if any(isinstance(x, str) and norm(x).strip().lower() == "altro" for x in c):
+                avv.append("conseguenze_legate_al_tema: 'altro' è generico, descrivi la conseguenza con una frase breve")
 
     if "citazioni" in d:
         cz = d["citazioni"]
@@ -215,10 +209,10 @@ def valida_scheda(d, id_file):
     if ruolo in ("obiter", "marginale"):
         if d.get("tema_causa_dell_esito") == "si":
             avv.append("incoerenza: tema_causa_dell_esito = si ma ruolo_del_tema = %s" % ruolo)
-        forti = [x for x in (d.get("conseguenze_legate_al_tema") or [])
-                 if isinstance(x, str) and x.startswith(("condanna", "trasmissione"))]
-        if forti:
-            avv.append("incoerenza: conseguenze %s ma ruolo_del_tema = %s" % (forti, ruolo))
+        cons = [x for x in (d.get("conseguenze_legate_al_tema") or [])
+                if isinstance(x, str) and norm(x).strip().lower() != "nessuna"]
+        if cons:
+            avv.append("incoerenza: conseguenze %s attribuite al tema ma ruolo_del_tema = %s" % (cons, ruolo))
     if d.get("testo_letto") == "no" and d.get("citazioni"):
         avv.append("testo_letto = no ma ci sono citazioni")
     return err, avv

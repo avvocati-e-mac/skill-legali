@@ -33,3 +33,7 @@ Rilievo rimesso all'autore: user-agent da browser in `scarica.py`/`scarica.sh`. 
 
 ## Rinomina 2026-11-07
 Nome cambiato da `ricerca-giurisprudenza` a `ricerca-giurisprudenza-online` (cartelle, frontmatter, `.skill`, metadati Codex), su richiesta dell'autore, per chiarezza: la skill cerca su siti pubblici online, non in banche dati MCP. Chi aveva installato la versione del convegno con il vecchio nome deve disinstallarla, altrimenti due skill quasi uguali competono per le stesse richieste.
+
+## Schede e report generali (2026-11-07)
+Su indicazione dell'autore ("i report devono essere generali, non specifici come l'esempio originale"): la ricerca di prova sugli appalti (costi della manodopera, art. 108 c. 9 d.lgs. 36/2023) aveva messo "altro" in tutte le 8 schede, perché `conseguenze_legate_al_tema` ammetteva solo voci del tema del convegno (art. 96 c.p.c., trasmissione all'Ordine, spese). Ora è una lista di frasi libere (max 12 parole, `["nessuna"]` esclusiva); `conteggi.py` le conta come scritte; `controlli.py` non ha più elenchi fissi e generalizza l'avviso di coerenza (obiter/marginale). Regole di bozza e red team con formule generali.
+Scartata la proposta del valutatore di "campi specifici per tema": contraria alla scelta di schede generali.

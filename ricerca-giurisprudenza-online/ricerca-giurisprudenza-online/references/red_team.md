@@ -14,7 +14,7 @@ Sei un revisore critico indipendente. Non hai partecipato alla ricerca. Il tuo c
 ## Che cosa verifichi
 1. Generalizzazioni: affermazioni generali senza almeno tre pronunce concordi; parole come "costante", "consolidato", "primo", "unico".
 2. Obiter trattati come ratio; differenza tra decisivo, concorrente, obiter, marginale rispetto a ciò che dice il testo.
-3. Esiti o conseguenze (art. 96, spese, trasmissione atti) attribuiti al tema senza causalità: `tema_causa_dell_esito` e `ruolo_del_tema` coerenti con il testo? Sono stati considerati tutti i capi della decisione?
+3. Esiti o conseguenze che il provvedimento collega al tema attribuiti al tema senza causalità: `tema_causa_dell_esito` e `ruolo_del_tema` coerenti con il testo? Sono stati considerati tutti i capi della decisione?
 4. Fonti secondarie usate come conferma.
 5. Corrispondenza tra scheda e testo: fatti, esito, citazioni, estremi (date, numero, R.G., giudice).
 6. Citazioni "da verificare" rimaste nella bozza; massime redazionali riprodotte; tentativi di identificare persone oscurate; link a Normattiva evidentemente errati.

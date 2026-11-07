@@ -22,17 +22,17 @@ Una scheda per provvedimento: `lavoro/schede/<id>.json`. Lo script `scripts/cont
   "url_file": "https://...",
   "fonte_testo": "provvedimento",
   "testo_letto": "integrale",
-  "chi": "avvocato",
+  "chi": "parte",
   "come_emerge": "...",
   "fatti": "...",
   "parte_rilevante": "...",
-  "norme_applicate": ["art. 96 c.p.c."],
+  "norme_applicate": ["art. 1 l. 241/1990"],
   "esito": "rigetta",
   "definitivo": "non indicato",
   "motivo_reale_dell_esito": "...",
   "tema_causa_dell_esito": "no",
   "ruolo_del_tema": "concorrente",
-  "conseguenze_legate_al_tema": ["condanna art. 96 co. 3", "spese"],
+  "conseguenze_legate_al_tema": ["esclusione dalla gara", "risarcimento del danno"],
   "importi": ["euro 2.000"],
   "citazioni": [{"testo": "...", "pagina": "4"}],
   "precedenti_citati": ["Cass. n. ..."],
@@ -49,7 +49,7 @@ Una scheda per provvedimento: `lavoro/schede/<id>.json`. Lo script `scripts/cont
 | `url_scheda`, `url_file` | URL come in `elenco.csv` (o `non indicato`) |
 | `fonte_testo` | `provvedimento` (testo del provvedimento) \| `massima_sito` (solo la massima o il sommario del sito) |
 | `testo_letto` | `integrale` \| `parziale` \| `no` (PDF scansione senza testo: niente OCR, scheda compilata dai dati del sito, segnalalo in `dubbi`) |
-| `chi` | chi ha usato / sollevato il tema: `avvocato` \| `parte` \| `giudice` \| `ctu` \| `altro` |
+| `chi` | chi ha usato / sollevato il tema: `avvocato` \| `parte` \| `giudice` \| `ctu` \| `altro` (parte pubblica o privata, amministrazione, ecc.: `parte`) |
 | `come_emerge` | in che modo il tema entra nella causa (una frase) |
 | `fatti` | max 60 parole |
 | `parte_rilevante` | max 150 parole; ciò che il testo dice sul tema |
@@ -58,14 +58,14 @@ Una scheda per provvedimento: `lavoro/schede/<id>.json`. Lo script `scripts/cont
 | `definitivo` | `si` \| `no` \| `non indicato` |
 | `motivo_reale_dell_esito` | max 30 parole; perché il giudice ha deciso così, a prescindere dal tema |
 | `tema_causa_dell_esito` | `si` \| `no` \| `non chiaro`: riferito all'esito principale (merito o rito) |
-| `ruolo_del_tema` | `decisivo` = senza il tema l'esito di almeno un capo cambierebbe \| `concorrente` = pesa insieme ad altri motivi autonomi \| `obiter` = detto ma non necessario alla decisione \| `marginale`. Va valutato su TUTTI i capi della decisione: merito o rito, ma anche art. 96, spese, trasmissione atti |
-| `conseguenze_legate_al_tema` | lista, uno o più valori: `condanna art. 96 co. 3` \| `condanna art. 96 co. 4` \| `trasmissione atti all'Ordine` \| `spese` \| `nessuna` \| `altro` (`nessuna` esclude gli altri; se `altro`, spiega in `dubbi`). Indica solo le conseguenze che il provvedimento collega al tema |
+| `ruolo_del_tema` | `decisivo` = senza il tema l'esito di almeno un capo cambierebbe \| `concorrente` = pesa insieme ad altri motivi autonomi \| `obiter` = detto ma non necessario alla decisione \| `marginale`. Va valutato su TUTTI i capi della decisione: merito o rito, compresi i capi accessori come spese o sanzioni processuali |
+| `conseguenze_legate_al_tema` | lista di frasi brevi libere (max 12 parole ciascuna) che descrivono le conseguenze che il provvedimento collega al tema, nella materia della ricerca. Esempi: `esclusione dalla gara`, `annullamento dell'aggiudicazione`, `condanna ex art. 96 co. 3 c.p.c.`, `trasmissione degli atti all'Ordine`, `annullamento dell'avviso di accertamento`, `risarcimento del danno`. `["nessuna"]` se non ce ne sono (esclude le altre voci). Indica solo le conseguenze che il provvedimento collega al tema |
 | `importi` | lista di importi come scritti nel testo |
 | `citazioni` | lista di `{"testo": ..., "pagina": ...}`; ogni testo max 25 parole, copiato dal file `testi/<id>.txt`, senza omissioni `[...]`; `pagina` come nel testo |
 | `precedenti_citati` | lista di precedenti richiamati sul tema |
 | `dubbi` | lista di incertezze, lacune, scansioni, incoerenze |
 
-Coerenza: se `ruolo_del_tema` è `obiter` o `marginale`, il tema non può essere la causa dell'esito né di una condanna ex art. 96. Lo script segnala come avviso le incoerenze evidenti.
+Coerenza: se `ruolo_del_tema` è `obiter` o `marginale`, `tema_causa_dell_esito` non può essere `si` e le conseguenze non possono essere attribuite al tema (devono essere `["nessuna"]`). Lo script segnala come avviso le incoerenze evidenti.
 
 ## Regole di estrazione (per il subagente)
 

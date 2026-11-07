@@ -99,10 +99,10 @@ SCHEDA = {
     "url_scheda": "non indicato", "url_file": "non indicato",
     "fonte_testo": "provvedimento", "testo_letto": "integrale", "chi": "giudice",
     "come_emerge": "rilievo d'ufficio", "fatti": "fatti sintetici di prova",
-    "parte_rilevante": "il giudice rileva il tema", "norme_applicate": ["art. 96 c.p.c."],
+    "parte_rilevante": "il giudice rileva il tema", "norme_applicate": ["art. 1 l. 241/1990"],
     "esito": "rigetta", "definitivo": "non indicato", "motivo_reale_dell_esito": "infondatezza",
     "tema_causa_dell_esito": "no", "ruolo_del_tema": "concorrente",
-    "conseguenze_legate_al_tema": ["spese"], "importi": [],
+    "conseguenze_legate_al_tema": ["esclusione dalla gara"], "importi": [],
     "citazioni": [{"testo": "il ricorso è infondato e va rigettato", "pagina": "2"}],
     "precedenti_citati": [], "dubbi": [],
 }
@@ -153,6 +153,53 @@ class TestScriptSuFixture(unittest.TestCase):
             r = subprocess.run([sys.executable, "-I", str(SCRIPTS / "controlli.py"), str(lav)],
                                capture_output=True, text=True)
             self.assertEqual(r.returncode, 1, "una citazione assente dal testo deve far fallire i controlli")
+
+    def _lavoro(self, tmp, scheda):
+        lav = Path(tmp) / "lavoro"
+        (lav / "schede").mkdir(parents=True)
+        (lav / "testi").mkdir()
+        (Path(tmp) / "pdf").mkdir()
+        (lav / "elenco.csv").write_text(
+            "id,ufficio,sezione,grado,tipo,data,numero,rg,url_scheda,url_file,pertinenza,motivo,da_leggere,formato\n"
+            "123,T,P,primo grado,sentenza,2025-03-20,1/2025,2/2024,-,-,alta,prova,si,pdf\n", encoding="utf-8")
+        (lav / "scartati.csv").write_text("id,titolo,motivo\n", encoding="utf-8")
+        (lav / "ricognizione.md").write_text("x\n", encoding="utf-8")
+        (lav / "testi" / "123.txt").write_text(
+            "[pag. 2]\nIn conclusione il ricorso è infondato e va rigettato.\n", encoding="utf-8")
+        (lav / "schede" / "123.json").write_text(json.dumps(scheda, ensure_ascii=False), encoding="utf-8")
+        return lav
+
+    def test_conseguenze_libere_di_altra_materia(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            scheda = dict(SCHEDA, conseguenze_legate_al_tema=[
+                "annullamento dell'avviso di accertamento", "risarcimento del danno"])
+            lav = self._lavoro(tmp, scheda)
+            r = subprocess.run([sys.executable, "-I", str(SCRIPTS / "controlli.py"), str(lav)],
+                               capture_output=True, text=True)
+            self.assertEqual(r.returncode, 0, (lav / "controlli.txt").read_text(encoding="utf-8"))
+            r = subprocess.run([sys.executable, "-I", str(SCRIPTS / "conteggi.py"), str(lav)],
+                               capture_output=True, text=True)
+            self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+            conteggi = (lav / "conteggi.txt").read_text(encoding="utf-8")
+            self.assertIn("annullamento dell'avviso di accertamento", conteggi)
+            self.assertIn("risarcimento del danno", conteggi)
+            self.assertIn("risarcimento del danno", (lav / "tabelle.md").read_text(encoding="utf-8"))
+
+    def test_nessuna_con_altre_voci_segnalata(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            scheda = dict(SCHEDA, conseguenze_legate_al_tema=["nessuna", "esclusione dalla gara"])
+            lav = self._lavoro(tmp, scheda)
+            r = subprocess.run([sys.executable, "-I", str(SCRIPTS / "controlli.py"), str(lav)],
+                               capture_output=True, text=True)
+            self.assertEqual(r.returncode, 1, "'nessuna' con altre voci deve essere segnalato")
+
+    def test_conseguenza_troppo_lunga_segnalata(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            scheda = dict(SCHEDA, conseguenze_legate_al_tema=[" ".join(["parola"] * 13)])
+            lav = self._lavoro(tmp, scheda)
+            r = subprocess.run([sys.executable, "-I", str(SCRIPTS / "controlli.py"), str(lav)],
+                               capture_output=True, text=True)
+            self.assertEqual(r.returncode, 1)
 
 
 if __name__ == "__main__":

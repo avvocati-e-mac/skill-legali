@@ -3,7 +3,7 @@
 Si scrive solo dopo i controlli della Fase 5 e leggendo solo le schede (`lavoro/schede/`), `lavoro/conteggi.txt` e `lavoro/tabelle.md`. Non rileggere i provvedimenti interi.
 
 ## Struttura di `lavoro/bozza.md`
-1. **Sintesi** (max 5 righe): principi condivisi e conseguenze, distinguendo decisivo, concorrente e obiter, e indicando le conseguenze legate al tema (art. 96, spese, trasmissione atti) quando ci sono.
+1. **Sintesi** (max 5 righe): principi condivisi e conseguenze, distinguendo decisivo, concorrente e obiter, e indicando le conseguenze che il provvedimento collega al tema quando ci sono.
 2. **Tabella degli estremi**: incolla quella di `tabelle.md`. Colonne fisse: ufficio, sezione, tipo, data decisione, data deposito, numero, R.G., giudice o collegio (con l'`id` in prima colonna per i rinvii).
 3. **Una scheda per provvedimento**: estremi, cosa dice, perché rileva.
 4. **Tabella cronologica**: incolla quella di `tabelle.md`. Colonne: peso del tema, esito, conseguenze legate al tema.
@@ -14,7 +14,7 @@ Si scrive solo dopo i controlli della Fase 5 e leggendo solo le schede (`lavoro/
 ## Regole anti-generalizzazione
 - Ogni affermazione generale cita gli id che la reggono. Con meno di tre pronunce concordi scrivi "in una pronuncia" o "in due pronunce".
 - Vietati "costante", "consolidato", "primo", "unico", "orientamento prevalente" senza prova nelle schede.
-- Un esito si attribuisce al tema solo se `tema_causa_dell_esito` = "si". Una conseguenza (art. 96, spese, trasmissione atti) si attribuisce al tema solo se `ruolo_del_tema` è decisivo o concorrente.
+- Un esito si attribuisce al tema solo se `tema_causa_dell_esito` = "si". Una conseguenza che il provvedimento collega al tema si attribuisce al tema solo se `ruolo_del_tema` è decisivo o concorrente.
 - Distingui sempre decisivo / concorrente / obiter: un obiter non è una ratio.
 - Tieni separato ciò che il provvedimento dice da ciò che deduci tu; le deduzioni dichiarale come tali.
 - Un campione di ricerca non è l'universo: non scrivere che "non esistono" altre pronunce, solo che "non risultano nella ricerca".

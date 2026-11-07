@@ -4,7 +4,7 @@
 Uso:  python3 conteggi.py <cartella_lavoro>
 
 Scrive <cartella_lavoro>/conteggi.txt (conteggi per esito, ruolo_del_tema,
-conseguenze_legate_al_tema, chi + numeri della ricerca) e <cartella_lavoro>/tabelle.md
+conseguenze_legate_al_tema come scritte, chi + numeri della ricerca) e <cartella_lavoro>/tabelle.md
 (tabella degli estremi e tabella cronologica in Markdown). I file "scaricati" sono
 solo quelli presenti davvero nella cartella ../pdf accanto a <cartella_lavoro>.
 Solo libreria standard di Python 3.
@@ -18,8 +18,6 @@ from collections import Counter
 
 ESITI = ["accoglie", "rigetta", "inammissibile", "improcedibile", "altro"]
 RUOLI = ["decisivo", "concorrente", "obiter", "marginale"]
-CONSEGUENZE = ["condanna art. 96 co. 3", "condanna art. 96 co. 4",
-               "trasmissione atti all'Ordine", "spese", "nessuna", "altro"]
 CHI = ["avvocato", "parte", "giudice", "ctu", "altro"]
 RE_DATA = re.compile(r"^(\d{4})-(\d{2})-(\d{2})$")
 
@@ -135,8 +133,13 @@ def main(argv):
     for s in schede:
         v = s.get("conseguenze_legate_al_tema")
         v = v if isinstance(v, list) else [v]
-        cons += [x.replace("’", "'").replace("‘", "'") if isinstance(x, str) else x for x in v]
-    out += conta("Per conseguenze_legate_al_tema (una scheda può averne più d'una)", CONSEGUENZE, cons)
+        cons += [" ".join(x.replace("’", "'").replace("‘", "'").lower().split()) if isinstance(x, str) else x
+                 for x in v]
+    # conseguenze libere: contate come scritte (normalizzate), dalla più frequente
+    freq = Counter(cons).most_common()
+    freq.sort(key=lambda x: (-x[1], str(x[0])))
+    out.append("Per conseguenze_legate_al_tema (frasi libere; una scheda può averne più d'una)")
+    out += ["  %-50s %d" % (v, n) for v, n in freq] or ["  (nessuna scheda)"]
     out.append("")
     out += conta("Per chi (chi usa o solleva il tema)", CHI, [s.get("chi") for s in schede])
     out.append("")
