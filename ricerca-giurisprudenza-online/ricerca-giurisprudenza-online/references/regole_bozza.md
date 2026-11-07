@@ -7,12 +7,14 @@ Si scrive solo dopo i controlli della Fase 5 e leggendo solo le schede (`lavoro/
 2. **Tabella degli estremi**: incolla quella di `tabelle.md`. Colonne fisse: ufficio, sezione, tipo, data decisione, data deposito, numero, R.G., giudice o collegio (con l'`id` in prima colonna per i rinvii).
 3. **Una scheda per provvedimento**: estremi, cosa dice, perché rileva.
 4. **Tabella cronologica**: incolla quella di `tabelle.md`. Colonne: peso del tema, esito, conseguenze legate al tema.
-5. **Linee di tendenza e contrasti**.
-6. **Fonti secondarie** (commenti, riviste) in una sezione a parte.
-7. **Numeri della ricerca** (risultati totali, pertinenti, letti, scaricati: valori di `conteggi.txt`) e **limiti** (siti e periodo coperti, interrogazioni fatte, schede senza testo integrale, controlli manuali se manca python3).
+5. **Linee di tendenza**.
+6. **Contrasti** (obbligatoria): per ogni punto del quesito indica se le pronunce lette concordano o divergono (con id) e se la divergenza è tra gradi. Se non hai cercato la tesi opposta, dillo.
+7. **Fonti secondarie** (commenti, riviste) in una sezione a parte.
+8. **Numeri della ricerca** (risultati totali, pertinenti, letti, scaricati: valori di `conteggi.txt`) e **limiti** (siti e periodo coperti, interrogazioni fatte, schede senza testo integrale, controlli manuali se manca python3).
 
 ## Regole anti-generalizzazione
 - Ogni affermazione generale cita gli id che la reggono. Con meno di tre pronunce concordi scrivi "in una pronuncia" o "in due pronunce".
+- Con meno di 10 schede usa "in N pronunce lette" al posto di qualsiasi formula di prevalenza.
 - Vietati "costante", "consolidato", "primo", "unico", "orientamento prevalente" senza prova nelle schede.
 - Un esito si attribuisce al tema solo se `tema_causa_dell_esito` = "si". Una conseguenza che il provvedimento collega al tema si attribuisce al tema solo se `ruolo_del_tema` è decisivo o concorrente.
 - Distingui sempre decisivo / concorrente / obiter: un obiter non è una ratio.

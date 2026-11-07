@@ -12,7 +12,7 @@ Sei l'orchestratore. L'utente è un avvocato italiano, non tecnico: parla in ita
 ## Regole generali
 - Non digitare mai credenziali; non aggirare login, SPID, captcha, robots o altri blocchi: se serve un accesso lo fa l'utente nel browser scelto in Fase 0.
 - "Browser" = quello scelto in Fase 0: browser integrato (app desktop di Claude), Claude in Chrome (Claude Code) o browser di Codex. Regole e scelta in `references/ambienti.md`.
-- Subagenti (ambienti Claude) con lo strumento Agent (`subagent_type` "general-purpose", parametro `model`): ricerca ed estrazione `haiku`, red team `sonnet`. Non servono agenti preconfigurati. In Codex: equivalenze in `references/ambienti.md`.
+- Subagenti (ambienti Claude) con lo strumento Agent (`subagent_type` "general-purpose", parametro `model`): il modello più economico capace, per fase, secondo `references/modelli.md`. Non servono agenti preconfigurati. In Codex: equivalenze in `references/ambienti.md`.
 - A ogni subagente passa SOLO: compito, parametri utili, percorsi dei file (anche dei file di riferimento, che leggono loro), schema da compilare, regole del sito da `ricognizione.md`, tetto di chiamate. Mai questa skill intera. Chiedi max 150 parole di risposta; il materiale voluminoso va su file.
 - Ogni provvedimento si apre una sola volta. Niente narrazione tra i passaggi: aggiorna la task list.
 - Script: si ESEGUONO, non si leggono. Non aprirne il codice salvo errori che non capisci dal messaggio.
@@ -23,18 +23,18 @@ Fermati e fai UNA domanda con 2-3 opzioni se: (a) il sito chiede login, SPID o c
 ## Fase 0 - Parametri e strumenti
 Arrivato alla Fase 0, leggi `references/formati_file.md` (cartella e file di lavoro).
 1. Parametri: TEMA, SITO, AMBITO (uffici, gradi, periodo con date precise), PAROLE CHIAVE (se mancano, generane 8-12), MAX_DA_LEGGERE (default 20), SCARICARE (default tutti i pertinenti; oppure solo quelli letti, nessuno), CARTELLA, FONTI ESTERNE (default no; oppure solo elenco, cerca anche i commenti). Fai UNA sola domanda riepilogativa con i soli parametri mancanti e i default proposti.
-2. Ambiente e strumenti, prima di cercare: leggi `references/ambienti.md` e scegli il browser in base agli strumenti presenti (anche con ToolSearch, se esiste). Agent (se manca, fai tu le fasi dei subagenti e dillo in una riga); browser integrato, strumenti con nome contenente "Claude_Browser" (se serve, carica la skill "built-in-browser" e ricavane 10 righe per i subagenti); altrimenti Claude in Chrome, strumenti con nome contenente "claude-in-chrome", con le regole di `ambienti.md`; in Codex il browser configurato, se c'è. Nessun browser e il sito ne ha bisogno: arresto (b). `python3 --version` (se manca: dillo, su macOS si installa con `xcode-select --install`, prosegui con controlli manuali dichiarati nel report e scarica con `scarica.sh`).
+2. Ambiente e strumenti, prima di cercare: leggi `references/ambienti.md` e `references/modelli.md` e scegli il browser in base agli strumenti presenti (anche con ToolSearch, se esiste). Agent (se manca, fai tu le fasi dei subagenti e dillo in una riga); browser integrato, strumenti con nome contenente "Claude_Browser" (se serve, carica la skill "built-in-browser" e ricavane 10 righe per i subagenti); altrimenti Claude in Chrome, strumenti con nome contenente "claude-in-chrome", con le regole di `ambienti.md`; in Codex il browser configurato, se c'è. Nessun browser e il sito ne ha bisogno: arresto (b). `python3 --version` (se manca: dillo, su macOS si installa con `xcode-select --install`, prosegui con controlli manuali dichiarati nel report e scarica con `scarica.sh`).
 3. Profilo: elenca solo i NOMI dei file in `references/profili/` (con `ls`) e apri soltanto quello che corrisponde al SITO (es. ilcaso.it → `ilcaso.md`; giustizia-amministrativa.it → `giustizia-amministrativa.md`; Cassazione/italgiure → `cassazione.md`; giustizia tributaria → `giustizia-tributaria.md`). Copialo in `lavoro/ricognizione.md` e salta la Fase 1. Un modello marcato "DA COMPLETARE" non è un profilo. Non aprire mai gli altri profili.
 4. Crea la cartella e la task list.
 
 ## Fase 1 - Ricognizione (solo senza profilo; max 8 chiamate)
 - Entro 3 chiamate leggi UN provvedimento preso da un risultato di ricerca.
-- Cerca con WebSearch e `allowed_domains` (l'operatore `site:` viene ignorato). WebFetch accetta di solito solo URL comparsi nei risultati. Se WebFetch rifiuta, controlla il `robots.txt` vero del sito (regola in `ambienti.md`): se il sito vieta il percorso, non ottenerlo con nessuno strumento; se lo permette, leggi nel browser o arresto (b).
+- Cerca con WebSearch e `allowed_domains` (l'operatore `site:` viene ignorato). WebFetch accetta di solito solo URL comparsi nei risultati. Se WebFetch rifiuta, applica la regola su robots.txt e termini d'uso di `references/ambienti.md`.
 - Scrivi `lavoro/ricognizione.md` (campi in `references/formati_file.md`).
 - Finita la ricerca, se il sito è nuovo, offri di salvarne il profilo: leggi allora `references/profili/LEGGIMI.md`.
 
 ## Fase 2 - Ricerca
-- Con un profilo: la fai tu, max 12 interrogazioni. Solo per siti grandi senza profilo: un subagente haiku, max 15.
+- Con un profilo: decidi tu l'elenco di max 12 interrogazioni (puoi eseguirle tu o delegarle a un subagente economico, `modelli.md`), distinte per grado/organo (giudice d'appello o di legittimità e giudici di primo grado), con almeno una mirata all'organo di vertice presente sul sito e almeno una "di contrasto" (formulata per trovare la tesi opposta a quella emersa). Riserva a queste quote del tetto. Solo per siti grandi senza profilo: un subagente haiku, max 15.
 - Scarta da titolo, estratto e data. NON aprire le schede per verificare la pertinenza: lo fa l'estrattore all'apertura (non pertinente: riga in `scartati.csv`).
 - Scrivi `elenco.csv` e `scartati.csv` (colonne in `references/formati_file.md`) e annota i risultati per interrogazione in `ricognizione.md`. Pertinente = affronta il TEMA nella motivazione, non solo nelle parole chiave.
 - Arresto (d) se i pertinenti potenziali superano 200.
@@ -49,7 +49,7 @@ Se SCARICARE non è "nessuno", lancia in background:
 - "Scaricati" = solo i file arrivati davvero in `pdf/` (lo calcola `conteggi.py`).
 
 ## Fase 4 - Estrazione (subagenti haiku, max 6 provvedimenti e 40 chiamate ciascuno)
-Arrivato alla Fase 4, passa ai subagenti il PERCORSO di `references/schema_scheda.md`: lo leggono loro (schema della scheda e "Regole di estrazione"); tu non lo leggi. Con WebFetch lavorano in parallelo; con il browser integrato uno alla volta, ciascuno nella propria scheda da chiudere; con Claude in Chrome o un browser di Codex estrai tu, in sequenza (`ambienti.md`). Ognuno produce `lavoro/testi/<id>.txt` e `lavoro/schede/<id>.json`. Se dopo gli scarti le schede sono meno di MAX_DA_LEGGERE e restano candidati, fai un secondo giro. Con 5 provvedimenti o meno puoi estrarre tu, seguendo lo stesso schema: dillo nel report.
+Arrivato alla Fase 4, passa ai subagenti il PERCORSO di `references/schema_scheda.md`: lo leggono loro (schema della scheda e "Regole di estrazione"); tu non lo leggi. Con WebFetch lavorano in parallelo; con il browser integrato uno alla volta, ciascuno nella propria scheda da chiudere; con Claude in Chrome o un browser di Codex un subagente alla volta (o tu), in sequenza (`ambienti.md`). Ognuno produce `lavoro/testi/<id>.txt` e `lavoro/schede/<id>.json`. Se dopo gli scarti le schede sono meno di MAX_DA_LEGGERE e restano candidati, fai un secondo giro. Prima dei controlli: se più schede citano lo stesso precedente in `precedenti_citati` ed è sul sito e nell'ambito, aggiungilo ai candidati (secondo giro, max 3, senza superare MAX_DA_LEGGERE di oltre 3). Con 5 provvedimenti o meno puoi estrarre tu, seguendo lo stesso schema: dillo nel report.
 
 ## Fase 5 - Controlli obbligatori (prima del red team, senza modelli)
 ```
