@@ -66,6 +66,28 @@ def conta(titolo, valori_attesi, valori):
     return righe
 
 
+def righe_pagine(lav, schede):
+    """Riepilogo di pagine.jsonl (scritto da pagine.py); nessuna riga se il file non c'e'."""
+    percorso = os.path.join(lav, "pagine.jsonl")
+    if not os.path.isfile(percorso):
+        return []
+    n_cit = {s["_id"]: len(s["citazioni"]) for s in schede if isinstance(s.get("citazioni"), list)}
+    righe = {}
+    with open(percorso, encoding="utf-8") as f:
+        for linea in f:
+            try:
+                r = json.loads(linea)
+                if r["i"] < n_cit.get(r["id"], 0):
+                    righe[(r["id"], r["i"])] = r
+            except (ValueError, KeyError, TypeError):
+                continue
+    per_metodo = Counter(r.get("metodo") for r in righe.values() if r.get("stato") == "trovata")
+    trovate = sum(per_metodo.values())
+    testo = ", ".join("%s %d" % (m, n) for m, n in sorted(per_metodo.items(), key=lambda x: str(x[0]))) or "nessuno"
+    return ["", "Pagine dei PDF (da pagine.jsonl)",
+            "  Citazioni con pagina trovata:        %d/%d (per metodo: %s)" % (trovate, len(righe), testo)]
+
+
 def main(argv):
     if len(argv) != 2 or argv[1] in ("-h", "--help"):
         print(__doc__)
@@ -147,6 +169,7 @@ def main(argv):
                  [s.get("tema_causa_dell_esito") for s in schede])
     out.append("")
     out += conta("Per testo_letto", ["integrale", "parziale", "no"], [s.get("testo_letto") for s in schede])
+    out += righe_pagine(lav, schede)
     testo = "\n".join(out) + "\n"
 
     ordinate = sorted(schede, key=lambda s: (chiave_data(est(s, "data_decisione")), s["_id"]))

@@ -17,6 +17,7 @@ Codex/OpenAI: scegli tra i modelli disponibili nel runtime; non inventare nomi.
 | Qualificazione giuridica (ruolo del tema, ratio/obiter, causa dell'esito) | haiku + verifica sonnet solo sulle schede "decisivo" o `tema_causa=si` | piccolo + verifica intermedio, stesse schede |
 | Bozza | sonnet | modello intermedio |
 | Red team | sonnet | modello intermedio |
+| Pagine dei PDF (Fase 5b, `pagine.py`) | script: 0 token, nessun modello | uguale |
 | Report finale | sonnet (l'orchestratore controlla e applica le correzioni del red team) | intermedio |
 | Profilo di un sito nuovo | sonnet | modello intermedio |
 

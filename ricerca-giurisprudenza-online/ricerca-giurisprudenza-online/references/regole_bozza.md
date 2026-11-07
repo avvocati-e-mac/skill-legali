@@ -12,6 +12,12 @@ Si scrive solo dopo i controlli della Fase 5 e leggendo solo le schede (`lavoro/
 7. **Fonti secondarie** (commenti, riviste) in una sezione a parte.
 8. **Numeri della ricerca** (risultati totali, pertinenti, letti, scaricati: valori di `conteggi.txt`) e **limiti** (siti e periodo coperti, interrogazioni fatte, schede senza testo integrale, controlli manuali se manca python3).
 
+## Pagine nelle citazioni
+- PDF con pagina trovata in `pagine.jsonl` (stato `trovata`): "p. N" (pagina fisica del PDF; se il numero stampato è diverso e noto, indicalo).
+- HTML: "punto/par. N" (forma corretta, da dichiarare nel report).
+- Non ritrovata, ambigua o non verificabile: testo senza pagina, con nota "non ritrovata nel testo del PDF".
+- Nei limiti: metodo usato e `citazioni con pagina trovata X/Y` (da `conteggi.txt`); se la skill Docling o il server mancano, il messaggio di `ambienti.md` sezione 5.
+
 ## Regole anti-generalizzazione
 - Ogni affermazione generale cita gli id che la reggono. Con meno di tre pronunce concordi scrivi "in una pronuncia" o "in due pronunce".
 - Con meno di 10 schede usa "in N pronunce lette" al posto di qualsiasi formula di prevalenza.

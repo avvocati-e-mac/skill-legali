@@ -51,3 +51,18 @@ Se `robots.txt` permette ma WebFetch rifiuta per sue politiche (es. `robots_disa
 | Lettura pagine | WebFetch | lettura web nativa o shell (`curl`), rispettando la regola robots |
 | Red team (Fase 7) | subagente sonnet, obbligatorio | subagente indipendente se disponibile; altrimenti chiedi all'utente se accetta una revisione in un passaggio separato, scritta in `lavoro/red_team.md` prima di rileggere la bozza, e dichiaralo nel report. Mai un'autorevisione presentata come red team. |
 | Script | `python3` da shell | uguale |
+
+## 5. Skill Docling e pagine dei PDF (Fase 0, punto 2; Fase 5)
+Serve solo ai provvedimenti scaricati come PDF. Gli HTML restano citati per punto/paragrafo ("punto 6.3"): è la forma corretta, non un difetto. Non usare mai il flusso o `SKILL.md` della skill `docling-citazioni-pdf` (carica i PDF interi nel contesto): di quella skill si usa solo lo script check_pdf_quote.py, lanciato da `pagine.py`.
+
+**1. La skill è installata?** Prima guarda l'elenco delle skill disponibili nel contesto (anche con prefisso di plugin, es. `...:docling-citazioni-pdf`), poi le cartelle note: Claude Code `~/.claude/skills/docling-citazioni-pdf`; Codex la cartella skill di Codex. Il percorso serve per lanciarne lo script: va scoperto, non presunto, e passato a `pagine.py` con `--skill-docling "<cartella>"`. Nel dubbio chiedi all'utente; mai dichiarare "non installata" senza averlo verificato. Se non c'è: nei limiti scrivi "pagine PDF verificate solo con pdftotext: skill docling-citazioni-pdf non installata (repository avvocati-e-mac/skill-legali)". `pagine.py` funziona comunque.
+
+**2. Il server Docling MCP** (strumenti con "docling" nel nome) serve solo per scansioni, numeri stampati e struttura, non per `pagine.py`, che è locale e verifica le citazioni sul PDF scaricato. Distingui:
+- non configurato: nessuno strumento "docling" e nessuna voce nella configurazione MCP;
+- configurato ma non connesso (es. ECONNREFUSED): non ritentare in ciclo e non toccare la configurazione;
+- connesso.
+Distingui anche server **locale** o **remoto**: remoto se l'URL MCP non è `localhost`/`127.0.0.1`. Con un server remoto (altro computer, rete privata) e rifiuto della connessione, se l'host risponde al ping il messaggio all'utente è: "il server Docling sul computer remoto non è avviato". Non provare ad avviare nulla sull'altro computer e non modificare la configurazione MCP. Per avviarlo rinvia alla guida server-remoto.md della skill docling-citazioni-pdf (non duplicarla); se il server non è connesso per altri motivi, rinvia alla sua guida di installazione. Nei limiti del report i messaggi sono diversi: skill assente / server non configurato / non connesso / remoto non avviato.
+
+**3. Con un server remoto connesso** la VPN non condivide le cartelle: il server non vede `<cartella>/pdf/`, e i file che produce restano sul server. Per i provvedimenti PUBBLICI scaricati da un URL diretto (`url_file`) passa al server l'URL pubblico come sorgente al posto del percorso locale (da verificare al primo uso: segnalalo come "da verificare"), poi confronta lo SHA-256 del PDF locale se il server lo restituisce. In ogni altro caso nessun trasferimento automatico: chiedi all'utente il canale (come dice la skill Docling). Le pagine di `pagine.jsonl` restano comunque quelle verificate sul PDF locale.
+
+**4. Scrittura**: in `lavoro/ricognizione.md` la riga `Docling: skill sì/no; server non configurato/non connesso/connesso, locale/remoto; pdftotext sì/no`. Il metodo finale per citazione è in `pagine.jsonl`.
