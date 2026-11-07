@@ -74,5 +74,5 @@ Coerenza: se `ruolo_del_tema` è `obiter` o `marginale`, `tema_causa_dell_esito`
 3. Salva in `lavoro/testi/<id>.txt` SOLO: intestazione (prime 1.500 battute), i passaggi sul TEMA con 300 battute prima e dopo e il numero di pagina (riga `[pag. N]`), il dispositivo (ultime 2.000 battute). Non ricopiare tutto il testo. Togli gli spazi spuri dentro le parole prodotti dall'estrazione.
 4. Copia le citazioni dal file `testi/<id>.txt` appena salvato (rileggilo), non dalla memoria.
 5. Compila `lavoro/schede/<id>.json` secondo lo schema. Tieni separato ciò che il testo dice da ciò che deduci.
-6. Con il browser integrato: una scheda (tab) per subagente, da chiudere alla fine. Con Claude in Chrome o un browser di Codex: estrae solo l'orchestratore, in schede nuove create apposta e chiuse alla fine, mai quelle dell'utente. Non digitare credenziali, non aggirare login, captcha o robots.
+6. Con il browser integrato: una scheda (tab) per subagente, da chiudere alla fine. Con Claude in Chrome o un browser di Codex: un estrattore alla volta, in schede nuove create apposta e chiuse alla fine, mai quelle dell'utente. Non digitare credenziali, non aggirare login, captcha o robots.
 7. Restituisci max 150 parole: id elaborati, id scartati, problemi.

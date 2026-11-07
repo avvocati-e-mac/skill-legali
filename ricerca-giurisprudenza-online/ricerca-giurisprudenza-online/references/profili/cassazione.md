@@ -1,4 +1,5 @@
 # Profilo: Corte di cassazione (modello vuoto)
+Tipo di sito: pubblico
 
 DA COMPLETARE con la prima ricognizione. Non usare questo file come se fosse verificato: finché resta questa riga, fai la ricognizione (Fase 1) e poi compila i campi.
 

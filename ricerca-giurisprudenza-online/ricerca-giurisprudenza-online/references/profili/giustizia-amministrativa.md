@@ -1,14 +1,16 @@
-# Profilo: giustizia-amministrativa.it (TAR, Consiglio di Stato) (modello vuoto)
+# Profilo: giustizia-amministrativa.it (TAR, Consiglio di Stato) - verificato il 2026-11-07
 
-DA COMPLETARE con la prima ricognizione. Non usare questo file come se fosse verificato: finché resta questa riga, fai la ricognizione (Fase 1) e poi compila i campi.
+Tipo di sito: pubblico
+
+Ricognizione fatta da terminale; il browser NON serve. robots.txt assente (404) su www. e mdp.: nessun percorso vietato.
 
 ## Campi (stessi di ricognizione.md)
-- Pagina d'ingresso: da completare
-- Come si cerca (URL con parametri o solo modulo; il filtro funziona davvero?): da completare
-- URL della scheda: da completare
-- URL del file: da completare
-- Formato (PDF testuale, PDF scansione, HTML): da completare
-- Strumento che funziona (WebFetch, WebSearch con allowed_domains, browser integrato, Claude in Chrome, pdf.js): da completare
-- id consigliato: da completare
-- Provvedimento di prova: da completare
-- Da verificare al primo uso: login, SPID o captcha richiesti? robots.txt? Possibile ricerca interna con filtri per sede, sezione, anno: verificare se funziona via URL.
+- Pagina d'ingresso: www.giustizia-amministrativa.it
+- Come si cerca: WebSearch con allowed_domains ["giustizia-amministrativa.it"]. Consiglio dalla valutazione: fare interrogazioni distinte per Consiglio di Stato e per TAR. Avvertenza: i riassunti della ricerca web possono datare male le notizie (2018/2019 presentate come nuovo codice); fidarsi solo del testo del provvedimento.
+- URL della scheda: non c'e una scheda separata; si apre direttamente il provvedimento.
+- URL del file: https://mdp.giustizia-amministrativa.it/visualizza/?nodeRef=&schema=<ufficio>&nrg=<anno+num ricorso>&nomeFile=<anno+num provv>_<tipo>.<html|xml|pdf>&subDir=Provvedimenti (schema: cds, tar_na, tar_rm, ...; tipo 01 sentenza TAR, 11 sentenza CdS, 20 sentenza breve). Pulire i "&amp=" degli URL dei risultati.
+- Formato: varia (la maggior parte .html, alcuni .xml, alcuni .pdf). L'estensione NON e intercambiabile: un'estensione sbagliata risponde 200 con la pagina "404 - Pagina non trovata". Controllare SEMPRE il testo ricevuto. Provare l'estensione del risultato; se fallisce, le altre due.
+- Strumento che funziona: shell. `curl -sS -L -m 30 -A "ricerca-giurisprudenza-online/1.0" -o f "<URL>"`; PDF con `pdftotext -layout f out.txt`; HTML/XML togliendo i tag (python3, re e html.unescape). Browser non necessario.
+- id consigliato: <ufficio>-<anno>-<numero> (es. cds-2026-3008)
+- Provvedimento di prova: Cons. Stato, Sez. III, n. 3008/2026, R.G. 8682/2025, pubbl. 16/04/2026 (PDF, 25.711 caratteri estratti).
+- Da verificare al primo uso: ricerca interna con filtri (sede, sezione, anno) via URL: da verificare; limiti di frequenza: da verificare (usare pause).
