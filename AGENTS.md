@@ -164,7 +164,8 @@ Quando una procedura dipende dal runtime, differenzia sempre in modo esplicito:
 - **File chiave:** `ricerca-giurisprudenza-online/ricerca-giurisprudenza-online/SKILL.md`, `references/ambienti.md`, `references/profili/`, `scripts/`, `ricerca-giurisprudenza-online/ARCHITETTURA.md` (decisioni e red teaming)
 - **File installazione Claude:** `ricerca-giurisprudenza-online/ricerca-giurisprudenza-online.skill`
 - **Test:** `python3 -B -m unittest discover -s ricerca-giurisprudenza-online/tests -v` (offline: struttura, archivio allineato, `controlli.py` e `conteggi.py` su fixture sintetica). Rigenerare il `.skill` dopo ogni modifica ai sorgenti, altrimenti il test dell'archivio fallisce
-- **Aperto:** lettura dei PDF con Claude in Chrome da verificare al primo uso su ilcaso.it; profili giustizia-amministrativa, giustizia-tributaria e cassazione ancora da completare
+- **Verificato (2026-11-07):** Claude in Chrome (estensione in Brave) legge i PDF di ilcaso.it con pdf.js via `javascript_tool` (`get_page_text` no); download con user-agent onesto riuscito. Esiti in `ARCHITETTURA.md`
+- **Aperto:** profili giustizia-amministrativa, giustizia-tributaria e cassazione ancora da completare
 
 ---
 

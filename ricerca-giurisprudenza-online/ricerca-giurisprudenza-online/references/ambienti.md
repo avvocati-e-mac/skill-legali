@@ -23,7 +23,8 @@ Chrome è il browser VERO dell'utente, con i suoi accessi già aperti.
 - Il browser serve a LEGGERE, un provvedimento alla volta. Niente scaricamenti in massa dal browser: i PDF li scarica `scarica.py`, che non usa gli accessi del browser e rispetta robots.txt.
 - Niente credenziali, niente pulsanti che aprono finestre di conferma o alert, niente aggiramento di login, captcha o SPID.
 - Estrazione: con Chrome la fai TU (orchestratore), in sequenza; non affidarla a subagenti, che potrebbero non avere accesso a Chrome.
-- PDF che appare vuoto: prova prima `get_page_text`; poi pdf.js da cdnjs con `javascript_tool` (lo stesso metodo del browser integrato). Il metodo con Chrome è da verificare al primo uso su ogni sito: se non funziona, segna il provvedimento come non letto (arresto e) e annota il risultato nel profilo.
+- PDF: `get_page_text` di solito NON legge i PDF aperti nel visore ("No text content found"); usa pdf.js da cdnjs con `javascript_tool`, come nel browser integrato (verificato su ilcaso.it). Il codice deve iniziare con `await` e restituire una stringa (es. `JSON.stringify(...)`): una funzione asincrona senza `await` restituisce `{}` vuoto, senza errore. Su un sito nuovo il metodo è da verificare al primo uso: se non funziona, segna il provvedimento come non letto (arresto e) e annota il risultato nel profilo.
+- Brave, Edge e gli altri browser basati su Chromium con l'estensione installata valgono come Chrome.
 
 ## 3. robots.txt: regola unica
 Decide il file `robots.txt` del sito, non il messaggio di uno strumento.

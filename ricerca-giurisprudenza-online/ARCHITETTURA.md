@@ -21,8 +21,14 @@ Rilievi accolti: contraddizione sulla regola robots (alta); pdf.js in Chrome non
 Rilievi respinti: `__pycache__` nello zip (falso: era un artefatto della verifica locale, lo zip originale non lo contiene).
 Rilievo rimesso all'autore: user-agent da browser in `scarica.py`/`scarica.sh`. Deciso il 2026-11-07: user-agent onesto `ricerca-giurisprudenza-online/1.0 (+URL del repository)`; se un sito rifiuta, nessun camuffamento né ritento: link da aprire a mano nel report. Effetto collaterale: le regole robots.txt dedicate a questo nome ora si applicano davvero (`can_fetch` usa il nome).
 
+### Prova reale con Claude in Chrome (2026-11-07, Claude Code da terminale, estensione in Brave)
+- Scelta dell'ambiente: nessuno strumento `Claude_Browser`, strumenti `claude-in-chrome` presenti, un solo browser collegato → Claude in Chrome. Corretto.
+- ilcaso.it, provvedimento 32960: `get_page_text` sul PDF fallisce; pdf.js 3.11.174 da cdnjs via `javascript_tool` legge 13 pagine e 29.535 caratteri. Trappola: senza `await` iniziale lo strumento restituisce `{}`. Annotato in `ambienti.md`.
+- Scheda HTML leggibile; il menu "PREMIUM" presente su ogni pagina dava un falso segnale di contenuto riservato: annotato nel profilo.
+- `scarica.py` e `scarica.sh` con user-agent onesto: PDF scaricato (`%PDF-1.7`, 380 kB), uscita 0.
+- Scheda del browser creata e chiusa; nessuna scheda dell'utente toccata.
+
 ### Aperto
-- Prova reale di Claude in Chrome su ilcaso.it (lettura PDF) e annotazione nel profilo.
 - Profili giustizia-amministrativa, giustizia-tributaria, cassazione ancora "DA COMPLETARE".
 
 ## Rinomina 2026-11-07
