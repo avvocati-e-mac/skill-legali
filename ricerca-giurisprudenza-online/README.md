@@ -1,4 +1,4 @@
-# Ricerca giurisprudenza
+# Ricerca giurisprudenza online
 
 Skill per assistenti AI che **cerca le pronunce su un tema in un sito pubblico** (ad esempio ilcaso.it o giustizia-amministrativa.it), ne compila una scheda per ciascuna, controlla che le frasi citate compaiano davvero nel testo, scarica i provvedimenti sul tuo computer e scrive un report con le linee di tendenza. Prima del report un revisore indipendente (red team) cerca le generalizzazioni non giustificate.
 
@@ -19,8 +19,8 @@ Se nessun browser è disponibile e il sito ne ha bisogno, l'assistente si ferma 
 
 ## Come si installa
 
-- **Claude (Desktop, Cowork, Claude Code):** scarica [`ricerca-giurisprudenza.skill`](https://github.com/avvocati-e-mac/skill-legali/raw/main/ricerca-giurisprudenza/ricerca-giurisprudenza.skill) e installalo dalle impostazioni delle skill. Se avevi già la versione del convegno, **reinstallala**: quella vecchia non conosce Claude in Chrome.
-- **Codex:** copia la cartella interna `ricerca-giurisprudenza/` nella cartella delle skill di Codex.
+- **Claude (Desktop, Cowork, Claude Code):** scarica [`ricerca-giurisprudenza-online.skill`](https://github.com/avvocati-e-mac/skill-legali/raw/main/ricerca-giurisprudenza-online/ricerca-giurisprudenza-online.skill) e installalo dalle impostazioni delle skill. Se avevi già la versione del convegno, **reinstallala**: quella vecchia non conosce Claude in Chrome.
+- **Codex:** copia la cartella interna `ricerca-giurisprudenza-online/` nella cartella delle skill di Codex.
 
 ## Come si usa
 

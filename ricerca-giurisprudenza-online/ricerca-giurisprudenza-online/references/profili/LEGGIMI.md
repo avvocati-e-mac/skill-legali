@@ -20,7 +20,7 @@ Dopo una ricognizione riuscita (`lavoro/ricognizione.md` compilato e un provvedi
 3. Ciò che non hai verificato scrivilo come "da verificare", non come fatto.
 4. Il nome del file deve contenere il dominio, così l'assistente lo trova.
 
-Chi chiede all'assistente di farlo può dire: "salva il profilo di questo sito tra i profili della skill ricerca-giurisprudenza".
+Chi chiede all'assistente di farlo può dire: "salva il profilo di questo sito tra i profili della skill ricerca-giurisprudenza-online".
 
 ## Modelli vuoti
 Per ora esistono solo modelli da completare con la prima ricognizione: `giustizia-amministrativa.md`, `giustizia-tributaria.md`, `cassazione.md`. Quando un modello è completato, togli la riga "DA COMPLETARE".

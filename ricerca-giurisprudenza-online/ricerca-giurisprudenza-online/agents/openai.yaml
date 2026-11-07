@@ -1,0 +1,7 @@
+interface:
+  display_name: "Ricerca giurisprudenza online"
+  short_description: "Cerca, schedula e scarica pronunce su un sito pubblico e ricostruisce l'indirizzo giurisprudenziale su un tema"
+  default_prompt: "Usa $ricerca-giurisprudenza-online per cercare su un sito pubblico le pronunce su un tema, con schede, controllo delle citazioni, report e download dei provvedimenti."
+
+policy:
+  allow_implicit_invocation: true

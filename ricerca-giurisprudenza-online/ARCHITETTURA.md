@@ -1,4 +1,4 @@
-# Architettura e decisioni — ricerca-giurisprudenza
+# Architettura e decisioni — ricerca-giurisprudenza-online
 
 ## Origine
 Skill del convegno CC Ravenna (9 ottobre 2026), importata nel repository il 2026-11-07 senza modifiche (commit "importa la skill originale"), poi adattata.
@@ -24,3 +24,6 @@ Rilievo aperto, rimesso all'autore: user-agent da browser in `scarica.py`/`scari
 ### Aperto
 - Prova reale di Claude in Chrome su ilcaso.it (lettura PDF) e annotazione nel profilo.
 - Profili giustizia-amministrativa, giustizia-tributaria, cassazione ancora "DA COMPLETARE".
+
+## Rinomina 2026-11-07
+Nome cambiato da `ricerca-giurisprudenza` a `ricerca-giurisprudenza-online` (cartelle, frontmatter, `.skill`, metadati Codex), su richiesta dell'autore, per chiarezza: la skill cerca su siti pubblici online, non in banche dati MCP. Chi aveva installato la versione del convegno con il vecchio nome deve disinstallarla, altrimenti due skill quasi uguali competono per le stesse richieste.

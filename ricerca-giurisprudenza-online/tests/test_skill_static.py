@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Test per la skill ricerca-giurisprudenza (offline, solo libreria standard).
+"""Test per la skill ricerca-giurisprudenza-online (offline, solo libreria standard).
 
-Esecuzione:  python3 -B -m unittest discover -s ricerca-giurisprudenza/tests -v
+Esecuzione:  python3 -B -m unittest discover -s ricerca-giurisprudenza-online/tests -v
 """
 
 from __future__ import annotations
@@ -18,9 +18,9 @@ from pathlib import Path
 
 TEST_DIR = Path(__file__).resolve().parent
 SKILL_ROOT = TEST_DIR.parent
-INNER = SKILL_ROOT / "ricerca-giurisprudenza"
+INNER = SKILL_ROOT / "ricerca-giurisprudenza-online"
 SKILL_MD = INNER / "SKILL.md"
-ARCHIVE = SKILL_ROOT / "ricerca-giurisprudenza.skill"
+ARCHIVE = SKILL_ROOT / "ricerca-giurisprudenza-online.skill"
 SCRIPTS = INNER / "scripts"
 
 
@@ -49,7 +49,7 @@ def sorgenti() -> dict[str, bytes]:
 class TestStruttura(unittest.TestCase):
     def test_frontmatter(self):
         fm = frontmatter(SKILL_MD.read_text(encoding="utf-8"))
-        self.assertEqual(fm.get("name"), "ricerca-giurisprudenza")
+        self.assertEqual(fm.get("name"), "ricerca-giurisprudenza-online")
         desc = fm.get("description", "")
         self.assertTrue(desc, "description mancante")
         self.assertLessEqual(len(desc), 1024, "description oltre 1024 caratteri (Cowork la rifiuta)")
@@ -67,7 +67,7 @@ class TestStruttura(unittest.TestCase):
 
     def test_openai_yaml(self):
         testo = (INNER / "agents" / "openai.yaml").read_text(encoding="utf-8")
-        self.assertIn("$ricerca-giurisprudenza", testo)
+        self.assertIn("$ricerca-giurisprudenza-online", testo)
         self.assertIn("allow_implicit_invocation: true", testo)
 
     def test_ambienti_coprono_tre_runtime(self):

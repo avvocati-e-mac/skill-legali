@@ -1,5 +1,5 @@
 ---
-name: ricerca-giurisprudenza
+name: ricerca-giurisprudenza-online
 description: Ricerca di sentenze e provvedimenti su un sito pubblico (es. giustizia-amministrativa.it, ilcaso.it) per ricostruire un indirizzo giurisprudenziale su un tema, con schede, controllo delle citazioni, report e download dei provvedimenti sul Mac. Usala quando l'avvocato chiede di cercare, raccogliere o scaricare pronunce su un tema. Sceglie da sola il browser in base all'ambiente (browser integrato dell'app desktop di Claude, Claude in Chrome in Claude Code, browser di Codex). Non per domande di diritto, atti, pareri o sola ricerca di norme.
 ---
 
