@@ -30,6 +30,34 @@ Protocollo per il subagente di verifica fonti:
 Vale sia in Claude (lancia un subagente/Agent) sia in Codex (subagente/processo separato). Il report
 deve riportare l'esito **verificato dal subagente**, non lo stato grezzo `not_performed` del wrapper.
 
+In Codex, se per la verifica di giurisprudenza usi Claude per accedere a BuddaLaw e la skill `buddalaw`
+è presente, **caricala prima** di interrogare BuddaLaw.
+
+## Pre-filtri deterministici prima del subagente (risparmio token)
+
+Due passaggi deterministici (offline, zero token LLM) riducono il lavoro delegato al subagente/MCP:
+
+- **Norme italiane** → `scripts/verify_statutes.py` (wrapper offline-di-default su `normattiva_fetch.py`):
+  conferma esistenza/vigenza del testo ufficiale. Esegue il fetch live solo con `--allow-network`,
+  dopo l'approvazione della route fonti. Output mergeabile da `report --sources`.
+- **Giurisprudenza/provvedimenti** → `scripts/caselaw_formcheck.py`: valida **solo la forma** della
+  citazione (corte/sezione/numero/anno) e scarta offline placeholder (`99999`), anni futuri, sezioni
+  incoerenti. Forma valida ≠ esistenza ≠ massima: non emette mai `verified`. Le citazioni `not_found`/
+  `mismatch` non vanno più mandate all'MCP; solo le `unsupported` (forma plausibile) restano da
+  verificare con BuddaLaw/MCP o controllo umano.
+
+## Allucinazioni: driver deterministico, LLM subordinato
+
+Per le allucinazioni di **fonte** (norma o sentenza inesistente/incoerente) il driver è deterministico:
+l'esistenza/vigenza è una proprietà del mondo, verificata contro banca dati, non una stima di
+plausibilità di un giudice LLM (che è lo stesso meccanismo che genera l'allucinazione). Una citazione
+`not_found`/`mismatch` da `verify_statutes`/`caselaw_formcheck` abbassa l'affidabilità a prescindere dal
+punteggio LLM su `assenza_allucinazioni` (il report lo rende esplicito nel blocco "Allucinazioni:
+controllo deterministico"). La **fedeltà semantica** fonte↔affermazione e i fatti privi di citazione
+restano valutazione LLM subordinata, sempre con revisione umana. Limiti: copre solo allucinazioni
+ancorabili a una fonte; coverage banche dati giurisprudenziali incompleta → "assente" significa "da
+verificare", non "inventata". Fonti: CiteCheck (arXiv:2605.27700), Stanford DHO Legal RAG Hallucinations.
+
 ## Route And Confidentiality Gate
 
 Before live search or cloud upload:

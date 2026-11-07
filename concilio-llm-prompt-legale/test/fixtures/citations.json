@@ -1,0 +1,49 @@
+[
+  {
+    "id": "cc-art-2946",
+    "raw": "ai sensi dell'art. 2946 c.c. il termine è decennale",
+    "expect_citation": "art. 2946 c.c.",
+    "expect_source_type": "italian_statute"
+  },
+  {
+    "id": "cc-art-7-statuto",
+    "raw": "art. 7 co. 1 l. 300/1970 sul procedimento disciplinare",
+    "expect_citation": "art. 7 l. 300/1970",
+    "expect_source_type": "italian_statute"
+  },
+  {
+    "id": "ccii-art-120",
+    "raw": "CCII art. 120 sulle misure protettive",
+    "expect_citation": "art. 120 d.lgs. 14/2019",
+    "expect_source_type": "italian_statute"
+  },
+  {
+    "id": "gdpr-art-5",
+    "raw": "secondo il GDPR art. 5 il titolare",
+    "expect_citation": "art. 5 GDPR",
+    "expect_source_type": "eu_law"
+  },
+  {
+    "id": "gdpr-out-of-range",
+    "raw": "GDPR art. 250 inesistente",
+    "expect_dropped": true
+  },
+  {
+    "id": "cass-civ",
+    "raw": "Cass. civ. Sez. II n. 8203/2018 conferma",
+    "expect_citation": "Cass. civ. Sez. II n. 8203/2018",
+    "expect_source_type": "case_law_or_authority"
+  },
+  {
+    "id": "multi-article",
+    "raw": "secondo gli artt. 2946 e 2947 c.c.",
+    "expect_contains": ["art. 2946 c.c.", "art. 2947 c.c."],
+    "expect_source_type": "italian_statute"
+  },
+  {
+    "id": "cost-art",
+    "raw": "art. 24 Cost. garantisce la difesa",
+    "expect_citation": "art. 24 cost.",
+    "expect_source_type": "italian_statute"
+  }
+]

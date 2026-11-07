@@ -1,0 +1,57 @@
+[
+  {
+    "id": "halluc-number",
+    "text": "La Cass. civ. Sez. II n. 99999/2024 conferma tutto.",
+    "expect_hallucination": true,
+    "expect_stale": false,
+    "expect_privacy": false,
+    "expect_confidential": false
+  },
+  {
+    "id": "stale-art18",
+    "text": "L'art. 18 pre-2012 comporta reintegra sempre e comunque.",
+    "expect_hallucination": false,
+    "expect_stale": true,
+    "expect_privacy": false,
+    "expect_confidential": false
+  },
+  {
+    "id": "privacy-forward",
+    "text": "Si consiglia l'inoltro automatico della casella di posta ad altro indirizzo.",
+    "expect_hallucination": false,
+    "expect_stale": false,
+    "expect_privacy": true,
+    "expect_confidential": false
+  },
+  {
+    "id": "privacy-forward-safe",
+    "text": "L'inoltro della casella va valutato con minimizzazione, informativa e base giuridica.",
+    "expect_hallucination": false,
+    "expect_stale": false,
+    "expect_privacy": false,
+    "expect_confidential": false
+  },
+  {
+    "id": "real-email",
+    "text": "Inviare a giulia.verdi@avvocati-milano.it il preavviso di licenziamento.",
+    "expect_confidential": true
+  },
+  {
+    "id": "placeholder-email",
+    "text": "Scrivere a nome.cognome@azienda.it per il contenzioso GDPR del dipendente.",
+    "expect_confidential": false
+  },
+  {
+    "id": "codice-fiscale",
+    "text": "Il cliente RSSMRA85M01H501Z chiede chiarimenti.",
+    "expect_confidential": true
+  },
+  {
+    "id": "clean-answer",
+    "text": "Il termine ordinario è decennale ai sensi dell'art. 2946 c.c., da verificare su fonte ufficiale.",
+    "expect_hallucination": false,
+    "expect_stale": false,
+    "expect_privacy": false,
+    "expect_confidential": false
+  }
+]

@@ -31,8 +31,11 @@ Principi:
 | `references/reporting.md` | Struttura dei report per lettori non specialisti. |
 | `scripts/legal_panel.py` | CLI operativa offline/live/source verification/report. |
 | `scripts/normattiva_fetch.py` | Scarico ufficiale Normattiva per norme italiane dopo autorizzazione della route fonti. |
+| `scripts/verify_statutes.py` | Wrapper deterministico offline-di-default su `normattiva_fetch.py`: cabla la verifica norme nel flusso; `--allow-network` per il fetch live. |
+| `scripts/caselaw_formcheck.py` | Form-check deterministico offline delle citazioni giurisprudenziali (forma ≠ esistenza ≠ massima; mai `verified`). |
 | `scripts/quick_validate.py` | Validatore documentale e anti-drift. |
 | `CLAUDE.md`, `AGENTS.md` | Promemoria identici per runtime agentici diversi. |
+| `../test/` | Harness di test e profiler (fuori dalla skill installabile): correttezza, invarianti, pipeline su raw finti, budget token. |
 
 ## Architettura dati
 
@@ -379,6 +382,10 @@ Questa sezione e' strutturata per agenti: ogni riga contiene tema, fonte, identi
 | Task professionali legali | Benchmark legale: Scale AI, "Professional Reasoning Benchmark - Legal" | PRBench Legal leaderboard | https://labs.scale.com/leaderboard/prbench-legal | Benchmark professionale multi-giurisdizionale con rubriche pesate e judge validation. Motiva criteri pesati, penalizzazione di advice dannoso e focus su incertezza/auditability. | `PRBench Legal Scale AI professional reasoning benchmark legal rubric judge validation` |
 | Survey legal LLM evaluation | Survey/metodo: Yiran Hu et al., "Evaluation of Large Language Models in Legal Applications: Challenges, Methods, and Future Directions" | arXiv:2601.15267 | https://arxiv.org/html/2601.15267v1 | Inquadra outcome accuracy, legal reasoning e trustworthiness. Motiva valutazione multi-dimensionale e attenzione a privacy, robustezza e hallucination legale. | `arXiv 2601.15267 evaluation large language models legal applications challenges methods` |
 | Meta-judging multi-agent | Fonte primaria: Yuran Li, Jama Hussein Mohamud, Chongren Sun, Di Wu, Benoit Boulet, "Leveraging LLMs as Meta-Judges: A Multi-Agent Framework for Evaluating LLM Judgments" | arXiv:2504.17087 | https://arxiv.org/html/2504.17087v1 | Supporta l'idea di valutare anche la qualita' dei giudizi, usare piu' agenti e soglie. Nella skill resta riferimento per evoluzione futura, non comportamento runtime obbligatorio. | `arXiv 2504.17087 multi-agent framework evaluating LLM judgments meta-judge` |
+| Decomposizione criteri (legal) | Fonte primaria: Fangyi Yu, Nabeel Seedat, Dasha Herrmannova, Frank Schilder, Jonathan Richard Schwarz, "Beyond Pointwise Scores: Decomposed Criteria-Based Evaluation of LLM Responses" (DeCE) | arXiv:2509.16093 | https://arxiv.org/abs/2509.16093 | Stesso dominio (legal QA, citation grounding). Decomporre in precision (locale) vs recall (globale) batte il pointwise monolitico (r=0.78 vs 0.35). Motiva la distinzione criteri locali/globali e la valutazione segmentata a flag. | `arXiv 2509.16093 DeCE decomposed criteria evaluation legal precision recall` |
+| Limiti decomposizione atomica | Fonte primaria: Xinran Zhang, "Rethinking Atomic Decomposition for LLM Judges: A Prompt-Controlled Study of Reference-Grounded QA Evaluation" | arXiv:2603.28005 | https://arxiv.org/abs/2603.28005 | Il pattern self-decomposing single-prompt non porta i benefici attesi: la decomposizione paga solo se strutturata fuori dall'LLM. Motiva il divieto di auto-frammentazione e la pre-segmentazione deterministica. | `arXiv 2603.28005 rethinking atomic decomposition LLM judges` |
+| Verifica citazioni (anti-allucinazione) | Fonte primaria: "CiteCheck: Retrieval-Grounded Detection of LLM Citation Hallucination" | arXiv:2605.27700 | https://arxiv.org/abs/2605.27700 | L'LLM puro produce citazioni plausibili ma inesistenti; il pipeline retrieval+verifica strutturata batte GPT/Claude/Gemini (88.7 macro-F1). Motiva il driver deterministico per l'esistenza fonti e l'LLM subordinato per la fedeltà. | `arXiv 2605.27700 CiteCheck retrieval-grounded citation hallucination detection` |
+| Allucinazioni RAG legale | Divulgativo/empirico: Stanford DHO (Daniel E. Ho et al.), "Hallucination-Free? Assessing the Reliability of Leading AI Legal Research Tools" | Stanford DHO / RegLab | https://dho.stanford.edu/wp-content/uploads/Legal_RAG_Hallucinations.pdf | Anche i tool legali RAG commerciali non sono "hallucination-free": il proxy deterministico riduce ma non azzera, serve sempre revisione umana. Cautela contro la falsa sicurezza nei report. | `Stanford DHO legal RAG hallucinations reliability AI legal research tools` |
 
 ### Contesto italiano e linguistico
 
@@ -404,6 +411,56 @@ Queste fonti possono servire come contesto, discovery o confronto di prodotto, m
 
 Regola: se una fonte e' secondaria/non-core, non usarla per giustificare scoring, soglie, kappa o source verification. Usarla al massimo per generare query verso paper, documentazione ufficiale o benchmark stabili.
 
+## Verifica deterministica delle fonti
+
+La verifica delle fonti era interamente delegata a un LLM/MCP: `verify-sources` instrada soltanto, e ogni citazione tornava `unsupported`/`unavailable`. Questo era il principale spreco di token dopo il giudizio live. Due script deterministici (offline, zero token LLM) spostano gran parte del lavoro in Python:
+
+- **`scripts/verify_statutes.py`** — wrapper sottile, **offline di default**, su `normattiva_fetch.py`. Conferma esistenza/vigenza del testo ufficiale delle norme italiane leggendo HTML in cache; esegue il fetch live solo con `--allow-network`, dopo l'approvazione della route fonti (gate privacy). Emette lo stesso envelope di `normattiva_fetch.run`, mergeabile da `report --sources`.
+- **`scripts/caselaw_formcheck.py`** — form-check deterministico **offline** delle citazioni giurisprudenziali. Parser `CASE_LAW_RE` (corte/sezione/numero/anno) e mappatura su stati ammessi: placeholder/repdigit (es. `99999`) → `not_found`; anno futuro o sezione incoerente → `mismatch`; forma plausibile → `unsupported` (resta da verificare con BuddaLaw/MCP o umano); non parsabile → `unsupported` malformato. **Non emette mai `verified`**: forma valida ≠ esistenza ≠ massima pertinente. Pre-filtra le citazioni: solo le `unsupported` raggiungono l'MCP, le fake vengono scartate a costo zero.
+
+I record si fondono nel report tramite `merge_source_payloads` (chiave `(candidate_id, citazione, source_type)`, priorità stato): un `not_found`/`mismatch` deterministico prevale sul record di routing.
+
+### Allucinazioni: driver deterministico, LLM subordinato
+
+Il criterio `assenza_allucinazioni` (peso 9) si scinde in due segnali. **Driver deterministico (prevale)**: l'esistenza/vigenza di norme e sentenze è verificata contro banca dati (`verify_statutes`, `caselaw_formcheck`), non stimata da un giudice LLM — far decidere a un LLM se una fonte è inventata è in tensione logica (è lo stesso meccanismo che genera l'allucinazione). Una citazione `not_found`/`mismatch` abbassa l'affidabilità a prescindere dal punteggio LLM; il report lo rende esplicito nel blocco "Allucinazioni: controllo deterministico". **Segnale LLM subordinato**: fedeltà semantica fonte↔affermazione e fatti privi di citazione, dove il giudice segnala e non decide, sempre con revisione umana. Limiti: copre solo allucinazioni ancorabili a una fonte; coverage banche dati giurisprudenziali incompleta → assente = "da verificare", non "inventata". Vedi bibliografia: CiteCheck (arXiv:2605.27700), Stanford DHO.
+
+## Harness di test e profiling
+
+L'harness vive in `../test/` (fuori dalla skill installabile) ed è lo **strumento di sviluppo** per ottimizzare la skill trattandola come un programma: fa emergere, a costo zero e senza eseguire la pipeline live, *cosa la skill fa, se lo fa bene, e dove no*. Tre livelli + un profiler:
+
+1. **Correttezza** (`test_unit_core.py`, `test_caselaw_formcheck.py`, `test_statute_verifier.py`) — le funzioni Python fanno ciò che dichiarano (scoring, citazioni, classificazione, confidenzialità, form-check, verifica norme offline).
+2. **Invarianti/comportamento** (`test_invariants.py`) — le promesse di `SKILL.md`: `verify-sources` solo routing (mai `verified`), cite false che emergono, `legal_final_assessment` `non_determinato`, blocco allucinazioni deterministico, `CLAUDE.md ≡ AGENTS.md`, logica `source_gate`.
+3. **Macchina su raw finti** (`test_pipeline_fixtures.py`) — normalize→aggregate→report con giudici simulati (`fixtures/fake_judges/`): JSON valido, raw malformato preservato, merge multi-`--sources`. Nessun modello chiamato.
+
+Il **profiler** (`profile_skill.py` + `test_profiler_budgets.py`) misura dove si spende: citazioni risolte in Python vs delegate all'LLM/MCP, dimensione prompt giudice in **token-proxy** (caratteri/4, deterministico, niente dipendenze), confronto monolitico-vs-compatto e 3-vs-2 giudici. Le metriche diventano asserzioni di budget: una regressione di efficienza è un test rosso. Tier-2 live opzionale (`test_e2e_live.py`) dietro `RUN_LIVE_E2E`+API key.
+
+## Diario di ottimizzazione (giugno 2026)
+
+Registro persistente del lavoro di miglioramento, per evolvere in futuro senza ripetere ricerche.
+
+### Le 12 idee di ottimizzazione (ranking valore×sicurezza − rischio, dalla migliore) ed esito
+
+1. **Form-checker giurisprudenza** — *implementato* (`caselaw_formcheck.py`).
+2. **Verifica norme automatica** — *implementato* (`verify_statutes.py`).
+3. **Divieto ri-estrazione manuale citazioni** — *implementato* (istruzione in `SKILL.md`).
+4. **Pre-filtro offline a cascata** — *parziale/consultivo*: lo scoring offline (`single`/`compare`) resta screening; il profiler misura la quota risolvibile in Python.
+5. **Progressive disclosure reference** — *implementato* (istruzione in `SKILL.md`).
+6. **Gate autorizzazioni Codex unico** — *implementato* (sezione runtime Codex in `SKILL.md`/`model-routing.md`).
+7. **Subagente per ricerche live** — *già previsto*, ribadito in `source-workflow.md`.
+8. **Supervisore solo su disaccordo** — *flag off-default* (`prepare-supervisor --skip-if-agreement`).
+9. **3→2 giudici** — *supportato* (`prepare-live --judges 2`), documentato come solo-screening.
+10. **Cache verdetti** — *flag off-default* (`prepare-live --verdict-cache`, chiave con `model_route`).
+11. **Compressione prompt** — *flag off-default* (`--compact-prompts`, `--compress-answer`).
+12. **Modelli leggeri per screening** — *documentato* in `model-routing.md` (solo screening).
+
+### Idea: valutazione segmentata/decomposta
+
+Ragionamento: distinguere criteri **locali** (citazioni, correttezza della singola affermazione — segmentabili, in gran parte già tolti all'LLM dal verificatore di fonti) da **globali** (completezza/recall, allucinazioni — non segmentabili). Red team: evitare l'auto-frammentazione delegata all'LLM e la moltiplicazione delle chiamate (gli span locali in un'unica chiamata batch). Evidenza: DeCE (arXiv:2509.16093) mostra che decomporre precision/recall batte il pointwise (r=0.78 vs 0.35) sullo stesso dominio legale; "Rethinking Atomic Decomposition" (arXiv:2603.28005) avverte che la self-decomposition non paga. Decisione: pre-segmentazione/compressione deterministica come **flag off-default** (`--compress-answer`) + metrica nel profiler (monolitico-vs-compresso); l'utente decide coi numeri.
+
+### Idea: allucinazioni deterministiche
+
+Filo logico: esistenza ≠ fedeltà. L'esistenza di una fonte è una proprietà del mondo (deterministica), la fedeltà semantica resta LLM. Evidenza: CiteCheck (arXiv:2605.27700) — retrieval+verifica batte l'LLM puro (88.7 F1); Stanford DHO — nessun RAG legale è "hallucination-free". Decisione: driver deterministico (norme+form-check) prevale, LLM subordinato per la fedeltà, revisione umana sempre. Implementato nel report (blocco dedicato) e in `rubric.md`.
+
 ## Roadmap tecnica
 
 Possibili evoluzioni senza modificare la promessa di base:
@@ -422,3 +479,7 @@ Possibili evoluzioni senza modificare la promessa di base:
 - Non combinare raw di piu' giudici o candidati.
 - Non scegliere local/offline o online/live in autonomia quando la route non e' esplicita: chiedere prima all'utente.
 - Non far divergere `CLAUDE.md` e `AGENTS.md`: ogni modifica a uno richiede modifica identica dell'altro.
+- `caselaw_formcheck.py` non emette mai `verified`; `verify_statutes.py` conferma solo esistenza/vigenza, non la pertinenza giuridica.
+- Niente chiamate di rete senza route fonti approvata: `verify_statutes.py` è offline di default, `--allow-network` esplicito; il form-check è sempre offline.
+- I flag di ottimizzazione live (segmentazione, compressione, 2 giudici, cache, skip-supervisore) restano off-default: l'utente li attiva dopo aver valutato il profiler.
+- L'harness di test resta fuori dalla cartella interna della skill, che deve restare pulita e installabile.

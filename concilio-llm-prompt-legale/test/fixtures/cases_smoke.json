@@ -1,0 +1,28 @@
+{
+  "cases": [
+    {
+      "candidate_id": "A",
+      "source_file": "fixtures/A.md",
+      "quesito": "Qual è il termine di prescrizione ordinario nel codice civile?",
+      "risposta": "Il termine di prescrizione ordinario è decennale ai sensi dell'art. 2946 c.c. Per il risarcimento da fatto illecito vale il quinquennale dell'art. 2947 c.c. La Cass. civ. Sez. II n. 99999/2024 confermerebbe, ma va verificata su banca dati ufficiale.",
+      "ground_truth": "Prescrizione ordinaria decennale art. 2946 c.c. Distinguere art. 2947 c.c. per l'illecito.",
+      "data_riferimento": "2026-06-18",
+      "fonti": ["art. 2946 c.c.", "art. 2947 c.c.", "Cass. civ. Sez. II n. 99999/2024"],
+      "confidential": false,
+      "confidential_reason": ["nessun segnale di materiale riservato"],
+      "extraction": {"format": "fixture", "notes": []}
+    },
+    {
+      "candidate_id": "B",
+      "source_file": "fixtures/B.md",
+      "quesito": "Qual è il termine di prescrizione ordinario nel codice civile?",
+      "risposta": "La prescrizione ordinaria è decennale (art. 2946 c.c.); l'azione aquiliana si prescrive in cinque anni ex art. 2947 c.c. Il testo va verificato su Normattiva.",
+      "ground_truth": "Prescrizione ordinaria decennale art. 2946 c.c. Distinguere art. 2947 c.c. per l'illecito.",
+      "data_riferimento": "2026-06-18",
+      "fonti": ["art. 2946 c.c.", "art. 2947 c.c."],
+      "confidential": false,
+      "confidential_reason": ["nessun segnale di materiale riservato"],
+      "extraction": {"format": "fixture", "notes": []}
+    }
+  ]
+}
