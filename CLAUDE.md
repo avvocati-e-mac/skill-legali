@@ -153,6 +153,18 @@ Quando una procedura dipende dal runtime, differenzia sempre in modo esplicito:
 - **File installazione Claude:** `verifica-citazioni-legali/verifica-citazioni-legali.skill`
 - **Riservatezza:** gli esempi e l'atto di collaudo non contengono dati di parti o pratiche reali; mantenerli così
 
+### ricerca-giurisprudenza
+
+- **Cartella:** `ricerca-giurisprudenza/` (skill del convegno CC Ravenna, 9 ottobre 2026, importata il 2026-11-07)
+- **Scopo:** ricostruisce un indirizzo giurisprudenziale cercando le pronunce su un sito pubblico (es. ilcaso.it, giustizia-amministrativa.it): schede JSON, controlli deterministici delle citazioni (`controlli.py`), conteggi e tabelle (`conteggi.py`), red team obbligatorio, report e download dei PDF (`scarica.py`/`scarica.sh`)
+- **Trigger:** richieste di cercare, raccogliere o scaricare pronunce su un tema da un sito pubblico; non per domande di diritto, atti, pareri o sola ricerca di norme
+- **Ambienti e browser:** in Fase 0 sceglie il browser dagli strumenti presenti, riconosciuti per sottostringa: browser integrato (`Claude_Browser`, app desktop: ramo invariato) > Claude in Chrome (`claude-in-chrome`, Claude Code da terminale/IDE) > browser di Codex > nessuno (arresto b). Con Chrome: schede nuove, solo pagine pubbliche, stop su contenuti in abbonamento visibili grazie agli accessi dell'utente, niente download in massa dal browser, estrazione solo dall'orchestratore in sequenza. Dettagli in `references/ambienti.md`
+- **Regola robots:** decide il `robots.txt` del sito, non il messaggio dello strumento (ilcaso.it non vieta nulla; WebFetch lo rifiuta per sua politica)
+- **File chiave:** `ricerca-giurisprudenza/ricerca-giurisprudenza/SKILL.md`, `references/ambienti.md`, `references/profili/`, `scripts/`, `ricerca-giurisprudenza/ARCHITETTURA.md` (decisioni e red teaming)
+- **File installazione Claude:** `ricerca-giurisprudenza/ricerca-giurisprudenza.skill`
+- **Test:** `python3 -B -m unittest discover -s ricerca-giurisprudenza/tests -v` (offline: struttura, archivio allineato, `controlli.py` e `conteggi.py` su fixture sintetica). Rigenerare il `.skill` dopo ogni modifica ai sorgenti, altrimenti il test dell'archivio fallisce
+- **Aperto:** lettura dei PDF con Claude in Chrome da verificare al primo uso su ilcaso.it; profili giustizia-amministrativa, giustizia-tributaria e cassazione ancora da completare; user-agent da browser negli script di download da rivalutare
+
 ---
 
 ## Struttura standard di una skill
