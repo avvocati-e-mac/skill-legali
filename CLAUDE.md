@@ -160,10 +160,11 @@ Quando una procedura dipende dal runtime, differenzia sempre in modo esplicito:
 - **Trigger:** richieste di cercare, raccogliere o scaricare pronunce su un tema da un sito pubblico; non per domande di diritto, atti, pareri o sola ricerca di norme
 - **Ambienti e browser:** in Fase 0 sceglie il browser dagli strumenti presenti, riconosciuti per sottostringa: browser integrato (`Claude_Browser`, app desktop: ramo invariato) > Claude in Chrome (`claude-in-chrome`, Claude Code da terminale/IDE) > browser di Codex > nessuno (arresto b). Con Chrome: schede nuove, solo pagine pubbliche, stop su contenuti in abbonamento visibili grazie agli accessi dell'utente, niente download in massa dal browser, estrazione solo dall'orchestratore in sequenza. Dettagli in `references/ambienti.md`
 - **Regola robots:** decide il `robots.txt` del sito, non il messaggio dello strumento (ilcaso.it non vieta nulla; WebFetch lo rifiuta per sua politica)
+- **User-agent onesto:** `scarica.py` e `scarica.sh` si identificano come `ricerca-giurisprudenza-online/1.0` con l'URL del repository; se un sito rifiuta, niente camuffamento né ritento. Non reintrodurre un user-agent da browser
 - **File chiave:** `ricerca-giurisprudenza-online/ricerca-giurisprudenza-online/SKILL.md`, `references/ambienti.md`, `references/profili/`, `scripts/`, `ricerca-giurisprudenza-online/ARCHITETTURA.md` (decisioni e red teaming)
 - **File installazione Claude:** `ricerca-giurisprudenza-online/ricerca-giurisprudenza-online.skill`
 - **Test:** `python3 -B -m unittest discover -s ricerca-giurisprudenza-online/tests -v` (offline: struttura, archivio allineato, `controlli.py` e `conteggi.py` su fixture sintetica). Rigenerare il `.skill` dopo ogni modifica ai sorgenti, altrimenti il test dell'archivio fallisce
-- **Aperto:** lettura dei PDF con Claude in Chrome da verificare al primo uso su ilcaso.it; profili giustizia-amministrativa, giustizia-tributaria e cassazione ancora da completare; user-agent da browser negli script di download da rivalutare
+- **Aperto:** lettura dei PDF con Claude in Chrome da verificare al primo uso su ilcaso.it; profili giustizia-amministrativa, giustizia-tributaria e cassazione ancora da completare
 
 ---
 

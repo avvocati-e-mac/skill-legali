@@ -9,13 +9,13 @@
 # nome_file ASCII, di solito AAAA-MM-GG_ufficio_numero_<id>.pdf; formato = pdf oppure html.
 # Righe vuote o che iniziano con # sono ignorate.
 #
-# Stessa logica di scarica.py: user-agent da browser, Referer = url_scheda, 2 nuovi
+# Stessa logica di scarica.py: user-agent onesto (nome della skill), Referer = url_scheda, 2 nuovi
 # tentativi, 2 secondi tra un file e l'altro, salta i file gia' presenti, rispetta
 # robots.txt, tiene il file solo se inizia con %PDF (o e' HTML), altrimenti lo elimina
 # e lo annota in errori.txt (accanto al piano). Non disattiva mai i controlli dei certificati.
 # Codice di uscita: 0 = nessun errore, 1 = almeno un errore.
 
-UA="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
+UA="ricerca-giurisprudenza-online/1.0 (+https://github.com/avvocati-e-mac/skill-legali; download di provvedimenti pubblici per un avvocato)"
 PIANO="$1"
 DEST="$2"
 

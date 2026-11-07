@@ -11,7 +11,7 @@ Opzioni:
   --piano FILE.tsv       non scarica: scrive il piano (url_file, url_scheda, nome_file, formato)
                          nel formato letto da scarica.sh
 
-Per ogni riga: user-agent da browser, Referer = url_scheda, 2 nuovi tentativi, pausa
+Per ogni riga: user-agent onesto (nome della skill, non un browser), Referer = url_scheda, 2 nuovi tentativi, pausa
 tra i file, salta i file gia' presenti, rispetta robots.txt (se il sito vieta il
 percorso, non scarica e lo annota), nomi ASCII sicuri AAAA-MM-GG_ufficio_numero_<id>.pdf.
 Il file viene tenuto solo se inizia con %PDF (o e' HTML, se il formato e' html);
@@ -33,8 +33,7 @@ import urllib.parse
 import urllib.request
 import urllib.robotparser
 
-UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
-      "(KHTML, like Gecko) Chrome/124.0 Safari/537.36")
+UA = ("ricerca-giurisprudenza-online/1.0 (+https://github.com/avvocati-e-mac/skill-legali; download di provvedimenti pubblici per un avvocato)")
 RE_DATA = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
 

@@ -19,7 +19,7 @@ La versione del convegno presupponeva il **browser integrato** (`Claude_Browser`
 ### Red teaming del piano (subagente, 2026-11-07)
 Rilievi accolti: contraddizione sulla regola robots (alta); pdf.js in Chrome non dimostrato (alta: segnato "da verificare al primo uso", prima `get_page_text`); siti in abbonamento con login già attivi nel Chrome dell'utente (alta); nomi strumenti con prefisso `remote-devices`, `enable__*`, più Chrome collegati, estensione non connessa (media); subagenti senza accesso a Chrome (media: estrae l'orchestratore); ramo Codex e red team (media); regressione desktop e reinstallazione del `.skill` (media); `ARCHITETTURA.md` (bassa); test fragili su stringhe (bassa); commit separati (media).
 Rilievi respinti: `__pycache__` nello zip (falso: era un artefatto della verifica locale, lo zip originale non lo contiene).
-Rilievo aperto, rimesso all'autore: user-agent da browser in `scarica.py`/`scarica.sh` (dichiarato nel README).
+Rilievo rimesso all'autore: user-agent da browser in `scarica.py`/`scarica.sh`. Deciso il 2026-11-07: user-agent onesto `ricerca-giurisprudenza-online/1.0 (+URL del repository)`; se un sito rifiuta, nessun camuffamento né ritento: link da aprire a mano nel report. Effetto collaterale: le regole robots.txt dedicate a questo nome ora si applicano davvero (`can_fetch` usa il nome).
 
 ### Aperto
 - Prova reale di Claude in Chrome su ilcaso.it (lettura PDF) e annotazione nel profilo.

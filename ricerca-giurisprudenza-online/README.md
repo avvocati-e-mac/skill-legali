@@ -30,6 +30,6 @@ Basta chiedere, per esempio: *"Cerca su ilcaso.it le sentenze degli ultimi due a
 
 - È una ricerca su un **campione**: il report dice "non risultano nella ricerca", mai "non esistono".
 - Rispetta il file `robots.txt` dei siti, non digita credenziali e non aggira login, captcha o SPID.
-- Per lo scaricamento automatico gli script si presentano al sito come un normale browser Chrome, con una pausa di 2 secondi tra un file e l'altro.
+- **Nota sullo scaricamento automatico.** Gli script di download si presentano al sito con il proprio nome (`ricerca-giurisprudenza-online/1.0`) e l'indirizzo di questo progetto, non travestiti da browser: il sito sa chi sta scaricando e può decidere. Fanno una pausa di 2 secondi tra un file e l'altro e rispettano il file robots.txt. Qualche sito potrebbe rifiutare uno scaricamento non fatto da un browser: in quel caso la skill non insiste e non si camuffa, ma elenca nel report i link da aprire a mano.
 - Il metodo di lettura dei PDF con Claude in Chrome non è ancora stato provato su ogni sito: al primo uso l'assistente lo verifica e lo annota.
 - Non sostituisce la lettura dei provvedimenti da parte dell'avvocato.

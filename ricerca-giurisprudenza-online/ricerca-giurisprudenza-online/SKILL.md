@@ -45,6 +45,7 @@ Se SCARICARE non è "nessuno", lancia in background:
 (aggiungi `--solo-da-leggere` per "solo quelli letti"; `--escludi "<cartella>/lavoro/scartati.csv"` per saltare gli scartati). Rispetta robots.txt, salta i file già presenti, tiene solo file davvero PDF, annota gli errori in `lavoro/errori.txt`.
 - Senza python3 o con errore di certificato: `zsh "<skill>/scripts/scarica.sh" "<cartella>/lavoro/scarica.tsv" "<cartella>/pdf"` (formato del TSV in `references/formati_file.md`). Non disattivare mai i controlli dei certificati.
 - Link con sessione o token temporanei: con il browser integrato scarica da lì; con Chrome o in Codex non scaricare dal browser: avvisa l'utente.
+- Gli script si identificano con il nome della skill, non come un browser. Se un sito rifiuta (403, pagina di login o di errore), non cambiare user-agent e non riprovare in altre forme: riporta nel report i link da aprire a mano.
 - "Scaricati" = solo i file arrivati davvero in `pdf/` (lo calcola `conteggi.py`).
 
 ## Fase 4 - Estrazione (subagenti haiku, max 6 provvedimenti e 40 chiamate ciascuno)
